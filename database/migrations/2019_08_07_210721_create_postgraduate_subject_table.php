@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostgraduatesSubjectsTable extends Migration
+class CreatePostgraduateSubjectTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePostgraduatesSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('postgraduates_subjects', function (Blueprint $table) {
+        Schema::create('postgraduate_subject', function (Blueprint $table) {
             $table->unsignedBigInteger('postgraduate_id');
             $table->unsignedBigInteger('subject_id');
             $table->string('type',1);

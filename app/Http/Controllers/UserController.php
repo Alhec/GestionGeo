@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 
-class AdministratorController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class AdministratorController extends Controller
      */
     public function index()
     {
-        $administrators= User::where('user_type','A')->get();
-        return $administrators;
+        $users = User::all();
+        return $users;
     }
 
     /**
@@ -26,7 +26,6 @@ class AdministratorController extends Controller
      */
     public function store(Request $request)
     {
-        $request['user_type']='A';
         User::create($request->all());
         return response()->json(['message'=>'OK']);
     }
@@ -39,8 +38,8 @@ class AdministratorController extends Controller
      */
     public function show($id)
     {
-        $administrator = User::where(['id'=>$id,'user_type'=>'A'])->get();
-        return $administrator[0];
+        $user = User::find($id);
+        return $user;
     }
 
     /**
@@ -52,8 +51,7 @@ class AdministratorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request['user_type']='A';
-        User::where(['id'=>$id,'user_type'=>'A'])->get()[0]->update($request->all());
+        User::find($id)->update($request->all());
         return response()->json(['message'=>'OK']);
     }
 
@@ -65,7 +63,7 @@ class AdministratorController extends Controller
      */
     public function destroy($id)
     {
-        User::where(['id'=>$id,'user_type'=>'A'])->get()[0]->delete();
+        User::find($id)->delete();
         return response()->json(['message'=>'OK']);
     }
 }

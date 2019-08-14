@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('jwt.auth')->resource('postgraduates','PostgraduateController');
-Route::middleware('jwt.auth')->resource('subjects','SubjectController');
-Route::middleware('jwt.auth')->resource('users','UserController');
+Route::resource('subjects','SubjectController');
+//Route::resource('users','UserController');
+Route::middleware('jwt.auth')->resource('administrators','AdministratorController');
 Route::post('login', 'AuthController@login');

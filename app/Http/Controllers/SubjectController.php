@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Subject;
+use App\PostgraduateSubject;
 
 class SubjectController extends Controller
 {
@@ -14,7 +15,7 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::all();
+        $subjects = Subject::with('postgraduates')->get();
         return $subjects;
     }
 
@@ -37,6 +38,14 @@ class SubjectController extends Controller
     public function store(Request $request)
     {
         Subject::create($request->all());
+        $subject = Subject::where('subject_name',$request['subject_name'])->get()[0];
+        $postgraduates = $request['postgraduates'];
+        $cant_postgraduates=sizeof($postgraduates);
+        for ($i=0;$i<$cant_postgraduates;$i++){
+            PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[0]['id'],
+                'subject_id'=>$subject['id'],
+                'type'=>$postgraduates[0]['type'],]);
+        }
         return response()->json(['message'=>'OK']);
     }
 
@@ -48,7 +57,7 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        $subject = Subject::find($id);
+        $subject = Subject::with('postgraduates')->find($id);
         return $subject;
     }
 
@@ -63,6 +72,9 @@ class SubjectController extends Controller
         //
     }
 
+    public function includeInBd($postgraduate,$postgraduatesInBd){
+
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -72,7 +84,19 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Subject::find($id)->update($request->all());
+        /*Subject::find($id)->update($request->all());
+        $postgraduatesInBd =PostgraduateSubject::where('subject_id')->get();
+        $postgraduates = $request['postgraduates'];
+        $cant_postgraduates=sizeof($postgraduates);
+        foreach ($postgraduates as $postgraduate){
+
+        }
+        for ($i=0;$i<$cant_postgraduates;$i++){
+
+            PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[0]['id'],
+                'subject_id'=>$id,
+                'type'=>$postgraduates[0]['type'],]);
+        }*/
         return response()->json(['message'=>'OK']);
     }
 

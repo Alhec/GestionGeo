@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\PostgraduateSubject;
 
-class PostgraduatesSubjectsTableSeeder extends Seeder
+class PostgraduateSubjectTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
