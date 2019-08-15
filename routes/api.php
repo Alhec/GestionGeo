@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('jwt.auth')->resource('postgraduates','PostgraduateController');
+Route::resource('postgraduates','PostgraduateController');
 Route::resource('subjects','SubjectController');
 //Route::resource('users','UserController');
 Route::middleware('jwt.auth')->resource('administrators','AdministratorController');

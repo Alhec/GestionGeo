@@ -84,19 +84,26 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        /*Subject::find($id)->update($request->all());
-        $postgraduatesInBd =PostgraduateSubject::where('subject_id')->get();
+        Subject::find($id)->update($request->all());
         $postgraduates = $request['postgraduates'];
-        $cant_postgraduates=sizeof($postgraduates);
+        $postgraduatesID = PostgraduateSubject::where('subject_id',$id)->get(['id','postgraduate_id']);
         foreach ($postgraduates as $postgraduate){
-
+            $existPostgraduate=false;
+            foreach ($postgraduatesID as $postgraduateID){
+                if ($postgraduate['id']==$postgraduateID['postgraduate_id']){
+                    $postgraduate['subject_id']=$id;
+                    PostgraduateSubject::find($postgraduateID['id'])->update($postgraduate);
+                    $existPostgraduate=true;
+                    break;
+                }
+            }
+            if ($existPostgraduate==false){
+                PostgraduateSubject::create(['postgraduate_id'=>$postgraduate['id'],
+                    'subject_id'=>$id,
+                    'type'=>$postgraduate['type'],
+                    ]);
+            }
         }
-        for ($i=0;$i<$cant_postgraduates;$i++){
-
-            PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[0]['id'],
-                'subject_id'=>$id,
-                'type'=>$postgraduates[0]['type'],]);
-        }*/
         return response()->json(['message'=>'OK']);
     }
 

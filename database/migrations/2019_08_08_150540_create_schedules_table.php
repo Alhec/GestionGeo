@@ -32,6 +32,8 @@ class CreateSchedulesTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('schedules');
+        Schema::enableForeignKeyConstraints();
     }
 }

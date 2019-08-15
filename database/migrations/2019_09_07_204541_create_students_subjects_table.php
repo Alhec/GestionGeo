@@ -14,6 +14,7 @@ class CreateStudentsSubjectsTable extends Migration
     public function up()
     {
         Schema::create('students_subjects', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('school_period_student_id');
             $table->unsignedBigInteger('school_period_subject_teacher_id');
             $table->integer('qualification')->nullable();
@@ -31,6 +32,9 @@ class CreateStudentsSubjectsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('students_subjects');
+        Schema::enableForeignKeyConstraints();
+
     }
 }

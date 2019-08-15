@@ -14,6 +14,7 @@ class CreatePostgraduateSubjectTable extends Migration
     public function up()
     {
         Schema::create('postgraduate_subject', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('postgraduate_id');
             $table->unsignedBigInteger('subject_id');
             $table->string('type',1);
@@ -30,6 +31,8 @@ class CreatePostgraduateSubjectTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('postgraduates_subjects');
+        Schema::enableForeignKeyConstraints();
     }
 }

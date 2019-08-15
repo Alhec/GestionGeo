@@ -34,6 +34,9 @@ class CreateSchoolPeriodsStudentsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('school_periods_students');
+        Schema::enableForeignKeyConstraints();
+
     }
 }

@@ -34,6 +34,8 @@ class CreateTeachersTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('teachers');
+        Schema::enableForeignKeyConstraints();
     }
 }

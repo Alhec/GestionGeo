@@ -14,7 +14,6 @@ class StudentsTableSeeder extends Seeder
     {
         Student::query()->truncate();
         Student::create([
-            'teacher_id'=>2,
             'postgraduate_id'=>1,
             'user_id'=>3,
             'student_type'=>"REG", // REG EXT AMP
