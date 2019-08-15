@@ -32,6 +32,7 @@ class AdministratorController extends Controller
         if (count($administrator)>0){//valida que el administrador no exista
             return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
         }else{
+            $request['password']=Hash::make($request['identification']);
             $request['user_type']='A';
             User::create($request->all());
             return response()->json(['message'=>'OK']);
@@ -74,12 +75,14 @@ class AdministratorController extends Controller
                     if (count($userIdentification)>0){ // valida si ya existe un identificador como ci o rif en bd
                         if ($userIdentification[0]['id'] == $administrator[0]['id']){ // si son diferentes la ci o rif la tiene otro usuario
                             $request['user_type']='A';
+                            $request['password']=$administrator[0]['password'];
                             $administrator[0]->update($request->all());
                             return response()->json(['message'=>'OK']);
                         }else{
                             return response()->json(['message'=>'Identificacion registrada'],206);
                         }
                     }else{// el caso en que esten disponible la ci o rif
+                        $request['password']=$administrator[0]['password'];
                         $request['user_type']='A';
                         $administrator[0]->update($request->all());
                         return response()->json(['message'=>'OK']);
