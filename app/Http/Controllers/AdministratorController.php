@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\User;
 
 class AdministratorController extends Controller
@@ -35,7 +35,8 @@ class AdministratorController extends Controller
             $request['password']=Hash::make($request['identification']);
             $request['user_type']='A';
             User::create($request->all());
-            return response()->json(['message'=>'OK']);
+            $administrator = User::where(['identification'=>$request['identification']])->get()[0];
+            return $administrator;
         }
 
     }
@@ -77,7 +78,8 @@ class AdministratorController extends Controller
                             $request['user_type']='A';
                             $request['password']=$administrator[0]['password'];
                             $administrator[0]->update($request->all());
-                            return response()->json(['message'=>'OK']);
+                            $administrator = User::find($id);
+                            return $administrator;
                         }else{
                             return response()->json(['message'=>'Identificacion registrada'],206);
                         }
@@ -85,7 +87,8 @@ class AdministratorController extends Controller
                         $request['password']=$administrator[0]['password'];
                         $request['user_type']='A';
                         $administrator[0]->update($request->all());
-                        return response()->json(['message'=>'OK']);
+                        $administrator = User::find($id);
+                        return $administrator;
                     }
                 }else{
                     return response()->json(['message'=>'Correo ya registrado'],206);
@@ -95,14 +98,16 @@ class AdministratorController extends Controller
                     if ($userIdentification[0]['id'] == $administrator[0]['id']){
                         $request['user_type']='A';
                         $administrator[0]->update($request->all());
-                        return response()->json(['message'=>'OK']);
+                        $administrator = User::find($id);
+                        return $administrator;
                     }else{
                         return response()->json(['message'=>'Identificacion registrada'],206);
                     }
                 }else{
                     $request['user_type']='A';
                     $administrator[0]->update($request->all());
-                    return response()->json(['message'=>'OK']);
+                    $administrator = User::find($id);
+                    return $administrator;
                 }
             }
         }else{
