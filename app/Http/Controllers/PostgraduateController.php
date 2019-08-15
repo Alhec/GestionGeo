@@ -36,8 +36,15 @@ class PostgraduateController extends Controller
      */
     public function store(Request $request)
     {
-        Postgraduate::create($request->all());
-        return response()->json(['message'=>'OK']);
+        $postgraduate = Postgraduate::where(['postgraduate_name'=>$request['postgraduate_name']])->get();
+        if (count($postgraduate)>0){
+            return response()->json(['message'=>'Postgrado ya registrado'],206);
+        }else{
+            Postgraduate::create($request->all());
+            $postgraduate = Postgraduate::where(['postgraduate_name'=>$request['postgraduate_name']])->get()[0];
+            return $postgraduate;
+        }
+
     }
 
     /**
@@ -49,7 +56,12 @@ class PostgraduateController extends Controller
     public function show($id)
     {
         $postgraduate = Postgraduate::find($id);
-        return $postgraduate;
+        if (count([$postgraduate])>0){
+            return $postgraduate;
+        } else{
+            return response()->json(['message'=>'Postgrado no encontrado'],206);
+        }
+
     }
 
     /**
@@ -72,9 +84,25 @@ class PostgraduateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        Postgraduate::find($id)->update($request->all());
-        return response()->json(['message'=>'OK']);
+        $postgraduate = Postgraduate::find($id);
+        if (count([$postgraduate])>0){
+            $postgraduateName = Postgraduate::where(['postgraduate_name'=>$request['postgraduate_name']])->get();
+            if (count($postgraduateName)>0){
+                if ($postgraduateName[0][id]==$id){
+                    $postgraduate->update($request->all());
+                    $postgraduate = Postgraduate::find($id);
+                    return $postgraduate;
+                }else{
+                    return response()->json(['message'=>'nombre de Postgrado en uso'],206);
+                }
+            }else{
+                $postgraduate->update($request->all());
+                $postgraduate = Postgraduate::find($id);
+                return $postgraduate;
+            }
+        }else{
+            return response()->json(['message'=>'Postgrado no encontrado'],206);
+        }
     }
 
     /**
@@ -86,7 +114,12 @@ class PostgraduateController extends Controller
     public function destroy($id)
     {
         //
-        Postgraduate::find($id)->delete();
-        return response()->json(['message'=>'OK']);
+        $postgraduate = Postgraduate::find($id);
+        if (count([$postgraduate])>0){
+            $postgraduate->delete();
+            return response()->json(['message'=>'OK']);
+        }else{
+            return response()->json(['message'=>'Postgrado no encontrado'],206);
+        }
     }
 }

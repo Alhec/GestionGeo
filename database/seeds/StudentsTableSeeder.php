@@ -17,7 +17,6 @@ class StudentsTableSeeder extends Seeder
             'postgraduate_id'=>1,
             'user_id'=>3,
             'student_type'=>"REG", // REG EXT AMP
-            'level_instruction'=>'Licenciado',
             'home_university'=>'Universidad Central de Venezuela',
         ]);
     }

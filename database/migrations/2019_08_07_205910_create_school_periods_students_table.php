@@ -17,7 +17,6 @@ class CreateSchoolPeriodsStudentsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('school_period_id');
-            $table->float('duty');
             $table->string('pay_ref');
             $table->string('status',5);
             $table->timestamps();

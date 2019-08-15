@@ -18,7 +18,6 @@ class CreateStudentsTable extends Migration
             $table->unsignedBigInteger('postgraduate_id');
             $table->unsignedBigInteger('user_id');
             $table->string('student_type',3);
-            $table->string('level_instruction',20);
             $table->string('home_university',70);
             $table->string('current_postgraduate',70)->nullable();
             $table->text('degrees')->nullable();

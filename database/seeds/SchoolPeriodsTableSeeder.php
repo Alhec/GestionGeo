@@ -16,6 +16,7 @@ class SchoolPeriodsTableSeeder extends Seeder
             'cod_school_period'=>'2-2019',
             'start_date'=>now(),
             'end_date'=>now(),
+            'duty'=>10,
         ]);
     }
 }

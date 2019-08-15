@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Postgraduate extends Model
 {
     //
-    protected $fillable = ['postgraduate_name','num_cu'];
+    protected $fillable = ['postgraduate_name','num_cu','faculty','school'];
 
     public function  subjects(){
         return $this->belongsToMany('App\Subject','postgraduate_subject')->withPivot('subject_id','type');
