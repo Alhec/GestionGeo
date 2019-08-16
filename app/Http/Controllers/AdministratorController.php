@@ -131,7 +131,7 @@ class AdministratorController extends Controller
         $administrator = User::where(['id'=>$id])->where(['user_type'=>'A'])->get();
         if (count($administrator)>0){ //valida que el administrador exista par eliminarlo
             $administrator[0]->delete();
-            return response()->json(['message'=>'OK'],204);
+            return response()->json(['message'=>'OK']);
         }else{
             return response()->json(['message'=>'Administrador no encontrado'],206);
         }
