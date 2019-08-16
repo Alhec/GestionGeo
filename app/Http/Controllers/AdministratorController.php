@@ -16,7 +16,12 @@ class AdministratorController extends Controller
     public function index()
     {
         $administrators= User::where('user_type','A')->get();
-        return $administrators;
+        if (count([$administrators])>0){
+            return $administrators;
+        }else{
+            return response()->json(['message'=>'No existen administradores'],206);
+        }
+
     }
 
     /**

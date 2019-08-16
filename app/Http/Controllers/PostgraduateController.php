@@ -15,7 +15,11 @@ class PostgraduateController extends Controller
     public function index()
     {
         $postgraduates = Postgraduate::all();
-        return $postgraduates;
+        if (count([$postgraduates])>0) {
+            return $postgraduates;
+        }else{
+            return response()->json(['message'=>'No existen postgrados'],206);
+        }
     }
 
     /**

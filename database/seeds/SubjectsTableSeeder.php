@@ -14,6 +14,7 @@ class SubjectsTableSeeder extends Seeder
     {
         Subject::query()->truncate();
         Subject::create([
+            'subject_code'=>'12345',
             'subject_name'=>'Materia1',
             'uc'=>5,
         ]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Subject;
 use App\PostgraduateSubject;
+use App\Postgraduate;
 
 class SubjectController extends Controller
 {
@@ -16,7 +17,11 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Subject::with('postgraduates')->get();
-        return $subjects;
+        if (count($subjects)>0){
+            return $subjects;
+        }else{
+            return response()->json(['message'=>'No existen materias'],206);
+        }
     }
 
     /**
@@ -37,16 +42,41 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        Subject::create($request->all());
-        $subject = Subject::where('subject_name',$request['subject_name'])->get()[0];
-        $postgraduates = $request['postgraduates'];
-        $cant_postgraduates=sizeof($postgraduates);
-        for ($i=0;$i<$cant_postgraduates;$i++){
-            PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[0]['id'],
-                'subject_id'=>$subject['id'],
-                'type'=>$postgraduates[0]['type'],]);
+        $subject=Subject::where('subject_name',$request['subject_name'])->get();
+        if (count($subject)<=0){
+            $postgraduatesInBd=Postgraduate::all('id');
+            //validacion de los postgrados enviados
+            $validPostgraduates = true;
+            $postgraduates = $request['postgraduates'];
+            foreach ($postgraduates as $postgraduate){
+                foreach ($postgraduatesInBd as $postgraduateInBd){
+                    if ($postgraduate['id']!= $postgraduateInBd['id']){
+                        $validPostgraduates=false;
+                        break;
+                    }
+                }
+                if ($validPostgraduates == false){
+                    break;
+                }
+            }
+            if ($validPostgraduates == false){
+                return response()->json(['message'=>'Postgrados invalidos'],206);
+            }else{
+                Subject::create($request->all());
+                $subject = Subject::where('subject_name',$request['subject_name'])->get()[0];
+                $postgraduates = $request['postgraduates'];
+                $cant_postgraduates=sizeof($postgraduates);
+                for ($i=0;$i<$cant_postgraduates;$i++){
+                    PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[0]['id'],
+                        'subject_id'=>$subject['id'],
+                        'type'=>$postgraduates[0]['type'],]);
+                }
+                $subjectReturn = Subject::with('postgraduates')->find($subject['id']);
+                return $subjectReturn;
+            }
+        }else{
+            return response()->json(['message'=>'Materia existente'],206);
         }
-        return response()->json(['message'=>'OK']);
     }
 
     /**
@@ -58,7 +88,12 @@ class SubjectController extends Controller
     public function show($id)
     {
         $subject = Subject::with('postgraduates')->find($id);
-        return $subject;
+        if (count([$subject])>0){
+            return $subject;
+        }else{
+            return response()->json(['message'=>'Materia no encontrada'],206);
+        }
+
     }
 
     /**
@@ -115,7 +150,13 @@ class SubjectController extends Controller
      */
     public function destroy($id)
     {
-        Subject::find($id)->delete();
-        return response()->json(['message'=>'OK']);
+        $subject = Subject::find($id);
+        if (count([$subject])>0){
+            $subject->delete();
+            return response()->json(['message'=>'OK']);
+        }else{
+            return response()->json(['message'=>'Materia no encontrada'],206);
+        }
+
     }
 }

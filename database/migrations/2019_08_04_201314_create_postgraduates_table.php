@@ -17,8 +17,6 @@ class CreatePostgraduatesTable extends Migration
             $table->bigIncrements('id');
             $table->string('postgraduate_name')->unique();
             $table->integer('num_cu');
-            $table->string('faculty');
-            $table->string('school');
             $table->timestamps();
         });
     }
