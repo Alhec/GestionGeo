@@ -32,7 +32,7 @@ class CreatePostgraduateSubjectTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('postgraduates_subjects');
+        Schema::dropIfExists('postgraduate_subject');
         Schema::enableForeignKeyConstraints();
     }
 }

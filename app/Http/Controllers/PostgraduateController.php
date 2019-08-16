@@ -15,7 +15,7 @@ class PostgraduateController extends Controller
     public function index()
     {
         $postgraduates = Postgraduate::all();
-        if (count([$postgraduates])>0) {
+        if (count($postgraduates)>0) {
             return $postgraduates;
         }else{
             return response()->json(['message'=>'No existen postgrados'],206);
@@ -60,7 +60,7 @@ class PostgraduateController extends Controller
     public function show($id)
     {
         $postgraduate = Postgraduate::find($id);
-        if (count([$postgraduate])>0){
+        if ($postgraduate!=null){
             return $postgraduate;
         } else{
             return response()->json(['message'=>'Postgrado no encontrado'],206);
@@ -119,7 +119,7 @@ class PostgraduateController extends Controller
     {
         //
         $postgraduate = Postgraduate::find($id);
-        if (count([$postgraduate])>0){
+        if ($postgraduate!=null){
             $postgraduate->delete();
             return response()->json(['message'=>'OK']);
         }else{
