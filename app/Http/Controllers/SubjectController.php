@@ -49,14 +49,14 @@ class SubjectController extends Controller
             $validPostgraduates = true;
             $postgraduates = $request['postgraduates'];
             foreach ($postgraduates as $postgraduate){
+                $found = false;
                 foreach ($postgraduatesInBd as $postgraduateInBd){
-                    if ($postgraduate['id']!= $postgraduateInBd['id']){
+                    if (($postgraduate['id']!= $postgraduateInBd['id'])AND $found ==false){
                         $validPostgraduates=false;
-                        break;
+                    }else{
+                        $found =true;
+                        $validPostgraduates=true;
                     }
-                }
-                if ($validPostgraduates == false){
-                    break;
                 }
             }
             if ($validPostgraduates == false){
@@ -128,14 +128,14 @@ class SubjectController extends Controller
                     $validPostgraduates = true;
                     $postgraduates = $request['postgraduates'];
                     foreach ($postgraduates as $postgraduate){
+                        $found = false;
                         foreach ($postgraduatesInBd as $postgraduateInBd){
-                            if ($postgraduate['id']!= $postgraduateInBd['id']){
+                            if (($postgraduate['id']!= $postgraduateInBd['id'])AND $found ==false){
                                 $validPostgraduates=false;
-                                break;
+                            }else{
+                                $found =true;
+                                $validPostgraduates=true;
                             }
-                        }
-                        if ($validPostgraduates == false){
-                            break;
                         }
                     }
                     if ($validPostgraduates == false){
@@ -148,7 +148,9 @@ class SubjectController extends Controller
                             foreach ($postgraduatesID as $postgraduateID){
                                 if ($postgraduate['id']==$postgraduateID['postgraduate_id']){
                                     $postgraduate['subject_id']=$id;
-                                    PostgraduateSubject::find($postgraduateID['id'])->update($postgraduate);
+                                    $postgraduateUpd=PostgraduateSubject::where('postgraduate_id',$postgraduateID['postgraduate_id'])
+                                        ->where('subject_id',$id)->get()[0];
+                                    $postgraduateUpd->update($postgraduate);
                                     $existPostgraduate=true;
                                     break;
                                 }
@@ -172,14 +174,14 @@ class SubjectController extends Controller
                 $validPostgraduates = true;
                 $postgraduates = $request['postgraduates'];
                 foreach ($postgraduates as $postgraduate){
+                    $found = false;
                     foreach ($postgraduatesInBd as $postgraduateInBd){
-                        if ($postgraduate['id']!= $postgraduateInBd['id']){
+                        if (($postgraduate['id']!= $postgraduateInBd['id'])AND $found ==false){
                             $validPostgraduates=false;
-                            break;
+                        }else{
+                            $found =true;
+                            $validPostgraduates=true;
                         }
-                    }
-                    if ($validPostgraduates == false){
-                        break;
                     }
                 }
                 if ($validPostgraduates == false){
@@ -192,9 +194,10 @@ class SubjectController extends Controller
                         foreach ($postgraduatesID as $postgraduateID){
                             if ($postgraduate['id']==$postgraduateID['postgraduate_id']){
                                 $postgraduate['subject_id']=$id;
-                                PostgraduateSubject::find($postgraduateID['id'])->update($postgraduate);
+                                $postgraduateUpd=PostgraduateSubject::where('postgraduate_id',$postgraduateID['postgraduate_id'])
+                                    ->where('subject_id',$id)->get()[0];
+                                $postgraduateUpd->update($postgraduate);
                                 $existPostgraduate=true;
-                                break;
                             }
                         }
                         if ($existPostgraduate==false){
@@ -221,7 +224,7 @@ class SubjectController extends Controller
     public function destroy($id)
     {
         $subject = Subject::find($id);
-        if ($subject==null){
+        if ($subject!=null){
             $subject->delete();
             return response()->json(['message'=>'OK']);
         }else{
