@@ -43,9 +43,9 @@ class SubjectController extends Controller
     public function store(Request $request)
     {
         $subject=Subject::where('subject_name',$request['subject_name'])->get();
-        if (count($subject)<=0){
+        if (count($subject)<=0){ //valido que la materia a crear no exista (por nombre)
             $postgraduatesInBd=Postgraduate::all('id');
-            //validacion de los postgrados enviados
+            //validacion de los postgrados enviados si existen en bd
             $validPostgraduates = true;
             $postgraduates = $request['postgraduates'];
             foreach ($postgraduates as $postgraduate){
@@ -61,7 +61,7 @@ class SubjectController extends Controller
             }
             if ($validPostgraduates == false){
                 return response()->json(['message'=>'Postgrados invalidos'],206);
-            }else{
+            }else{//si lospostgrados son validos se crea la materia asignada a los postgrados
                 Subject::create($request->all());
                 $subject = Subject::where('subject_name',$request['subject_name'])->get()[0];
                 $postgraduates = $request['postgraduates'];
@@ -88,7 +88,7 @@ class SubjectController extends Controller
     public function show($id)
     {
         $subject = Subject::with('postgraduates')->find($id);
-        if (count([$subject])>0){
+        if ($subject != null){
             return $subject;
         }else{
             return response()->json(['message'=>'Materia no encontrada'],206);
@@ -107,9 +107,6 @@ class SubjectController extends Controller
         //
     }
 
-    public function includeInBd($postgraduate,$postgraduatesInBd){
-
-    }
     /**
      * Update the specified resource in storage.
      *
@@ -119,27 +116,100 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Subject::find($id)->update($request->all());
-        $postgraduates = $request['postgraduates'];
-        $postgraduatesID = PostgraduateSubject::where('subject_id',$id)->get(['id','postgraduate_id']);
-        foreach ($postgraduates as $postgraduate){
-            $existPostgraduate=false;
-            foreach ($postgraduatesID as $postgraduateID){
-                if ($postgraduate['id']==$postgraduateID['postgraduate_id']){
-                    $postgraduate['subject_id']=$id;
-                    PostgraduateSubject::find($postgraduateID['id'])->update($postgraduate);
-                    $existPostgraduate=true;
-                    break;
+        $subject=Subject::find($id);
+        if ($subject==null){ //validar que la materia exista
+            return response()->json(['message'=>'Materia no encontrada'],206);
+        }else{
+            $nameSubject = Subject::where('subject_name',$request['subject_name'])->get();
+            if (count($nameSubject)>0){//el nombre existe en bd
+                if ($nameSubject[0]['id']==$id){//El nombre es del mismo registro a editar
+                    $postgraduatesInBd=Postgraduate::all('id');
+                    //validacion de los postgrados enviados
+                    $validPostgraduates = true;
+                    $postgraduates = $request['postgraduates'];
+                    foreach ($postgraduates as $postgraduate){
+                        foreach ($postgraduatesInBd as $postgraduateInBd){
+                            if ($postgraduate['id']!= $postgraduateInBd['id']){
+                                $validPostgraduates=false;
+                                break;
+                            }
+                        }
+                        if ($validPostgraduates == false){
+                            break;
+                        }
+                    }
+                    if ($validPostgraduates == false){
+                        return response()->json(['message'=>'Postgrados invalidos'],206);
+                    }else{
+                        $subject->update($request->all());
+                        $postgraduatesID = PostgraduateSubject::where('subject_id',$id)->get(['id','postgraduate_id']);
+                        foreach ($postgraduates as $postgraduate){
+                            $existPostgraduate=false;
+                            foreach ($postgraduatesID as $postgraduateID){
+                                if ($postgraduate['id']==$postgraduateID['postgraduate_id']){
+                                    $postgraduate['subject_id']=$id;
+                                    PostgraduateSubject::find($postgraduateID['id'])->update($postgraduate);
+                                    $existPostgraduate=true;
+                                    break;
+                                }
+                            }
+                            if ($existPostgraduate==false){
+                                PostgraduateSubject::create(['postgraduate_id'=>$postgraduate['id'],
+                                    'subject_id'=>$id,
+                                    'type'=>$postgraduate['type'],
+                                ]);
+                            }
+                        }
+                        $subjectReturn = Subject::with('postgraduates')->find($subject['id']);
+                        return $subjectReturn;
+                    }
+                }else{
+                    return response()->json(['message'=>'Nombre de materia en uso'],206);
+                }
+            }else{//el nombre esta disponible
+                $postgraduatesInBd=Postgraduate::all('id');
+                //validacion de los postgrados enviados
+                $validPostgraduates = true;
+                $postgraduates = $request['postgraduates'];
+                foreach ($postgraduates as $postgraduate){
+                    foreach ($postgraduatesInBd as $postgraduateInBd){
+                        if ($postgraduate['id']!= $postgraduateInBd['id']){
+                            $validPostgraduates=false;
+                            break;
+                        }
+                    }
+                    if ($validPostgraduates == false){
+                        break;
+                    }
+                }
+                if ($validPostgraduates == false){
+                    return response()->json(['message'=>'Postgrados invalidos'],206);
+                }else{
+                    $subject->update($request->all());
+                    $postgraduatesID = PostgraduateSubject::where('subject_id',$id)->get(['id','postgraduate_id']);
+                    foreach ($postgraduates as $postgraduate){
+                        $existPostgraduate=false;
+                        foreach ($postgraduatesID as $postgraduateID){
+                            if ($postgraduate['id']==$postgraduateID['postgraduate_id']){
+                                $postgraduate['subject_id']=$id;
+                                PostgraduateSubject::find($postgraduateID['id'])->update($postgraduate);
+                                $existPostgraduate=true;
+                                break;
+                            }
+                        }
+                        if ($existPostgraduate==false){
+                            PostgraduateSubject::create(['postgraduate_id'=>$postgraduate['id'],
+                                'subject_id'=>$id,
+                                'type'=>$postgraduate['type'],
+                            ]);
+                        }
+                    }
+                    $subjectReturn = Subject::with('postgraduates')->find($subject['id']);
+                    return $subjectReturn;
                 }
             }
-            if ($existPostgraduate==false){
-                PostgraduateSubject::create(['postgraduate_id'=>$postgraduate['id'],
-                    'subject_id'=>$id,
-                    'type'=>$postgraduate['type'],
-                    ]);
-            }
         }
-        return response()->json(['message'=>'OK']);
+
     }
 
     /**
@@ -151,7 +221,7 @@ class SubjectController extends Controller
     public function destroy($id)
     {
         $subject = Subject::find($id);
-        if (count([$subject])>0){
+        if ($subject==null){
             $subject->delete();
             return response()->json(['message'=>'OK']);
         }else{
