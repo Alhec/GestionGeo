@@ -18,7 +18,6 @@ class CreatePostgraduateSubjectTable extends Migration
             $table->unsignedBigInteger('postgraduate_id');
             $table->unsignedBigInteger('subject_id');
             $table->string('type',1);
-            $table->timestamps();
             $table->foreign('postgraduate_id')->references('id')->on('postgraduates')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });

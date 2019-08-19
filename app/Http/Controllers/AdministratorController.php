@@ -102,6 +102,7 @@ class AdministratorController extends Controller
                 if (count($userIdentification)>0){
                     if ($userIdentification[0]['id'] == $administrator[0]['id']){
                         $request['user_type']='A';
+                        $request['password']=$administrator[0]['password'];
                         $administrator[0]->update($request->all());
                         $administrator = User::find($id);
                         return $administrator;
@@ -110,6 +111,7 @@ class AdministratorController extends Controller
                     }
                 }else{
                     $request['user_type']='A';
+                    $request['password']=$administrator[0]['password'];
                     $administrator[0]->update($request->all());
                     $administrator = User::find($id);
                     return $administrator;

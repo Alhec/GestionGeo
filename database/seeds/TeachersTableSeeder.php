@@ -19,8 +19,6 @@ class TeachersTableSeeder extends Seeder
         Teacher::create([
             'user_id'=>2,
             'teacher_type'=>'INS', //INS ASI AGR ASO TIT
-            'level_instruction'=>'Doctor',
-            'full_time'=>true,
         ]);
 
     }

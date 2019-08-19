@@ -17,6 +17,8 @@ class SchoolPeriodsTableSeeder extends Seeder
             'start_date'=>now(),
             'end_date'=>now(),
             'duty'=>10,
+            'inscription_visible'=>true,
+            'end_school_period'=>false,
         ]);
     }
 }

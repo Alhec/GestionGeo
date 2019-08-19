@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
          Schema::disableForeignKeyConstraints();
          $this->call(UsersTableSeeder::class);
          //$this->call(AdministratorsTableSeeder::class);
-         //$this->call(TeachersTableSeeder::class);
+         $this->call(TeachersTableSeeder::class);
          $this->call(PostgraduatesTableSeeder::class);
          $this->call(StudentsTableSeeder::class);
         // $this->call(DegreesTableSeeder::class);
          $this->call(SchoolPeriodsTableSeeder::class);
          $this->call(SubjectsTableSeeder::class);
-         $this->call(SchoolPeriodsSubjectsTeachersTableSeeder::class);
+         $this->call(SchoolPeriodSubjectTeacherTableSeeder::class);
          $this->call(PostgraduateSubjectTableSeeder::class);
          $this->call(SchoolPeriodsStudentsTableSeeder::class);
          $this->call(StudentsSubjectsTableSeeder::class);

@@ -19,9 +19,6 @@ class CreateTeachersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->string('teacher_type',3);
-            $table->string('level_instruction',20);
-            $table->boolean('full_time');
-            $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 

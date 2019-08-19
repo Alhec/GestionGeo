@@ -19,7 +19,6 @@ class CreateSubjectsTable extends Migration
             $table->string('subject_name',50)->unique();
             $table->integer('uc');
             $table->string('subject_type',3)->nullable(); //REG AMP
-            $table->timestamps();
         });
     }
 

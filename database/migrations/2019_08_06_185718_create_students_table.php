@@ -23,7 +23,6 @@ class CreateStudentsTable extends Migration
             $table->text('degrees')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('postgraduate_id')->references('id')->on('postgraduates')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

@@ -67,9 +67,9 @@ class SubjectController extends Controller
                 $postgraduates = $request['postgraduates'];
                 $cant_postgraduates=sizeof($postgraduates);
                 for ($i=0;$i<$cant_postgraduates;$i++){
-                    PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[0]['id'],
+                    PostgraduateSubject::create(['postgraduate_id'=>$postgraduates[$i]['id'],
                         'subject_id'=>$subject['id'],
-                        'type'=>$postgraduates[0]['type'],]);
+                        'type'=>$postgraduates[$i]['type'],]);
                 }
                 $subjectReturn = Subject::with('postgraduates')->find($subject['id']);
                 return $subjectReturn;

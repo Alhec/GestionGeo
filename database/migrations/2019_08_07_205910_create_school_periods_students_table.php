@@ -19,7 +19,6 @@ class CreateSchoolPeriodsStudentsTable extends Migration
             $table->unsignedBigInteger('school_period_id');
             $table->string('pay_ref');
             $table->string('status',5);
-            $table->timestamps();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->foreign('school_period_id')->references('id')->on('school_periods')->onDelete('cascade');
 

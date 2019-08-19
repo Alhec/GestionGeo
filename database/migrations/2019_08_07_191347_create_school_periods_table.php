@@ -19,7 +19,8 @@ class CreateSchoolPeriodsTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->float('duty');
-            $table->timestamps();
+            $table->boolean('inscription_visible');
+            $table->boolean('end_school_period');
         });
     }
 

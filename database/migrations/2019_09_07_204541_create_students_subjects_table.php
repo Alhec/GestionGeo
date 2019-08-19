@@ -19,9 +19,8 @@ class CreateStudentsSubjectsTable extends Migration
             $table->unsignedBigInteger('school_period_subject_teacher_id');
             $table->integer('qualification')->nullable();
             $table->string('status',3);
-            $table->timestamps();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('school_period_subject_teacher_id')->references('id')->on('school_periods_subjects_teachers')->onDelete('cascade');
+            $table->foreign('school_period_subject_teacher_id')->references('id')->on('school_period_subject_teacher')->onDelete('cascade');
         });
     }
 

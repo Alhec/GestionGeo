@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
-
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -59,5 +59,13 @@ class User extends Authenticatable implements JWTSubject
     {
         // TODO: Implement getJWTCustomClaims() method.
         return [];
+    }
+
+    public function teacher() {
+        return $this->hasOne('App\Teacher');
+    }
+
+    public function student() {
+        return $this->hasOne('App\Student');
     }
 }
