@@ -20,6 +20,7 @@ class CreateSchoolPeriodSubjectTeacherTable extends Migration
             $table->unsignedBigInteger('school_period_id');
             $table->integer('limit');
             $table->boolean('inscription_visible');
+            $table->boolean('load_notes');
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->foreign('school_period_id')->references('id')->on('school_periods')->onDelete('cascade');

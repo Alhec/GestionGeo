@@ -14,7 +14,7 @@ class PostgraduatesTableSeeder extends Seeder
     {
         Postgraduate::query()->truncate();
         Postgraduate::create([
-            'postgraduate_name' => 'Geoquimica',
+            'postgraduate_name' => 'Postgrado de Geoquimica',
             'num_cu' => 50,
         ]);
     }

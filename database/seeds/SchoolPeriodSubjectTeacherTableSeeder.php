@@ -19,6 +19,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'school_period_id'=>1,
             'inscription_visible'=>true,
             'limit'=>30,
+            'load_notes'=>false,
         ]);
     }
 }

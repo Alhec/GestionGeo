@@ -14,8 +14,8 @@ class SchoolPeriodsTableSeeder extends Seeder
         SchoolPeriod::query()->truncate();
         SchoolPeriod::create([
             'cod_school_period'=>'2-2019',
-            'start_date'=>now(),
-            'end_date'=>now(),
+            'start_date'=>'2019-05-10',
+            'end_date'=>'2019-10-10',
             'duty'=>10,
             'inscription_visible'=>true,
             'end_school_period'=>false,

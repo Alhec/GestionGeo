@@ -15,30 +15,30 @@ class UsersTableSeeder extends Seeder
         //
         User::query()->truncate();
         User::create([
-            'identification' => '12345678',
-            'first_name' => 'Administrator',
-            'first_surname' => 'Administrator',
+            'identification' => '24698916',
+            'first_name' => 'Hector',
+            'first_surname' => 'Alayon',
             'mobile' => '(1234) 567-8901',
-            'email' => 'administrator@admin.com',
-            'password' => Hash::make('adminadmin'),
+            'email' => 'hector@admin.com',
+            'password' => Hash::make('24698916'),
             'user_type' => 'A',  //S T A
         ]);
         User::create([
-            'identification' => '22345678',
-            'first_name' => 'Teacher',
-            'first_surname' => 'Teacher',
+            'identification' => '24698917',
+            'first_name' => 'Luis',
+            'first_surname' => 'Hubrea',
             'mobile' => '(1234) 567-8901',
-            'email' => 'teacher@admin.com',
-            'password' => Hash::make('adminadmin'),
+            'email' => 'luis@teacher.com',
+            'password' => Hash::make('24698917'),
             'user_type' => 'T',
         ]);
         User::create([
-            'identification' => '32345678',
-            'first_name' => 'Student',
-            'first_surname' => 'Student',
+            'identification' => '24698918',
+            'first_name' => 'Abraham',
+            'first_surname' => 'Navarro',
             'mobile' => '(1234) 567-8901',
-            'email' => 'student@admin.com',
-            'password' => Hash::make('adminadmin'),
+            'email' => 'abraham@student.com',
+            'password' => Hash::make('24698918'),
             'user_type' => 'S',
         ]);
 

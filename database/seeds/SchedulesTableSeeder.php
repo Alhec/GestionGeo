@@ -17,8 +17,8 @@ class SchedulesTableSeeder extends Seeder
             'school_period_subject_teacher_id'=>1,
             'day'=>'Lunes',
             'classroom'=>'2',
-            'start_hour'=>now(),
-            'end_hour'=>now(),
+            'start_hour'=>'07:00:00',
+            'end_hour'=>'09:00:00',
         ]);
     }
 }
