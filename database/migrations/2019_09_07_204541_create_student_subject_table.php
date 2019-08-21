@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStudentsSubjectsTable extends Migration
+class CreateStudentSubjectTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateStudentsSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('students_subjects', function (Blueprint $table) {
+        Schema::create('student_subject', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('school_period_subject_teacher_id');
@@ -32,7 +32,7 @@ class CreateStudentsSubjectsTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('students_subjects');
+        Schema::dropIfExists('student_subject');
         Schema::enableForeignKeyConstraints();
 
     }
