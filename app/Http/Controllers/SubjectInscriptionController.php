@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\StudentSubject;
-
+use App\Student;
+use App\SchoolPeriodSubjectTeacher;
 class SubjectInscriptionController extends Controller
 {
     /**
@@ -14,8 +15,11 @@ class SubjectInscriptionController extends Controller
      */
     public function index()
     {
-        $subjectInscriptions=StudentSubject::all();
-        return $subjectInscriptions;
+        $subjectInscriptions=StudentSubject::with('student')->with('subject')->get();
+        if (count($subjectInscriptions)>0){
+            return $subjectInscriptions;
+        }
+        return response()->json(['message'=>'No existen Inscripciones'],206);
     }
 
     /**
@@ -26,7 +30,30 @@ class SubjectInscriptionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $student_id=Student::find($request['student_id']);
+        if ($student_id!=null){
+            $subject_id=SchoolPeriodSubjectTeacher::find($request['school_period_subject_teacher_id']);
+            if ($subject_id!=null){
+                $validRelation = true;
+            }else{
+                $validRelation = false;
+            }
+        }else{
+            $validRelation = false;
+        }
+        if ($validRelation == false){
+            return response()->json(['message'=>'Relacion errada'],206);
+        }else{
+            $subjectInscription = StudentSubject::where('student_id',$request['student_id'])->where('school_period_subject_teacher_id',$request['school_period_subject_teacher_id'])->get();
+            if (count($subjectInscription)>0){
+                return response()->json(['message'=>'Inscripcion ya registrada'],206);
+            }else{
+                StudentSubject::create($request->all());
+                $subjectInscription = StudentSubject::where('student_id',$request['student_id'])->where('school_period_subject_teacher_id',$request['school_period_subject_teacher_id'])->get();
+                return $subjectInscription;
+            }
+        }
+
     }
 
     /**
@@ -37,7 +64,11 @@ class SubjectInscriptionController extends Controller
      */
     public function show($id)
     {
-        //
+        $subjectInscription=StudentSubject::with('student')->with('subject')->where('id',$id)->get();
+        if (count($subjectInscription)>0){
+            return $subjectInscription[0];
+        }
+        return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
 
     /**
@@ -60,6 +91,12 @@ class SubjectInscriptionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $subjectInscription=StudentSubject::with('student')->with('subject')->where('id',$id)->get();
+        if (count($subjectInscription)>0){
+            $subjectInscription->delete();
+            return response()->json(['message'=>'OK']);
+        }
+        return response()->json(['message'=>'Inscripcion no encontrada'],206);
+
     }
 }

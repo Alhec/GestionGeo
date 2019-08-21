@@ -74,7 +74,7 @@ class SchoolPeriodController extends Controller
                             'school_period_id'=>$schoolPeriod['id'],
                             'inscription_visible'=>$subject['inscription_visible'],
                             'limit'=>$subject['limit'],
-                            'enrolled students'=>$subject['enrolled students'],
+                            'enrolled_students'=>$subject['enrolled_students'],
                             'load_notes'=>$subject['load_notes'],
                             'duty'=>$subject['duty'],
                         ]);
@@ -183,7 +183,7 @@ class SchoolPeriodController extends Controller
                                         'school_period_id'=>$schoolPeriod['id'],
                                         'inscription_visible'=>$subject['inscription_visible'],
                                         'limit'=>$subject['limit'],
-                                        'enrolled students'=>$subject['enrolled students'],
+                                        'enrolled_students'=>$subject['enrolled_students'],
                                         'load_notes'=>$subject['load_notes'],
                                         'duty'=>$subject['duty'],
                                     ]);
@@ -213,7 +213,7 @@ class SchoolPeriodController extends Controller
                                         'school_period_id'=>$schoolPeriod['id'],
                                         'inscription_visible'=>$subject['inscription_visible'],
                                         'limit'=>$subject['limit'],
-                                        'enrolled students'=>$subject['enrolled students'],
+                                        'enrolled_students'=>$subject['enrolled_students'],
                                         'load_notes'=>$subject['load_notes'],
                                         'duty'=>$subject['duty'],
                                     ]);
@@ -304,7 +304,7 @@ class SchoolPeriodController extends Controller
                                     'school_period_id'=>$schoolPeriod['id'],
                                     'inscription_visible'=>$subject['inscription_visible'],
                                     'limit'=>$subject['limit'],
-                                    'enrolled students'=>$subject['enrolled students'],
+                                    'enrolled_students'=>$subject['enrolled_students'],
                                     'load_notes'=>$subject['load_notes'],
                                     'duty'=>$subject['duty'],
                                 ]);
@@ -334,7 +334,7 @@ class SchoolPeriodController extends Controller
                                     'school_period_id'=>$schoolPeriod['id'],
                                     'inscription_visible'=>$subject['inscription_visible'],
                                     'limit'=>$subject['limit'],
-                                    'enrolled students'=>$subject['enrolled students'],
+                                    'enrolled_students'=>$subject['enrolled_students'],
                                     'load_notes'=>$subject['load_notes'],
                                     'duty'=>$subject['duty'],
                                 ]);

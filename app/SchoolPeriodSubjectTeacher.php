@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolPeriodSubjectTeacher extends Model
 {
-    protected $fillable = ['teacher_id','subject_id','school_period_id','limit','duty','enrolled students','inscription_visible','load_notes'];
+    protected $fillable = ['teacher_id','subject_id','school_period_id','limit','duty','enrolled_students','inscription_visible','load_notes'];
     protected $table = 'school_period_subject_teacher';
     public $timestamps = false;
 
@@ -21,5 +21,9 @@ class SchoolPeriodSubjectTeacher extends Model
     public function schedule()
     {
         return $this->hasMany('App\Schedule');
+    }
+    public function schoolPeriod()
+    {
+        return $this->belongsTo('App\SchoolPeriod');
     }
 }
