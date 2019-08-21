@@ -21,6 +21,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled students'=>0,
             'load_notes'=>false,
+            'duty'=>10,
         ]);
     }
 }

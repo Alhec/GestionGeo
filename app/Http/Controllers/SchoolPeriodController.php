@@ -76,6 +76,7 @@ class SchoolPeriodController extends Controller
                             'limit'=>$subject['limit'],
                             'enrolled students'=>$subject['enrolled students'],
                             'load_notes'=>$subject['load_notes'],
+                            'duty'=>$subject['duty'],
                         ]);
                         if (isset($subject['schedule'])){//valido si asignaron horarios a las materias
                             $schedules = $subject['schedule'];
@@ -184,6 +185,7 @@ class SchoolPeriodController extends Controller
                                         'limit'=>$subject['limit'],
                                         'enrolled students'=>$subject['enrolled students'],
                                         'load_notes'=>$subject['load_notes'],
+                                        'duty'=>$subject['duty'],
                                     ]);
                                     $schoolPeriodsSubjectsTeachersUpdates[] = $schoolPeriodSubjectTeacher[0]['id'];//se agrega a la lista de los actualizados
 
@@ -213,6 +215,7 @@ class SchoolPeriodController extends Controller
                                         'limit'=>$subject['limit'],
                                         'enrolled students'=>$subject['enrolled students'],
                                         'load_notes'=>$subject['load_notes'],
+                                        'duty'=>$subject['duty'],
                                     ]);
                                     $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::where('teacher_id',$subject['teacher_id'])
                                         ->where('subject_id',$subject['subject_id'])->where('school_period_id',$schoolPeriod['id'])->get('id');
@@ -303,6 +306,7 @@ class SchoolPeriodController extends Controller
                                     'limit'=>$subject['limit'],
                                     'enrolled students'=>$subject['enrolled students'],
                                     'load_notes'=>$subject['load_notes'],
+                                    'duty'=>$subject['duty'],
                                 ]);
                                 $schoolPeriodsSubjectsTeachersUpdates[] = $schoolPeriodSubjectTeacher[0]['id'];//se agrega a la lista de los actualizados
 
@@ -332,6 +336,7 @@ class SchoolPeriodController extends Controller
                                     'limit'=>$subject['limit'],
                                     'enrolled students'=>$subject['enrolled students'],
                                     'load_notes'=>$subject['load_notes'],
+                                    'duty'=>$subject['duty'],
                                 ]);
                                 $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::where('teacher_id',$subject['teacher_id'])
                                     ->where('subject_id',$subject['subject_id'])->where('school_period_id',$schoolPeriod['id'])->get('id');

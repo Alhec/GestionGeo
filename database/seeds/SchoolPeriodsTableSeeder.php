@@ -16,7 +16,6 @@ class SchoolPeriodsTableSeeder extends Seeder
             'cod_school_period'=>'2-2019',
             'start_date'=>'2019-05-10',
             'end_date'=>'2019-10-10',
-            'duty'=>10,
             'inscription_visible'=>true,
             'end_school_period'=>false,
         ]);
