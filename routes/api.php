@@ -20,4 +20,6 @@ Route::resource('administrators','AdministratorController');
 Route::resource('teachers','TeacherController');
 Route::resource('students','StudentController');
 Route::resource('schoolPeriods','SchoolPeriodController');
+Route::resource('subjectInscription','SubjectInscriptionController');
+Route::resource('schoolPeriodInscription','SchoolPeriodInscriptionController');
 Route::post('login', 'AuthController@login');

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\StudentSubject;
 
-class InscriptionSchoolPeriodController extends Controller
+class SubjectInscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +14,8 @@ class InscriptionSchoolPeriodController extends Controller
      */
     public function index()
     {
-        //
+        $subjectInscriptions=StudentSubject::all();
+        return $subjectInscriptions;
     }
 
     /**
