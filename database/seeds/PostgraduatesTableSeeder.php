@@ -16,6 +16,7 @@ class PostgraduatesTableSeeder extends Seeder
         Postgraduate::create([
             'postgraduate_name' => 'Postgrado de Geoquimica',
             'num_cu' => 50,
+            'organization_id'=>'G'
         ]);
     }
 }

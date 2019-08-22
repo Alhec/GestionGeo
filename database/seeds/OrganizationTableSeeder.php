@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Organiation;
+use App\Organization;
 
 class OrganizationTableSeeder extends Seeder
 {
@@ -12,8 +12,8 @@ class OrganizationTableSeeder extends Seeder
      */
     public function run()
     {
-        Organiation::query()->truncate();
-        Organiation::create([
+        Organization::query()->truncate();
+        Organization::create([
             'id'=>'G',
             'name'=>'Geoquimica',
             'faculty_id'=>'CIENS'

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostgraduatesTable extends Migration
+class CreateAdministratorOrganizationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreatePostgraduatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('postgraduates', function (Blueprint $table) {
+        Schema::create('administrator_organization', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('administrator_id');
             $table->string('organization_id');
-            $table->string('postgraduate_name')->unique();
-            $table->integer('num_cu');
+            $table->foreign('administrator_id')->references('id')->on('administrators')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }
@@ -29,9 +29,6 @@ class CreatePostgraduatesTable extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('postgraduates');
-        Schema::enableForeignKeyConstraints();
-
+        Schema::dropIfExists('administrator_organizations');
     }
 }
