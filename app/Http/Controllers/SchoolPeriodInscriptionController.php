@@ -48,7 +48,7 @@ class SchoolPeriodInscriptionController extends Controller
             }else{
                 SchoolPeriodStudent::create($request->all());
                 $schoolPeriodStudent = SchoolPeriodStudent::where('student_id',$request['student_id'])->where('school_period_id',$request['school_period_id'])->with('schoolPeriod')->with('student')->get();
-                return $schoolPeriodStudent;
+                return $schoolPeriodStudent[0];
             }
         }
     }
@@ -61,7 +61,7 @@ class SchoolPeriodInscriptionController extends Controller
      */
     public function show($id)
     {
-        $schoolPeriodInscription=SchoolPeriodStudent::find($id)->with('schoolPeriod')->with('student')->get();
+        $schoolPeriodInscription=SchoolPeriodStudent::where('id',$id)->with('schoolPeriod')->with('student')->get();
         if (count($schoolPeriodInscription)>0){
             return $schoolPeriodInscription[0];
         }
@@ -104,8 +104,8 @@ class SchoolPeriodInscriptionController extends Controller
                     $schoolPeriodInscription->update($request->all());
                 }
             }
-            $schoolPeriodInscription = SchoolPeriodStudent::find($id)->with('schoolPeriod')->with('student')->get();
-            return $schoolPeriodInscription;
+            $schoolPeriodInscription = SchoolPeriodStudent::where('id',$id)->with('schoolPeriod')->with('student')->get();
+            return $schoolPeriodInscription[0];
         }else{
             return response()->json(['message'=>'Inscripcion no encontrada'],206);
         }
@@ -119,9 +119,9 @@ class SchoolPeriodInscriptionController extends Controller
      */
     public function destroy($id)
     {
-        $schoolPeriodInscription=SchoolPeriodStudent::find($id);
-        if ($schoolPeriodInscription!=null){
-            $schoolPeriodInscription->delete();
+        $schoolPeriodInscription=SchoolPeriodStudent::where('id',$id);
+        if (count($schoolPeriodInscription)>0){
+            $schoolPeriodInscription[0]->delete();
             return response()->json(['message'=>'OK']);
         }
         return response()->json(['message'=>'Inscripcion no encontrada'],206);

@@ -50,7 +50,7 @@ class SubjectInscriptionController extends Controller
             }else{
                 StudentSubject::create($request->all());
                 $subjectInscription = StudentSubject::where('student_id',$request['student_id'])->where('school_period_subject_teacher_id',$request['school_period_subject_teacher_id'])->get();
-                return $subjectInscription;
+                return $subjectInscription[0];
             }
         }
 
@@ -64,7 +64,7 @@ class SubjectInscriptionController extends Controller
      */
     public function show($id)
     {
-        $subjectInscription=StudentSubject::find($id)->with('student')->with('subject')->get();
+        $subjectInscription=StudentSubject::where('id',$id)->with('student')->with('subject')->get();
         if (count($subjectInscription)>0){
             return $subjectInscription[0];
         }
@@ -107,7 +107,7 @@ class SubjectInscriptionController extends Controller
                     $subjectInscription->update($request->all());
                 }
             }
-            $subjectInscription=StudentSubject::find($id)->with('student')->with('subject')->get();
+            $subjectInscription=StudentSubject::where('id',$id)->with('student')->with('subject')->get();
             return $subjectInscription;
         }
         return response()->json(['message'=>'Inscripcion no encontrada'],206);
@@ -121,9 +121,9 @@ class SubjectInscriptionController extends Controller
      */
     public function destroy($id)
     {
-        $subjectInscription=StudentSubject::find($id);
+        $subjectInscription=StudentSubject::where('id',$id);
         if ($subjectInscription!=null){
-            $subjectInscription->delete();
+            $subjectInscription[0]->delete();
             return response()->json(['message'=>'OK']);
         }
         return response()->json(['message'=>'Inscripcion no encontrada'],206);
