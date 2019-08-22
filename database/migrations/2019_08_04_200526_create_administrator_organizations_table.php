@@ -17,7 +17,7 @@ class CreateAdministratorOrganizationsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('administrator_id');
             $table->string('organization_id');
-            $table->foreign('administrator_id')->references('id')->on('administrators')->onDelete('cascade');
+            $table->foreign('administrator_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }

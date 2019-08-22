@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\AdministratorOrganization;
 
 class AdministratorController extends Controller
 {
@@ -41,6 +42,10 @@ class AdministratorController extends Controller
             $request['user_type']='A';
             User::create($request->all());
             $administrator = User::where(['identification'=>$request['identification']])->get()[0];
+            AdministratorOrganization::create([
+                'administrator_id'=>$administrator['id'],
+                'organization_id'=>$request['organization_id'],
+            ]);
             return $administrator;
         }
 
