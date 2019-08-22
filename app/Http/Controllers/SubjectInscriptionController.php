@@ -30,10 +30,10 @@ class SubjectInscriptionController extends Controller
      */
     public function store(Request $request)
     {
-        $student_id=Student::find($request['student_id']);
-        if ($student_id!=null){
-            $subject_id=SchoolPeriodSubjectTeacher::find($request['school_period_subject_teacher_id']);
-            if ($subject_id!=null){
+        $studentId=Student::find($request['student_id']);
+        if ($studentId!=null){
+            $subjectId=SchoolPeriodSubjectTeacher::find($request['school_period_subject_teacher_id']);
+            if ($subjectId!=null){
                 $validRelation = true;
             }else{
                 $validRelation = false;
@@ -80,8 +80,8 @@ class SubjectInscriptionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $subjectInscription=StudentSubject::find($id)->with('student')->with('subject')->get();
-        if (count($subjectInscription)>0){
+        $subjectInscription=StudentSubject::find($id);
+        if ($subjectInscription!=null){
             $student_id=Student::find($request['student_id']);
             if ($student_id!=null){
                 $subject_id=SchoolPeriodSubjectTeacher::find($request['school_period_subject_teacher_id']);
@@ -98,13 +98,13 @@ class SubjectInscriptionController extends Controller
             }else{
                 $inscriptionInBd = StudentSubject::where('student_id',$request['student_id'])->where('school_period_subject_teacher_id',$request['school_period_subject_teacher_id'])->get();
                 if (count($inscriptionInBd)>0){
-                    if ($inscriptionInBd[0]['id']==$subjectInscription[0]['id']){
-                        $subjectInscription[0]->update($request->all());
+                    if ($inscriptionInBd[0]['id']==$subjectInscription['id']){
+                        $subjectInscription->update($request->all());
                     }else{
                         return response()->json(['message'=>'Inscripcion ya registrada'],206);
                     }
                 }else{
-                    $subjectInscription[0]->update($request->all());
+                    $subjectInscription->update($request->all());
                 }
             }
             $subjectInscription=StudentSubject::find($id)->with('student')->with('subject')->get();

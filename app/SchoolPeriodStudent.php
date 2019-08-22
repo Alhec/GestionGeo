@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolPeriodStudent extends Model
 {
+    protected $fillable = ['student_id','school_period_id','pay_ref','status'];
     protected $table = 'school_period_student';
     public $timestamps = false;
 
@@ -13,4 +14,9 @@ class SchoolPeriodStudent extends Model
     {
         return $this->belongsTo('App\SchoolPeriod');
     }
+    public function student()
+    {
+        return $this->belongsTo('App\Student')->with('user');
+    }
+
 }

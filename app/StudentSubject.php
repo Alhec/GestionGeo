@@ -16,7 +16,8 @@ class StudentSubject extends Model
         return $this->belongsTo('App\Student')->with('user');
     }
 
-    public function subject(){
+    public function subject()
+    {
         return $this->belongsTo('App\SchoolPeriodSubjectTeacher','school_period_subject_teacher_id','id')->with('teacher')->with('subject')->with('schoolPeriod')->with('schedule');
     }
 }
