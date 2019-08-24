@@ -16,7 +16,7 @@ class CreatePostgraduatesTable extends Migration
         Schema::create('postgraduates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('organization_id');
-            $table->string('postgraduate_name')->unique();
+            $table->string('postgraduate_name',50)->unique();
             $table->integer('num_cu');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });

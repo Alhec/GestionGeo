@@ -14,8 +14,9 @@ class AdministratorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        return $request->header('organization_key');
         $administrators= User::where('user_type','A')->get();
         if (count([$administrators])>0){
             return $administrators;
@@ -33,6 +34,7 @@ class AdministratorController extends Controller
      */
     public function store(Request $request)
     {
+
         $administrator = User::where(['identification'=>$request['identification']])->orWhere(['email'=>$request['email']])->get();
       //return count($administrator);
         if (count($administrator)>0){//valida que el administrador no exista

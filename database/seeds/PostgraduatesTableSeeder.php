@@ -18,5 +18,10 @@ class PostgraduatesTableSeeder extends Seeder
             'num_cu' => 50,
             'organization_id'=>'G'
         ]);
+        Postgraduate::create([
+            'postgraduate_name' => 'Postgrado de Computacion',
+            'num_cu' => 50,
+            'organization_id'=>'C'
+        ]);
     }
 }

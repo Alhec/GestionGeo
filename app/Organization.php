@@ -9,4 +9,5 @@ class Organization extends Model
     public $timestamps = false;
 
     protected $fillable = ['id','name','faculty_id'];
+    protected $keyType='string';
 }

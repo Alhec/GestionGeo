@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Postgraduate;
+use App\Services\PostgraduateService;
 
 class PostgraduateController extends Controller
 {
@@ -12,24 +12,10 @@ class PostgraduateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $postgraduates = Postgraduate::all();
-        if (count($postgraduates)>0) {
-            return $postgraduates;
-        }else{
-            return response()->json(['message'=>'No existen postgrados'],206);
-        }
-    }
+        return  PostgraduateService::getPostgrduates($request);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -40,15 +26,7 @@ class PostgraduateController extends Controller
      */
     public function store(Request $request)
     {
-        $postgraduate = Postgraduate::where(['postgraduate_name'=>$request['postgraduate_name']])->get();
-        if (count($postgraduate)>0){
-            return response()->json(['message'=>'Postgrado ya registrado'],206);
-        }else{
-            Postgraduate::create($request->all());
-            $postgraduate = Postgraduate::where(['postgraduate_name'=>$request['postgraduate_name']])->get()[0];
-            return $postgraduate;
-        }
-
+        return PostgraduateService::addPostgraduate($request);
     }
 
     /**
@@ -57,26 +35,9 @@ class PostgraduateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $postgraduate = Postgraduate::find($id);
-        if ($postgraduate!=null){
-            return $postgraduate;
-        } else{
-            return response()->json(['message'=>'Postgrado no encontrado'],206);
-        }
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return PostgraduateService::getPostgraduatesById($request, $id);
     }
 
     /**
@@ -86,27 +47,9 @@ class PostgraduateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id,Request $request)
     {
-        $postgraduate = Postgraduate::find($id);
-        if (count([$postgraduate])>0){
-            $postgraduateName = Postgraduate::where(['postgraduate_name'=>$request['postgraduate_name']])->get();
-            if (count($postgraduateName)>0){
-                if ($postgraduateName[0][id]==$id){
-                    $postgraduate->update($request->all());
-                    $postgraduate = Postgraduate::find($id);
-                    return $postgraduate;
-                }else{
-                    return response()->json(['message'=>'nombre de Postgrado en uso'],206);
-                }
-            }else{
-                $postgraduate->update($request->all());
-                $postgraduate = Postgraduate::find($id);
-                return $postgraduate;
-            }
-        }else{
-            return response()->json(['message'=>'Postgrado no encontrado'],206);
-        }
+        return PostgraduateService::updatePostgraduate($request,$id);
     }
 
     /**
@@ -115,15 +58,8 @@ class PostgraduateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
-        //
-        $postgraduate = Postgraduate::find($id);
-        if ($postgraduate!=null){
-            $postgraduate->delete();
-            return response()->json(['message'=>'OK']);
-        }else{
-            return response()->json(['message'=>'Postgrado no encontrado'],206);
-        }
+       return PostgraduateService::deletePostgraduate($request,$id);
     }
 }
