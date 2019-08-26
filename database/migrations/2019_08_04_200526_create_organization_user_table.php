@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdministratorOrganizationsTable extends Migration
+class CreateOrganizationUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAdministratorOrganizationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('administrator_organization', function (Blueprint $table) {
+        Schema::create('organization_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('administrator_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('organization_id');
-            $table->foreign('administrator_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }
@@ -29,6 +29,6 @@ class CreateAdministratorOrganizationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('administrator_organizations');
+        Schema::dropIfExists('organization_user');
     }
 }

@@ -27,4 +27,15 @@ class AuthController extends Controller
         ]);
     }
 
+    public function getToken(Request $request)
+    {
+        $token = auth('api')->getToken();
+
+//        $user = auth('api')->authenticate($token);
+        //$user = auth('api')->getPayload($token)->toArray();
+        //$payloadArray = auth('api')->decode($token);
+
+        return $token;
+    }
+
 }

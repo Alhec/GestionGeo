@@ -15,7 +15,6 @@ class PostgraduateController extends Controller
     public function index(Request $request)
     {
         return  PostgraduateService::getPostgrduates($request);
-
     }
 
     /**

@@ -58,7 +58,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         // TODO: Implement getJWTCustomClaims() method.
-        return [];
+        return [
+            'user_type' =>$this->user_type,
+        ];
     }
 
     public function teacher() {
