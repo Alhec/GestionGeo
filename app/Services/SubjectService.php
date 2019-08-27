@@ -69,10 +69,11 @@ class SubjectService
     public static function validate(Request $request)
     {
          $request->validate([
-            'subject_code'=>'required|max:10',
-            'subject_name'=>'required|max:50',
-            'uc'=>'required|numeric',
-            'subject_type'=>'max:3|ends_with:REG,AMP',
+             'subject_code'=>'required|max:10',
+             'subject_name'=>'required|max:50',
+             'uc'=>'required|numeric',
+             'subject_type'=>'max:3|ends_with:REG,AMP',
+             'postgraduates.*.type'=>'max:1|ends_with:E,O',
         ]);
     }
 

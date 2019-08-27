@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use PhpParser\Node\Scalar\String_;
 
 class Subject extends Model
 {
@@ -20,15 +19,18 @@ class Subject extends Model
     }
 
     public static function getSubjects(){
-        return self::with('postgraduates')->get();
+        return self::with('postgraduates')
+            ->get();
     }
 
     public static function getSubjectById($id){
-        return self::with('postgraduates')->find($id);
+        return self::with('postgraduates')
+            ->find($id);
     }
 
     public static function existSubject($code){
-        return self::where('subject_code',$code)->exists();
+        return self::where('subject_code',$code)
+            ->exists();
     }
 
     public static function addSubject($subject)
@@ -52,11 +54,13 @@ class Subject extends Model
 
     public static function deleteSubject($id)
     {
-        self::find($id)->delete();
+        self::find($id)
+            ->delete();
     }
 
     public static function updateSubject($id,$subject)
     {
-        self::find($id)->update($subject->all());
+        self::find($id)
+            ->update($subject->all());
     }
 }

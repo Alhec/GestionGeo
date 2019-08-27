@@ -79,13 +79,15 @@ class Postgraduate extends Model
     /*eliminar un elemento dado un id y una organizacion*/
     public static function deletePostgraduate($id)
     {
-        self::find($id)->delete();
+        self::find($id)
+            ->delete();
     }
 
     /*Actualizar un postgrado en una oraganizacion*/
     public static function updatePotgraduate($id,$postgraduate)
     {
-        self::find($id)->update($postgraduate->all());
+        self::find($id)
+            ->update($postgraduate->all());
     }
 
     /*obtener relacion con organizacion*/

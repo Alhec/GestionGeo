@@ -18,5 +18,10 @@ class OrganizationTableSeeder extends Seeder
             'name'=>'Geoquimica',
             'faculty_id'=>'CIENS'
         ]);
+        Organization::create([
+            'id'=>'C',
+            'name'=>'Computacion',
+            'faculty_id'=>'CIENS'
+        ]);
     }
 }

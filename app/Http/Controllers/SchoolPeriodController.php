@@ -8,6 +8,7 @@ use App\Subject;
 use App\Teacher;
 use App\Schedule;
 use App\SchoolPeriodSubjectTeacher;
+use App\Services\SchoolPeriodService;
 
 class SchoolPeriodController extends Controller
 {
@@ -16,14 +17,9 @@ class SchoolPeriodController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $schoolPeriods = SchoolPeriod::with('subject')->get();
-        if (count($schoolPeriods)>0){
-            return $schoolPeriods;
-        }else{
-            return response()->json(['message'=>'No existen periodos escolares'],206);
-        }
+        return SchoolPeriodService::getSchoolPeriods($request);
     }
 
     /**
@@ -34,79 +30,8 @@ class SchoolPeriodController extends Controller
      */
     public function store(Request $request)
     {
-        $schoolPeriod = SchoolPeriod::where('cod_school_period',$request['cod_school_period'])->get();
-        if (count($schoolPeriod)>0){
-            return response()->json(['message'=>'Ya existe periodo escolar'],206);
-        }else{//el postgrado puede ser ingresado si sus relaciones estan correctas
-            if (isset($request['subject'])){
-                $subjects = $request['subject'];
-                $teachersInBd=Teacher::all('id');
-                $subjectsInBd=Subject::all('id');
-                $validRelation = true;
-                foreach ($subjects as $subject){//recorrer las relaciones para validar que la materia y el profesor asignado sean correctos
-                    $foundTeacher = false;
-                    foreach ($teachersInBd as $teacherInBd){//validar profesor
-                        if (($subject['teacher_id']!=$teacherInBd['id'])AND $foundTeacher ==false){
-                            $validRelation = false;
-                        }else{
-                            $foundTeacher=true;
-                        }
-                    }
-                    if ($foundTeacher == true){//si se consigue el profesor entonces se validan las materias
-                        $foundSubject = false;
-                        foreach ($subjectsInBd as $subjectInBd){// recorrer para validar si lasmaterias estan en bd
-                            if (($subject['subject_id']!=$subjectInBd['id'])AND $foundSubject ==false){
-                                $validRelation = false;
-                            }else{
-                                $foundSubject=true;
-                                $validRelation = true;
-                            }
-                        }
-                    }
-                }
-                if ($validRelation == true){// si la relacion de asociacion es correct se procede  insertar en bd
-                    SchoolPeriod::create($request->all());
-                    $schoolPeriod = SchoolPeriod::where('cod_school_period',$request['cod_school_period'])->get('id')[0];
-                    foreach ($subjects as $subject){ // Puede haber mas de una materia con profesor a ser agregada
-                        SchoolPeriodSubjectTeacher::create([
-                            'teacher_id'=>$subject['teacher_id'],
-                            'subject_id'=>$subject['subject_id'],
-                            'school_period_id'=>$schoolPeriod['id'],
-                            'inscription_visible'=>$subject['inscription_visible'],
-                            'limit'=>$subject['limit'],
-                            'enrolled_students'=>$subject['enrolled_students'],
-                            'load_notes'=>$subject['load_notes'],
-                            'duty'=>$subject['duty'],
-                        ]);
-                        if (isset($subject['schedule'])){//valido si asignaron horarios a las materias
-                            $schedules = $subject['schedule'];
-                            $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::where('teacher_id',$subject['teacher_id'])
-                            ->where('subject_id',$subject['subject_id'])->where('school_period_id',$schoolPeriod['id'])->get('id')[0];
-                            foreach ($schedules as $schedule){
-                                Schedule::Create([
-                                    'school_period_subject_teacher_id'=>$schoolPeriodSubjectTeacher['id'],
-                                    'day'=>$schedule['day'],
-                                    'classroom'=>$schedule['classroom'],
-                                    'start_hour'=>$schedule['start_hour'],
-                                    'end_hour'=>$schedule['end_hour'],
-                                ]);
-                            }
-                        }
-                    }
-                    $schoolPeriod = SchoolPeriod::where('cod_school_period',$request['cod_school_period'])->get('id')[0];
-                    return $this->show($schoolPeriod['id']);
-                }else{
-                    return response()->json(['message'=>'Materia o profesor invalida'],206);
-                }
-            }else{
-                SchoolPeriod::create($request->all());
-                $schoolPeriod = SchoolPeriod::where('cod_school_period',$request['cod_school_period'])->get('id')[0];
-                return $this->show($schoolPeriod['id']);
-            }
-        }
-
+        return SchoolPeriodService::addSchoolPeriod($request);
     }
-
 
     /**
      * Display the specified resource.
@@ -114,19 +39,9 @@ class SchoolPeriodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-        $schoolPeriods = SchoolPeriod::with('subject')->get();
-        if (count($schoolPeriods)>0){
-            foreach ($schoolPeriods as $schoolPeriod){
-                if ($schoolPeriod['id']==$id){
-                    return $schoolPeriod;
-                }
-            }
-            return response()->json(['message'=>'Periodo escolar no encontrado'],206);
-        }else{
-            return response()->json(['message'=>'Periodo escolar no encontrado'],206);
-        }
+        return SchoolPeriodService::getSchoolPeriodById($request,$id);
     }
 
     /**

@@ -49,7 +49,7 @@ class PostgraduateService
             }
             return response()->json(['message'=>'Postgrado ya registrado'],206);
         }
-        return response()->json(['message'=>'No existe organizacion asociada'],206);;
+        return response()->json(['message'=>'No existe organizacion asociada'],206);
     }
 
     public static function deletePostgraduate(Request $request, $id)

@@ -11,4 +11,8 @@ class Teacher extends Model
     public function user() {
         return $this->belongsTo('App\User');
     }
+    public static function existTeacherById($id)
+    {
+        return self::find($id);
+    }
 }

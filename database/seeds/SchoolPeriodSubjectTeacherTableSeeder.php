@@ -17,10 +17,8 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'teacher_id'=>1,
             'subject_id'=>1,
             'school_period_id'=>1,
-            'inscription_visible'=>true,
             'limit'=>30,
             'enrolled_students'=>0,
-            'load_notes'=>false,
             'duty'=>10,
         ]);
     }

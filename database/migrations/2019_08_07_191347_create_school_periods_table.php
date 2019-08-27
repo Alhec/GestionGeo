@@ -15,11 +15,13 @@ class CreateSchoolPeriodsTable extends Migration
     {
         Schema::create('school_periods', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('cod_school_period')->unique();
+            $table->string('organization_id');
+            $table->string('cod_school_period',10);
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean('load_notes');
             $table->boolean('inscription_visible');
-            $table->boolean('end_school_period');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }
 

@@ -14,7 +14,6 @@ class CreateSchedulesTable extends Migration
     public function up()
     {
         Schema::create('schedules', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('school_period_subject_teacher_id');
             $table->string('day',10);
             $table->string('classroom',20);
