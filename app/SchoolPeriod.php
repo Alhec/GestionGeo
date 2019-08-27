@@ -50,8 +50,28 @@ class SchoolPeriod extends Model
         $schoolPeriod = self::where('cod_school_period',$codSchoolPeriod)
             ->where('organization_id',$organizationId);
         if ($schoolPeriod->exists()){
-            return $schoolPeriod->get('id')[0];
+            return $schoolPeriod->get()[0];
         }
         return null;
     }
+
+    public static function existSchoolPeriodById($id,$organizationId)
+    {
+        return self::where('id',$id)
+            ->where('organization_id',$organizationId)
+            ->exists();
+    }
+
+    public static function deleteSchoolPeriod($id)
+    {
+        self::find($id)
+            ->delete();
+    }
+
+    public static function updateSchoolPeriod($id,$schoolPeriod)
+    {
+        self::find($id)
+            ->update($schoolPeriod->all());
+    }
+
 }

@@ -43,8 +43,8 @@ class SchoolPeriodService
     {
         $request->validate([
             'cod_school_period'=>'required|max:10',
-            'start_date'=>'required',
-            'end_date'=>'required',
+            'start_date'=>'required|size:10',
+            'end_date'=>'required|size:10',
             'subjects.*.teacher_id'=>'required|numeric',
             'subjects.*.subject_id'=>'required|numeric',
             'subjects.*.limit'=>'required|numeric',
@@ -100,11 +100,10 @@ class SchoolPeriodService
                 if (isset($request['subjects'])){
                     if (!self::validateSubjects($request['subjects'])){
                         return response()->json(['message'=>'Materia o profesor invalido'],206);
-                    }else{
-                        SchoolPeriod::addSchoolPeriod($request);
-                        $schoolPeriodId = SchoolPeriod::findSchoolPeriodId($request['cod_school_period'],$organizationId)['id'];
-                        self::addSubjectInSchoolPeriod($request['subjects'],$schoolPeriodId);
                     }
+                    SchoolPeriod::addSchoolPeriod($request);
+                    $schoolPeriodId = SchoolPeriod::findSchoolPeriodId($request['cod_school_period'],$organizationId)['id'];
+                    self::addSubjectInSchoolPeriod($request['subjects'],$schoolPeriodId);
                 }else{
                     SchoolPeriod::addSchoolPeriod($request);
                     $schoolPeriodId = SchoolPeriod::findSchoolPeriodId($request['cod_school_period'],$organizationId)['id'];
@@ -114,5 +113,89 @@ class SchoolPeriodService
             return response()->json(['message'=>'Periodo escolar ya registrado'],206);
         }
         return response()->json(['message'=>'No existe organizacion asociada'],206);
+    }
+
+    public static function deleteSchoolPeriod(Request $request,$id)
+    {
+        $organizationId = $request->header('organization_key');
+        if (SchoolPeriod::existSchoolPeriodById($id,$organizationId)){
+            SchoolPeriod::deleteSchoolPeriod($id);
+            return response()->json(['message'=>'Ok']);
+        }
+        return response()->json(['message'=>'Periodo escolar no encontrado'],206);
+    }
+
+    public static function validateInUpdate(Request $request)
+    {
+        $request->validate([
+            'inscription_visible'=>'required|boolean',
+            'load_notes'=>'required|boolean',
+            'end_date'=>'required',
+        ]);
+    }
+
+    public static function updateSchedules($schedules,$schoolPeriodSubjectTeacherId)
+    {
+        Schedule::deleteAllSchedule($schoolPeriodSubjectTeacherId);
+        self::addSchedules($schedules,$schoolPeriodSubjectTeacherId);
+    }
+
+    public static function updateSubjectInSchoolPeriod($subjects,$schoolPeriodId)
+    {
+        $subjectsInBd = SchoolPeriodSubjectTeacher::findSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
+        $subjectsUpdated = [];
+        foreach ($subjects as $subject){
+            $existSubject = false;
+            foreach ($subjectsInBd as $subjectInBd){
+                if ($subjectInBd['teacher_id']==$subject['teacher_id'] AND $subjectInBd['subject_id']==$subject['subject_id']){
+                    $subject['school_period_id']=$schoolPeriodId;
+                    $subject['enrolled_student']=$subjectInBd['enrolled_student'];
+                    SchoolPeriodSubjectTeacher::updateSchoolPeriodSubjectTeacher($subjectInBd['id'],$subject);
+                    if (isset($subject['schedules'])){
+                        self::updateSchedules($subject['schedules'],$subjectInBd['id']);
+                    }
+                    $subjectsUpdated[]=$subjectInBd['id'];
+                    $existSubject=true;
+                    break;
+                }
+            }
+            if ($existSubject == false){
+                self::addSubjectInSchoolPeriod([$subject],$schoolPeriodId);
+                $subjectsUpdated[]=SchoolPeriodSubjectTeacher::findSchoolPeriodSubjectTeacher($schoolPeriodId,$subject['subject_id'],$subject['teacher_id'])[0]['id'];
+            }
+        }
+        foreach ($subjectsInBd as $subjectId){
+            if (!in_array($subjectId['id'],$subjectsUpdated)){
+                SchoolPeriodSubjectTeacher::deleteSchoolPeriodSubjectTeacher($subjectId['id']);
+            }
+        }
+    }
+
+    public static function updateSchoolPeriod(Request $request,$id)
+    {
+        $organizationId = $request->header('organization_key');
+        $request['organization_id']=$organizationId;
+        if (SchoolPeriod::existSchoolPeriodById($id,$organizationId)){
+            self::validate($request);
+            self::validateInUpdate($request);
+            if (SchoolPeriod::existSchoolPeriod($request['cod_school_period'],$organizationId)){
+                if (SchoolPeriod::findSchoolPeriodId($request['cod_school_period'],$organizationId)['id']!=$id){
+                    return response()->json(['message'=>'El codigo del periodo escolar ya esta registrado'],206);
+                }
+            }
+            if (isset($request['subjects'])){
+                if (!self::validateSubjects($request['subjects'])){
+                    return response()->json(['message'=>'Materia o profesor invalido'],206);
+                }
+                SchoolPeriod::updateSchoolPeriod($id, $request);
+                self::updateSubjectInSchoolPeriod($request['subjects'],$id);
+            }else{
+                SchoolPeriod::updateSchoolPeriod($id, $request);
+                SchoolPeriodSubjectTeacher::deleteSchoolPeriodSubjectTeacherBySchoolPeriod($id);
+            }
+
+            return self::getSchoolPeriodById($request,$id);
+        }
+        return response()->json(['message'=>'Periodo escolar no encontrado'],206);
     }
 }

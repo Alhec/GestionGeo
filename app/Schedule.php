@@ -15,4 +15,10 @@ class Schedule extends Model
     {
         self::create($schedule);
     }
+
+    public static function deleteAllSchedule($schoolPeriodSubjectTeacherId)
+    {
+        self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+            ->delete();
+    }
 }
