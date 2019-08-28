@@ -3,11 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\SchoolPeriod;
-use App\Subject;
-use App\Teacher;
-use App\Schedule;
-use App\SchoolPeriodSubjectTeacher;
 use App\Services\SchoolPeriodService;
 
 class SchoolPeriodController extends Controller

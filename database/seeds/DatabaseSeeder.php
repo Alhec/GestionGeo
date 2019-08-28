@@ -17,13 +17,10 @@ class DatabaseSeeder extends Seeder
         $this->call(FacultyTableSeeder::class);
         $this->call(OrganizationTableSeeder::class);
          $this->call(UsersTableSeeder::class);
-         //$this->call(AdministratorOrganizationTableSeeder::class);
          $this->call(OrganizationUserTableSeeder::class);
-         //$this->call(AdministratorsTableSeeder::class);
          $this->call(TeachersTableSeeder::class);
          $this->call(PostgraduatesTableSeeder::class);
          $this->call(StudentsTableSeeder::class);
-        // $this->call(DegreesTableSeeder::class);
          $this->call(SchoolPeriodsTableSeeder::class);
          $this->call(SubjectsTableSeeder::class);
          $this->call(SchoolPeriodSubjectTeacherTableSeeder::class);

@@ -24,6 +24,15 @@ class UsersTableSeeder extends Seeder
             'user_type' => 'A',  //S T A
         ]);
         User::create([
+            'identification' => '24698919',
+            'first_name' => 'Felix',
+            'first_surname' => 'Urbano',
+            'mobile' => '(1234) 567-8901',
+            'email' => 'felix@admin.com',
+            'password' => Hash::make('24698919'),
+            'user_type' => 'A',  //S T A
+        ]);
+        User::create([
             'identification' => '24698917',
             'first_name' => 'Luis',
             'first_surname' => 'Hubrea',

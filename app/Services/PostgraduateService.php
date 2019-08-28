@@ -9,7 +9,7 @@ use App\Postgraduate;
 class PostgraduateService
 {
 
-    public static function getPostgrduates(Request $request)
+    public static function getPostgraduates(Request $request)
     {
         $organizationId = $request->header('organization_key');
         $postgraduates = Postgraduate::getPostgraduates($organizationId);

@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\User;
-use App\OrganizationUser;
+use App\Services\UserServices;
 
 class AdministratorController extends Controller
 {
@@ -16,14 +14,7 @@ class AdministratorController extends Controller
      */
     public function index(Request $request)
     {
-        return $request->header('organization_key');
-        $administrators= User::where('user_type','A')->get();
-        if (count([$administrators])>0){
-            return $administrators;
-        }else{
-            return response()->json(['message'=>'No existen administradores'],206);
-        }
-
+        return UserServices::getUser($request,'A');
     }
 
     /**
@@ -34,23 +25,7 @@ class AdministratorController extends Controller
      */
     public function store(Request $request)
     {
-
-        $administrator = User::where(['identification'=>$request['identification']])->orWhere(['email'=>$request['email']])->get();
-      //return count($administrator);
-        if (count($administrator)>0){//valida que el administrador no exista
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
-        }else{
-            $request['password']=Hash::make($request['identification']);
-            $request['user_type']='A';
-            User::create($request->all());
-            $administrator = User::where(['identification'=>$request['identification']])->get()[0];
-            OrganizationUser::create([
-                'administrator_id'=>$administrator['id'],
-                'organization_id'=>$request['organization_id'],
-            ]);
-            return $administrator;
-        }
-
+        return UserServices::addUser($request,'A');
     }
 
     /**
@@ -59,15 +34,9 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-            $administrator = User::where(['id'=>$id])->where(['user_type'=>'A'])->get();
-            if (count($administrator)>0){//Valida si existe el registro
-                return response()->json($administrator[0]);
-            }else{
-                return response()->json(['message'=>'Administrador no encontrado'],206);
-            }
-
+        return UserServices::getUserById($request,$id,'A');
     }
 
     /**
@@ -79,54 +48,7 @@ class AdministratorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $administrator = User::where(['id'=>$id])->where(['user_type'=>'A'])->get();
-        if (count($administrator)>0){ // valida que el administrador exista para actualizarlo
-            $userEmail =  User::where(['email'=>$request['email']])->get();
-            $userIdentification =  User::where(['identification'=>$request['identification']])->get();
-            if (count($userEmail)>0 ){ // valida si existe un correo ya suministrado en bd igual al enviado en la peticion
-                if ($userEmail[0]['id'] == $administrator[0]['id']){ // si son diferentes el correo ya esta ocupado por otro usuario
-                    if (count($userIdentification)>0){ // valida si ya existe un identificador como ci o rif en bd
-                        if ($userIdentification[0]['id'] == $administrator[0]['id']){ // si son diferentes la ci o rif la tiene otro usuario
-                            $request['user_type']='A';
-                            $request['password']=$administrator[0]['password'];
-                            $administrator[0]->update($request->all());
-                            $administrator = User::find($id);
-                            return $administrator;
-                        }else{
-                            return response()->json(['message'=>'Identificacion registrada'],206);
-                        }
-                    }else{// el caso en que esten disponible la ci o rif
-                        $request['password']=$administrator[0]['password'];
-                        $request['user_type']='A';
-                        $administrator[0]->update($request->all());
-                        $administrator = User::find($id);
-                        return $administrator;
-                    }
-                }else{
-                    return response()->json(['message'=>'Correo ya registrado'],206);
-                }
-            }else{
-                if (count($userIdentification)>0){
-                    if ($userIdentification[0]['id'] == $administrator[0]['id']){
-                        $request['user_type']='A';
-                        $request['password']=$administrator[0]['password'];
-                        $administrator[0]->update($request->all());
-                        $administrator = User::find($id);
-                        return $administrator;
-                    }else{
-                        return response()->json(['message'=>'Identificacion registrada'],206);
-                    }
-                }else{
-                    $request['user_type']='A';
-                    $request['password']=$administrator[0]['password'];
-                    $administrator[0]->update($request->all());
-                    $administrator = User::find($id);
-                    return $administrator;
-                }
-            }
-        }else{
-            return response()->json(['message'=>'Administrador no encontrado'],206);
-        }
+       return UserServices::updateUser($request,$id,'A');
     }
 
     /**
@@ -135,17 +57,8 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $administrator = User::where(['id'=>$id])->where(['user_type'=>'A'])->get();
-        if (count($administrator)>0){ //valida que el administrador exista par eliminarlo
-            $administrator[0]->delete();
-            return response()->json(['message'=>'OK']);
-        }else{
-            return response()->json(['message'=>'Administrador no encontrado'],206);
-        }
-
-        //User::where(['id'=>$id,'user_type'=>'A'])->get()[0]->delete();
-        //return response()->json(['message'=>'OK']);
+        return UserServices::deleteUser($request,$id,'A');
     }
 }
