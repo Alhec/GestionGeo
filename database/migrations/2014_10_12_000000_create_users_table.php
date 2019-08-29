@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('user_type',1);
             $table->string('level_instruction',20)->nullable();
+            $table->boolean('active');
             $table->rememberToken();
         });
     }

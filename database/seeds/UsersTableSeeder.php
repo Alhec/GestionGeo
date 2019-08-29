@@ -21,7 +21,8 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'hector@admin.com',
             'password' => Hash::make('24698916'),
-            'user_type' => 'A',  //S T A
+            'user_type' => 'A',  //S T A,
+            'active'=>true,
         ]);
         User::create([
             'identification' => '24698919',
@@ -31,6 +32,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'felix@admin.com',
             'password' => Hash::make('24698919'),
             'user_type' => 'A',  //S T A
+            'active'=>true,
         ]);
         User::create([
             'identification' => '24698917',
@@ -40,6 +42,17 @@ class UsersTableSeeder extends Seeder
             'email' => 'luis@teacher.com',
             'password' => Hash::make('24698917'),
             'user_type' => 'T',
+            'active'=>true,
+        ]);
+        User::create([
+            'identification' => '24698917',
+            'first_name' => 'Juan',
+            'first_surname' => 'Hubrea',
+            'mobile' => '(1234) 567-8901',
+            'email' => 'Juan@teacher.com',
+            'password' => Hash::make('24698917'),
+            'user_type' => 'T',
+            'active'=>true,
         ]);
         User::create([
             'identification' => '24698918',
@@ -49,6 +62,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'abraham@student.com',
             'password' => Hash::make('24698918'),
             'user_type' => 'S',
+            'active'=>true,
         ]);
 
     }

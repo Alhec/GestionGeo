@@ -19,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'identification', 'password','user_type','first_name','second_name','first_surname','second_surname','telephone',
-        'mobile','work_phone','email'
+        'mobile','work_phone','email','active'
     ];
 
     /**
@@ -81,23 +81,45 @@ class User extends Authenticatable implements JWTSubject
 
     public static function getUsers($userType,$organizationId)
     {
-        return self::where('user_type',$userType)
+        $users = self::where('user_type',$userType)
             ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
-            })->get();
+            });
+        if ($userType == 'A'){
+            return $users->get();
+        }elseif ($userType='T'){
+            return $users->with('teacher')
+                ->get();
+        }elseif ($userType='S'){
+            return $users->with('student')
+                ->get();
+        }else{
+            return [];
+        }
     }
 
     public static function getUserById($id,$userType,$organizationId)
     {
-        return self::where('id',$id)
+        $user =self::where('id',$id)
             ->where('user_type',$userType)
             ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
-            })->get();
+            });
+        if ($userType == 'A'){
+            return $user->get();
+        }elseif ($userType='T'){
+            return $user->with('teacher')
+                ->get();
+        }elseif ($userType='S'){
+            return $user->with('student')
+                ->get();
+        }else{
+            return [];
+        }
     }
 
     public static function existUserByIdentification($identification,$userType,$organizationId)

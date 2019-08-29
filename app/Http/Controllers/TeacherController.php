@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Teacher;
 use Illuminate\Support\Facades\Hash;
+use App\Services\UserServices;
+use App\Services\TeacherService;
 
 class TeacherController extends Controller
 {
@@ -14,34 +16,9 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $teachers= User::with('teacher')->where('user_type','T')->get();
-        if (count($teachers)>0){
-            $teachersReturns=[];
-            foreach ($teachers as $teacher){
-                if ($teacher['teacher']!=null){
-                    $teachersReturns[] = $teacher;
-                }
-            }
-            if (count($teachersReturns)>0){
-                return $teachersReturns;
-            }else{
-                return response()->json(['message'=>'No existen profesores'],206);
-            }
-        }else{
-            return response()->json(['message'=>'No existen profesores'],206);
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return UserServices::getUser($request,'T');
     }
 
     /**
@@ -52,21 +29,7 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        $teacher= User::where(['identification'=>$request['identification']])->orWhere(['email'=>$request['email']])->get();
-        if (count($teacher)>0){//valida que el profesir no exista
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
-        }else{
-            $request['password']=Hash::make($request['identification']);
-            $request['user_type']='T';
-            User::create($request->all());
-            $teacher = User::where(['identification'=>$request['identification']])->get()[0];
-            Teacher::create([
-                'user_id'=>$teacher['id'],
-                'teacher_type'=>$request['teacher_type'],
-            ]);
-            $teacherReturn = User::with('teacher')->where('user_type','T')->where('id',$teacher['id'])->get()[0];
-            return $teacherReturn;
-        }
+        return TeacherService::addTeacher($request);
     }
 
     /**
@@ -75,29 +38,9 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-        $teacher= User::with('teacher')->where('user_type','T')->where('id',$id)->get();
-        if (count($teacher)>0){
-            if ($teacher[0]['teacher']!=null){//valida si existe relacin entre user y teacher
-                return $teacher;
-            }else{
-                return response()->json(['message'=>'Profesor no encontrado'],206);
-            }
-        }else{
-            return response()->json(['message'=>'Profesor no encontrado'],206);
-        }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return UserServices::getUserById($request,$id,'T');
     }
 
     /**
@@ -109,6 +52,7 @@ class TeacherController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return TeacherService::updateTeacher($request,$id);
         $teacher= User::with('teacher')->where('user_type','T')->where('id',$id)->get();
         if (count($teacher)>0){
             $userEmail =  User::where(['email'=>$request['email']])->get();
@@ -169,14 +113,8 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
-        $teacher= User::with('teacher')->where('user_type','T')->where('id',$id)->get();
-        if (count($teacher)>0){ //valida que el profesor exista par eliminarlo
-            $teacher[0]->delete();
-            return response()->json(['message'=>'OK']);
-        }else{
-            return response()->json(['message'=>'Profesor no encontrado'],206);
-        }
+        return UserServices::deleteUser($request,$id,'T');
     }
 }

@@ -17,7 +17,11 @@ class TeachersTableSeeder extends Seeder
 
         Teacher::query()->truncate();
         Teacher::create([
-            'user_id'=>2,
+            'user_id'=>3,
+            'teacher_type'=>'INS', //INS ASI AGR ASO TIT
+        ]);
+        Teacher::create([
+            'user_id'=>4,
             'teacher_type'=>'INS', //INS ASI AGR ASO TIT
         ]);
 

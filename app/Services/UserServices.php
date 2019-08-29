@@ -30,11 +30,11 @@ class UserServices
     public static function getUser(Request $request, $userType)
     {
         $organizationId = $request->header('organization_key');
-        $administrators= User::getUsers($userType,$organizationId);
-        if (count($administrators)>0){
-            return self::clearUser($administrators);
+        $users= User::getUsers($userType,$organizationId);
+        if (count($users)>0){
+            return self::clearUser($users);
         }
-        return response()->json(['message'=>'No existen administradores'],206);
+        return response()->json(['message'=>'No existen usuarios con ese perfil'],206);
     }
 
     public static function getUserById(Request $request, $userId, $userType)
@@ -44,7 +44,7 @@ class UserServices
         if (count($administrator)>0){
             return self::clearUser($administrator)[0];
         }
-        return response()->json(['message'=>'Administrador no encontrado'],206);
+        return response()->json(['message'=>'Usuario no encontrado'],206);
     }
 
     public static function validate(Request $request)
@@ -60,7 +60,8 @@ class UserServices
             'work_phone'=>'max:15',
             'email'=>'max:30',
             'user_type'=>'max:1|ends_with:A,S,T',
-            'level_instruction'=>'max:20'
+            'level_instruction'=>'max:20',
+            'active'=>'boolean'
         ]);
     }
 
@@ -72,11 +73,12 @@ class UserServices
             if (!(User::existUserByIdentification($request['identification'],$userType,$organizationId))AND!(User::existUserByEmail($request['email'],$userType,$organizationId))){
                 $request['password']=Hash::make($request['identification']);
                 $request['user_type']=$userType;
+                $request['active']=true;
                 User::addUser($request);
                 $userId=User::findUser($request['identification'],$userType)[0]['id'];
                 OrganizationUser::addOrganizationUser([
                     'user_id'=>$userId,
-                    'organization_id'=>$request['organization_id'],
+                    'organization_id'=>$organizationId,
                 ]);
                 return self::getUserById($request,$userId,$userType);
             }
@@ -92,7 +94,7 @@ class UserServices
             User::deleteUser($userId);
             return response()->json(['message'=>'OK']);
         }
-        return response()->json(['message'=>'Administrador no encontrado'],206);
+        return response()->json(['message'=>'Usuario no encontrado'],206);
     }
 
     public static function availableUser(Request $request, $userId, $userType,$organizationId)
@@ -124,6 +126,6 @@ class UserServices
             User::updateUser($userId,$request);
             return self::getUserById($request,$userId,$userType);
         }
-        return response()->json(['message'=>'Administrador no encontrado'],206);
+        return response()->json(['message'=>'Usuario no encontrado'],206);
     }
 }
