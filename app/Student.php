@@ -13,4 +13,12 @@ class Student extends Model
     public function user() {
         return $this->belongsTo('App\User');
     }
+    public static function addStudent($student)
+    {
+        self::create($student);
+    }
+    public static function updateStudent($userId,$student)
+    {
+        self::where('user_id',$userId)->get()[0]->update($student);
+    }
 }

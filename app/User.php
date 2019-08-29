@@ -89,10 +89,10 @@ class User extends Authenticatable implements JWTSubject
             });
         if ($userType == 'A'){
             return $users->get();
-        }elseif ($userType='T'){
+        }elseif ($userType=='T'){
             return $users->with('teacher')
                 ->get();
-        }elseif ($userType='S'){
+        }elseif ($userType=='S'){
             return $users->with('student')
                 ->get();
         }else{
@@ -111,10 +111,10 @@ class User extends Authenticatable implements JWTSubject
             });
         if ($userType == 'A'){
             return $user->get();
-        }elseif ($userType='T'){
+        }elseif ($userType=='T'){
             return $user->with('teacher')
                 ->get();
-        }elseif ($userType='S'){
+        }elseif ($userType=='S'){
             return $user->with('student')
                 ->get();
         }else{

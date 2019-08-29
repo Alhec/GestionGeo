@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Postgraduate;
 use App\OrganizationUser;
 
-class UserServices
+class UserService
 {
     public static function clearUser($users)
     {
@@ -82,7 +82,13 @@ class UserServices
                 ]);
                 return self::getUserById($request,$userId,$userType);
             }
+            if ($userType =='S'||$userType =='T'){
+                return 1;//Para service de profesor y estudiante errores
+            }
             return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+        }
+        if ($userType =='S'||$userType =='T'){
+            return 2;//Para service de profesor y estudiante errores
         }
         return response()->json(['message'=>'No existe organizacion asociada'],206);
     }
@@ -125,6 +131,9 @@ class UserServices
             $request['user_type']=$userType;
             User::updateUser($userId,$request);
             return self::getUserById($request,$userId,$userType);
+        }
+        if ($userType =='S'||$userType =='T'){
+            return 3;//Para service de profesor y estudiante errores
         }
         return response()->json(['message'=>'Usuario no encontrado'],206);
     }

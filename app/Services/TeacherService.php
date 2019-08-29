@@ -25,23 +25,36 @@ class TeacherService
     public static function addTeacher(Request $request)
     {
         self::validate($request);
-        UserServices::addUser($request,'T');
+        $result =UserService::addUser($request,'T');
+        if (is_int($result)){
+            if ($result==1){
+                return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+            }
+            if ($result==2){
+                return response()->json(['message'=>'No existe organizacion asociada'],206);
+            }
+        }
         $teacher = User::findUser($request['identification'],'T');
         Teacher::addTeacher([
             'user_id'=>$teacher[0]['id'],
             'teacher_type'=>$request['teacher_type'],
         ]);
-        return UserServices::getUserById($request,$teacher[0]['id'],'T');
+        return UserService::getUserById($request,$teacher[0]['id'],'T');
     }
 
     public static function updateTeacher(Request $request, $id)
     {
         self::validate($request);
-        UserServices::updateUser($request,$id,'T');
+        $result =UserService::updateUser($request,$id,'T');
+        if (is_int($result)){
+            if ($result==3){
+                return response()->json(['message'=>'Usuario no encontrado'],206);
+            }
+        }
         Teacher::updateTeacher($id,[
             'user_id'=>$id,
             'teacher_type'=>$request['teacher_type']
         ]);
-        return UserServices::getUserById($request,$id,'T');
+        return UserService::getUserById($request,$id,'T');
     }
 }

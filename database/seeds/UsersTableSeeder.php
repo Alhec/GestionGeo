@@ -64,6 +64,16 @@ class UsersTableSeeder extends Seeder
             'user_type' => 'S',
             'active'=>true,
         ]);
+        User::create([
+            'identification' => '24698928',
+            'first_name' => 'Felipe',
+            'first_surname' => 'Navarro',
+            'mobile' => '(1234) 567-8901',
+            'email' => 'Felipe@student.com',
+            'password' => Hash::make('24698928'),
+            'user_type' => 'S',
+            'active'=>true,
+        ]);
 
     }
 }

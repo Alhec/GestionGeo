@@ -15,8 +15,14 @@ class StudentsTableSeeder extends Seeder
         Student::query()->truncate();
         Student::create([
             'postgraduate_id'=>1,
-            'user_id'=>3,
+            'user_id'=>5,
             'student_type'=>"REG", // REG EXT AMP
+            'home_university'=>'Universidad Central de Venezuela',
+        ]);
+        Student::create([
+            'postgraduate_id'=>2,
+            'user_id'=>6,
+            'student_type'=>"EXT", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
         ]);
     }

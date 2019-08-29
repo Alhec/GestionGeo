@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\UserServices;
+use App\Services\UserService;
 
 class AdministratorController extends Controller
 {
@@ -14,7 +14,7 @@ class AdministratorController extends Controller
      */
     public function index(Request $request)
     {
-        return UserServices::getUser($request,'A');
+        return UserService::getUser($request,'A');
     }
 
     /**
@@ -25,7 +25,7 @@ class AdministratorController extends Controller
      */
     public function store(Request $request)
     {
-        return UserServices::addUser($request,'A');
+        return UserService::addUser($request,'A');
     }
 
     /**
@@ -36,7 +36,7 @@ class AdministratorController extends Controller
      */
     public function show($id,Request $request)
     {
-        return UserServices::getUserById($request,$id,'A');
+        return UserService::getUserById($request,$id,'A');
     }
 
     /**
@@ -48,7 +48,7 @@ class AdministratorController extends Controller
      */
     public function update(Request $request, $id)
     {
-       return UserServices::updateUser($request,$id,'A');
+       return UserService::updateUser($request,$id,'A');
     }
 
     /**
@@ -59,6 +59,6 @@ class AdministratorController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        return UserServices::deleteUser($request,$id,'A');
+        return UserService::deleteUser($request,$id,'A');
     }
 }
