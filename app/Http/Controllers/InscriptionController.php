@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SubjectService;
 use Illuminate\Http\Request;
+use App\Services\InscriptionService;
 
-class SubjectController extends Controller
+class InscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request$request)
+    public function index(Request $request)
     {
-       return SubjectService::getSubjects($request);
+        return InscriptionService::getInscription($request);
     }
 
     /**
@@ -25,7 +25,7 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        return SubjectService::addSubject($request);
+        return InscriptionService::addInscription($request);
     }
 
     /**
@@ -34,9 +34,9 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, Request $request)
+    public function show($id,Request $request)
     {
-        return SubjectService::getSubjectsById($request,$id);
+        return InscriptionService::getInscriptionById($request,$id);
     }
 
     /**
@@ -46,9 +46,9 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id,Request $request)
+    public function update(Request $request, $id)
     {
-        return SubjectService::updateSubject($request,$id);
+        return InscriptionService::updateInscription($request,$id);
     }
 
     /**
@@ -57,8 +57,9 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,Request $request)
+    public function destroy($id, Request $request)
     {
-       return SubjectService::deleteSubject($request,$id);
+        return InscriptionService::deleteInscription($request, $id);
     }
+
 }

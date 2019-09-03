@@ -21,4 +21,11 @@ class Student extends Model
     {
         self::where('user_id',$userId)->get()[0]->update($student);
     }
+
+    public static function existStudent($id)
+    {
+        return self::where('id',$id)
+            ->exists();
+    }
+
 }

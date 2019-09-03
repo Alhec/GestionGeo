@@ -22,5 +22,6 @@ Route::resource('students','StudentController');
 Route::resource('schoolPeriods','SchoolPeriodController');
 Route::resource('subjectInscription','SubjectInscriptionController');
 Route::resource('schoolPeriodInscription','SchoolPeriodInscriptionController');
+Route::resource('inscription','InscriptionController');
 Route::post('login', 'AuthController@login');
 Route::get('log', 'AuthController@getToken');

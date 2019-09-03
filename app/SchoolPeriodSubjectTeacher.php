@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\StudentSubject;
 
 class SchoolPeriodSubjectTeacher extends Model
 {
@@ -49,6 +50,12 @@ class SchoolPeriodSubjectTeacher extends Model
             ->get();
     }
 
+    public static function existSchoolPeriodSubjectTeacherById($id)
+    {
+        return self::where('id',$id)
+            ->exists();
+    }
+
     public static function  deleteSchoolPeriodSubjectTeacher($id)
     {
         self::find($id)
@@ -65,5 +72,14 @@ class SchoolPeriodSubjectTeacher extends Model
     {
         self::find($id)
             ->update($schoolPeriodSubjectTeacher);
+    }
+
+    public static function updateEnrolledStudent($id)
+    {
+        $schoolPeriodSubjectTeacher = self::where('id',$id)
+        ->get();
+        $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
+        self::find($id)
+        ->update($schoolPeriodSubjectTeacher->all());
     }
 }

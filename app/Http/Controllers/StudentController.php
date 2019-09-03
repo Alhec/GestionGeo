@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Student;
-use App\Postgraduate;
-use Illuminate\Support\Facades\Hash;
 use App\Services\UserService;
 use App\Services\StudentService;
 

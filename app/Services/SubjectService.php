@@ -102,9 +102,9 @@ class SubjectService
     public static function addSubject(Request $request)
     {
         self::validate($request);
-        $organization_id = $request->header('organization_key');
+        $organizationId = $request->header('organization_key');
         if (!Subject::existSubject($request['subject_code'])){//Se valida que el postgrado no exista
-            if (self::validatePostgraduates($request['postgraduates'],$organization_id)){
+            if (self::validatePostgraduates($request['postgraduates'],$organizationId)){
                 Subject::addSubject($request);
                 $subject = Subject::findSubject($request['subject_code']);
                 self::addPostgraduatesInSubject($request['postgraduates'],$subject['id']);
@@ -115,9 +115,23 @@ class SubjectService
         return response()->json(['message'=>'Materia existente'],206);
     }
 
-    public static function deleteSubject(String $id)
+    public static function validateOrganization($subjectId,$organizationId)
     {
-        if (Subject::existSubjectById($id)!=null){
+        $postgraduates = Postgraduate::getPostgraduates($organizationId);
+        $postgraduateSubjects = PostgraduateSubject::getPostgraduateSubject($subjectId);
+        foreach ($postgraduates as $postgraduate){
+            foreach ($postgraduateSubjects as $postgraduateSubject){
+                if ($postgraduateSubject['postgraduate_id']==$postgraduate['id']){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public static function deleteSubject(Request $request,$id)
+    {
+        $organizationId = $request->header('organization_key');
+        if (Subject::existSubjectById($id)!=null AND self::validateOrganization($id,$organizationId)){
             Subject::deleteSubject($id);
             return response()->json(['message'=>'OK']);
         }else{
@@ -160,10 +174,9 @@ class SubjectService
     public static function updateSubject(Request $request,String $id)
     {
         self::validate($request);
-        $organization_id = $request->header('organization_key');
-        $subject = Subject::existSubjectById($id);
-        if($subject!=null){
-            if (self::validatePostgraduates($request['postgraduates'],$organization_id)){
+        $organizationId = $request->header('organization_key');
+        if(Subject::existSubjectById($id)!=null AND self::validateOrganization($id,$organizationId)){
+            if (self::validatePostgraduates($request['postgraduates'],$organizationId)){
                 $subjectCode = Subject::findSubject($request['subject_code']);
                 if ($subjectCode!=null){
                     if ($subjectCode['id']==$id){

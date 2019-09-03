@@ -12,6 +12,11 @@ class Teacher extends Model
         return $this->belongsTo('App\User');
     }
 
+    public static function existTeacherById($id)
+    {
+        return self::find($id);
+    }
+
     public static function addTeacher($teacher)
     {
         self::create($teacher);

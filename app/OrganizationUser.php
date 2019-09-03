@@ -14,4 +14,10 @@ class OrganizationUser extends Model
     {
         self::create($organizationUser);
     }
+
+    public static function existOrganizationUser($userId)
+    {
+        return self::where('user_id',$userId)
+            ->exists();
+    }
 }

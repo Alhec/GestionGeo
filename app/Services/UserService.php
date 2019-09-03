@@ -65,6 +65,17 @@ class UserService
         ]);
     }
 
+    public static function getIdUser($identification,$userType) // puede ocurrir el caso en queun estudiante este en mas de un postgrado
+    {
+        $users=User::findUser($identification,$userType);
+        foreach ($users as $user){
+            //dd([OrganizationUser::existOrganizationUser($user['id'],$organizationId),$identification,$userType,$user['id'],$organizationId]);
+            if (!OrganizationUser::existOrganizationUser($user['id'])){
+                return $user['id'];
+            }
+        }
+    }
+
     public static function addUser(Request $request,$userType)
     {
         $organizationId = $request->header('organization_key');
@@ -75,7 +86,7 @@ class UserService
                 $request['user_type']=$userType;
                 $request['active']=true;
                 User::addUser($request);
-                $userId=User::findUser($request['identification'],$userType)[0]['id'];
+                $userId= self::getIdUser($request['identification'],$userType);
                 OrganizationUser::addOrganizationUser([
                     'user_id'=>$userId,
                     'organization_id'=>$organizationId,
