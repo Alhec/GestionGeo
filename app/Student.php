@@ -28,4 +28,10 @@ class Student extends Model
             ->exists();
     }
 
+    public static function getStudent($id)
+    {
+        return self::where('id',$id)
+            ->get();
+    }
+
 }

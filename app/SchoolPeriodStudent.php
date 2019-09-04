@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class SchoolPeriodStudent extends Model
 {
@@ -19,23 +20,32 @@ class SchoolPeriodStudent extends Model
         return $this->belongsTo('App\Student')
             ->with('user');
     }
-    public function enrolled_subjects()
+    public function enrolledSubjects()
     {
         return $this->hasMany('App\StudentSubject')->with('subject');
     }
-    public static function getSchoolPeriodStudent()
+    public static function getSchoolPeriodStudent($organizationId)
     {
         return self::with('schoolPeriod')
             ->with('student')
-            ->with('enrolled_subjects')
+            ->with('enrolledSubjects')
+            ->with('schoolPeriod')
+            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+            })
             ->get();
     }
-    public static function getSchoolPeriodStudentById($id)
+    public static function getSchoolPeriodStudentById($id,$organizationId)
     {
         return self::where('id',$id)
-            ->with('schoolPeriod')
             ->with('student')
-            ->with('enrolled_subjects')
+            ->with('enrolledSubjects')
+            ->with('schoolPeriod')
+            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+            })
             ->get();
     }
     public static function addSchoolPeriodStudent($schoolPeriodStudent){
@@ -54,8 +64,15 @@ class SchoolPeriodStudent extends Model
             ->where('school_period_id',$schoolPeriodId)
             ->get();
     }
-    public static function existSchoolPeriodStudentById($id){
+    public static function existSchoolPeriodStudentById($id,$organizationId){
         return self::where('id',$id)
+            ->with('student')
+            ->with('enrolledSubjects')
+            ->with('schoolPeriod')
+            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+            })
             ->exists();
     }
 
@@ -70,4 +87,6 @@ class SchoolPeriodStudent extends Model
         self::find($id)
             ->update($schoolPeriodSubject->all());
     }
+
+
 }

@@ -82,4 +82,9 @@ class SchoolPeriodSubjectTeacher extends Model
         self::find($id)
         ->update($schoolPeriodSubjectTeacher->all());
     }
+     public static function getSchoolPeriodSubjectTeacher($id)
+     {
+         return self::where('id',$id)
+             ->get();
+     }
 }

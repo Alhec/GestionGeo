@@ -8,6 +8,8 @@
 
 namespace App\Services;
 
+use App\PostgraduateSubject;
+use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriod;
 use App\Postgraduate;
@@ -57,11 +59,32 @@ class SchoolPeriodService
         ]);
     }
 
-    public static function validateSubjects($subjects)
+    public static function validateSubjects($subjects,$organizationId)
     {
         foreach ($subjects as $subject){
-            if ((Subject::existSubjectById($subject['subject_id'])==null) OR (Teacher::existTeacherById($subject['subject_id'])==null)){
+
+            if (Subject::existSubjectById($subject['subject_id'])==null ){
                 return false;
+            }else{
+                $subjectsInPostgraduate = PostgraduateSubject::getPostgraduateSubject($subject['subject_id']);
+                $associated = false;
+                foreach ($subjectsInPostgraduate as $subjectInPostgrduate){
+                    if (Postgraduate::existPostgraduateById($subjectInPostgrduate['postgraduate_id'],$organizationId)){
+                        $associated =true;
+                        break;
+                    }
+                }
+                if ($associated == false){
+                    return false;
+                }
+            }
+            if (Teacher::existTeacherById($subject['teacher_id'])==null){
+                return false;
+            }else{
+                $teacherInBd = Teacher::existTeacherById($subject['teacher_id']);
+                if (count(User::getUserById($teacherInBd['user_id'],'T',$organizationId))<=0){
+                    return false;
+                }
             }
         }
         return true;
@@ -88,6 +111,7 @@ class SchoolPeriodService
         }
     }
 
+
     public static function addSchoolPeriod(Request $request)
     {
         self::validate($request);
@@ -98,7 +122,7 @@ class SchoolPeriodService
                 $request['inscription_visible']=false;
                 $request['organization_id']=$organizationId;
                 if (isset($request['subjects'])){
-                    if (!self::validateSubjects($request['subjects'])){
+                    if (!self::validateSubjects($request['subjects'],$organizationId)){
                         return response()->json(['message'=>'Materia o profesor invalido'],206);
                     }
                     SchoolPeriod::addSchoolPeriod($request);

@@ -103,7 +103,7 @@ class SubjectService
     {
         self::validate($request);
         $organizationId = $request->header('organization_key');
-        if (!Subject::existSubject($request['subject_code'])){//Se valida que el postgrado no exista
+        if (!Subject::existSubject($request['subject_code'])){//Se valida que la materia no exista
             if (self::validatePostgraduates($request['postgraduates'],$organizationId)){
                 Subject::addSubject($request);
                 $subject = Subject::findSubject($request['subject_code']);

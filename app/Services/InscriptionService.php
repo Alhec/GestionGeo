@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriodStudent;
 use App\Student;
@@ -17,18 +18,34 @@ use App\StudentSubject;
 
 class InscriptionService
 {
+    public static function clearInscription($inscriptions){
+        $inscriptionsReturn=[];
+        foreach ($inscriptions as $inscription){
+            unset($inscription['schoolPeriod']);
+            $inscriptionsReturn[]=$inscription;
+        }
+        return $inscriptionsReturn;
+    }
+
     public static function getInscription(Request $request)
     {
-        $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudent();
+        $organizationId = $request->header('organization_key');
+        $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudent($organizationId);
         if (count($inscriptions)>0){
-            return $inscriptions;
+            return self::clearInscription($inscriptions);
         }
         return response()->json(['message'=>'No existen inscripciones'],206);
     }
 
     public static function getInscriptionById(Request $request, $id)
     {
-        return SchoolPeriodStudent::getSchoolPeriodStudentById($id)[0];
+        $organizationId = $request->header('organization_key');
+        $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($id,$organizationId);
+        //var_dump($inscription);
+        if (count($inscription)>0){
+            return self::clearInscription($inscription)[0];
+        }
+        return response()->json(['Inscripcion no encontrada'],206);
     }
 
     public static function validate(Request $request)
@@ -45,16 +62,25 @@ class InscriptionService
     public static function validateRelation(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        if (!Student::existStudent($request['student_id'])){
+        if (!Student::existStudent($request['student_id'],$organizationId)){
             return false;
+        }else{
+            $student = Student::getStudent($request['student_id']);
+            if (count(User::getUserById($student[0]['user_id'],'S',$organizationId))<=0){
+                return false;
+            }
         }
         if (!SchoolPeriod::existSchoolPeriodById($request['school_period_id'],$organizationId)){
-
             return false;
         }
         foreach ($request['subjects'] as $subject){
             if (!SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($subject['school_period_subject_teacher_id'])){
                 return false;
+            }else{
+                $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacher($subject['school_period_subject_teacher_id'])[0];
+                if ($schoolPeriodSubjectTeacher['school_period_id']!=$request['school_period_id']){
+                    return false;
+                }
             }
         }
         return true;
@@ -91,7 +117,8 @@ class InscriptionService
 
     public static function deleteInscription(Request $request,$id)
     {
-        if(SchoolPeriodStudent::existSchoolPeriodStudentById($id)){
+        $organizationId = $request->header('organization_key');
+        if(SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
             SchoolPeriodStudent::deleteSchoolPeriodStudent($id);
             return response()->json(['message'=>'OK']);
         }
@@ -105,7 +132,8 @@ class InscriptionService
         foreach ($subjects as $subject){
             $existSubject = false;
             foreach ($subjectsInBd as $subjectInBd){
-                if ($subject['shool_period_subject_teacher_id']==$subjectInBd['shool_period_subject_teacher_id']){
+                if ($subject['school_period_subject_teacher_id']==$subjectInBd['school_period_subject_teacher_id']){
+                    $subject['qualification']=$subjectInBd['qualification'];
                     $subject['school_period_student_id']=$schoolPeriodStudentId;
                     StudentSubject::updateStudentSubject($subjectInBd['id'],$subject);
                     $subjectsUpdated[]=$subjectInBd['id'];
@@ -115,7 +143,7 @@ class InscriptionService
             }
             if ($existSubject==false){
                 self::addSubjects([$subject],$schoolPeriodStudentId);
-                $subjectsUpdated[]=StudentSubject::findSchoolPeriodStudent($schoolPeriodStudentId,$subject['shool_period_subject_teacher_id'])[0]['id'];
+                $subjectsUpdated[]=StudentSubject::findSchoolPeriodStudent($schoolPeriodStudentId,$subject['school_period_subject_teacher_id'])[0]['id'];
             }
         }
         foreach ($subjectsInBd as $subjectId){
@@ -127,9 +155,10 @@ class InscriptionService
 
     public static function updateInscription(Request $request, $id)
     {
+        $organizationId = $request->header('organization_key');
         self::validate($request);
         if (self::validateRelation($request)){
-            if (SchoolPeriodStudent::existSchoolPeriodStudentById($id)){
+            if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
                 if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
                     if( SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id']!=$id){
                         return response()->json(['message'=>'Inscripcion ocupada'],206);
@@ -137,7 +166,7 @@ class InscriptionService
                 }
                 SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
                 self::updateSubjects($request['subjects'],$id);
-                self::getInscriptionById($request,$id);
+                return self::getInscriptionById($request,$id);
             }
             return response()->json(['message'=>'Inscripcion no encontrada'],206);
         }
