@@ -19,6 +19,7 @@ Route::resource('subjects','SubjectController');
 Route::resource('administrators','AdministratorController');
 Route::resource('teachers','TeacherController');
 Route::resource('students','StudentController');
+Route::get('schoolPeriods/current','SchoolPeriodController@current');
 Route::resource('schoolPeriods','SchoolPeriodController');
 Route::resource('subjectInscription','SubjectInscriptionController');
 Route::resource('schoolPeriodInscription','SchoolPeriodInscriptionController');

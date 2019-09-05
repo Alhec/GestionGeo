@@ -61,4 +61,9 @@ class SchoolPeriodController extends Controller
     {
         return SchoolPeriodService::deleteSchoolPeriod($request,$id);
     }
+
+    public function current(Request $request)
+    {
+        return SchoolPeriodService::getCurrentSchoolPeriod($request);
+    }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolPeriod extends Model
 {
-    protected $fillable = ['cod_school_period','start_date','end_date','inscription_visible','organization_id','load_notes'];
+    protected $fillable = ['cod_school_period','start_date','end_date','withdrawal_deadline','inscription_visible','organization_id','load_notes'];
     protected $hidden = ['organization_id'];
     public $timestamps = false;
 
@@ -72,6 +72,14 @@ class SchoolPeriod extends Model
     {
         self::find($id)
             ->update($schoolPeriod->all());
+    }
+
+    public static function getCurrentSchoolPeriod($organizationId)
+    {
+        return self::where('organization_id',$organizationId)
+            ->whereDate('end_date','>=',date("Y-m-d"))
+            ->with('subjects')
+            ->get();
     }
 
 }

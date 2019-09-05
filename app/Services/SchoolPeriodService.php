@@ -47,6 +47,7 @@ class SchoolPeriodService
             'cod_school_period'=>'required|max:10',
             'start_date'=>'required|size:10',
             'end_date'=>'required|size:10',
+            'withdrawal_deadline'=>'required|size:10',
             'subjects.*.teacher_id'=>'required|numeric',
             'subjects.*.subject_id'=>'required|numeric',
             'subjects.*.limit'=>'required|numeric',
@@ -221,5 +222,15 @@ class SchoolPeriodService
             return self::getSchoolPeriodById($request,$id);
         }
         return response()->json(['message'=>'Periodo escolar no encontrado'],206);
+    }
+
+    public static function getCurrentSchoolPeriod(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        $currentSchoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organizationId);
+        if (count($currentSchoolPeriod)>0){
+            return $currentSchoolPeriod[0];
+        }
+        return response()->json(['message'=>'No hay periodp escolar en curso'],206);
     }
 }
