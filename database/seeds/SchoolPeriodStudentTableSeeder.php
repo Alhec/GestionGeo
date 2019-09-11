@@ -25,5 +25,11 @@ class SchoolPeriodStudentTableSeeder extends Seeder
             'pay_ref'=>'1234567890',
             'status'=>'INC-A', //RET-A RET-B DES-A DES-B INC-A INC-B REI-A REI-B REG
         ]);
+        SchoolPeriodStudent::create([
+            'student_id'=>1,
+            'school_period_id'=>3,
+            'pay_ref'=>'1234567890',
+            'status'=>'INC-A', //RET-A RET-B DES-A DES-B INC-A INC-B REI-A REI-B REG
+        ]);
     }
 }

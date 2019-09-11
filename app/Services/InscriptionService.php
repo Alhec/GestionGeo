@@ -32,7 +32,7 @@ class InscriptionService
         $organizationId = $request->header('organization_key');
         $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudent($organizationId);
         if (count($inscriptions)>0){
-            return self::clearInscription($inscriptions);
+            return ($inscriptions);
         }
         return response()->json(['message'=>'No existen inscripciones'],206);
     }
@@ -43,7 +43,7 @@ class InscriptionService
         $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($id,$organizationId);
         //var_dump($inscription);
         if (count($inscription)>0){
-            return self::clearInscription($inscription)[0];
+            return ($inscription)[0];
         }
         return response()->json(['Inscripcion no encontrada'],206);
     }
@@ -86,7 +86,6 @@ class InscriptionService
         return true;
     }
 
-
     public static function addSubjects($subjects,$schoolPeriodStudent)
     {
         foreach ($subjects as $subject){
@@ -99,18 +98,43 @@ class InscriptionService
             SchoolPeriodSubjectTeacher::updateEnrolledStudent($subject['school_period_subject_teacher_id']);
         }
     }
+
+    public static function existSubjectInAvailableSubjects($subjectId,$availableSubjects){
+        foreach ($availableSubjects as $availableSubject){
+            if ($availableSubject['id'] == $subjectId ){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static function isValidSubjects($subjects,$availableSubjects)
+    {
+        if (!is_array($availableSubjects)){
+            return false;
+        }
+        foreach($subjects as $subject){
+            if (!self::existSubjectInAvailableSubjects($subject['school_period_subject_teacher_id'],$availableSubjects)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static function addInscription(Request $request)
     {
         self::validate($request);
         if(self::validateRelation($request)){
-            if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
-                $request['status']='INC-A';
-                SchoolPeriodStudent::addSchoolPeriodStudent($request);
-                $schoolPeriodStudentId= SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id'];
-                self::addSubjects($request['subjects'],$schoolPeriodStudentId);
-                return self::getInscriptionById($request,$schoolPeriodStudentId);
+            if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request))){
+                if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
+                    $request['status']='INC-A';
+                    SchoolPeriodStudent::addSchoolPeriodStudent($request);
+                    $schoolPeriodStudentId= SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id'];
+                    self::addSubjects($request['subjects'],$schoolPeriodStudentId);
+                    return self::getInscriptionById($request,$schoolPeriodStudentId);
+                }
+                return response()->json(['message'=>'Inscripcion ya realizada'],206);
             }
-            return response()->json(['message'=>'Inscripcion ya realizada'],206);
+            return response()->json(['message'=>'ALguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
         }
         return response()->json(['message'=>'Relacion invalida'],206);
     }
@@ -158,18 +182,55 @@ class InscriptionService
         $organizationId = $request->header('organization_key');
         self::validate($request);
         if (self::validateRelation($request)){
-            if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
-                if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
-                    if( SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id']!=$id){
-                        return response()->json(['message'=>'Inscripcion ocupada'],206);
+            if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request))){
+                if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
+                    if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
+                        if( SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id']!=$id){
+                            return response()->json(['message'=>'Inscripcion ocupada'],206);
+                        }
                     }
+                    SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
+                    self::updateSubjects($request['subjects'],$id);
+                    return self::getInscriptionById($request,$id);
                 }
-                SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
-                self::updateSubjects($request['subjects'],$id);
-                return self::getInscriptionById($request,$id);
+                return response()->json(['message'=>'Inscripcion no encontrada'],206);
             }
-            return response()->json(['message'=>'Inscripcion no encontrada'],206);
+            return response()->json(['message'=>'ALguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
         }
         return response()->json(['message'=>'Relacion invalida'],206);
+    }
+
+    public static function isApprovedSubject($subjectId,$approvedSubjects)
+    {
+        foreach ($approvedSubjects as $approvedSubject){
+            if ($approvedSubject['subject']['subject_id']==$subjectId){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request)
+    {
+        $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::findSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
+        if (count($subjectsInSchoolPeriod)>0){
+            $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
+            $availableSubjects=[];
+            foreach ($subjectsInSchoolPeriod as $subjectInSchoolPeriod){
+                if ($subjectInSchoolPeriod['enrolled_students']<$subjectInSchoolPeriod['limit']){
+                    if (count($approvedSubjects)>0){
+                        if (!self::isApprovedSubject($subjectInSchoolPeriod['subject_id'],$approvedSubjects)){
+                            $availableSubjects[]=$subjectInSchoolPeriod;
+                        }
+                    }else{
+                       $availableSubjects[]=$subjectInSchoolPeriod;
+                    }
+                }
+            }
+            if (count($availableSubjects)>0){
+                return $availableSubjects;
+            }
+        }
+        return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
     }
 }

@@ -47,7 +47,7 @@ class SchoolPeriodService
             'cod_school_period'=>'required|max:10',
             'start_date'=>'required|size:10',
             'end_date'=>'required|size:10',
-            'withdrawal_deadline'=>'required|size:10',
+            'withdrawal_deadline'=>'size:10',
             'subjects.*.teacher_id'=>'required|numeric',
             'subjects.*.subject_id'=>'required|numeric',
             'subjects.*.limit'=>'required|numeric',
@@ -209,7 +209,7 @@ class SchoolPeriodService
                 }
             }
             if (isset($request['subjects'])){
-                if (!self::validateSubjects($request['subjects'])){
+                if (!self::validateSubjects($request['subjects'],$organizationId)){
                     return response()->json(['message'=>'Materia o profesor invalido'],206);
                 }
                 SchoolPeriod::updateSchoolPeriod($id, $request);

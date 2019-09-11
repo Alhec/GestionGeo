@@ -64,4 +64,9 @@ class StudentController extends Controller
     {
         return UserService::deleteUser($request,$id,'S');
     }
+
+    public function active(Request $request)
+    {
+        return UserService::activeUser($request,'S');
+    }
 }

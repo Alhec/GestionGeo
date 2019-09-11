@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class StudentSubject extends Model
 {
@@ -13,7 +14,7 @@ class StudentSubject extends Model
 
     public function student()
     {
-        return $this->belongsTo('App\SchoolPeriodStudent');
+        return $this->belongsTo('App\SchoolPeriodStudent','school_period_student_id','id');
     }
 
     public function subject()
@@ -61,6 +62,18 @@ class StudentSubject extends Model
     {
         return self::where('school_period_student_id',$schoolPeriodStudentId)
             ->where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+            ->get();
+    }
+
+    public static function getApprovedSubjects($studentId)
+    {
+        return self::where('status','APR')
+            ->with('subject')
+            ->with('student')
+            ->whereHas('student',function (Builder $query) use ($studentId){
+                $query
+                    ->where('student_id','=',$studentId);
+            })
             ->get();
     }
 }

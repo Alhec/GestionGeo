@@ -47,6 +47,9 @@ class SchoolPeriodSubjectTeacher extends Model
     public static function findSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
     {
         return self::where('school_period_id',$schoolPeriodId)
+            ->with('schedules')
+            ->with('teacher')
+            ->with('subject')
             ->get();
     }
 

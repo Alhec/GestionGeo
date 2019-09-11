@@ -24,5 +24,10 @@ class PostgraduateSubjectTableSeeder extends Seeder
             'subject_id'=>2,
             'type'=>'O',
         ]);
+        PostgraduateSubject::create([
+            'postgraduate_id'=>1,
+            'subject_id'=>3,
+            'type'=>'O',
+        ]);
     }
 }

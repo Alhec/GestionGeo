@@ -23,5 +23,10 @@ class SubjectsTableSeeder extends Seeder
             'subject_name'=>'Develop',
             'uc'=>5,
         ]);
+        Subject::create([
+            'subject_code'=>'12347',
+            'subject_name'=>'Hierro',
+            'uc'=>5,
+        ]);
     }
 }

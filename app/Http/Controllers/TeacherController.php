@@ -62,4 +62,9 @@ class TeacherController extends Controller
     {
         return UserService::deleteUser($request,$id,'T');
     }
+
+    public function active(Request $request)
+    {
+        return UserService::activeUser($request,'T');
+    }
 }

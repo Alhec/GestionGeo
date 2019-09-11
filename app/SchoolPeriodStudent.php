@@ -87,6 +87,4 @@ class SchoolPeriodStudent extends Model
         self::find($id)
             ->update($schoolPeriodSubject->all());
     }
-
-
 }

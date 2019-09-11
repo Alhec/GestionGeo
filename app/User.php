@@ -19,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'identification', 'password','user_type','first_name','second_name','first_surname','second_surname','telephone',
-        'mobile','work_phone','email','active'
+        'mobile','work_phone','email','active','withWork','withDisabilities',
     ];
 
     /**
@@ -188,5 +188,27 @@ class User extends Authenticatable implements JWTSubject
     {
         self::find($id)
             ->update($user->all());
+    }
+
+    public static function getUsersActive($userType,$organizationId)
+    {
+        $users = self::where('user_type',$userType)
+            ->where('active',true)
+            ->with('organization')
+            ->whereHas('organization',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+            });
+        if ($userType == 'A'){
+            return $users->get();
+        }elseif ($userType=='T'){
+            return $users->with('teacher')
+                ->get();
+        }elseif ($userType=='S'){
+            return $users->with('student')
+                ->get();
+        }else{
+            return [];
+        }
     }
 }

@@ -61,4 +61,9 @@ class AdministratorController extends Controller
     {
         return UserService::deleteUser($request,$id,'A');
     }
+
+    public function active(Request $request)
+    {
+        return UserService::activeUser($request,'A');
+    }
 }

@@ -61,7 +61,9 @@ class UserService
             'email'=>'max:30',
             'user_type'=>'max:1|ends_with:A,S,T',
             'level_instruction'=>'max:20',
-            'active'=>'boolean'
+            'active'=>'boolean',
+            'withWork'=>'boolean',
+            'withDisabilities'=>'boolean',
         ]);
     }
 
@@ -147,5 +149,16 @@ class UserService
             return 3;//Para service de profesor y estudiante errores
         }
         return response()->json(['message'=>'Usuario no encontrado'],206);
+    }
+
+    public static function activeUser(Request $request,$userType)
+    {
+        $organizationId = $request->header('organization_key');
+        $users = User::getUsersActive($userType,$organizationId);
+        if (count($users)>0){
+            return self::clearUser($users);
+        }
+        return response()->json(['message'=>'No existen usuarios activos con ese perfil'],206);
+
     }
 }

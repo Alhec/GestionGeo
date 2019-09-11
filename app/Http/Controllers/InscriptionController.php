@@ -62,4 +62,10 @@ class InscriptionController extends Controller
         return InscriptionService::deleteInscription($request, $id);
     }
 
+    public function availableSubjects(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        $schoolPeriodId = $request->input('school_period_id');
+        return InscriptionService::getAvailableSubjects($studentId,$schoolPeriodId,$request);
+    }
 }
