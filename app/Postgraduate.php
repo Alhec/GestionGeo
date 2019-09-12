@@ -65,10 +65,5 @@ class Postgraduate extends Model
             ->update($postgraduate->all());
     }
 
-    public function organization()
-    {
-        return $this->belongsTo('App\Organization');
-    }
-
 }
 

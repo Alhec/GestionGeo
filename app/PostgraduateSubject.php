@@ -17,24 +17,28 @@ class PostgraduateSubject extends Model
         self::create($postgraduateSubject);
     }
 
-    public static function getPostgraduateSubject($subjectId)
+    public static function getPostgraduateSubjectBySubjectId($subjectId)
     {
-        return self::where('subject_id',$subjectId)->get();
+        return self::where('subject_id',$subjectId)
+            ->get();
     }
 
     public static function updatePostgraduateSubject($id,$postgraduateSubject)
     {
-        self::find($id)->update($postgraduateSubject);
+        self::find($id)
+            ->update($postgraduateSubject);
     }
 
-    public static function findPostgraduateSubject($postgraduateId,$subjectId)
+    public static function getPostgraduateSubject($postgraduateId,$subjectId)
     {
         return self::where('postgraduate_id',$postgraduateId)
-            ->where('subject_id',$subjectId)->get('id')[0];
+            ->where('subject_id',$subjectId)
+            ->get();
     }
 
-    public static function deletePostgraduateSubject($postgraduateSubjectId)
+    public static function deletePostgraduateSubject($id)
     {
-        self::find($postgraduateSubjectId)->delete();
+        self::find($id)
+            ->delete();
     }
 }
