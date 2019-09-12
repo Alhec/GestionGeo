@@ -23,5 +23,11 @@ class OrganizationTableSeeder extends Seeder
             'name'=>'Computacion',
             'faculty_id'=>'CIENS'
         ]);
+        Organization::create([
+            'id'=>'ICT',
+            'name'=>'Instituto de Ciencias de la Tierra',
+            'faculty_id'=>'CIENS',
+            'organization_id'=>'G'
+        ]);
     }
 }

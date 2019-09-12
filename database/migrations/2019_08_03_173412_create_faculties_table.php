@@ -14,9 +14,9 @@ class CreateFacultiesTable extends Migration
     public function up()
     {
         Schema::create('faculties', function (Blueprint $table) {
-            $table->String('id');
-            $table->string('university_id');
-            $table->String('name');
+            $table->String('id',10);
+            $table->string('university_id',10);
+            $table->String('name',100);
             $table->primary('id');
             $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
         });

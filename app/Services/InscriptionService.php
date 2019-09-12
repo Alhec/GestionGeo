@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Postgraduate;
 use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriodStudent;
@@ -107,6 +108,7 @@ class InscriptionService
         }
         return false;
     }
+
     public static function isValidSubjects($subjects,$availableSubjects)
     {
         if (!is_array($availableSubjects)){
@@ -120,21 +122,64 @@ class InscriptionService
         return true;
     }
 
+    public static function getCurrentAmountCredits($studentId)
+    {
+        $currentAmountCredits = 0;
+        $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
+        if (count($approvedSubjects)>0){
+            foreach ($approvedSubjects as $approvedSubject){
+                $currentAmountCredits += $approvedSubject['subject']['uc'];
+            }
+        }
+        return $currentAmountCredits;
+    }
+
+    public static function getTotalAmountCredits($studentId,$organizationId)
+    {
+        $postgraduateId = Student::getStudent($studentId)[0]['postgraduate_id'];
+
+        return Postgraduate::getPostgraduateById($postgraduateId,$organizationId);
+    }
+
+    public static function getNumberCreditsInscription($subjects)
+    {
+        $numberCreditsInscription = 0;
+        foreach ($subjects as $subject){
+            $numberCreditsInscription += SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById($subject['school_period_subject_teacher_id'])[0]['subject']['uc'];
+        }
+        return $numberCreditsInscription;
+    }
+
+    public static function isValidCredits($studentId,$subjects,$organizationId)
+    {
+        $currentAmountCredits = self::getCurrentAmountCredits($studentId);
+        $totalAmountCredits = self::getTotalAmountCredits($studentId,$organizationId);
+        $numberCreditsInscription = self::getNumberCreditsInscription($subjects);
+        if ($currentAmountCredits+$numberCreditsInscription > $totalAmountCredits){
+            return false;
+        }
+        return true;
+    }
+
     public static function addInscription(Request $request)
     {
+        $organizationId = $request->header('organization_key');
         self::validate($request);
         if(self::validateRelation($request)){
             if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request))){
-                if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
-                    $request['status']='INC-A';
-                    SchoolPeriodStudent::addSchoolPeriodStudent($request);
-                    $schoolPeriodStudentId= SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id'];
-                    self::addSubjects($request['subjects'],$schoolPeriodStudentId);
-                    return self::getInscriptionById($request,$schoolPeriodStudentId);
+                if (self::isValidCredits($request['student_id'],$request['subjects'],$organizationId)){
+                    if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
+                        $request['status']='INC-A';
+                        SchoolPeriodStudent::addSchoolPeriodStudent($request);
+                        $schoolPeriodStudentId= SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id'];
+                        self::addSubjects($request['subjects'],$schoolPeriodStudentId);
+                        return self::getInscriptionById($request,$schoolPeriodStudentId);
+                    }
+                    return response()->json(['message'=>'Inscripcion ya realizada'],206);
                 }
-                return response()->json(['message'=>'Inscripcion ya realizada'],206);
+                return response()->json(['message'=>'La cantidad de creditos inscritos excede el limite permitido en su postgrado'],206);
             }
-            return response()->json(['message'=>'ALguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
+            return response()->json(['message'=>'Alguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
         }
         return response()->json(['message'=>'Relacion invalida'],206);
     }
@@ -183,19 +228,22 @@ class InscriptionService
         self::validate($request);
         if (self::validateRelation($request)){
             if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request))){
-                if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
-                    if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
-                        if( SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id']!=$id){
-                            return response()->json(['message'=>'Inscripcion ocupada'],206);
+                if (self::isValidCredits($request['student_id'],$request['subjects'],$organizationId)){
+                    if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
+                        if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
+                            if( SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id']!=$id){
+                                return response()->json(['message'=>'Inscripcion ocupada'],206);
+                            }
                         }
+                        SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
+                        self::updateSubjects($request['subjects'],$id);
+                        return self::getInscriptionById($request,$id);
                     }
-                    SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
-                    self::updateSubjects($request['subjects'],$id);
-                    return self::getInscriptionById($request,$id);
+                    return response()->json(['message'=>'Inscripcion no encontrada'],206);
                 }
-                return response()->json(['message'=>'Inscripcion no encontrada'],206);
+                return response()->json(['message'=>'La cantidad de creditos inscritos excede el limite permitido en su postgrado'],206);
             }
-            return response()->json(['message'=>'ALguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
+            return response()->json(['message'=>'Alguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
         }
         return response()->json(['message'=>'Relacion invalida'],206);
     }

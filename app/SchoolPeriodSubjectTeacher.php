@@ -59,6 +59,12 @@ class SchoolPeriodSubjectTeacher extends Model
             ->exists();
     }
 
+    public static function getSchoolPeriodSubjectTeacherById($id)
+    {
+        return self::where('id',$id)
+            ->with('subject')
+            ->get();
+    }
     public static function  deleteSchoolPeriodSubjectTeacher($id)
     {
         self::find($id)
