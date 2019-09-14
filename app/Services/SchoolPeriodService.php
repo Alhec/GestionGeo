@@ -67,7 +67,7 @@ class SchoolPeriodService
             if (Subject::existSubjectById($subject['subject_id'])==null ){
                 return false;
             }else{
-                $subjectsInPostgraduate = PostgraduateSubject::getPostgraduateSubject($subject['subject_id']);
+                $subjectsInPostgraduate = PostgraduateSubject::getPostgraduateSubjectBySubjectId($subject['subject_id']);
                 $associated = false;
                 foreach ($subjectsInPostgraduate as $subjectInPostgrduate){
                     if (Postgraduate::existPostgraduateById($subjectInPostgrduate['postgraduate_id'],$organizationId)){

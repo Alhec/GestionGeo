@@ -5,12 +5,13 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use App\Postgraduate;
 use App\Organization;
-
+//use Mail;
 class PostgraduateService
 {
 
     public static function getPostgraduates(Request $request)
     {
+        //self::sendEmail();
         $organizationId = $request->header('organization_key');
         $postgraduates = Postgraduate::getPostgraduates($organizationId);
         if (count($postgraduates)>0){
@@ -44,10 +45,10 @@ class PostgraduateService
         if (Organization::existOrganization($organizationId)){
             if (!Postgraduate::existPostgraduateByName($request['postgraduate_name'],$organizationId)){
                 $request['organization_id']=$organizationId;
-                Postgraduate::addPostgraduate($request);
-                return self::getPostgraduatesById($request,Postgraduate::getPostgraduateByName($request['postgraduate_name'],$organizationId)[0]['id']);
+                $id = Postgraduate::addPostgraduate($request);
+                return self::getPostgraduatesById($request,$id);
             }
-            return response()->json(['message'=>'Postgrado ya registrado'],206);
+            return response()->json(['message'=>'Nombre de postgrado en uso'],206);
         }
         return response()->json(['message'=>'No existe organizacion asociada'],206);
     }
@@ -66,18 +67,33 @@ class PostgraduateService
     {
         self::validate($request);
         $organizationId = $request->header('organization_key');
-        if (Postgraduate::existPostgraduateById($id,$organizationId)){
-            $request['organization_id']=$organizationId;
-            $postgraduateName=Postgraduate::getPostgraduateByName($request['postgraduate_name'],$organizationId);
-            if (count($postgraduateName)>0){
-                if ($postgraduateName[0]['id']!=$id){
-                    return response()->json(['message'=>'Nombre de postgrado en uso'],206);
+        if (Organization::existOrganization($organizationId)){
+            if (Postgraduate::existPostgraduateById($id,$organizationId)){
+                $request['organization_id']=$organizationId;
+                $postgraduateName=Postgraduate::getPostgraduateByName($request['postgraduate_name'],$organizationId);
+                if (count($postgraduateName)>0){
+                    if ($postgraduateName[0]['id']!=$id){
+                        return response()->json(['message'=>'Nombre de postgrado en uso'],206);
+                    }
                 }
+                Postgraduate::updatePostgraduate($id,$request);
+                return self::getPostgraduatesById($request,$id);
             }
-            Postgraduate::updatePostgraduate($id,$request);
-            return PostgraduateService::getPostgraduatesById($request,$id);
+            return response()->json(['message'=>'Postgrado no encontrado'],206);
         }
-        return response()->json(['message'=>'Postgrado no encontrado'],206);
+        return response()->json(['message'=>'No existe organizacion asociada'],206);
     }
+
+    /*public static function sendEmail()
+    {
+        $to_name = 'Hector';
+        $to_email = 'hector080896@gmail.com';
+        $data = array('name'=>'Ogbonna Vitalis(sender_name)', 'body' => 'A test mail');
+        Mail::send('email.Geoquimica.emailTest', $data, function($message) use ($to_name, $to_email) {
+        $message->to($to_email, $to_name)
+        ->subject('Laravel Test Mail');
+        $message->from('noyala96@gmail.com','Test Mail');
+        });
+    }*/
 
 }

@@ -74,17 +74,16 @@ class SubjectService
         $organizationId = $request->header('organization_key');
         if (!Subject::existSubjectByCode($request['subject_code'],$organizationId)){
             if (self::validatePostgraduates($request['postgraduates'],$organizationId)){
-                Subject::addSubject($request);
-                $subject = Subject::getSubjectByParameters($request['subject_code'],$request['subject_name'],$request['uc'])[0];
-                self::addPostgraduatesInSubject($request['postgraduates'],$subject['id']);
-                return self::getSubjectsById($request,$subject['id']);
+                $id = Subject::addSubject($request);
+                self::addPostgraduatesInSubject($request['postgraduates'],$id);
+                return self::getSubjectsById($request,$id);
             }
             return response()->json(['message'=>'Postgrados invalidos'],206);
         }
         return response()->json(['message'=>'Codigo de materia en uso'],206);
     }
 
-    public static function validateSubjectInOrganization($subjectId,$organizationId)
+    /*public static function validateSubjectInOrganization($subjectId,$organizationId)
     {
         $postgraduates = Postgraduate::getPostgraduates($organizationId);
         $postgraduateSubjects = PostgraduateSubject::getPostgraduateSubjectBySubjectId($subjectId);
@@ -96,7 +95,7 @@ class SubjectService
             }
         }
         return false;
-    }
+    }*/
 
     public static function deleteSubject(Request $request,$id)
     {
@@ -123,13 +122,12 @@ class SubjectService
                     break;
                 }
             }
-            if ($existPostgraduate ==false){
-                PostgraduateSubject::addPostgraduateSubject([
+            if ($existPostgraduate == false){
+                $postgraduatesUpdated[]=PostgraduateSubject::addPostgraduateSubject([
                     'postgraduate_id'=>$postgraduate['id'],
                     'subject_id'=>$subject_id,
                     'type'=>$postgraduate['type'],
                 ]);
-                $postgraduatesUpdated[]=PostgraduateSubject::getPostgraduateSubject($postgraduate['id'],$subject_id)[0]['id'];
             }
         }
         foreach ($postgraduatesInBd as $postgraduateId){

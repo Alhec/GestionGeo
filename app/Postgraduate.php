@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Organization;
 
 class Postgraduate extends Model
 {
@@ -36,7 +35,7 @@ class Postgraduate extends Model
 
     public static function addPostgraduate($postgraduate)
     {
-        self::create($postgraduate->all());
+        return self::insertGetId($postgraduate->all());
     }
 
     public static function getPostgraduateByName($name, $organizationId)

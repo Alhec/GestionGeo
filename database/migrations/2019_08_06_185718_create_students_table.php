@@ -21,6 +21,7 @@ class CreateStudentsTable extends Migration
             $table->string('home_university',70);
             $table->string('current_postgraduate',70)->nullable();
             $table->text('degrees')->nullable();
+            $table->string('type_income',30)->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('postgraduate_id')->references('id')->on('postgraduates')->onDelete('cascade');
         });

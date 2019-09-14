@@ -25,12 +25,12 @@ class CreateUsersTable extends Migration
             $table->string('work_phone',15)->nullable();
             $table->string('email',30);
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password',250);
             $table->string('user_type',1);
-            $table->string('level_instruction',20)->nullable();
+            $table->text('level_instruction')->nullable();
             $table->boolean('active');
-            $table->boolean('withWork')->nullable();
-            $table->boolean('withDisabilities')->nullable();
+            $table->boolean('with_work')->nullable();
+            $table->boolean('with_disabilities')->nullable();
             $table->rememberToken();
         });
     }

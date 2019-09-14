@@ -49,15 +49,7 @@ class Subject extends Model
 
     public static function addSubject($subject)
     {
-        self::create($subject->all());
-    }
-
-    public static function getSubjectByParameters($code,$name,$uc)
-    {
-        return self::where('subject_code',$code)
-            ->where('subject_name',$name)
-            ->where('uc',$uc)
-            ->get();
+        return self::insertGetId($subject->only('subject_code','subject_name','uc','subject_type'));
     }
 
     public static function getSubjectByCode($code,$organizationId)
@@ -69,7 +61,6 @@ class Subject extends Model
                     ->where('organization_id','=',$organizationId);
             })
             ->get();
-
     }
 
     public static function existSubjectById($id,$organizationId)

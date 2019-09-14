@@ -149,7 +149,7 @@ class User extends Authenticatable implements JWTSubject
         self::create($user->all());
     }
 
-    public static function findUser($identification,$userType)
+    public static function getUsersByIdentification($identification,$userType)
     {
         return self::where('identification',$identification)
             ->where('user_type',$userType)

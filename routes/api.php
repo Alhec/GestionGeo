@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+//Route::middleware('jwt.auth','role:A')->resource('postgraduates','PostgraduateController');
 Route::resource('postgraduates','PostgraduateController');
 //Route::middleware('jwt.auth')->resource('subjects','SubjectController');
 Route::resource('subjects','SubjectController');
@@ -48,3 +49,11 @@ Route::post('payload', 'AuthController@payload');
 Route::group(['middleware' => ['jwt.auth']], function() {
     /*AÑADE AQUI LAS RUTAS QUE QUIERAS PROTEGER CON JWT*/
 });
+//Route::post('password/email', 'PasswordController@postEmail');
+//Route::post('password/reset', 'PasswordController@postReset');
+
+// Password Reset Routes...
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.email');;
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');

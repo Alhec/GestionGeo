@@ -9,10 +9,10 @@
 namespace App\Services;
 
 
+use App\Organization;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
-use App\Postgraduate;
 use App\OrganizationUser;
 
 class UserService
@@ -69,9 +69,8 @@ class UserService
 
     public static function getIdUser($identification,$userType) // puede ocurrir el caso en queun estudiante este en mas de un postgrado
     {
-        $users=User::findUser($identification,$userType);
+        $users=User::getUsersByIdentification($identification,$userType);
         foreach ($users as $user){
-            //dd([OrganizationUser::existOrganizationUser($user['id'],$organizationId),$identification,$userType,$user['id'],$organizationId]);
             if (!OrganizationUser::existOrganizationUser($user['id'])){
                 return $user['id'];
             }
@@ -82,7 +81,7 @@ class UserService
     {
         $organizationId = $request->header('organization_key');
         self::validate($request);
-        if (Postgraduate::existOrganization($organizationId)){
+        if (Organization::existOrganization($organizationId)){
             if (!(User::existUserByIdentification($request['identification'],$userType,$organizationId))AND!(User::existUserByEmail($request['email'],$userType,$organizationId))){
                 $request['password']=Hash::make($request['identification']);
                 $request['user_type']=$userType;
