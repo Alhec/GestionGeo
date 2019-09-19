@@ -18,6 +18,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('name',100);
             $table->string('faculty_id',10);
             $table->string('organization_id',10)->nullable();
+            $table->string('website',50)->nullable();
             $table->primary('id');
             $table->foreign('faculty_id')->references('id')->on('faculties')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');

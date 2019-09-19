@@ -14,7 +14,7 @@ class AdministratorController extends Controller
      */
     public function index(Request $request)
     {
-        return UserService::getUser($request,'A');
+        return UserService::getUsers($request,'A');
     }
 
     /**
@@ -46,7 +46,7 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id,Request $request)
     {
        return UserService::updateUser($request,$id,'A');
     }
@@ -64,6 +64,6 @@ class AdministratorController extends Controller
 
     public function active(Request $request)
     {
-        return UserService::activeUser($request,'A');
+        return UserService::activeUsers($request,'A');
     }
 }

@@ -1,99 +1,295 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
-    <!-- Styles -->
-    <style>
-        html, body {
-            background-color: #fff;
-            color: #636b6f;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 200;
-            height: 100vh;
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>A Simple Responsive HTML Email</title>
+    <style type="text/css">
+        body {
             margin: 0;
+            padding: 0;
+            min-width: 100% !important;
         }
 
-        .full-height {
-            height: 100vh;
-        }
-
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-        }
-
-        .position-ref {
-            position: relative;
-        }
-
-        .top-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
+        img {
+            height: auto;
         }
 
         .content {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .header {
+            padding: 40px 30px 20px 30px;
+        }
+
+        .innerpadding {
+            padding: 30px 30px 30px 30px;
+        }
+
+        .borderbottom {
+            border-bottom: 1px solid #f2eeed;
+        }
+
+        .subhead {
+            font-size: 15px;
+            color: #ffffff;
+            font-family: sans-serif;
+            letter-spacing: 10px;
+        }
+
+        .h1, .h2, .bodycopy {
+            color: #153643;
+            font-family: sans-serif;
+        }
+
+        .h1 {
+            font-size: 33px;
+            line-height: 38px;
+            font-weight: bold;
+        }
+
+        .h2 {
+            padding: 0 0 15px 0;
+            font-size: 24px;
+            line-height: 28px;
+            font-weight: bold;
+        }
+
+        .bodycopy {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .button {
             text-align: center;
+            font-size: 18px;
+            font-family: sans-serif;
+            font-weight: bold;
+            padding: 0 30px 0 30px;
         }
 
-        .title {
-            font-size: 84px;
-        }
-
-        .links > a {
-            color: #636b6f;
-            padding: 0 25px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: .1rem;
+        .button a {
+            color: #ffffff;
             text-decoration: none;
-            text-transform: uppercase;
         }
 
-        .m-b-md {
-            margin-bottom: 30px;
+        .footer {
+            padding: 20px 30px 15px 30px;
         }
+
+        .footercopy {
+            font-family: sans-serif;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .footercopy a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        @media only screen and (max-width: 550px), screen and (max-device-width: 550px) {
+            body[yahoo] .hide {
+                display: none !important;
+            }
+
+            body[yahoo] .buttonwrapper {
+                background-color: transparent !important;
+            }
+
+            body[yahoo] .button {
+                padding: 0px !important;
+            }
+
+            body[yahoo] .button a {
+                background-color: #e05443;
+                padding: 15px 15px 13px !important;
+            }
+
+            body[yahoo] .unsubscribe {
+                display: block;
+                margin-top: 20px;
+                padding: 10px 50px;
+                background: #2f3942;
+                border-radius: 5px;
+                text-decoration: none !important;
+                font-weight: bold;
+            }
+        }
+
+        /*@media only screen and (min-device-width: 601px) {
+          .content {width: 600px !important;}
+          .col425 {width: 425px!important;}
+          .col380 {width: 380px!important;}
+          }*/
+
     </style>
 </head>
-<body>
-<div class="flex-center position-ref full-height">
-    @if (Route::has('login'))
-        <div class="top-right links">
-            @auth
-                <a href="{{ url('/home') }}">Home</a>
-            @else
-                <a href="{{ route('login') }}">Login</a>
 
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}">Register</a>
-                @endif
-            @endauth
-        </div>
-    @endif
+<body yahoo bgcolor="#f6f8f1">
+<table width="100%" bgcolor="#f6f8f1" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td>
+            <![endif]-->
+            <table bgcolor="#ffffff" class="content" align="center" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td bgcolor="#1976D2" class="header">
+                        <table width="70" align="left" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td height="70" style="padding: 0 20px 20px 0;">
+                                    <img class="fix" src="https://cdn.onlinewebfonts.com/svg/img_175368.png"
+                                         width="70" height="70" border="0" alt=""/>
+                                </td>
+                            </tr>
+                        </table>
 
-    <div class="content">
-        <div class="title m-b-md">
-            Laravel
-        </div>
-
-        <div class="links">
-            <a href="https://laravel.com/docs">Docs</a>
-            <a href="https://laracasts.com">Laracasts</a>
-            <a href="https://laravel-news.com">News</a>
-            <a href="https://blog.laravel.com">Blog</a>
-            <a href="https://nova.laravel.com">Nova</a>
-            <a href="https://forge.laravel.com">Forge</a>
-            <a href="https://github.com/laravel/laravel">GitHub</a>
-        </div>
-    </div>
-</div>
+                        <table class="col425" align="left" border="0" cellpadding="0" cellspacing="0"
+                               style="width: 100%; max-width: 425px;">
+                            <tr>
+                                <td height="70">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td class="subhead" style="padding: 0 0 0 3px;">
+                                                Usuario creado
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="h1" style="padding: 5px 0 0 0;">
+                                                Bienvenido a GestionGeo
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <tr>
+                    <td class="innerpadding borderbottom">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td class="h2">
+                                    GestionGeo
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bodycopy">
+                                    Es el sistema de gestion academica de los postgrados asociados a la escuela de geoquimica.
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="innerpadding borderbottom">
+                        <table width="115" align="left" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td height="115" style="padding: 0 20px 20px 0;">
+                                    <img class="fix"
+                                         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/article1.png"
+                                         width="115" height="115" border="0" alt=""/>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="col380" align="left" border="0" cellpadding="0" cellspacing="0"
+                               style="width: 100%; max-width: 380px;">
+                            <tr>
+                                <td>
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td class="bodycopy">
+                                                Hola {{ $name }}, se ha creado un usuario con el rol de {{ $profile }}, ingresa al sistema con tu cedula de identidad, use su cedula como contrase;a y cambiela lo antes posible.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 20px 0 0 0;">
+                                                <table class="buttonwrapper" bgcolor="#1976D2" border="0"
+                                                       cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                        <td class="button" height="45">
+                                                            <a href="{{ $web }}">Acceder</a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <tr>
+                    <td class="innerpadding borderbottom">
+                        <img class="fix" src="http://gea.ciens.ucv.ve/webict/web/wp-content/uploads/2013/11/slider4-700x315.png" width="100%"
+                             border="0" alt=""/>
+                    </td>
+                </tr>
+                <!--<tr>
+                    <td class="innerpadding bodycopy">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus adipiscing felis, sit amet
+                        blandit ipsum volutpat sed. Morbi porttitor, eget accumsan dictum, nisi libero ultricies ipsum,
+                        in posuere mauris neque at erat.
+                    </td>
+                </tr>-->
+                <tr>
+                    <td class="footer" bgcolor="#44525f">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <!--<tr>
+                                <td align="center" class="footercopy">
+                                    &reg; Someone, somewhere 20XX<br/>
+                                    <a href="#" class="unsubscribe"><font color="#ffffff">Unsubscribe</font></a>
+                                    <span class="hide">from this newsletter instantly</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="padding: 20px 0 0 0;">
+                                    <table border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td width="37" style="text-align: center; padding: 0 10px 0 10px;">
+                                                <a href="http://www.facebook.com/">
+                                                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/facebook.png"
+                                                         width="37" height="37" alt="Facebook" border="0"/>
+                                                </a>
+                                            </td>
+                                            <td width="37" style="text-align: center; padding: 0 10px 0 10px;">
+                                                <a href="http://www.twitter.com/">
+                                                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/twitter.png"
+                                                         width="37" height="37" alt="Twitter" border="0"/>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>-->
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </td>
+    </tr>
+</table>
 </body>
 </html>

@@ -121,7 +121,16 @@ class User extends Authenticatable implements JWTSubject
             return [];
         }
     }
-
+    public static function existUserById($id,$userType,$organizationId)
+    {
+        return self::where('id',$id)
+            ->where('user_type',$userType)
+            ->with('organization')
+            ->whereHas('organization',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+            })->exists();
+    }
     public static function existUserByIdentification($identification,$userType,$organizationId)
     {
         return self::where('identification',$identification)
@@ -146,14 +155,9 @@ class User extends Authenticatable implements JWTSubject
 
     public static function addUser($user)
     {
-        self::create($user->all());
-    }
-
-    public static function getUsersByIdentification($identification,$userType)
-    {
-        return self::where('identification',$identification)
-            ->where('user_type',$userType)
-            ->get();
+        return self::insertGetId($user->only('identification', 'password','user_type','first_name','second_name',
+            'first_surname','second_surname','telephone','mobile','work_phone','email','active','with_work',
+            'with_disabilities'));
     }
 
     public static function deleteUser($id)

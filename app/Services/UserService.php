@@ -27,7 +27,7 @@ class UserService
         return $usersReturns;
     }
 
-    public static function getUser(Request $request, $userType)
+    public static function getUsers(Request $request, $userType)
     {
         $organizationId = $request->header('organization_key');
         $users= User::getUsers($userType,$organizationId);
@@ -56,25 +56,13 @@ class UserService
             'first_surname'=>'required|max:20',
             'second_surname'=>'max:20',
             'telephone'=>'max:15',
-            'mobile'=>'max:15',
+            'mobile'=>'required|max:15',
             'work_phone'=>'max:15',
-            'email'=>'max:30',
-            'user_type'=>'max:1|ends_with:A,S,T',
+            'email'=>'required|max:30|email',
             'level_instruction'=>'max:20',
-            'active'=>'boolean',
-            'withWork'=>'boolean',
-            'withDisabilities'=>'boolean',
+            'with_work'=>'boolean',
+            'with_disabilities'=>'boolean',
         ]);
-    }
-
-    public static function getIdUser($identification,$userType) // puede ocurrir el caso en queun estudiante este en mas de un postgrado
-    {
-        $users=User::getUsersByIdentification($identification,$userType);
-        foreach ($users as $user){
-            if (!OrganizationUser::existOrganizationUser($user['id'])){
-                return $user['id'];
-            }
-        }
     }
 
     public static function addUser(Request $request,$userType)
@@ -86,12 +74,15 @@ class UserService
                 $request['password']=Hash::make($request['identification']);
                 $request['user_type']=$userType;
                 $request['active']=true;
-                User::addUser($request);
-                $userId= self::getIdUser($request['identification'],$userType);
+                $userId= User::addUser($request);
                 OrganizationUser::addOrganizationUser([
                     'user_id'=>$userId,
                     'organization_id'=>$organizationId,
                 ]);
+                EmailService::userCreate($userId,$organizationId,$userType);
+                if ($userType =='S'||$userType =='T'){
+                    return $userId;//Para service de profesor y estudiante retornar usuario
+                }
                 return self::getUserById($request,$userId,$userType);
             }
             if ($userType =='S'||$userType =='T'){
@@ -108,7 +99,7 @@ class UserService
     public static function deleteUser(Request $request, $userId, $userType)
     {
         $organizationId = $request->header('organization_key');
-        if (count(User::getUserById($userId,$userType,$organizationId))>0){
+        if (User::existUserById($userId,$userType,$organizationId)){
             User::deleteUser($userId);
             return response()->json(['message'=>'OK']);
         }
@@ -134,23 +125,32 @@ class UserService
     {
         self::validate($request);
         $organizationId = $request->header('organization_key');
-        $user=User::getUserById($userId,$userType,$organizationId);
-        if (count($user)>0){
-            if (!self::availableUser($request,$userId,$userType,$organizationId)){
-                return response()->json(['message'=>'Identificacion o correo ya registrado'],206);
+        if (Organization::existOrganization($organizationId)){
+            if (User::existUserById($userId,$userType,$organizationId)){
+                if (!self::availableUser($request,$userId,$userType,$organizationId)){
+                    return response()->json(['message'=>'Identificacion o correo ya registrado'],206);
+                }
+                $user=User::getUserById($userId,$userType,$organizationId);
+                $request['password']=$user[0]['password'];
+                $request['user_type']=$userType;
+                User::updateUser($userId,$request);
+                if ($userType =='S'||$userType =='T'){
+                    return $userId;//Para service de profesor y estudiante retornar usuario
+                }
+                return self::getUserById($request,$userId,$userType);
             }
-            $request['password']=$user[0]['password'];
-            $request['user_type']=$userType;
-            User::updateUser($userId,$request);
-            return self::getUserById($request,$userId,$userType);
+            if ($userType =='S'||$userType =='T'){
+                return 3;//Para service de profesor y estudiante errores
+            }
+            return response()->json(['message'=>'Usuario no encontrado'],206);
         }
         if ($userType =='S'||$userType =='T'){
-            return 3;//Para service de profesor y estudiante errores
+            return 2;//Para service de profesor y estudiante errores
         }
-        return response()->json(['message'=>'Usuario no encontrado'],206);
+        return response()->json(['message'=>'No existe organizacion asociada'],206);
     }
 
-    public static function activeUser(Request $request,$userType)
+    public static function activeUsers(Request $request,$userType)
     {
         $organizationId = $request->header('organization_key');
         $users = User::getUsersActive($userType,$organizationId);

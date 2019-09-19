@@ -56,7 +56,6 @@ class SchoolPeriodService
             'subjects.*.schedules.*.classroom'=>'required|max:20',
             'subjects.*.schedules.*.start_hour'=>'required|size:8',
             'subjects.*.schedules.*.end_hour'=>'required|size:8',
-
         ]);
     }
 
@@ -64,7 +63,7 @@ class SchoolPeriodService
     {
         foreach ($subjects as $subject){
 
-            if (Subject::existSubjectById($subject['subject_id'])==null ){
+            if (Subject::existSubjectById($subject['subject_id'],$organizationId)==null ){
                 return false;
             }else{
                 $subjectsInPostgraduate = PostgraduateSubject::getPostgraduateSubjectBySubjectId($subject['subject_id']);
@@ -231,6 +230,6 @@ class SchoolPeriodService
         if (count($currentSchoolPeriod)>0){
             return $currentSchoolPeriod[0];
         }
-        return response()->json(['message'=>'No hay periodp escolar en curso'],206);
+        return response()->json(['message'=>'No hay periodo escolar en curso'],206);
     }
 }
