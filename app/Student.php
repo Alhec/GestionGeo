@@ -19,16 +19,18 @@ class Student extends Model
     }
     public static function updateStudent($userId,$student)
     {
-        self::where('user_id',$userId)->get()[0]->update($student);
+        self::where('user_id',$userId)
+            ->get()[0]
+            ->update($student);
     }
 
-    public static function existStudent($id)
+    public static function existStudentByid($id)
     {
         return self::where('id',$id)
             ->exists();
     }
 
-    public static function getStudent($id)
+    public static function getStudentById($id)
     {
         return self::where('id',$id)
             ->get();

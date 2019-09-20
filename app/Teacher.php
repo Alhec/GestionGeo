@@ -12,9 +12,16 @@ class Teacher extends Model
         return $this->belongsTo('App\User');
     }
 
+    public static function getTeacherById($id)
+    {
+        return self::where('id',$id)
+            ->get();
+    }
+
     public static function existTeacherById($id)
     {
-        return self::find($id);
+        return self::where('id',$id)
+            ->exist();
     }
 
     public static function addTeacher($teacher)
@@ -24,6 +31,8 @@ class Teacher extends Model
 
     public static function updateTeacher($userId,$teacher)
     {
-        self::where('user_id',$userId)->get()[0]->update($teacher);
+        self::where('user_id',$userId)
+            ->get()[0]
+            ->update($teacher);
     }
 }

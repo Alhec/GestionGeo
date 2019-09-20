@@ -26,35 +26,35 @@ class TeacherService
     {
         self::validate($request);
         $result =UserService::addUser($request,'T');
-        if (is_int($result)){
-            if ($result==1){
-                return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
-            }
-            if ($result==2){
-                return response()->json(['message'=>'No existe organizacion asociada'],206);
-            }
+        if ($result=="identification_email"){
+            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+        }else if ($result=="organization"){
+            return response()->json(['message'=>'No existe organizacion asociada'],206);
+        }else{
+            Teacher::addTeacher([
+                'user_id'=>$result,
+                'teacher_type'=>$request['teacher_type'],
+            ]);
+            return UserService::getUserById($request,$result,'T');
         }
-        $teacher = User::findUser($request['identification'],'T');
-        Teacher::addTeacher([
-            'user_id'=>$teacher[0]['id'],
-            'teacher_type'=>$request['teacher_type'],
-        ]);
-        return UserService::getUserById($request,$teacher[0]['id'],'T');
     }
 
     public static function updateTeacher(Request $request, $id)
     {
         self::validate($request);
         $result =UserService::updateUser($request,$id,'T');
-        if (is_int($result)){
-            if ($result==3){
-                return response()->json(['message'=>'Usuario no encontrado'],206);
-            }
+        if ($result=="user"){
+            return response()->json(['message'=>'Usuario no encontrado'],206);
+        }else if ($result=="organization"){
+            return response()->json(['message'=>'No existe organizacion asociada'],206);
+        }else if ($result=="identification_email"){
+            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+        }else {
+            Teacher::updateTeacher($id, [
+                'user_id' => $id,
+                'teacher_type' => $request['teacher_type']
+            ]);
+            return UserService::getUserById($request, $id, 'T');
         }
-        Teacher::updateTeacher($id,[
-            'user_id'=>$id,
-            'teacher_type'=>$request['teacher_type']
-        ]);
-        return UserService::getUserById($request,$id,'T');
     }
 }

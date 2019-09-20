@@ -86,12 +86,12 @@ class UserService
                 return self::getUserById($request,$userId,$userType);
             }
             if ($userType =='S'||$userType =='T'){
-                return 1;//Para service de profesor y estudiante errores
+                return "identification_email";//Para service de profesor y estudiante errores
             }
             return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
         }
         if ($userType =='S'||$userType =='T'){
-            return 2;//Para service de profesor y estudiante errores
+            return "organization";//Para service de profesor y estudiante errores
         }
         return response()->json(['message'=>'No existe organizacion asociada'],206);
     }
@@ -128,6 +128,9 @@ class UserService
         if (Organization::existOrganization($organizationId)){
             if (User::existUserById($userId,$userType,$organizationId)){
                 if (!self::availableUser($request,$userId,$userType,$organizationId)){
+                    if ($userType =='S'||$userType =='T'){
+                        return "identification_email";//Para service de profesor y estudiante errores
+                    }
                     return response()->json(['message'=>'Identificacion o correo ya registrado'],206);
                 }
                 $user=User::getUserById($userId,$userType,$organizationId);
@@ -140,12 +143,12 @@ class UserService
                 return self::getUserById($request,$userId,$userType);
             }
             if ($userType =='S'||$userType =='T'){
-                return 3;//Para service de profesor y estudiante errores
+                return "user";//Para service de profesor y estudiante errores
             }
             return response()->json(['message'=>'Usuario no encontrado'],206);
         }
         if ($userType =='S'||$userType =='T'){
-            return 2;//Para service de profesor y estudiante errores
+            return "organization";//Para service de profesor y estudiante errores
         }
         return response()->json(['message'=>'No existe organizacion asociada'],206);
     }

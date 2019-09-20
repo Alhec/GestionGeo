@@ -48,15 +48,4 @@ class EmailService extends Controller
             }
         }
     }
-    /*public static function sendEmail()
-     {
-         $to_name = 'Hector';
-         $to_email = 'hector080896@gmail.com';
-         $data = array('name'=>'Ogbonna Vitalis(sender_name)', 'body' => 'A test mail');
-         Mail::send('email.Geoquimica.emailTest', $data, function($message) use ($to_name, $to_email) {
-         $message->to($to_email, $to_name)
-         ->subject('Laravel Test Mail');
-         $message->from('noyala96@gmail.com','Test Mail');
-         });
-     }*/
 }
