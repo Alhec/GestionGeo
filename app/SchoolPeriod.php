@@ -42,17 +42,7 @@ class SchoolPeriod extends Model
 
     public static function addSchoolPeriod($schoolPeriod)
     {
-        self::create($schoolPeriod->all());
-    }
-
-    public static function findSchoolPeriodId($codSchoolPeriod,$organizationId)
-    {
-        $schoolPeriod = self::where('cod_school_period',$codSchoolPeriod)
-            ->where('organization_id',$organizationId);
-        if ($schoolPeriod->exists()){
-            return $schoolPeriod->get()[0];
-        }
-        return null;
+        return self::insertGetId($schoolPeriod->only('cod_school_period','start_date','end_date','withdrawal_deadline','inscription_visible','organization_id','load_notes'));
     }
 
     public static function existSchoolPeriodById($id,$organizationId)
@@ -78,6 +68,7 @@ class SchoolPeriod extends Model
     {
         return self::where('organization_id',$organizationId)
             ->whereDate('end_date','>=',date("Y-m-d"))
+            ->orderBy('start_date','ASC')
             ->with('subjects')
             ->get();
     }

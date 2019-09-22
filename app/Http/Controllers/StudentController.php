@@ -15,7 +15,7 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        return UserService::getUser($request,'S');
+        return UserService::getUsers($request,'S');
     }
 
 
@@ -67,6 +67,6 @@ class StudentController extends Controller
 
     public function active(Request $request)
     {
-        return UserService::activeUser($request,'S');
+        return UserService::activeUsers($request,'S');
     }
 }

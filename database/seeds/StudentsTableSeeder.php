@@ -26,7 +26,7 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
         ]);
         Student::create([
-            'postgraduate_id'=>1,
+            'postgraduate_id'=>3,
             'user_id'=>9,
             'student_type'=>"AMP", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',

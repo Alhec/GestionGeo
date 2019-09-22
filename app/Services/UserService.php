@@ -79,7 +79,7 @@ class UserService
                     'user_id'=>$userId,
                     'organization_id'=>$organizationId,
                 ]);
-                EmailService::userCreate($userId,$organizationId,$userType);
+                //EmailService::userCreate($userId,$organizationId,$userType);
                 if ($userType =='S'||$userType =='T'){
                     return $userId;//Para service de profesor y estudiante retornar usuario
                 }

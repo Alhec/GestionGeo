@@ -15,7 +15,7 @@ class CreateSchoolPeriodsTable extends Migration
     {
         Schema::create('school_periods', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('organization_id');
+            $table->string('organization_id',10);
             $table->string('cod_school_period',10);
             $table->date('start_date');
             $table->date('end_date');

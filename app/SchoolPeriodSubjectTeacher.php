@@ -33,7 +33,7 @@ class SchoolPeriodSubjectTeacher extends Model
 
     public static function addSchoolPeriodSubjectTeacher($schoolPeriodSubjectTeacher)
     {
-        self::create($schoolPeriodSubjectTeacher);
+        return self::insertGetId($schoolPeriodSubjectTeacher->only('teacher_id','subject_id','school_period_id','limit','duty','enrolled_students'));
     }
 
     public static function findSchoolPeriodSubjectTeacher($schoolPeriodId,$subjectId,$teacherId)
@@ -65,17 +65,18 @@ class SchoolPeriodSubjectTeacher extends Model
             ->with('subject')
             ->get();
     }
+
     public static function  deleteSchoolPeriodSubjectTeacher($id)
     {
         self::find($id)
         ->delete();
     }
 
-    public static function  deleteSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
+   /* public static function  deleteSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
     {
         self::where('school_period_id',$schoolPeriodId)
             ->delete();
-    }
+    }*/
 
     public static function updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher)
     {
@@ -86,14 +87,16 @@ class SchoolPeriodSubjectTeacher extends Model
     public static function updateEnrolledStudent($id)
     {
         $schoolPeriodSubjectTeacher = self::where('id',$id)
-        ->get();
+            ->get();
         $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
-        self::find($id)
-        ->update($schoolPeriodSubjectTeacher->all());
+        self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher);
+        /*self::find($id)
+            ->update($schoolPeriodSubjectTeacher->all());*/
     }
-     public static function getSchoolPeriodSubjectTeacher($id)
+
+ /*    public static function getSchoolPeriodSubjectTeacher($id)
      {
          return self::where('id',$id)
              ->get();
-     }
+     }*/
 }

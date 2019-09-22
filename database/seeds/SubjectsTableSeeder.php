@@ -15,22 +15,22 @@ class SubjectsTableSeeder extends Seeder
         Subject::query()->truncate();
         Subject::create([
             'subject_code'=>'12345',
-            'subject_name'=>'Aire',
+            'subject_name'=>'Geodinamica Avanzada',
             'uc'=>5,
         ]);
         Subject::create([
             'subject_code'=>'12346',
-            'subject_name'=>'Tierra',
+            'subject_name'=>'Geoquimica General',
             'uc'=>5,
         ]);
         Subject::create([
             'subject_code'=>'12347',
-            'subject_name'=>'Fuego',
+            'subject_name'=>'Petrologia Ignea',
             'uc'=>5,
         ]);
         Subject::create([
             'subject_code'=>'12348',
-            'subject_name'=>'Agua',
+            'subject_name'=>'Petrologia Metamorfica',
             'uc'=>5,
         ]);
         Subject::create([
