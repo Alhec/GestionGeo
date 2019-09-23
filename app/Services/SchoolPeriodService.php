@@ -76,6 +76,18 @@ class SchoolPeriodService
         return true;
     }
 
+    public static function subjectConsistency($subjects)
+    {
+        $subjectId = [];
+        foreach ($subjects as $subject){
+            if (in_array($subject['subject_id'],$subjectId)){
+                return false;
+            }
+            $subjectId[]=$subject['subject_id'];
+        }
+        return true;
+    }
+
     public static function addSchedules($schedules,$schoolPeriodSubjectTeacherId)
     {
         foreach ($schedules as $schedule){
@@ -109,6 +121,9 @@ class SchoolPeriodService
                 if (isset($request['subjects'])){
                     if (!self::validateSubjects($request['subjects'],$organizationId)){
                         return response()->json(['message'=>'Materia o profesor invalido'],206);
+                    }
+                    if (!self::subjectConsistency($request['subjects'])){
+                        return response()->json(['message'=>'Materias duplicadas'],206);
                     }
                     $schoolPeriodId = SchoolPeriod::addSchoolPeriod($request);
                     self::addSubjectInSchoolPeriod($request['subjects'],$schoolPeriodId);
@@ -187,12 +202,15 @@ class SchoolPeriodService
                 self::validateInUpdate($request);
                 if (SchoolPeriod::existSchoolPeriodbyCodSchoolPeriod($request['cod_school_period'],$organizationId)){
                     if (SchoolPeriod::getSchoolPeriodByCodSchoolPeriod($request['cod_school_period'],$organizationId)[0]['id']!=$id){
-                        return response()->json(['message'=>'El codigo del periodo escolar ya esta registrado'],206);
+                        return response()->json(['message'=>'Periodo escolar ya registrado'],206);
                     }
                 }
                 if (isset($request['subjects'])){
                     if (!self::validateSubjects($request['subjects'],$organizationId)){
                         return response()->json(['message'=>'Materia o profesor invalido'],206);
+                    }
+                    if (!self::subjectConsistency($request['subjects'])){
+                        return response()->json(['message'=>'Materias duplicadas'],206);
                     }
                     SchoolPeriod::updateSchoolPeriod($id, $request);
                     self::updateSubjectInSchoolPeriod($request['subjects'],$id);
