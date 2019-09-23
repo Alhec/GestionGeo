@@ -33,7 +33,29 @@ class SchoolPeriod extends Model
             ->get();
     }
 
-    public static function existSchoolPeriod($codSchoolPeriod,$organizationId)
+    public static function getCurrentSchoolPeriod($organizationId)
+    {
+        return self::where('organization_id',$organizationId)
+            ->whereDate('end_date','>=',date("Y-m-d"))
+            ->orderBy('start_date','ASC')
+            ->with('subjects')
+            ->get();
+    }
+
+    public static function deleteSchoolPeriod($id)
+    {
+        self::find($id)
+            ->delete();
+    }
+
+    public static function existSchoolPeriodById($id,$organizationId)
+    {
+        return self::where('id',$id)
+            ->where('organization_id',$organizationId)
+            ->exists();
+    }
+
+    public static function existSchoolPeriodByCodSchoolPeriod($codSchoolPeriod,$organizationId)
     {
         return self::where('cod_school_period',$codSchoolPeriod)
             ->where('organization_id',$organizationId)
@@ -45,17 +67,12 @@ class SchoolPeriod extends Model
         return self::insertGetId($schoolPeriod->only('cod_school_period','start_date','end_date','withdrawal_deadline','inscription_visible','organization_id','load_notes'));
     }
 
-    public static function existSchoolPeriodById($id,$organizationId)
+    public static function getSchoolPeriodByCodSchoolPeriod($codSchoolPeriod,$organizationId)
     {
-        return self::where('id',$id)
+        return self::where('cod_school_period',$codSchoolPeriod)
             ->where('organization_id',$organizationId)
-            ->exists();
-    }
-
-    public static function deleteSchoolPeriod($id)
-    {
-        self::find($id)
-            ->delete();
+            ->with('subjects')
+            ->get();
     }
 
     public static function updateSchoolPeriod($id,$schoolPeriod)
@@ -64,13 +81,5 @@ class SchoolPeriod extends Model
             ->update($schoolPeriod->all());
     }
 
-    public static function getCurrentSchoolPeriod($organizationId)
-    {
-        return self::where('organization_id',$organizationId)
-            ->whereDate('end_date','>=',date("Y-m-d"))
-            ->orderBy('start_date','ASC')
-            ->with('subjects')
-            ->get();
-    }
 
 }

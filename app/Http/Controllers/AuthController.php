@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -19,17 +20,20 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
-        $credentials= json_decode($request->getContent(),true);
-        if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],'password'=>$credentials['password'],'user_type'=>$credentials['user_type']])) {
-            return response()->json(['error' => 'Invalid User'], 401);
+        $organizationId = $request->header('organization_key');
+        if (User::existUserByIdentification($request['identification'],$request['user_type'],$organizationId)){
+            $credentials= json_decode($request->getContent(),true);
+            if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],'password'=>$credentials['password'],'user_type'=>$credentials['user_type']])) {
+                return response()->json(['error' => 'Invalid User'], 401);
+            }
+            return response()->json([
+                'token' => $token,
+                'type' => 'bearer', // you can ommit this
+                'expires' => auth('api')->factory()->getTTL() * 60,
+                'user' => auth('api')->user(),
+            ]);
         }
-        return response()->json([
-            'token' => $token,
-            'type' => 'bearer', // you can ommit this
-            'expires' => auth('api')->factory()->getTTL() * 60,
-            'user' => auth('api')->user(),
-        ]);
+        return response()->json(['error' => 'Invalid User'], 401);
     }
 
     public function me()

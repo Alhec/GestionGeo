@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\StudentSubject;
 
 class SchoolPeriodSubjectTeacher extends Model
 {
@@ -16,7 +15,7 @@ class SchoolPeriodSubjectTeacher extends Model
         return $this->belongsTo('App\Subject');
     }
 
-    public function teacher()
+   public function teacher()
     {
         return $this->belongsTo('App\Teacher')->with('user');
     }
@@ -25,35 +24,62 @@ class SchoolPeriodSubjectTeacher extends Model
     {
         return $this->hasMany('App\Schedule');
     }
-
+ /*
     public function schoolPeriod()
     {
         return $this->belongsTo('App\SchoolPeriod');
-    }
+    }*/
 
     public static function addSchoolPeriodSubjectTeacher($schoolPeriodSubjectTeacher)
     {
-        return self::insertGetId($schoolPeriodSubjectTeacher->only('teacher_id','subject_id','school_period_id','limit','duty','enrolled_students'));
+        unset($schoolPeriodSubjectTeacher['schedules']);
+        return self::insertGetId($schoolPeriodSubjectTeacher);
     }
 
-    public static function findSchoolPeriodSubjectTeacher($schoolPeriodId,$subjectId,$teacherId)
+    public static function  deleteSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
+    {
+        self::where('school_period_id',$schoolPeriodId)
+            ->delete();
+    }
+
+    public static function getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
+    {
+        return self::where('school_period_id',$schoolPeriodId)
+            ->get();
+    }
+
+    public static function updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher)
+    {
+        self::find($id)
+            ->update($schoolPeriodSubjectTeacher);
+    }
+
+    public static function findSchoolPeriodSubjectTeacherId($schoolPeriodId,$subjectId,$teacherId)
     {
         return self::where('school_period_id',$schoolPeriodId)
             ->where('subject_id',$subjectId)
             ->where('teacher_id',$teacherId)
-            ->get();
+            ->get('id');
     }
-
-    public static function findSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
+    public static function existSchoolPeriodSubjectTeacherBySchoolPeriodId($schoolPeriodId)
     {
         return self::where('school_period_id',$schoolPeriodId)
-            ->with('schedules')
-            ->with('teacher')
-            ->with('subject')
-            ->get();
+            ->exists();
     }
 
-    public static function existSchoolPeriodSubjectTeacherById($id)
+    public static function deleteSchoolPeriodSubjectTeacher($id)
+    {
+        self::find($id)
+            ->delete();
+    }
+
+
+
+
+
+
+/*
+public static function existSchoolPeriodSubjectTeacherById($id)
     {
         return self::where('id',$id)
             ->exists();
@@ -64,26 +90,14 @@ class SchoolPeriodSubjectTeacher extends Model
         return self::where('id',$id)
             ->with('subject')
             ->get();
-    }
-
-    public static function  deleteSchoolPeriodSubjectTeacher($id)
-    {
-        self::find($id)
-        ->delete();
-    }
-
-   /* public static function  deleteSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
-    {
-        self::where('school_period_id',$schoolPeriodId)
-            ->delete();
     }*/
 
-    public static function updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher)
-    {
-        self::find($id)
-            ->update($schoolPeriodSubjectTeacher);
-    }
 
+
+   /* */
+
+
+/*
     public static function updateEnrolledStudent($id)
     {
         $schoolPeriodSubjectTeacher = self::where('id',$id)
@@ -92,11 +106,16 @@ class SchoolPeriodSubjectTeacher extends Model
         self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher);
         /*self::find($id)
             ->update($schoolPeriodSubjectTeacher->all());*/
-    }
+    //}
 
  /*    public static function getSchoolPeriodSubjectTeacher($id)
      {
          return self::where('id',$id)
              ->get();
-     }*/
+     }
+
+
+
+
+ */
 }

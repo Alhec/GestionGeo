@@ -43,8 +43,8 @@ class SubjectService
              'subject_name'=>'required|max:50',
              'uc'=>'required|numeric',
              'subject_type'=>'max:3|ends_with:REG,AMP',
-             'postgraduates.*.id'=>'numeric',
-             'postgraduates.*.type'=>'max:1|ends_with:E,O',
+             'postgraduates.*.id'=>'required|numeric',
+             'postgraduates.*.type'=>'required|max:1|ends_with:E,O',
         ]);
     }
 

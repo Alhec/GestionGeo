@@ -11,7 +11,6 @@ class PostgraduateService
 
     public static function getPostgraduates(Request $request)
     {
-        //self::sendEmail();
         $organizationId = $request->header('organization_key');
         $postgraduates = Postgraduate::getPostgraduates($organizationId);
         if (count($postgraduates)>0){

@@ -21,7 +21,7 @@ class Teacher extends Model
     public static function existTeacherById($id)
     {
         return self::where('id',$id)
-            ->exist();
+            ->exists();
     }
 
     public static function addTeacher($teacher)
