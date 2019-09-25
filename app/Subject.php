@@ -85,4 +85,13 @@ class Subject extends Model
         self::find($id)
             ->update($subject->all());
     }
+
+    public static function getSubjectsByPostgraduate($postgraduateId,$organizationId){
+        return self::whereHas('postgraduates',function (Builder $query) use ($postgraduateId,$organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId)
+                    ->where('postgraduate_id','=',$postgraduateId);
+            })
+            ->get('id');
+    }
 }

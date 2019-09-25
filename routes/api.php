@@ -28,8 +28,9 @@ Route::get('schoolPeriods/current','SchoolPeriodController@current');
 Route::resource('schoolPeriods','SchoolPeriodController');
 //Route::resource('subjectInscription','SubjectInscriptionController');
 //Route::resource('schoolPeriodInscription','SchoolPeriodInscriptionController');
-Route::get('inscription/availableSubjects','InscriptionController@availableSubjects');
-Route::resource('inscription','InscriptionController');
+Route::get('inscriptions/schoolPeriod/{schoolPeriodId}','InscriptionController@inscriptionBySchoolPeriod');
+Route::get('inscriptions/availableSubjects','InscriptionController@availableSubjects');
+Route::resource('inscriptions','InscriptionController');
 //Route::post('login', 'AuthController@login');
 //Route::get('log', 'AuthController@getToken');
 /*Route::group([

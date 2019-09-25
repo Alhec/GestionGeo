@@ -51,7 +51,7 @@ class OrganizationUserTableSeeder extends Seeder
         ]);
         OrganizationUser::create([
             'user_id'=>10,
-            'organization_id'=>'C',
+            'organization_id'=>'G',
         ]);
         OrganizationUser::create([
             'user_id'=>11,

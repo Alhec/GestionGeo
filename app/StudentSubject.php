@@ -17,12 +17,39 @@ class StudentSubject extends Model
         return $this->belongsTo('App\SchoolPeriodStudent','school_period_student_id','id');
     }
 
-    public function subject()
+    public function dataSubject()
     {
         return $this->belongsTo('App\SchoolPeriodSubjectTeacher','school_period_subject_teacher_id','id')
             ->with('subject')
             ->with('schedules');
     }
+
+    public static function getApprovedSubjects($studentId)
+    {
+        return self::where('status','APR')
+            ->with('dataSubject')
+            ->whereHas('student',function (Builder $query) use ($studentId){
+                $query
+                    ->where('student_id','=',$studentId);
+            })
+            ->get();
+    }
+
+    public static function getEnrolledSubjectsBySchoolPeriod($studentId,$schoolPeriodId)
+    {
+        return self::with('dataSubject')
+            ->whereHas('student',function (Builder $query) use ($studentId,$schoolPeriodId){
+                $query
+                    ->where('student_id','=',$studentId)
+                    ->where('school_period_id','=',$schoolPeriodId);
+            })
+            ->get();
+    }
+
+
+
+
+
 
     public static function addStudentSubject($studentSubject)
     {
@@ -65,15 +92,5 @@ class StudentSubject extends Model
             ->get();
     }
 
-    public static function getApprovedSubjects($studentId)
-    {
-        return self::where('status','APR')
-            ->with('subject')
-            ->with('student')
-            ->whereHas('student',function (Builder $query) use ($studentId){
-                $query
-                    ->where('student_id','=',$studentId);
-            })
-            ->get();
-    }
+
 }

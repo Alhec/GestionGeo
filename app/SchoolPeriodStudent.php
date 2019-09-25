@@ -22,7 +22,7 @@ class SchoolPeriodStudent extends Model
     }
     public function enrolledSubjects()
     {
-        return $this->hasMany('App\StudentSubject')->with('subject');
+        return $this->hasMany('App\StudentSubject')->with('dataSubject');
     }
     public static function getSchoolPeriodStudent($organizationId)
     {
@@ -36,6 +36,7 @@ class SchoolPeriodStudent extends Model
             })
             ->get();
     }
+
     public static function getSchoolPeriodStudentById($id,$organizationId)
     {
         return self::where('id',$id)
@@ -48,6 +49,25 @@ class SchoolPeriodStudent extends Model
             })
             ->get();
     }
+
+    public static function getSchoolPeriodStudentBySchoolPeriod($schoolPeriodId,$organizationId)
+    {
+        return self::where('school_period_id',$schoolPeriodId)
+            ->with('student')
+            ->with('enrolledSubjects')
+            ->with('schoolPeriod')
+            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+            })
+            ->get();
+    }
+
+
+
+
+
+
     public static function addSchoolPeriodStudent($schoolPeriodStudent){
         self::create($schoolPeriodStudent->all());
     }

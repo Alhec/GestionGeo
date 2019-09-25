@@ -17,22 +17,12 @@ use App\OrganizationUser;
 
 class UserService
 {
-    public static function clearUser($users)
-    {
-        $usersReturns =[];
-        foreach ($users as $user){
-            unset($user['organization']);
-            $usersReturns[]=$user;
-        }
-        return $usersReturns;
-    }
-
     public static function getUsers(Request $request, $userType)
     {
         $organizationId = $request->header('organization_key');
         $users= User::getUsers($userType,$organizationId);
         if (count($users)>0){
-            return self::clearUser($users);
+            return $users;
         }
         return response()->json(['message'=>'No existen usuarios con ese perfil'],206);
     }
@@ -42,7 +32,7 @@ class UserService
         $organizationId = $request->header('organization_key');
         $administrator = User::getUserById($userId,$userType,$organizationId);
         if (count($administrator)>0){
-            return self::clearUser($administrator)[0];
+            return $administrator[0];
         }
         return response()->json(['message'=>'Usuario no encontrado'],206);
     }
@@ -158,7 +148,7 @@ class UserService
         $organizationId = $request->header('organization_key');
         $users = User::getUsersActive($userType,$organizationId);
         if (count($users)>0){
-            return self::clearUser($users);
+            return $users;
         }
         return response()->json(['message'=>'No existen usuarios activos con ese perfil'],206);
 

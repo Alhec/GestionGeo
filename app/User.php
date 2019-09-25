@@ -82,7 +82,6 @@ class User extends Authenticatable implements JWTSubject
     public static function getUsers($userType,$organizationId)
     {
         $users = self::where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -104,7 +103,6 @@ class User extends Authenticatable implements JWTSubject
     {
         $user =self::where('id',$id)
             ->where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -125,7 +123,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return self::where('id',$id)
             ->where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -135,7 +132,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return self::where('identification',$identification)
             ->where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -146,7 +142,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return self::where('email',$email)
             ->where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -170,7 +165,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return self::where('identification',$identification)
             ->where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -181,7 +175,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return self::where('email',$email)
             ->where('user_type',$userType)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -198,7 +191,6 @@ class User extends Authenticatable implements JWTSubject
     {
         $users = self::where('user_type',$userType)
             ->where('active',true)
-            ->with('organization')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);

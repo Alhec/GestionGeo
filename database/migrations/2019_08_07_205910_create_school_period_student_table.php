@@ -17,7 +17,7 @@ class CreateSchoolPeriodStudentTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('school_period_id');
-            $table->string('pay_ref')->nullable();
+            $table->string('pay_ref',50)->nullable();
             $table->string('status',5);
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->foreign('school_period_id')->references('id')->on('school_periods')->onDelete('cascade');

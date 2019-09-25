@@ -16,20 +16,31 @@ class StudentSubjectTableSeeder extends Seeder
         StudentSubject::create([
             'school_period_student_id'=>1,
             'school_period_subject_teacher_id'=>1,
-            'qualification'=>0,
-            'status'=>'CUR' //CUR RET APR REP
+            'qualification'=>15,
+            'status'=>'APR' //CUR RET APR REP
+        ]);
+        StudentSubject::create([
+            'school_period_student_id'=>1,
+            'school_period_subject_teacher_id'=>2,
+            'qualification'=>15,
+            'status'=>'APR' //CUR RET APR REP
         ]);
         StudentSubject::create([
             'school_period_student_id'=>2,
-            'school_period_subject_teacher_id'=>2,
-            'qualification'=>0,
-            'status'=>'CUR' //CUR RET APR REP
+            'school_period_subject_teacher_id'=>1,
+            'qualification'=>15,
+            'status'=>'APR' //CUR RET APR REP
         ]);
         StudentSubject::create([
             'school_period_student_id'=>3,
-            'school_period_subject_teacher_id'=>3,
-            'qualification'=>0,
+            'school_period_subject_teacher_id'=>1,
+            'qualification'=>15,
             'status'=>'APR' //CUR RET APR REP
+        ]);
+        StudentSubject::create([
+            'school_period_student_id'=>4,
+            'school_period_subject_teacher_id'=>4,
+            'status'=>'CUR' //CUR RET APR REP
         ]);
     }
 }

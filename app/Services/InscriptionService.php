@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Postgraduate;
+use App\Subject;
 use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriodStudent;
@@ -19,16 +20,7 @@ use App\StudentSubject;
 
 class InscriptionService
 {
-    public static function clearInscription($inscriptions){
-        $inscriptionsReturn=[];
-        foreach ($inscriptions as $inscription){
-            unset($inscription['schoolPeriod']);
-            $inscriptionsReturn[]=$inscription;
-        }
-        return $inscriptionsReturn;
-    }
-
-    public static function getInscription(Request $request)
+    public static function getInscriptions(Request $request)
     {
         $organizationId = $request->header('organization_key');
         $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudent($organizationId);
@@ -42,12 +34,111 @@ class InscriptionService
     {
         $organizationId = $request->header('organization_key');
         $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($id,$organizationId);
-        //var_dump($inscription);
         if (count($inscription)>0){
             return ($inscription)[0];
         }
-        return response()->json(['Inscripcion no encontrada'],206);
+        return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
+
+    public static function getInscriptionsBySchoolPeriod(Request $request, $schoolPeriodId)
+    {
+        $organizationId = $request->header('organization_key');
+        $inscription = SchoolPeriodStudent::getSchoolPeriodStudentBySchoolPeriod($schoolPeriodId,$organizationId);
+        if (count($inscription)>0){
+            return ($inscription);
+        }
+        return response()->json(['message'=>'Periodo escolar no posee inscripciones'],206);
+    }
+
+    public static function isApprovedSubject($subjectId,$approvedSubjects)
+    {
+        foreach ($approvedSubjects as $approvedSubject){
+            if ($approvedSubject['dataSubject']['subject_id']==$subjectId){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod)
+    {
+        $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
+        $availableSubjects=[];
+        foreach ($subjectsInSchoolPeriod as $subjectInSchoolPeriod){
+            if ($subjectInSchoolPeriod['enrolled_students']<$subjectInSchoolPeriod['limit']){
+                if (count($approvedSubjects)>0){
+                    if (!self::isApprovedSubject($subjectInSchoolPeriod['subject_id'],$approvedSubjects)){
+                        $availableSubjects[]=$subjectInSchoolPeriod;
+                    }
+                }else{
+                    $availableSubjects[]=$subjectInSchoolPeriod;
+                }
+            }
+        }
+        return $availableSubjects;
+    }
+
+    public static function filterSubjectsByPostgraduate($student,$organizationId,$availableSubjects)
+    {
+        $subjectsInPostgraduate = Subject::getSubjectsByPostgraduate($student['postgraduate_id'],$organizationId);
+        $availableSubjectsInPostgraduate=[];
+        foreach ($availableSubjects as $availableSubject){
+            foreach ($subjectsInPostgraduate as $subjectInPostgraduate){
+                if ($availableSubject['subject_id']==$subjectInPostgraduate['id']){
+                    $availableSubjectsInPostgraduate[]=$availableSubject;
+                    break;
+                }
+            }
+        }
+        return $availableSubjectsInPostgraduate;
+    }
+
+    public static function filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,$availableSubjects)
+    {
+        $enrolledSubjects = StudentSubject::getEnrolledSubjectsBySchoolPeriod($studentId,$schoolPeriodId);
+        if (count($enrolledSubjects)>0){
+            $filterSubjectsEnrolled = [];
+            foreach ($availableSubjects as $availableSubject){
+                $subjectFound=false;
+                foreach ($enrolledSubjects as $enrolledSubject){
+                    if ($availableSubject['subject_id']==$enrolledSubject['dataSubject']['subject_id']){
+                        $subjectFound = true;
+                        break;
+                    }
+                }
+                if ($subjectFound ==false){
+                    $filterSubjectsEnrolled[]=$availableSubject;
+                }
+            }
+            return $filterSubjectsEnrolled;
+        }
+        return $availableSubjects;
+    }
+
+    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        $student= Student::getStudentById($studentId)[0];
+        if (User::existUserById($student['user_id'],'S',$organizationId)){
+            $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
+            if (count($subjectsInSchoolPeriod)>0){
+                $subjectsNotYetApproved = self::getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod);
+                if (count($subjectsNotYetApproved)>0){
+                    $filterSubjectsByPostgraduate = self::filterSubjectsByPostgraduate($student,$organizationId,$subjectsNotYetApproved);
+                    if (count($filterSubjectsByPostgraduate)>0){
+                        $availableSubjects= self::filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,$filterSubjectsByPostgraduate);
+                        if (count($availableSubjects)>0){
+                            return $availableSubjects;
+                        }
+                    }
+                }
+            }
+            return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
+        }
+        return response()->json(['message'=>'No existe el estudiante dado el id'],206);
+    }
+
+
 
     public static function validate(Request $request)
     {
@@ -248,37 +339,7 @@ class InscriptionService
         return response()->json(['message'=>'Relacion invalida'],206);
     }
 
-    public static function isApprovedSubject($subjectId,$approvedSubjects)
-    {
-        foreach ($approvedSubjects as $approvedSubject){
-            if ($approvedSubject['subject']['subject_id']==$subjectId){
-                return true;
-            }
-        }
-        return false;
-    }
 
-    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request)
-    {
-        $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::findSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
-        if (count($subjectsInSchoolPeriod)>0){
-            $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
-            $availableSubjects=[];
-            foreach ($subjectsInSchoolPeriod as $subjectInSchoolPeriod){
-                if ($subjectInSchoolPeriod['enrolled_students']<$subjectInSchoolPeriod['limit']){
-                    if (count($approvedSubjects)>0){
-                        if (!self::isApprovedSubject($subjectInSchoolPeriod['subject_id'],$approvedSubjects)){
-                            $availableSubjects[]=$subjectInSchoolPeriod;
-                        }
-                    }else{
-                       $availableSubjects[]=$subjectInSchoolPeriod;
-                    }
-                }
-            }
-            if (count($availableSubjects)>0){
-                return $availableSubjects;
-            }
-        }
-        return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
-    }
+
+
 }

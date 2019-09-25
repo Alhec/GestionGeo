@@ -24,11 +24,11 @@ class SchoolPeriodSubjectTeacher extends Model
     {
         return $this->hasMany('App\Schedule');
     }
- /*
+
     public function schoolPeriod()
     {
         return $this->belongsTo('App\SchoolPeriod');
-    }*/
+    }
 
     public static function addSchoolPeriodSubjectTeacher($schoolPeriodSubjectTeacher)
     {
@@ -45,6 +45,9 @@ class SchoolPeriodSubjectTeacher extends Model
     public static function getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
     {
         return self::where('school_period_id',$schoolPeriodId)
+            ->with('subject')
+            ->with('teacher')
+            ->with('schoolPeriod')
             ->get();
     }
 
@@ -90,14 +93,11 @@ public static function existSchoolPeriodSubjectTeacherById($id)
         return self::where('id',$id)
             ->with('subject')
             ->get();
-    }*/
+    }
 
 
 
-   /* */
 
-
-/*
     public static function updateEnrolledStudent($id)
     {
         $schoolPeriodSubjectTeacher = self::where('id',$id)
@@ -105,10 +105,10 @@ public static function existSchoolPeriodSubjectTeacherById($id)
         $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
         self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher);
         /*self::find($id)
-            ->update($schoolPeriodSubjectTeacher->all());*/
+            ->update($schoolPeriodSubjectTeacher->all());
     //}
 
- /*    public static function getSchoolPeriodSubjectTeacher($id)
+    public static function getSchoolPeriodSubjectTeacher($id)
      {
          return self::where('id',$id)
              ->get();

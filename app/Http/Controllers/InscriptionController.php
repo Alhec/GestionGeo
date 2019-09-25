@@ -14,7 +14,7 @@ class InscriptionController extends Controller
      */
     public function index(Request $request)
     {
-        return InscriptionService::getInscription($request);
+        return InscriptionService::getInscriptions($request);
     }
 
     /**
@@ -34,7 +34,7 @@ class InscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,Request $request)
+    public function show(Request $request, $id)
     {
         return InscriptionService::getInscriptionById($request,$id);
     }
@@ -67,5 +67,10 @@ class InscriptionController extends Controller
         $studentId = $request->input('student_id');
         $schoolPeriodId = $request->input('school_period_id');
         return InscriptionService::getAvailableSubjects($studentId,$schoolPeriodId,$request);
+    }
+
+    public function inscriptionBySchoolPeriod(Request $request,$schoolPeriodId)
+    {
+        return InscriptionService::getInscriptionsBySchoolPeriod($request,$schoolPeriodId);
     }
 }
