@@ -66,7 +66,7 @@ class InscriptionController extends Controller
     {
         $studentId = $request->input('student_id');
         $schoolPeriodId = $request->input('school_period_id');
-        return InscriptionService::getAvailableSubjects($studentId,$schoolPeriodId,$request);
+        return InscriptionService::getAvailableSubjects($studentId,$schoolPeriodId,$request,false);
     }
 
     public function inscriptionBySchoolPeriod(Request $request,$schoolPeriodId)

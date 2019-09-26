@@ -46,11 +46,6 @@ class StudentSubject extends Model
             ->get();
     }
 
-
-
-
-
-
     public static function addStudentSubject($studentSubject)
     {
         self::create($studentSubject);
@@ -61,6 +56,13 @@ class StudentSubject extends Model
         return self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
             ->get();
     }
+
+
+
+
+
+
+
 
     public static function existStudentSubject($id)
     {

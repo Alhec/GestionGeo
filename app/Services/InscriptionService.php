@@ -115,13 +115,13 @@ class InscriptionService
         return $availableSubjects;
     }
 
-    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request)
+    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request,$internalCall)
     {
         $organizationId = $request->header('organization_key');
         $student= Student::getStudentById($studentId)[0];
         if (User::existUserById($student['user_id'],'S',$organizationId)){
             $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
-            if (count($subjectsInSchoolPeriod)>0){
+            if (count($subjectsInSchoolPeriod)>0 && (self::getCurrentAmountCredits($studentId)<self::getTotalAmountCredits($studentId,$organizationId))){
                 $subjectsNotYetApproved = self::getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod);
                 if (count($subjectsNotYetApproved)>0){
                     $filterSubjectsByPostgraduate = self::filterSubjectsByPostgraduate($student,$organizationId,$subjectsNotYetApproved);
@@ -133,84 +133,89 @@ class InscriptionService
                     }
                 }
             }
+            if ($internalCall){
+                return [];
+            }
             return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
         }
         return response()->json(['message'=>'No existe el estudiante dado el id'],206);
     }
-
-
 
     public static function validate(Request $request)
     {
         $request->validate([
             'student_id'=>'required',
             'school_period_id'=>'required',
-            'status'=>'max:5|ends_with:RET-A,RET-B,DES-A,DES-B,INC-A,INC-B,REI-A,REI-B,REG',
+            'status'=>'required|max:5|ends_with:RET-A,RET-B,DES-A,DES-B,INC-A,INC-B,REI-A,REI-B,REG',
             'subjects.*.school_period_subject_teacher_id'=>'required',
             'subjects.*.status'=>'max:3|ends_with:CUR,RET,APR,REP',
+            'subjects.*.qualification'=>'numeric'
         ]);
     }
 
-    public static function validateRelation(Request $request)
+    public static function validateRelation($organizationId,Request $request)
     {
-        $organizationId = $request->header('organization_key');
-        if (!Student::existStudent($request['student_id'],$organizationId)){
-            return false;
-        }else{
-            $student = Student::getStudent($request['student_id']);
-            if (count(User::getUserById($student[0]['user_id'],'S',$organizationId))<=0){
+        if (Student::existStudentByid($request['student_id'])){
+            $student= Student::getStudentById($request['student_id']);
+            if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
                 return false;
             }
+        }else{
+            return false;
         }
         if (!SchoolPeriod::existSchoolPeriodById($request['school_period_id'],$organizationId)){
             return false;
         }
-        foreach ($request['subjects'] as $subject){
-            if (!SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($subject['school_period_subject_teacher_id'])){
-                return false;
-            }else{
-                $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacher($subject['school_period_subject_teacher_id'])[0];
-                if ($schoolPeriodSubjectTeacher['school_period_id']!=$request['school_period_id']){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public static function addSubjects($subjects,$schoolPeriodStudent)
-    {
-        foreach ($subjects as $subject){
-            StudentSubject::addStudentSubject([
-                'school_period_student_id'=>$schoolPeriodStudent,
-                'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
-                'qualification'=>0,
-                'status'=>'CUR'
-            ]);
-            SchoolPeriodSubjectTeacher::updateEnrolledStudent($subject['school_period_subject_teacher_id']);
-        }
-    }
-
-    public static function existSubjectInAvailableSubjects($subjectId,$availableSubjects){
-        foreach ($availableSubjects as $availableSubject){
-            if ($availableSubject['id'] == $subjectId ){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static function isValidSubjects($subjects,$availableSubjects)
-    {
-        if (!is_array($availableSubjects)){
+        $availableSubjects=self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request,true);
+        if (count($availableSubjects)<=0){
             return false;
         }
-        foreach($subjects as $subject){
-            if (!self::existSubjectInAvailableSubjects($subject['school_period_subject_teacher_id'],$availableSubjects)){
+        $availableSubjectsId=[];
+        foreach($availableSubjects as $availableSubject){
+            $availableSubjectsId[]=$availableSubject['id'];
+        }
+        foreach ($request['subjects'] as $subject){
+            if (!in_array($subject['school_period_subject_teacher_id'],$availableSubjectsId)){
                 return false;
             }
         }
         return true;
+    }
+
+    public static function addSubjects($subjects,$schoolPeriodStudentId,$isWithdrawn)
+    {
+        foreach ($subjects as $subject){
+
+            if (isset($subject['qualification'])&& $isWithdrawn){
+                $studentSubject=[
+                    'school_period_student_id'=>$schoolPeriodStudentId,
+                    'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
+                    'qualification'=>$subject['qualification'],
+                    'status'=>'RET'
+                ];
+            }else if (isset($subject['qualification'])&& !$isWithdrawn){
+                $studentSubject=[
+                    'school_period_student_id'=>$schoolPeriodStudentId,
+                    'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
+                    'qualification'=>$subject['qualification'],
+                    'status'=>'CUR'
+                ];
+            }else if (!isset($subject['qualification'])&& $isWithdrawn){
+                $studentSubject=[
+                    'school_period_student_id'=>$schoolPeriodStudentId,
+                    'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
+                    'status'=>'RET'
+                ];
+            }else{
+                $studentSubject=[
+                    'school_period_student_id'=>$schoolPeriodStudentId,
+                    'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
+                    'status'=>'CUR'
+                ];
+            }
+            StudentSubject::addStudentSubject($studentSubject);
+            SchoolPeriodSubjectTeacher::updateEnrolledStudent($subject['school_period_subject_teacher_id']);
+        }
     }
 
     public static function getCurrentAmountCredits($studentId)
@@ -219,7 +224,7 @@ class InscriptionService
         $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
         if (count($approvedSubjects)>0){
             foreach ($approvedSubjects as $approvedSubject){
-                $currentAmountCredits += $approvedSubject['subject']['uc'];
+                $currentAmountCredits += $approvedSubject['dataSubject']['subject']['uc'];
             }
         }
         return $currentAmountCredits;
@@ -227,26 +232,31 @@ class InscriptionService
 
     public static function getTotalAmountCredits($studentId,$organizationId)
     {
-        $postgraduateId = Student::getStudent($studentId)[0]['postgraduate_id'];
-
-        return Postgraduate::getPostgraduateById($postgraduateId,$organizationId);
+        $postgraduateId = Student::getStudentById($studentId)[0]['postgraduate_id'];
+        return Postgraduate::getPostgraduateById($postgraduateId,$organizationId)[0]['num_cu'];
     }
 
-    public static function getNumberCreditsInscription($subjects)
+    public static function getNumberCreditsInscription($schoolPeriodId,$subjects)
     {
+        $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
         $numberCreditsInscription = 0;
         foreach ($subjects as $subject){
-            $numberCreditsInscription += SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById($subject['school_period_subject_teacher_id'])[0]['subject']['uc'];
+            foreach ($subjectsInSchoolPeriod as $subjectInSchoolPeriod){
+                if ($subject['school_period_subject_teacher_id']==$subjectInSchoolPeriod['id']){
+                    $numberCreditsInscription += $subjectInSchoolPeriod['subject']['uc'];
+                }
+            }
         }
         return $numberCreditsInscription;
     }
 
-    public static function isValidCredits($studentId,$subjects,$organizationId)
+    public static function isValidCredits($studentId,$schoolPeriodId,$subjects,$organizationId)
     {
+        $numberCreditsInscription = self::getNumberCreditsInscription($schoolPeriodId,$subjects);
         $currentAmountCredits = self::getCurrentAmountCredits($studentId);
         $totalAmountCredits = self::getTotalAmountCredits($studentId,$organizationId);
-        $numberCreditsInscription = self::getNumberCreditsInscription($subjects);
-        if ($currentAmountCredits+$numberCreditsInscription > $totalAmountCredits){
+        if ($currentAmountCredits+$numberCreditsInscription >= $totalAmountCredits || $numberCreditsInscription>15){
+            dd(5);
             return false;
         }
         return true;
@@ -256,24 +266,34 @@ class InscriptionService
     {
         $organizationId = $request->header('organization_key');
         self::validate($request);
-        if(self::validateRelation($request)){
-            if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request))){
-                if (self::isValidCredits($request['student_id'],$request['subjects'],$organizationId)){
-                    if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
-                        $request['status']='INC-A';
-                        SchoolPeriodStudent::addSchoolPeriodStudent($request);
-                        $schoolPeriodStudentId= SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id'];
-                        self::addSubjects($request['subjects'],$schoolPeriodStudentId);
-                        return self::getInscriptionById($request,$schoolPeriodStudentId);
+        if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])) {
+            if(self::validateRelation($organizationId,$request)){
+                if (self::isValidCredits($request['student_id'],$request['school_period_id'],$request['subjects'],$organizationId)){
+                    $schoolPeriodStudentId=SchoolPeriodStudent::addSchoolPeriodStudent($request);
+                    if($request['status']=='RET-A'||$request['status']=='RET-B'){
+                        self::addSubjects($request['subjects'],$schoolPeriodStudentId,true);
+                    }else{
+                        self::addSubjects($request['subjects'],$schoolPeriodStudentId,false);
                     }
-                    return response()->json(['message'=>'Inscripcion ya realizada'],206);
+                    return self::getInscriptionById($request,$schoolPeriodStudentId);
                 }
-                return response()->json(['message'=>'La cantidad de creditos inscritos excede el limite permitido en su postgrado'],206);
+                return response()->json(['message'=>'La cantidad de creditos inscritos excede el limite de 15 creditos'],206);
             }
-            return response()->json(['message'=>'Alguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
+            return response()->json(['message'=>'Relacion invalida'],206);
         }
-        return response()->json(['message'=>'Relacion invalida'],206);
+        return response()->json(['message'=>'Inscripcion ya realizada'],206);
     }
+
+
+
+
+
+
+
+
+
+
+
 
     public static function deleteInscription(Request $request,$id)
     {
@@ -318,7 +338,7 @@ class InscriptionService
         $organizationId = $request->header('organization_key');
         self::validate($request);
         if (self::validateRelation($request)){
-            if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request))){
+            if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request,true))){
                 if (self::isValidCredits($request['student_id'],$request['subjects'],$organizationId)){
                     if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
                         if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){

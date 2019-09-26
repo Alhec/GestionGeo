@@ -64,6 +64,7 @@ class SchoolPeriodSubjectTeacher extends Model
             ->where('teacher_id',$teacherId)
             ->get('id');
     }
+
     public static function existSchoolPeriodSubjectTeacherBySchoolPeriodId($schoolPeriodId)
     {
         return self::where('school_period_id',$schoolPeriodId)
@@ -76,46 +77,11 @@ class SchoolPeriodSubjectTeacher extends Model
             ->delete();
     }
 
-
-
-
-
-
-/*
-public static function existSchoolPeriodSubjectTeacherById($id)
-    {
-        return self::where('id',$id)
-            ->exists();
-    }
-
-    public static function getSchoolPeriodSubjectTeacherById($id)
-    {
-        return self::where('id',$id)
-            ->with('subject')
-            ->get();
-    }
-
-
-
-
     public static function updateEnrolledStudent($id)
     {
         $schoolPeriodSubjectTeacher = self::where('id',$id)
-            ->get();
+            ->get()->toArray();
         $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
-        self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher);
-        /*self::find($id)
-            ->update($schoolPeriodSubjectTeacher->all());
-    //}
-
-    public static function getSchoolPeriodSubjectTeacher($id)
-     {
-         return self::where('id',$id)
-             ->get();
-     }
-
-
-
-
- */
+        self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher[0]);
+    }
 }
