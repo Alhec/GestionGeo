@@ -17,6 +17,7 @@ use App\Student;
 use App\SchoolPeriod;
 use App\SchoolPeriodSubjectTeacher;
 use App\StudentSubject;
+use phpDocumentor\Reflection\Types\Self_;
 
 class InscriptionService
 {
@@ -144,10 +145,10 @@ class InscriptionService
     public static function validate(Request $request)
     {
         $request->validate([
-            'student_id'=>'required',
-            'school_period_id'=>'required',
+            'student_id'=>'required|numeric',
+            'school_period_id'=>'required|numeric',
             'status'=>'required|max:5|ends_with:RET-A,RET-B,DES-A,DES-B,INC-A,INC-B,REI-A,REI-B,REG',
-            'subjects.*.school_period_subject_teacher_id'=>'required',
+            'subjects.*.school_period_subject_teacher_id'=>'required|numeric',
             'subjects.*.status'=>'max:3|ends_with:CUR,RET,APR,REP',
             'subjects.*.qualification'=>'numeric'
         ]);
@@ -182,37 +183,54 @@ class InscriptionService
         return true;
     }
 
-    public static function addSubjects($subjects,$schoolPeriodStudentId,$isWithdrawn)
+    public static function prepareArrayOfSubject($subject,$schoolPeriodStudentId,$isWithdrawn)
     {
-        foreach ($subjects as $subject){
-
-            if (isset($subject['qualification'])&& $isWithdrawn){
+        if (isset($subject['qualification'])){
+            if ($subject['qualification']>=10){
                 $studentSubject=[
                     'school_period_student_id'=>$schoolPeriodStudentId,
                     'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
                     'qualification'=>$subject['qualification'],
-                    'status'=>'RET'
+                    'status'=>'APR'
                 ];
-            }else if (isset($subject['qualification'])&& !$isWithdrawn){
+            }else{
                 $studentSubject=[
                     'school_period_student_id'=>$schoolPeriodStudentId,
                     'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
                     'qualification'=>$subject['qualification'],
-                    'status'=>'CUR'
+                    'status'=>'REP'
                 ];
-            }else if (!isset($subject['qualification'])&& $isWithdrawn){
+            }
+        }else{
+            if ($isWithdrawn){
                 $studentSubject=[
                     'school_period_student_id'=>$schoolPeriodStudentId,
                     'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
                     'status'=>'RET'
                 ];
             }else{
-                $studentSubject=[
-                    'school_period_student_id'=>$schoolPeriodStudentId,
-                    'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
-                    'status'=>'CUR'
-                ];
+                if (isset($subject['status'])){
+                    $studentSubject=[
+                        'school_period_student_id'=>$schoolPeriodStudentId,
+                        'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
+                        'status'=>$subject['status']
+                    ];
+                }else{
+                    $studentSubject=[
+                        'school_period_student_id'=>$schoolPeriodStudentId,
+                        'school_period_subject_teacher_id'=>$subject['school_period_subject_teacher_id'],
+                        'status'=>'CUR'
+                    ];
+                }
             }
+        }
+        return $studentSubject;
+    }
+
+    public static function addSubjects($subjects,$schoolPeriodStudentId,$isWithdrawn)
+    {
+        foreach ($subjects as $subject){
+            $studentSubject = self::prepareArrayOfSubject($subject,$schoolPeriodStudentId,$isWithdrawn);
             StudentSubject::addStudentSubject($studentSubject);
             SchoolPeriodSubjectTeacher::updateEnrolledStudent($subject['school_period_subject_teacher_id']);
         }
@@ -255,8 +273,7 @@ class InscriptionService
         $numberCreditsInscription = self::getNumberCreditsInscription($schoolPeriodId,$subjects);
         $currentAmountCredits = self::getCurrentAmountCredits($studentId);
         $totalAmountCredits = self::getTotalAmountCredits($studentId,$organizationId);
-        if ($currentAmountCredits+$numberCreditsInscription >= $totalAmountCredits || $numberCreditsInscription>15){
-            dd(5);
+        if ($currentAmountCredits+$numberCreditsInscription >= $totalAmountCredits){
             return false;
         }
         return true;
@@ -277,23 +294,12 @@ class InscriptionService
                     }
                     return self::getInscriptionById($request,$schoolPeriodStudentId);
                 }
-                return response()->json(['message'=>'La cantidad de creditos inscritos excede el limite de 15 creditos'],206);
+                return response()->json(['message'=>'Los creditos exceden el limite de los credistos disponibles para tu postgrado'],206);
             }
             return response()->json(['message'=>'Relacion invalida'],206);
         }
         return response()->json(['message'=>'Inscripcion ya realizada'],206);
     }
-
-
-
-
-
-
-
-
-
-
-
 
     public static function deleteInscription(Request $request,$id)
     {
@@ -305,25 +311,92 @@ class InscriptionService
         return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
 
-    public static function updateSubjects($subjects,$schoolPeriodStudentId)
+    public static function validateRelationUpdate($organizationId,Request $request)
     {
-        $subjectsInBd=StudentSubject::findStudentSubjectBySchoolPeriodStudent($schoolPeriodStudentId);
+        if (Student::existStudentByid($request['student_id'])){
+            $student= Student::getStudentById($request['student_id']);
+            if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
+                return false;
+            }
+        }else{
+            return false;
+        }
+        if (!SchoolPeriod::existSchoolPeriodById($request['school_period_id'],$organizationId)){
+            return false;
+        }
+        $availableSubjects=self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request,true);
+        $subjectsEnrolledInSchoolPeriod = SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['enrolledSubjects'];
+        if (count($availableSubjects)<=0 && count($subjectsEnrolledInSchoolPeriod)<=0){
+            return false;
+        }
+        $availableSubjectsId=[];
+        foreach($availableSubjects as $availableSubject){
+            $availableSubjectsId[]=$availableSubject['id'];
+        }
+        foreach ($subjectsEnrolledInSchoolPeriod as $subjectEnrolledInSchoolPeriod){
+            if (!in_array($subjectEnrolledInSchoolPeriod['school_period_subject_teacher_id'],$availableSubjectsId)){
+                $availableSubjectsId[]=$subjectEnrolledInSchoolPeriod['school_period_subject_teacher_id'];
+            }
+        }
+        foreach ($request['subjects'] as $subject){
+            if (!in_array($subject['school_period_subject_teacher_id'],$availableSubjectsId)){
+                dd(1);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function updateStatus($schoolPeriodStudentId,$organizationId)
+    {
+        $schoolPeriodStudent = SchoolPeriodStudent::getSchoolPeriodStudentById($schoolPeriodStudentId,$organizationId)[0];
+        $enrolledSubjects = $schoolPeriodStudent['enrolledSubjects'];
+        $allWithdrawn=true;
+        foreach ($enrolledSubjects as $enrolledSubject){
+            if ($enrolledSubject['status']!='RET'){
+                $allWithdrawn = false;
+                break;
+            }
+        }
+        if ($allWithdrawn){
+            $schoolPeriodStudent['status']='RET-A';
+            SchoolPeriodStudent::updateSchoolPeriodStudentLikeArray($schoolPeriodStudentId,
+                ['student_id'=>$schoolPeriodStudent['student_id'],
+                    'school_period_id'=>$schoolPeriodStudent['school_period_id'],
+                    'pay_ref'=>$schoolPeriodStudent['pay_ref'],
+                    'status'=>$schoolPeriodStudent['status']
+                ]);
+        }else{
+            if ($schoolPeriodStudent['status']=='RET-A'||$schoolPeriodStudent['status']=='RET-B'){
+                $schoolPeriodStudent['status']='REG';
+                SchoolPeriodStudent::updateSchoolPeriodStudentLikeArray($schoolPeriodStudentId,
+                    ['student_id'=>$schoolPeriodStudent['student_id'],
+                        'school_period_id'=>$schoolPeriodStudent['school_period_id'],
+                        'pay_ref'=>$schoolPeriodStudent['pay_ref'],
+                        'status'=>$schoolPeriodStudent['status']
+                    ]);
+            }
+        }
+    }
+
+    public static function updateSubjects($subjects,$schoolPeriodStudentId,$organizationId,$isWithdrawn)
+    {
+        $subjectsInBd=StudentSubject::studentSubjectBySchoolPeriodStudent($schoolPeriodStudentId);
         $subjectsUpdated=[];
         foreach ($subjects as $subject){
             $existSubject = false;
             foreach ($subjectsInBd as $subjectInBd){
                 if ($subject['school_period_subject_teacher_id']==$subjectInBd['school_period_subject_teacher_id']){
-                    $subject['qualification']=$subjectInBd['qualification'];
-                    $subject['school_period_student_id']=$schoolPeriodStudentId;
-                    StudentSubject::updateStudentSubject($subjectInBd['id'],$subject);
+                    $studentSubject = self::prepareArrayOfSubject($subject,$schoolPeriodStudentId,$isWithdrawn);
+                    StudentSubject::updateStudentSubject($subjectInBd['id'],$studentSubject);
                     $subjectsUpdated[]=$subjectInBd['id'];
                     $existSubject=true;
                     break;
                 }
             }
             if ($existSubject==false){
-                self::addSubjects([$subject],$schoolPeriodStudentId);
-                $subjectsUpdated[]=StudentSubject::findSchoolPeriodStudent($schoolPeriodStudentId,$subject['school_period_subject_teacher_id'])[0]['id'];
+                self::addSubjects([$subject],$schoolPeriodStudentId,$isWithdrawn);
+                $subjectsUpdated[]=StudentSubject::findSchoolPeriodStudentId($schoolPeriodStudentId,$subject['school_period_subject_teacher_id'])[0]['id'];
             }
         }
         foreach ($subjectsInBd as $subjectId){
@@ -331,35 +404,38 @@ class InscriptionService
                 StudentSubject::deleteStudentSubject($subjectId['id']);
             }
         }
+        self::updateStatus($schoolPeriodStudentId,$organizationId);
     }
 
     public static function updateInscription(Request $request, $id)
     {
         $organizationId = $request->header('organization_key');
         self::validate($request);
-        if (self::validateRelation($request)){
-            if (self::isValidSubjects($request['subjects'],self::getAvailableSubjects($request['student_id'],$request['school_period_id'],$request,true))){
-                if (self::isValidCredits($request['student_id'],$request['subjects'],$organizationId)){
-                    if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
-                        if (SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])){
-                            if( SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id'])[0]['id']!=$id){
-                                return response()->json(['message'=>'Inscripcion ocupada'],206);
-                            }
-                        }
-                        SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
-                        self::updateSubjects($request['subjects'],$id);
-                        return self::getInscriptionById($request,$id);
-                    }
-                    return response()->json(['message'=>'Inscripcion no encontrada'],206);
+        if (SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)) {
+            $schoolPeriodStudentIdInBd= SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$request['school_period_id']);
+            if(count($schoolPeriodStudentIdInBd)>0){
+                if ($schoolPeriodStudentIdInBd[0]['id']!=$id){
+                    return response()->json(['message'=>'El estudiante ya esta inscrito en el periodo escolar y se encuentra en otro registro'],206);
                 }
-                return response()->json(['message'=>'La cantidad de creditos inscritos excede el limite permitido en su postgrado'],206);
             }
-            return response()->json(['message'=>'Alguna de las materias que intenta inscribir no esta disponible porque ya la aprobo o esta al limite de estudiantes'],206);
+            if(self::validateRelationUpdate($organizationId,$request)){
+                if (self::isValidCredits($request['student_id'],$request['school_period_id'],$request['subjects'],$organizationId)){
+                    SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
+                    if($request['status']=='RET-A'||$request['status']=='RET-B'){
+                        self::updateSubjects($request['subjects'],$id,$organizationId,true);
+                    }else{
+                        self::updateSubjects($request['subjects'],$id,$organizationId,false);
+                    }
+                    return self::getInscriptionById($request,$id);
+                }
+                return response()->json(['message'=>'Los creditos exceden el limite de los credistos disponibles para tu postgrado'],206);
+            }
+            return response()->json(['message'=>'Relacion invalida'],206);
         }
-        return response()->json(['message'=>'Relacion invalida'],206);
+        return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
 
 
-
-
+    public static function studentInscription()
+    {}
 }

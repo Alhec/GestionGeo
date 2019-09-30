@@ -57,29 +57,17 @@ class StudentSubject extends Model
             ->get();
     }
 
-
-
-
-
-
-
-
-    public static function existStudentSubject($id)
-    {
-        self::where('id',$id)
-            ->exists();
-    }
-
-    public static function deleteStudentSubject($id)
-    {
-        self::find($id)
-            ->delete();
-    }
-
-    public static function findStudentSubjectBySchoolPeriodStudent($schoolPeriodStudentId)
+    public static function studentSubjectBySchoolPeriodStudent($schoolPeriodStudentId)
     {
         return self::where('school_period_student_id',$schoolPeriodStudentId)
             ->get();
+    }
+
+    public  static function findSchoolPeriodStudentId($schoolPeriodStudentId,$schoolPeriodSubjectTeacherId)
+    {
+        return self::where('school_period_student_id',$schoolPeriodStudentId)
+            ->where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+            ->get('id');
     }
 
     public static function updateStudentSubject($id,$studentSubject)
@@ -87,12 +75,11 @@ class StudentSubject extends Model
         self::find($id)
             ->update($studentSubject);
     }
-    public  static function findSchoolPeriodStudent($schoolPeriodStudentId,$schoolPeriodSubjectTeacherId)
-    {
-        return self::where('school_period_student_id',$schoolPeriodStudentId)
-            ->where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
-            ->get();
-    }
 
+    public static function deleteStudentSubject($id)
+    {
+        self::find($id)
+            ->delete();
+    }
 
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    //
+
     protected $fillable = ['postgraduate_id','user_id','home_university','student_type','current_postgraduate','degrees'];
 
     public $timestamps = false;
@@ -14,10 +14,12 @@ class Student extends Model
     public function user() {
         return $this->belongsTo('App\User');
     }
+
     public static function addStudent($student)
     {
         self::create($student);
     }
+
     public static function updateStudent($userId,$student)
     {
         self::where('user_id',$userId)
@@ -36,5 +38,4 @@ class Student extends Model
         return self::where('id',$id)
             ->get();
     }
-
 }

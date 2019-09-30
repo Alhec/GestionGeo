@@ -37,6 +37,7 @@ class SchoolPeriod extends Model
     {
         return self::where('organization_id',$organizationId)
             ->whereDate('end_date','>=',date("Y-m-d"))
+            ->whereDate('start_date','<=',date("Y-m-d"))
             ->orderBy('start_date','ASC')
             ->with('subjects')
             ->get();

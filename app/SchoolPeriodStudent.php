@@ -75,21 +75,8 @@ class SchoolPeriodStudent extends Model
         return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','pay_ref','status'));
     }
 
-
-
-
-
-    public static function findSchoolPeriodStudent($studentId,$schoolPeriodId)
-    {
-        return self::where('student_id',$studentId)
-            ->where('school_period_id',$schoolPeriodId)
-            ->get();
-    }
     public static function existSchoolPeriodStudentById($id,$organizationId){
         return self::where('id',$id)
-            ->with('student')
-            ->with('enrolledSubjects')
-            ->with('schoolPeriod')
             ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
@@ -103,9 +90,23 @@ class SchoolPeriodStudent extends Model
             ->delete();
     }
 
+    public static function findSchoolPeriodStudent($studentId,$schoolPeriodId)
+    {
+        return self::where('student_id',$studentId)
+            ->where('school_period_id',$schoolPeriodId)
+            ->with('enrolledSubjects')
+            ->get();
+    }
+
     public static function updateSchoolPeriodStudent($id,$schoolPeriodSubject)
     {
         self::find($id)
             ->update($schoolPeriodSubject->all());
+    }
+
+    public static function updateSchoolPeriodStudentLikeArray($id,$schoolPeriodSubject)
+    {
+        self::find($id)
+            ->update($schoolPeriodSubject);
     }
 }

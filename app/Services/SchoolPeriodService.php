@@ -108,7 +108,6 @@ class SchoolPeriodService
         }
     }
 
-
     public static function addSchoolPeriod(Request $request)
     {
         self::validate($request);
