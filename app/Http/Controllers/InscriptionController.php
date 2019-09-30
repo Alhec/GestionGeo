@@ -73,4 +73,9 @@ class InscriptionController extends Controller
     {
         return InscriptionService::getInscriptionsBySchoolPeriod($request,$schoolPeriodId);
     }
+
+    public function studentAvailableSubject(Request $request)
+    {
+        return InscriptionService::studentAvailableSubjects($request);
+    }
 }

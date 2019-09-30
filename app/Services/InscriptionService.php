@@ -435,7 +435,13 @@ class InscriptionService
         return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
 
+    public static function studentAvailableSubjects(Request $request)
+    {
+
+    }
 
     public static function studentInscription()
-    {}
+    {
+        //dd(auth()->user()['id']);
+    }
 }

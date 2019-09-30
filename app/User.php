@@ -110,10 +110,12 @@ class User extends Authenticatable implements JWTSubject
         if ($userType == 'A'){
             return $user->get();
         }elseif ($userType=='T'){
-            return $user->with('teacher')
+            return $user
+                ->with('teacher')
                 ->get();
         }elseif ($userType=='S'){
-            return $user->with('student')
+            return $user
+                ->with('student')
                 ->get();
         }else{
             return [];

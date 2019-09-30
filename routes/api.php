@@ -30,6 +30,7 @@ Route::resource('schoolPeriods','SchoolPeriodController');
 //Route::resource('schoolPeriodInscription','SchoolPeriodInscriptionController');
 Route::get('inscriptions/schoolPeriod/{schoolPeriodId}','InscriptionController@inscriptionBySchoolPeriod');
 Route::get('inscriptions/availableSubjects','InscriptionController@availableSubjects');
+Route::get('studentInscription/availableSubject','InscriptionController@studentAvailableSubjects');
 Route::resource('inscriptions','InscriptionController');
 //Route::post('login', 'AuthController@login');
 //Route::get('log', 'AuthController@getToken');
