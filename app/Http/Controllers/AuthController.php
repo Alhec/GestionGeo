@@ -26,7 +26,6 @@ class AuthController extends Controller
             if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],'password'=>$credentials['password'],'user_type'=>$credentials['user_type']])) {
                 return response()->json(['error' => 'Invalid User'], 401);
             }
-            dd(User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId));
             return response()->json([
                 'token' => $token,
                 'type' => 'bearer', // you can ommit this

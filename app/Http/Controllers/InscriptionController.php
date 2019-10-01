@@ -74,8 +74,25 @@ class InscriptionController extends Controller
         return InscriptionService::getInscriptionsBySchoolPeriod($request,$schoolPeriodId);
     }
 
-    public function studentAvailableSubject(Request $request)
+    public function studentAvailableSubjects(Request $request)
     {
-        return InscriptionService::studentAvailableSubjects($request);
+        $studentId = $request->input('student_id');
+        return InscriptionService::studentAvailableSubjects($studentId,$request);
+    }
+
+    public  function addStudentInscription(Request $request)
+    {
+        return InscriptionService::studentAddInscription($request);
+    }
+
+    public function currentEnrolledSubjects(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        return InscriptionService::getCurrentEnrolledSubjects($studentId,$request);
+    }
+
+    public function withdrawSubjects(Request $request)
+    {
+        return InscriptionService::withdrawSubjects($request);
     }
 }

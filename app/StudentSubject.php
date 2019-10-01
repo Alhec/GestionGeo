@@ -82,4 +82,10 @@ class StudentSubject extends Model
             ->delete();
     }
 
+    public static function getStudentSubjectById($id)
+    {
+        return self::where('id',$id)
+            ->get();
+    }
+
 }
