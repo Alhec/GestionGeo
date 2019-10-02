@@ -12,9 +12,10 @@ class StudentSubject extends Model
     protected $table = 'student_subject';
     public $timestamps = false;
 
-    public function student()
+    public function dataStudent()
     {
-        return $this->belongsTo('App\SchoolPeriodStudent','school_period_student_id','id');
+        return $this->belongsTo('App\SchoolPeriodStudent','school_period_student_id','id')
+            ->with('student');
     }
 
     public function dataSubject()
@@ -54,6 +55,7 @@ class StudentSubject extends Model
     public static function studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId)
     {
         return self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+            ->with('dataStudent')
             ->get();
     }
 
@@ -87,5 +89,7 @@ class StudentSubject extends Model
         return self::where('id',$id)
             ->get();
     }
+
+
 
 }

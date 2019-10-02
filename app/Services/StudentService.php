@@ -68,4 +68,21 @@ class StudentService
             return UserService::getUserById($request,$id,'S');
         }
     }
+
+    public static function validateStudent(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        if (Student::existStudentByid($request['student_id'])){
+            $student = Student::getStudentById($request['student_id']);
+            if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
+                return response()->json(['message'=>'Usuario no encontrado'],206);
+            }
+            if ($student[0]['user_id'] != auth()->user()['id']  ){
+                return response()->json(['message'=>'Unauthorized'],401);
+            }
+        }else{
+            return response()->json(['message'=>'Usuario no encontrado'],206);
+        }
+        return 'valid';
+    }
 }

@@ -235,4 +235,23 @@ class SchoolPeriodService
         }
         return response()->json(['message'=>'No hay periodo escolar en curso'],206);
     }
+
+    public static function getSubjectsTaughtSchoolPeriod($teacherId,Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        $request['teacher_id']=$teacherId;
+        $isValid=TeacherService::validateTeacher($request);
+        if ($isValid){
+            $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
+            if (count($currentSchoolPeriod)>0){
+                $subjectsTaught = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,$currentSchoolPeriod[0]['id']);
+                if (count($subjectsTaught)>0){
+                    return $subjectsTaught;
+                }
+                return response()->json(['message'=>'No impartes materias en el periodo escolar actual'],206);
+            }
+            return response()->json(['message'=>'No hay periodo escolar en curso'],206);
+        }
+        return $isValid;
+    }
 }

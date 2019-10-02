@@ -84,4 +84,25 @@ class SchoolPeriodSubjectTeacher extends Model
         $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
         self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher[0]);
     }
+
+    public static function getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,$schoolPeriodId)
+    {
+        return self::where('school_period_id',$schoolPeriodId)
+            ->where('teacher_id',$teacherId)
+            ->with('subject')
+            ->get();
+    }
+
+    public static function existSchoolPeriodSubjectTeacherById($id)
+    {
+        return self::where('id',$id)
+            ->exists();
+    }
+
+    public static function getSchoolPeriodSubjectTeacherById($id)
+    {
+        return self::where('id',$id)
+            ->get();
+    }
+
 }

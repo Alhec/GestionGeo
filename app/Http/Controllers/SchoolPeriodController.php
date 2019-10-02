@@ -66,4 +66,10 @@ class SchoolPeriodController extends Controller
     {
         return SchoolPeriodService::getCurrentSchoolPeriod($request);
     }
+
+    public function subjectTaughtSchoolPeriod(Request $request)
+    {
+        $teacherId=$request->input('teacher_id');
+        return SchoolPeriodService::getSubjectsTaughtSchoolPeriod($teacherId,$request);
+    }
 }

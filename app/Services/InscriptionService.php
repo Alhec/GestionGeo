@@ -434,27 +434,11 @@ class InscriptionService
         return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
 
-    public static function validateStudent(Request $request)
-    {
-        $organizationId = $request->header('organization_key');
-        if (Student::existStudentByid($request['student_id'])){
-            $student = Student::getStudentById($request['student_id']);
-            if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
-                return response()->json(['message'=>'Usuario no encontrado'],206);
-            }
-            if ($student[0]['user_id'] != auth()->user()['id']  ){
-                return response()->json(['message'=>'Unauthorized'],401);
-            }
-        }else{
-            return response()->json(['message'=>'Usuario no encontrado'],206);
-        }
-        return 'valid';
-    }
-
     public static function studentAvailableSubjects($studentId,Request $request)
     {
         $organizationId = $request->header('organization_key');
-        $isValid=self::validateStudent($request);
+        $request['student_id']=$studentId;
+        $isValid=StudentService::validateStudent($request);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
@@ -471,7 +455,7 @@ class InscriptionService
     public static function studentAddInscription(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        $isValid=self::validateStudent($request);
+        $isValid=StudentService::validateStudent($request);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
@@ -491,7 +475,8 @@ class InscriptionService
 
     public static function getCurrentEnrolledSubjects($studentId,Request $request){
         $organizationId = $request->header('organization_key');
-        $isValid=self::validateStudent($request);
+        $request['student_id']=$studentId;
+        $isValid=StudentService::validateStudent($request);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
@@ -540,7 +525,7 @@ class InscriptionService
     public static function withdrawSubjects(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        $isValid=self::validateStudent($request);
+        $isValid=StudentService::validateStudent($request);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
@@ -560,5 +545,78 @@ class InscriptionService
             return response()->json(['message'=>'No hay periodo escolar en curso'],206);
         }
         return $isValid;
+    }
+
+    public static function getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        $request['teacher_id']=$teacherId;
+        $isValid=TeacherService::validateTeacher($request);
+        if ($isValid){
+            $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
+            if (count($currentSchoolPeriod)>0){
+                if (SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId)){
+                    $schoolPeriodSubjectTeacher= SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId);
+                    if ($schoolPeriodSubjectTeacher[0]['teacher_id']==$teacherId && $schoolPeriodSubjectTeacher[0]['school_period_id']==$currentSchoolPeriod[0]['id'] ){
+                        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId);
+                        if (count($enrolledStudents)>0){
+                            return $enrolledStudents;
+                        }
+                        return response()->json(['message'=>'No tienes inscripciones'],206);
+                    }
+                }
+                return response()->json(['message'=>'Materia invalida'],206);
+            }
+            return response()->json(['message'=>'No hay periodo escolar en curso'],206);
+        }
+        return $isValid;
+    }
+
+    public static function validateLoadNote(Request $request,$schoolPeriodId)
+    {
+        $teacherId=$request['teacher_id'];
+        $schoolPeriodSubjectTeacherId=$request['school_period_subject_teacher_id'];
+        $studentNotes=$request['student_notes'];
+        if (!SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId)){
+            return false;
+        }
+        $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId);
+        if ($schoolPeriodSubjectTeacher[0]['teacher_id']!=$teacherId ||$schoolPeriodSubjectTeacher[0]['school_period_id']!=$schoolPeriodId){
+            return false;
+        }
+        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId);
+        if (count($enrolledStudents)<=0){
+            return false;
+        }
+        foreach ($studentNotes as $studentNote){
+            $found = false;
+            foreach ($enrolledStudents as $enrolledStudent){
+                if($enrolledStudent['id']==$studentNote['student_subject_teacher_id'] && $enrolledStudent['status']!='RET'){
+                    $found =true;
+                }
+            }
+            if ($found == false){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function loadNotes(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        $isValid=TeacherService::validateTeacher($request);
+        if ($isValid){
+            $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
+            if (count($currentSchoolPeriod)>0){
+                if (self::validateLoadNote($request,$currentSchoolPeriod[0]['id'])){
+
+                }
+                return response()->json(['message'=>'Datos invalidos'],206);
+            }
+            return response()->json(['message'=>'No hay periodo escolar en curso'],206);
+        }
+        return $isValid;
+
     }
 }

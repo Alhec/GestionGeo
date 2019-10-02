@@ -95,4 +95,12 @@ class InscriptionController extends Controller
     {
         return InscriptionService::withdrawSubjects($request);
     }
+
+    public static function enrolledStudentsInSchoolPeriod(Request $request)
+    {
+        $teacherId = $request->input('teacher_id');
+        $schoolPeriodSubjectTeacherId = $request->input('school_period_subject_teacher_id');
+        return InscriptionService::getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$request);
+    }
+
 }

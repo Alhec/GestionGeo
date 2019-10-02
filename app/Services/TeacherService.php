@@ -57,4 +57,21 @@ class TeacherService
             return UserService::getUserById($request, $id, 'T');
         }
     }
+
+    public static function validateTeacher(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        if (Teacher::existTeacherById($request['teacher_id'])){
+            $teacher = Teacher::getTeacherById($request['teacher_id']);
+            if (!User::existUserById($teacher[0]['user_id'],'S',$organizationId)) {
+                return response()->json(['message'=>'Usuario no encontrado'],206);
+            }
+            if ($teacher[0]['user_id'] != auth()->user()['id']  ){
+                return response()->json(['message'=>'Unauthorized'],401);
+            }
+        }else{
+            return response()->json(['message'=>'Usuario no encontrado'],206);
+        }
+        return 'valid';
+    }
 }
