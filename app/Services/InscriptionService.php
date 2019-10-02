@@ -611,6 +611,7 @@ class InscriptionService
             if (count($currentSchoolPeriod)>0){
                 if (self::validateLoadNote($request,$currentSchoolPeriod[0]['id'])){
 
+
                 }
                 return response()->json(['message'=>'Datos invalidos'],206);
             }
