@@ -241,7 +241,7 @@ class SchoolPeriodService
         $organizationId = $request->header('organization_key');
         $request['teacher_id']=$teacherId;
         $isValid=TeacherService::validateTeacher($request);
-        if ($isValid){
+        if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
                 $subjectsTaught = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,$currentSchoolPeriod[0]['id']);

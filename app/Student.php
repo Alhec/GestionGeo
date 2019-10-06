@@ -27,7 +27,7 @@ class Student extends Model
             ->update($student);
     }
 
-    public static function existStudentByid($id)
+    public static function existStudentById($id)
     {
         return self::where('id',$id)
             ->exists();

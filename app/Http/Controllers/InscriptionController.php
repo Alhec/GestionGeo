@@ -103,4 +103,8 @@ class InscriptionController extends Controller
         return InscriptionService::getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$request);
     }
 
+    public static function loadNotes(Request $request){
+        return InscriptionService::loadNotes($request);
+    }
+
 }

@@ -15,16 +15,19 @@ class SchoolPeriodStudent extends Model
     {
         return $this->belongsTo('App\SchoolPeriod');
     }
+
     public function student()
     {
         return $this->belongsTo('App\Student')
             ->with('user');
     }
+
     public function enrolledSubjects()
     {
         return $this->hasMany('App\StudentSubject')
             ->with('dataSubject');
     }
+
     public static function getSchoolPeriodStudent($organizationId)
     {
         return self::with('schoolPeriod')

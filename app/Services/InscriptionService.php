@@ -96,7 +96,7 @@ class InscriptionService
 
     public static function filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,$availableSubjects)
     {
-        $enrolledSubjects = StudentSubject::getEnrolledSubjectsBySchoolPeriod($studentId,$schoolPeriodId);
+        $enrolledSubjects = StudentSubject::getEnrolledSubjectsBySchoolPeriodStudent($studentId,$schoolPeriodId);
         if (count($enrolledSubjects)>0){
             $filterSubjectsEnrolled = [];
             foreach ($availableSubjects as $availableSubject){
@@ -156,7 +156,7 @@ class InscriptionService
 
     public static function validateRelation($organizationId,Request $request)
     {
-        if (Student::existStudentByid($request['student_id'])){
+        if (Student::existStudentById($request['student_id'])){
             $student= Student::getStudentById($request['student_id']);
             if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
                 return false;
@@ -313,7 +313,7 @@ class InscriptionService
 
     public static function validateRelationUpdate($organizationId,Request $request)
     {
-        if (Student::existStudentByid($request['student_id'])){
+        if (Student::existStudentById($request['student_id'])){
             $student= Student::getStudentById($request['student_id']);
             if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
                 return false;
@@ -552,7 +552,7 @@ class InscriptionService
         $organizationId = $request->header('organization_key');
         $request['teacher_id']=$teacherId;
         $isValid=TeacherService::validateTeacher($request);
-        if ($isValid){
+        if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
                 if (SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId)){
@@ -572,7 +572,7 @@ class InscriptionService
         return $isValid;
     }
 
-    public static function validateLoadNote(Request $request,$schoolPeriodId)
+    public static function validateLoadNotes(Request $request,$schoolPeriodId)
     {
         $teacherId=$request['teacher_id'];
         $schoolPeriodSubjectTeacherId=$request['school_period_subject_teacher_id'];
@@ -584,14 +584,14 @@ class InscriptionService
         if ($schoolPeriodSubjectTeacher[0]['teacher_id']!=$teacherId ||$schoolPeriodSubjectTeacher[0]['school_period_id']!=$schoolPeriodId){
             return false;
         }
-        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId);
+        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId)->toArray();
         if (count($enrolledStudents)<=0){
             return false;
         }
         foreach ($studentNotes as $studentNote){
             $found = false;
             foreach ($enrolledStudents as $enrolledStudent){
-                if($enrolledStudent['id']==$studentNote['student_subject_teacher_id'] && $enrolledStudent['status']!='RET'){
+                if($enrolledStudent['id']==$studentNote['student_subject_id'] && $enrolledStudent['status']!='RET'){
                     $found =true;
                 }
             }
@@ -602,22 +602,38 @@ class InscriptionService
         return true;
     }
 
+    public static function changeNotes($studentNotes){
+        $schoolPeriodStudentForUpdate= [];
+        foreach($studentNotes as $studentNote){
+            $studentSubject= StudentSubject::getStudentSubjectById($studentNote['student_subject_id'])->toArray();
+            $studentSubject[0]['qualification']=$studentNote['qualification'];
+            $studentSubjectPrepare = self::prepareArrayOfSubject($studentSubject[0],$studentSubject[0]['school_period_student_id'],false);
+            StudentSubject::updateStudentSubject($studentSubject[0]['id'],$studentSubjectPrepare);
+            if (!in_array($studentSubject[0]['school_period_student_id'],$schoolPeriodStudentForUpdate)){
+                $schoolPeriodStudentsForUpdate[]=$studentSubject[0]['school_period_student_id'];
+            }
+        }
+        return $schoolPeriodStudentsForUpdate;
+    }
+
     public static function loadNotes(Request $request)
     {
         $organizationId = $request->header('organization_key');
         $isValid=TeacherService::validateTeacher($request);
-        if ($isValid){
+        if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (count($currentSchoolPeriod)>0){
-                if (self::validateLoadNote($request,$currentSchoolPeriod[0]['id'])){
-
-
+                if (self::validateLoadNotes($request,$currentSchoolPeriod[0]['id']) && $currentSchoolPeriod[0]['load_notes']==true){
+                    $schoolPeriodsStudentForUpdate=self::changeNotes($request['student_notes']);
+                    foreach ($schoolPeriodsStudentForUpdate as $schoolPeriodStudentForUpdate){
+                        self::updateStatus($schoolPeriodStudentForUpdate,$organizationId);
+                    }
+                    return response()->json(['message'=>'Ok'],200);
                 }
                 return response()->json(['message'=>'Datos invalidos'],206);
             }
             return response()->json(['message'=>'No hay periodo escolar en curso'],206);
         }
         return $isValid;
-
     }
 }

@@ -22,24 +22,25 @@ class StudentSubject extends Model
     {
         return $this->belongsTo('App\SchoolPeriodSubjectTeacher','school_period_subject_teacher_id','id')
             ->with('subject')
-            ->with('schedules');
+            ->with('schedules')
+            ->with('schoolPeriod');
     }
 
     public static function getApprovedSubjects($studentId)
     {
         return self::where('status','APR')
             ->with('dataSubject')
-            ->whereHas('student',function (Builder $query) use ($studentId){
+            ->whereHas('dataStudent',function (Builder $query) use ($studentId){
                 $query
                     ->where('student_id','=',$studentId);
             })
             ->get();
     }
 
-    public static function getEnrolledSubjectsBySchoolPeriod($studentId,$schoolPeriodId)
+    public static function getEnrolledSubjectsBySchoolPeriodStudent($studentId,$schoolPeriodId)
     {
         return self::with('dataSubject')
-            ->whereHas('student',function (Builder $query) use ($studentId,$schoolPeriodId){
+            ->whereHas('dataStudent',function (Builder $query) use ($studentId,$schoolPeriodId){
                 $query
                     ->where('student_id','=',$studentId)
                     ->where('school_period_id','=',$schoolPeriodId);
@@ -89,7 +90,4 @@ class StudentSubject extends Model
         return self::where('id',$id)
             ->get();
     }
-
-
-
 }

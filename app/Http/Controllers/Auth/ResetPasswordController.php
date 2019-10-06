@@ -45,14 +45,30 @@ class ResetPasswordController extends Controller
     // {
     //     $this-&gt;middleware('guest');
     // }
+    protected function rules()
+    {
+        return [
+            'token' => 'required',
+            'user_type'=>'required',
+            'email' => 'required',
+            'password' => 'required|confirmed',
+        ];
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only(
+            'email','user_type', 'password', 'password_confirmation', 'token'
+        );
+    }
 
     public function reset(Request $request)
     {
         $this->validate($request, $this->rules(), $this->validationErrorMessages());
 
         $response = $this->broker()->reset(
-        $this->credentials($request), function ($user, $password) {
-        $this->resetPassword($user, $password);
+            $this->credentials($request), function ($user, $password) {
+                $this->resetPassword($user, $password);
             }
         );
 

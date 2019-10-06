@@ -20,4 +20,10 @@ class OrganizationUser extends Model
         return self::where('user_id',$userId)
             ->exists();
     }
+
+    public static function getOrganizationUserByUserId($userId)
+    {
+        return self::where('user_id',$userId)
+            ->get();
+    }
 }

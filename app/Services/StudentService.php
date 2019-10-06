@@ -72,7 +72,7 @@ class StudentService
     public static function validateStudent(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        if (Student::existStudentByid($request['student_id'])){
+        if (Student::existStudentById($request['student_id'])){
             $student = Student::getStudentById($request['student_id']);
             if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
                 return response()->json(['message'=>'Usuario no encontrado'],206);

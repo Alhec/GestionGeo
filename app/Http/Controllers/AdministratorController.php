@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\AdministratorService;
 
 class AdministratorController extends Controller
 {
@@ -23,11 +24,15 @@ class AdministratorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
         return UserService::addUser($request,'A');
-    }
+    }*/
 
+    public function store(Request $request)
+    {
+        return AdministratorService::addAdministrator($request);
+    }
     /**
      * Display the specified resource.
      *
@@ -46,9 +51,14 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id,Request $request)
+    /*public function update($id,Request $request)
     {
        return UserService::updateUser($request,$id,'A');
+    }*/
+
+    public function update($id,Request $request)
+    {
+        return AdministratorService::updateAdministrator($request,$id);
     }
 
     /**
@@ -57,13 +67,23 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    /*public function destroy($id, Request $request)
     {
         return UserService::deleteUser($request,$id,'A');
+    }*/
+
+    public function destroy($id, Request $request)
+    {
+        return AdministratorService::deleteAdministrator($request,$id);
     }
 
     public function active(Request $request)
     {
         return UserService::activeUsers($request,'A');
+    }
+
+    public function principal(Request $request)
+    {
+        return AdministratorService::getPrincipalCoordinator($request);
     }
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class SchoolPeriod extends Model
 {
@@ -18,6 +19,11 @@ class SchoolPeriod extends Model
             ->with('schedules');
     }
 
+    public function inscriptions()
+    {
+        return $this->hasMany('App\SchoolPeriodStudent','school_period_id','id')
+            ->with('enrolledSubjects');
+    }
     public static function getSchoolPeriods($organizationId)
     {
         return self::where('organization_id',$organizationId)
@@ -82,5 +88,26 @@ class SchoolPeriod extends Model
             ->update($schoolPeriod->all());
     }
 
+    public static function getSubjectsByTeacher($teacherId)
+    {
+        return self::whereHas('subjects',function (Builder $query) use ($teacherId){
+            $query
+                ->where('teacher_id','=',$teacherId);
+            })
+            ->with('subjects')
+            ->orderBy('start_date','ASC')
+            ->get();
+    }
 
+    public static function getEnrolledSubjectsByStudent($studentId)
+    {
+        return self::whereHas('inscriptions',function (Builder $query) use ($studentId){
+            $query
+                ->where('student_id','=',$studentId);
+            })
+            ->with('inscriptions')
+            ->orderBy('start_date','ASC')
+            ->get();
+
+    }
 }

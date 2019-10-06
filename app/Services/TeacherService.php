@@ -18,7 +18,7 @@ class TeacherService
     public static function validate(Request $request)
     {
         $request->validate([
-            'teacher_type'=>'max:3|ends_with:INS,ASI,AGR,ASO,TIT',
+            'teacher_type'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT',
         ]);
     }
 
@@ -63,7 +63,7 @@ class TeacherService
         $organizationId = $request->header('organization_key');
         if (Teacher::existTeacherById($request['teacher_id'])){
             $teacher = Teacher::getTeacherById($request['teacher_id']);
-            if (!User::existUserById($teacher[0]['user_id'],'S',$organizationId)) {
+            if (!User::existUserById($teacher[0]['user_id'],'T',$organizationId)) {
                 return response()->json(['message'=>'Usuario no encontrado'],206);
             }
             if ($teacher[0]['user_id'] != auth()->user()['id']  ){

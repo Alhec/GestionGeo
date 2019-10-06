@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
+use App\Notifications\CustomResetPassword;
+use Illuminate\Support\Facades\Password;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -58,9 +60,15 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
+        $organization=OrganizationUser::getOrganizationUserByUserId($this['id']);
+        if (count($organization)>0){
+            return [
+                'user' =>self::getUserById($this['id'],$this['user_type'],$organization[0]['organization_id'])[0],
+            ];
+        }
         // TODO: Implement getJWTCustomClaims() method.
         return [
-            'user_type' =>$this->user_type,
+            'user_type' =>$this['user_type'],
         ];
     }
 
@@ -72,6 +80,11 @@ class User extends Authenticatable implements JWTSubject
     public function student()
     {
         return $this->hasOne('App\Student');
+    }
+
+    public function administrator()
+    {
+        return $this->hasOne('App\Administrator');
     }
 
     public function organization()
@@ -87,7 +100,8 @@ class User extends Authenticatable implements JWTSubject
                     ->where('organization_id','=',$organizationId);
             });
         if ($userType == 'A'){
-            return $users->get();
+            return $users->with('administrator')
+                ->get();
         }elseif ($userType=='T'){
             return $users->with('teacher')
                 ->get();
@@ -108,7 +122,9 @@ class User extends Authenticatable implements JWTSubject
                     ->where('organization_id','=',$organizationId);
             });
         if ($userType == 'A'){
-            return $user->get();
+            return $user
+                ->with('administrator')
+                ->get();
         }elseif ($userType=='T'){
             return $user
                 ->with('teacher')
@@ -189,6 +205,12 @@ class User extends Authenticatable implements JWTSubject
             ->update($user->all());
     }
 
+    public static function updateUserLikeArray($id,$user)
+    {
+        self::find($id)
+            ->update($user);
+    }
+
     public static function getUsersActive($userType,$organizationId)
     {
         $users = self::where('user_type',$userType)
@@ -198,7 +220,8 @@ class User extends Authenticatable implements JWTSubject
                     ->where('organization_id','=',$organizationId);
             });
         if ($userType == 'A'){
-            return $users->get();
+            return $users->with('administrator')
+                ->get();
         }elseif ($userType=='T'){
             return $users->with('teacher')
                 ->get();
@@ -209,4 +232,9 @@ class User extends Authenticatable implements JWTSubject
             return [];
         }
     }
+
+   /* public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
+    }*/
 }

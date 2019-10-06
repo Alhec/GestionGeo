@@ -30,9 +30,9 @@ class UserService
     public static function getUserById(Request $request, $userId, $userType)
     {
         $organizationId = $request->header('organization_key');
-        $administrator = User::getUserById($userId,$userType,$organizationId);
-        if (count($administrator)>0){
-            return $administrator[0];
+        $user = User::getUserById($userId,$userType,$organizationId);
+        if (count($user)>0){
+            return $user[0];
         }
         return response()->json(['message'=>'Usuario no encontrado'],206);
     }
@@ -70,20 +70,11 @@ class UserService
                     'organization_id'=>$organizationId,
                 ]);
                 //EmailService::userCreate($userId,$organizationId,$userType);
-                if ($userType =='S'||$userType =='T'){
-                    return $userId;//Para service de profesor y estudiante retornar usuario
-                }
-                return self::getUserById($request,$userId,$userType);
+                return $userId;
             }
-            if ($userType =='S'||$userType =='T'){
-                return "identification_email";//Para service de profesor y estudiante errores
-            }
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+            return "identification_email";//Para service de profesor y estudiante errores
         }
-        if ($userType =='S'||$userType =='T'){
-            return "organization";//Para service de profesor y estudiante errores
-        }
-        return response()->json(['message'=>'No existe organizacion asociada'],206);
+        return "organization";//Para service de profesor y estudiante errores
     }
 
     public static function deleteUser(Request $request, $userId, $userType)
@@ -118,29 +109,17 @@ class UserService
         if (Organization::existOrganization($organizationId)){
             if (User::existUserById($userId,$userType,$organizationId)){
                 if (!self::availableUser($request,$userId,$userType,$organizationId)){
-                    if ($userType =='S'||$userType =='T'){
-                        return "identification_email";//Para service de profesor y estudiante errores
-                    }
-                    return response()->json(['message'=>'Identificacion o correo ya registrado'],206);
+                    return "identification_email";//Para service de profesor y estudiante errores
                 }
                 $user=User::getUserById($userId,$userType,$organizationId);
                 $request['password']=$user[0]['password'];
                 $request['user_type']=$userType;
                 User::updateUser($userId,$request);
-                if ($userType =='S'||$userType =='T'){
-                    return $userId;//Para service de profesor y estudiante retornar usuario
-                }
-                return self::getUserById($request,$userId,$userType);
+                return $userId;//Para service de profesor y estudiante retornar usuario
             }
-            if ($userType =='S'||$userType =='T'){
-                return "user";//Para service de profesor y estudiante errores
-            }
-            return response()->json(['message'=>'Usuario no encontrado'],206);
+            return "user";//Para service de profesor y estudiante errores
         }
-        if ($userType =='S'||$userType =='T'){
-            return "organization";//Para service de profesor y estudiante errores
-        }
-        return response()->json(['message'=>'No existe organizacion asociada'],206);
+        return "organization";//Para service de profesor y estudiante errores
     }
 
     public static function activeUsers(Request $request,$userType)
@@ -152,5 +131,52 @@ class UserService
         }
         return response()->json(['message'=>'No existen usuarios activos con ese perfil'],206);
 
+    }
+
+    public function changeUserData(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        if (auth()->payload()['user'][0]->id!=$request['id']){
+            return response()->json(['message'=>'Unauthorized'],401);
+        }
+        $user=User::getUserById(auth()->payload()['user'][0]->id,auth()->payload()['user'][0]->user_type,$organizationId)[0];
+        $request['password']=$user['password'];
+        $request['user_type']=$user['user_type'];
+        User::updateUser($request['id'],$request);
+        return response()->json(['message'=>'Ok'],200);
+    }
+
+    public static function validateChangePassword(Request $request)
+    {
+        $request->validate([
+            'id'=>'required|numeric',
+            'old_password'=>'required',
+            'password'=>'required|confirmed',
+        ]);
+    }
+
+    public static function changePassword(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        if (auth()->payload()['user'][0]->id!=$request['id']){
+            return response()->json(['message'=>'Unauthorized'],401);
+        }
+        self::validateChangePassword($request);
+        $user=User::getUserById(auth()->payload()['user'][0]->id,auth()->payload()['user'][0]->user_type,$organizationId)[0];
+
+        if (!Hash::check($request['old_password'],$user['password'])){
+            return response()->json(['message'=>'La clave esta errada'],206);
+        }
+        $user=$user->toArray();
+        $user['password']=Hash::make($request['password']);
+        if ($user['user_type']=='A'){
+            unset($user['administrator']);
+        } else if ($user['user_type']=='T'){
+            unset($user['teacher']);
+        } else {
+            unset($user['student']);
+        }
+        User::updateUserLikeArray($request['id'],$user);
+        return response()->json(['message'=>'Ok'],200);
     }
 }
