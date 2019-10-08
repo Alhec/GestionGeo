@@ -63,7 +63,7 @@ class User extends Authenticatable implements JWTSubject
         $organization=OrganizationUser::getOrganizationUserByUserId($this['id']);
         if (count($organization)>0){
             return [
-                'user' =>self::getUserById($this['id'],$this['user_type'],$organization[0]['organization_id'])[0],
+                'user' =>self::getUserById($this['id'],$this['user_type'],$organization[0]['organization_id']),
             ];
         }
         // TODO: Implement getJWTCustomClaims() method.
@@ -233,8 +233,8 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-   /* public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPassword($token));
-    }*/
+    }
 }

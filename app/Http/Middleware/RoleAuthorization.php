@@ -15,7 +15,7 @@ class RoleAuthorization
      */
     public function handle($request, Closure $next,...$roles)
     {
-        if(!in_array(auth()->payload()['user_type'],$roles)){
+        if(!in_array(auth()->payload()['user'][0]->user_type,$roles)){
             return response()->json(['error' => 'Unauthorized'],401);
         }
         return $next($request);

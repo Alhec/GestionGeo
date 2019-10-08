@@ -31,6 +31,9 @@ class AdministratorService
         }else if ($result=="organization"){
             return response()->json(['message'=>'No existe organizacion asociada'],206);
         }else{
+            if (!isset($request['principal'])){
+                $request['principal']=false;
+            }
             if ($request['principal']){
                 if (((auth()->payload()['user'][0]->administrator->principal) ==false && auth()->payload()['user'][0]->administrator->rol=='COORDINATOR' )|| auth()->payload()['user'][0]->administrator->rol=='SECRETARY'){
                     return response()->json(['message'=>'Unauthorized'],401);
@@ -40,7 +43,7 @@ class AdministratorService
                     'rol'=>auth()->payload()['user'][0]->administrator->rol,
                     'principal'=>false
                 ]);
-                Administtrator::addAdministrator([
+                Administrator::addAdministrator([
                     'user_id'=>$result,
                     'rol'=>$request['rol'],
                     'principal'=>$request['principal']
@@ -67,6 +70,9 @@ class AdministratorService
         }else if ($result=="identification_email"){
             return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
         }else {
+            if (!isset($request['principal'])){
+                $request['principal']=false;
+            }
             if ($request['principal']){
                 if (((auth()->payload()['user'][0]->administrator->principal) ==false && auth()->payload()['user'][0]->administrator->rol=='COORDINATOR' )|| auth()->payload()['user'][0]->administrator->rol=='SECRETARY'){
                     return response()->json(['message'=>'Unauthorized'],401);

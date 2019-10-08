@@ -18,9 +18,9 @@ class CustomResetPassword extends ResetPassword
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -42,12 +42,13 @@ class CustomResetPassword extends ResetPassword
      */
     public function toMail($notifiable)
     {
-        dd($notifiable);
+        $organization = Organization::getOrganizationByStudentId($notifiable['id']);
+
         return (new MailMessage)
             ->subject('Recuperar contraseña')
             ->greeting('Hola')
             ->line('Estás recibiendo este correo porque hiciste una solicitud de recuperación de contraseña para tu cuenta.')
-            ->action('Recuperar contraseña', route('password.reset', $this->token))
+            ->action('Recuperar contraseña',  'http://'.$organization[0]['website'].'/password/reset?token='.$this->token)
             ->line('Si no realizaste esta solicitud, no se requiere realizar ninguna otra acción.')
             ->salutation('Saludos, '. config('app.name'));
     }

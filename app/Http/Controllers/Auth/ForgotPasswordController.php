@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class ForgotPasswordController extends Controller
 {
@@ -40,12 +42,14 @@ class ForgotPasswordController extends Controller
     // }
 
     // Añadimos las respuestas JSON, ya que el Frontend solo recibe JSON
+
+
     public function sendResetLinkEmail(Request $request)
     {
-        $this->validate($request, ['email' => 'required|email']);
+        $this->validate($request, ['email' => 'required|email','user_type' => 'required']);
 
         $response = $this->broker()->sendResetLink(
-            $request->only('email')
+            $request->only('email','user_type')
         );
         switch ($response) {
             case \Password::INVALID_USER:
