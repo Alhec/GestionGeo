@@ -43,18 +43,12 @@ class AdministratorService
                     'rol'=>auth()->payload()['user'][0]->administrator->rol,
                     'principal'=>false
                 ]);
-                Administrator::addAdministrator([
-                    'user_id'=>$result,
-                    'rol'=>$request['rol'],
-                    'principal'=>$request['principal']
-                ]);
-            }else{
-                Administrator::addAdministrator([
-                    'user_id'=>$result,
-                    'rol'=>$request['rol'],
-                    'principal'=>false
-                ]);
             }
+            Administrator::addAdministrator([
+                'user_id'=>$result,
+                'rol'=>$request['rol'],
+                'principal'=>$request['principal']
+            ]);
             return UserService::getUserById($request,$result,'A');
         }
     }
@@ -82,18 +76,13 @@ class AdministratorService
                     'rol'=>auth()->payload()['user'][0]->administrator->rol,
                     'principal'=>false
                 ]);
-                Administrator::updateAdministrator($id, [
-                    'user_id'=>$id,
-                    'rol'=>$request['rol'],
-                    'principal'=>$request['principal']
-                ]);
-            }else{
-                Administrator::updateAdministrator($id, [
-                    'user_id'=>$id,
-                    'rol'=>$request['rol'],
-                    'principal'=>$request['principal']
-                ]);
+
             }
+            Administrator::updateAdministrator($id, [
+                'user_id'=>$id,
+                'rol'=>$request['rol'],
+                'principal'=>$request['principal']
+            ]);
             return UserService::getUserById($request, $id, 'A');
         }
     }
@@ -102,7 +91,7 @@ class AdministratorService
     {
         $organizationId = $request->header('organization_key');
         $administrator = User::getUserById($id,'A',$organizationId);
-        if (count($administrator)<0){
+        if (count($administrator)<=0){
             return response()->json(['message'=>'Usuario no encontrado'],206);
         }
         if ($administrator[0]['administrator']['principal'] && $administrator[0]['administrator']['rol']=='COORDINATOR'){

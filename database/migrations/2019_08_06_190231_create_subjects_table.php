@@ -18,7 +18,8 @@ class CreateSubjectsTable extends Migration
             $table->string('subject_code',10);
             $table->string('subject_name',50);
             $table->integer('uc');
-            $table->string('subject_type',3)->nullable(); //REG AMP
+            $table->boolean('is_final_subject?');
+            $table->string('subject_type',3); //REG AMP ACT PER PDC
         });
     }
 

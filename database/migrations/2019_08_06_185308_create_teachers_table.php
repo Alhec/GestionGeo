@@ -19,6 +19,9 @@ class CreateTeachersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->string('teacher_type',3);
+            $table->string('dedication',3);//TC tiempo completo, EXC Exclusivo CON Convencional MT medio Tiempo y INV Invitado
+            $table->string('home_institute',40)->nullable();
+            $table->string('country',20)->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 

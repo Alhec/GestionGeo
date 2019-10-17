@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostgraduateSubjectTable extends Migration
+class CreateSchoolProgramSubjectTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreatePostgraduateSubjectTable extends Migration
      */
     public function up()
     {
-        Schema::create('postgraduate_subject', function (Blueprint $table) {
+        Schema::create('school_program_subject', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('postgraduate_id');
+            $table->unsignedBigInteger('school_program_id');
             $table->unsignedBigInteger('subject_id');
-            $table->string('type',1);
-            $table->foreign('postgraduate_id')->references('id')->on('postgraduates')->onDelete('cascade');
+            $table->string('type',2);
+            $table->foreign('school_program_id')->references('id')->on('school_programs')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });
     }
@@ -31,7 +31,7 @@ class CreatePostgraduateSubjectTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('postgraduate_subject');
+        Schema::dropIfExists('school_program_subject');
         Schema::enableForeignKeyConstraints();
     }
 }

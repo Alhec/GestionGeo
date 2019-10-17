@@ -18,7 +18,10 @@ class TeacherService
     public static function validate(Request $request)
     {
         $request->validate([
-            'teacher_type'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT',
+            'teacher_type'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT,JUB,INV',
+            'dedication'=>'required|max:3|ends_with:INV,MT,CON,TC,EXC',
+            'home_institute'=>'max:40',
+            'country'=>'max:20'
         ]);
     }
 
@@ -34,6 +37,9 @@ class TeacherService
             Teacher::addTeacher([
                 'user_id'=>$result,
                 'teacher_type'=>$request['teacher_type'],
+                'dedication'=>$request['dedication'],
+                'home_institute'=>$request['home_institute'],
+                'country'=>$request['country'],
             ]);
             return UserService::getUserById($request,$result,'T');
         }
@@ -52,7 +58,10 @@ class TeacherService
         }else {
             Teacher::updateTeacher($id, [
                 'user_id' => $id,
-                'teacher_type' => $request['teacher_type']
+                'teacher_type' => $request['teacher_type'],
+                'dedication'=>$request['dedication'],
+                'home_institute'=>$request['home_institute'],
+                'country'=>$request['country'],
             ]);
             return UserService::getUserById($request, $id, 'T');
         }

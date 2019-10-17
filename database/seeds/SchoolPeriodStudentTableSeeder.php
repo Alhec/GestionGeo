@@ -18,24 +18,40 @@ class SchoolPeriodStudentTableSeeder extends Seeder
             'school_period_id'=>1,
             'pay_ref'=>'1234567890',
             'status'=>'INC-A', //RET-A RET-B DES-A DES-B INC-A INC-B REI-A REI-B REG
+            'amount_paid'=>5,
+            'is_exonerated'=>false,
+            'is_funded'=>false,
+            'is_scholarship'=>false,
         ]);
         SchoolPeriodStudent::create([
             'student_id'=>1,
             'school_period_id'=>1,
             'pay_ref'=>'1234567890',
             'status'=>'INC-A', //RET-A RET-B DES-A DES-B INC-A INC-B REI-A REI-B REG
+            'amount_paid'=>5,
+            'is_exonerated'=>false,
+            'is_funded'=>false,
+            'is_scholarship'=>false,
         ]);
         SchoolPeriodStudent::create([
             'student_id'=>3,
             'school_period_id'=>1,
             'pay_ref'=>'1234567890',
             'status'=>'INC-A', //RET-A RET-B DES-A DES-B INC-A INC-B REI-A REI-B REG
+            'amount_paid'=>5,
+            'is_exonerated'=>false,
+            'is_funded'=>false,
+            'is_scholarship'=>false,
         ]);
         SchoolPeriodStudent::create([
             'student_id'=>3,
             'school_period_id'=>2,
             'pay_ref'=>'1234567890',
             'status'=>'INC-A', //RET-A RET-B DES-A DES-B INC-A INC-B REI-A REI-B REG
+            'amount_paid'=>5,
+            'is_exonerated'=>false,
+            'is_funded'=>false,
+            'is_scholarship'=>false,
         ]);
     }
 }

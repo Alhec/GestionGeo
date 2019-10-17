@@ -50,6 +50,9 @@ class SchoolPeriodService
             'subjects.*.subject_id'=>'required|numeric',
             'subjects.*.limit'=>'required|numeric',
             'subjects.*.duty'=>'required|numeric',
+            'subjects.*.modality'=>'required|max:3|ends_with:REG,INT,SUF',
+            'subjects.*start_date'=>'size:10',
+            'subjects.*end_date'=>'size:10',
             'subjects.*.schedules.*.day'=>'required|max:10',
             'subjects.*.schedules.*.classroom'=>'required|max:20',
             'subjects.*.schedules.*.start_hour'=>'required|size:8',
@@ -173,6 +176,8 @@ class SchoolPeriodService
                     SchoolPeriodSubjectTeacher::updateSchoolPeriodSubjectTeacher($subjectInBd['id'],$subject);
                     if (isset($subject['schedules'])){
                         self::updateSchedules($subject['schedules'],$subjectInBd['id']);
+                    }else{
+                        Schedule::deleteAllSchedule($subjectInBd['id']);
                     }
                     $subjectsUpdated[]=$subjectInBd['id'];
                     $existSubject=true;

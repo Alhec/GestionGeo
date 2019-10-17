@@ -7,12 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
 
-    protected $fillable = ['postgraduate_id','user_id','home_university','student_type','current_postgraduate','degrees'];
+    protected $fillable = ['school_program_id','user_id','home_university','guide_teacher_id','student_type',
+        'current_postgraduate','type_income','is_available_final_work?','is_ucv_teacher?','repeat_approved_subject?',
+        'repeat_reprobated_subject?','credits_granted'];
 
     public $timestamps = false;
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('App\User');
+    }
+
+    public function degrees()
+    {
+        return $this->hasMany('App\Degree');
+    }
+
+    public function guideTeacher()
+    {
+        return $this->hasOne('App\Teacher','id','guide_teacher_id')
+            ->with('User');
     }
 
     public static function addStudent($student)

@@ -16,7 +16,7 @@ class CreateOrganizationsTable extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->string('id',10);
             $table->string('name',100);
-            $table->string('faculty_id',10);
+            $table->string('faculty_id',10)->nullable();
             $table->string('organization_id',10)->nullable();
             $table->string('website',50)->nullable();
             $table->text('address')->nullable();
@@ -33,6 +33,8 @@ class CreateOrganizationsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('organizations');
+        Schema::enableForeignKeyConstraints();
     }
 }

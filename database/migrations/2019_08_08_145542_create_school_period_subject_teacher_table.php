@@ -21,6 +21,9 @@ class CreateSchoolPeriodSubjectTeacherTable extends Migration
             $table->integer('limit');
             $table->integer('enrolled_students');
             $table->float('duty');
+            $table->string('modality',3);
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->foreign('school_period_id')->references('id')->on('school_periods')->onDelete('cascade');

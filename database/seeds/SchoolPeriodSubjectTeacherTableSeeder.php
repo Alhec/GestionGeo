@@ -20,6 +20,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled_students'=>3,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>2,
@@ -28,6 +29,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled_students'=>1,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>1,
@@ -36,6 +38,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>1,
             'enrolled_students'=>0,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>1,
@@ -44,6 +47,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled_students'=>1,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>2,
@@ -52,6 +56,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled_students'=>0,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>3,
@@ -60,6 +65,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled_students'=>0,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>4,
@@ -68,6 +74,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'limit'=>30,
             'enrolled_students'=>0,
             'duty'=>10,
+            'modality'=>'REG'
         ]);
     }
 }

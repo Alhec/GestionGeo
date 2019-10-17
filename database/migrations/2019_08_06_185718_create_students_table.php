@@ -15,15 +15,21 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('postgraduate_id');
+            $table->unsignedBigInteger('school_program_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('guide_teacher_id')->nullable();
             $table->string('student_type',3);
             $table->string('home_university',70);
             $table->string('current_postgraduate',70)->nullable();
-            $table->text('degrees')->nullable();
             $table->string('type_income',30)->nullable();
+            $table->boolean('is_available_final_work?');
+            $table->boolean('is_ucv_teacher?');
+            $table->boolean('repeat_approved_subject?');
+            $table->boolean('repeat_reprobated_subject?');
+            $table->integer('credits_granted')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('postgraduate_id')->references('id')->on('postgraduates')->onDelete('cascade');
+            $table->foreign('guide_teacher_id')->references('id')->on('teachers')->onDelete('cascade');
+            $table->foreign('school_program_id')->references('id')->on('school_programs')->onDelete('cascade');
         });
     }
 
@@ -35,8 +41,7 @@ class CreateStudentsTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('password_resets');
-        Schema::enableForeignKeyConstraints();
         Schema::dropIfExists('students');
+        Schema::enableForeignKeyConstraints();
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\PostgraduateService;
+use App\Services\SchoolProgramService;
 
-class PostgraduateController extends Controller
+class SchoolProgramController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class PostgraduateController extends Controller
      */
     public function index(Request $request)
     {
-        return  PostgraduateService::getPostgraduates($request);
+        return  SchoolProgramService::getSchoolProgram($request);
     }
 
     /**
@@ -25,7 +25,7 @@ class PostgraduateController extends Controller
      */
     public function store(Request $request)
     {
-        return PostgraduateService::addPostgraduate($request);
+        return SchoolProgramService::addSchoolProgram($request);
     }
 
     /**
@@ -36,7 +36,7 @@ class PostgraduateController extends Controller
      */
     public function show($id, Request $request)
     {
-        return PostgraduateService::getPostgraduatesById($request, $id);
+        return SchoolProgramService::getSchoolProgramById($request, $id);
     }
 
     /**
@@ -48,7 +48,7 @@ class PostgraduateController extends Controller
      */
     public function update($id,Request $request)
     {
-        return PostgraduateService::updatePostgraduate($request,$id);
+        return SchoolProgramService::updateSchoolProgram($request,$id);
     }
 
     /**
@@ -59,6 +59,6 @@ class PostgraduateController extends Controller
      */
     public function destroy($id,Request $request)
     {
-       return PostgraduateService::deletePostgraduate($request,$id);
+       return SchoolProgramService::deleteSchoolProgram($request,$id);
     }
 }

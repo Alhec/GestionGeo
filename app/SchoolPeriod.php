@@ -106,7 +106,6 @@ class SchoolPeriod extends Model
                 ->where('student_id','=',$studentId);
             })
             ->with('inscriptions')
-            ->orderBy('start_date','ASC')
             ->get();
 
     }

@@ -29,6 +29,8 @@ class CreateFacultiesTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('faculties');
+        Schema::enableForeignKeyConstraints();
     }
 }

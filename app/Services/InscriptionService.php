@@ -8,7 +8,7 @@
 
 namespace App\Services;
 
-use App\Postgraduate;
+use App\SchoolProgram;
 use App\Subject;
 use App\User;
 use Illuminate\Http\Request;
@@ -79,19 +79,19 @@ class InscriptionService
         return $availableSubjects;
     }
 
-    public static function filterSubjectsByPostgraduate($student,$organizationId,$availableSubjects)
+    public static function filterSubjectsBySchoolProgram($student, $organizationId, $availableSubjects)
     {
-        $subjectsInPostgraduate = Subject::getSubjectsByPostgraduate($student['postgraduate_id'],$organizationId);
-        $availableSubjectsInPostgraduate=[];
+        $subjectsInSchoolProgram = Subject::getSubjectsBySchoolProgram($student['school_program_id'],$organizationId);
+        $availableSubjectsInSchoolProgram=[];
         foreach ($availableSubjects as $availableSubject){
-            foreach ($subjectsInPostgraduate as $subjectInPostgraduate){
-                if ($availableSubject['subject_id']==$subjectInPostgraduate['id']){
-                    $availableSubjectsInPostgraduate[]=$availableSubject;
+            foreach ($subjectsInSchoolProgram as $subjectInSchoolProgram){
+                if ($availableSubject['subject_id']==$subjectInSchoolProgram['id']){
+                    $availableSubjectsInSchoolProgram[]=$availableSubject;
                     break;
                 }
             }
         }
-        return $availableSubjectsInPostgraduate;
+        return $availableSubjectsInSchoolProgram;
     }
 
     public static function filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,$availableSubjects)
@@ -119,26 +119,30 @@ class InscriptionService
     public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request,$internalCall)
     {
         $organizationId = $request->header('organization_key');
-        $student= Student::getStudentById($studentId)[0];
-        if (User::existUserById($student['user_id'],'S',$organizationId)){
-            $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
-            if (count($subjectsInSchoolPeriod)>0 && (self::getCurrentAmountCredits($studentId)<self::getTotalAmountCredits($studentId,$organizationId))){
-                $subjectsNotYetApproved = self::getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod);
-                if (count($subjectsNotYetApproved)>0){
-                    $filterSubjectsByPostgraduate = self::filterSubjectsByPostgraduate($student,$organizationId,$subjectsNotYetApproved);
-                    if (count($filterSubjectsByPostgraduate)>0){
-                        $availableSubjects= self::filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,$filterSubjectsByPostgraduate);
-                        if (count($availableSubjects)>0){
-                            return $availableSubjects;
+        $student= Student::getStudentById($studentId);
+        if (count($student)>0){
+            $student=$student[0];
+            if (User::existUserById($student['user_id'],'S',$organizationId)){
+                $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
+                if (count($subjectsInSchoolPeriod)>0 && (self::getCurrentAmountCredits($studentId)<self::getTotalAmountCredits($studentId,$organizationId))){
+                    $subjectsNotYetApproved = self::getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod);
+                    if (count($subjectsNotYetApproved)>0){
+                        $filterSubjectsBySchoolProgram = self::filterSubjectsBySchoolProgram($student,$organizationId,$subjectsNotYetApproved);
+                        if (count($filterSubjectsBySchoolProgram)>0){
+                            $availableSubjects= self::filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,$filterSubjectsBySchoolProgram);
+                            if (count($availableSubjects)>0){
+                                return $availableSubjects;
+                            }
                         }
                     }
                 }
+                if ($internalCall){
+                    return [];
+                }
+                return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
             }
-            if ($internalCall){
-                return [];
-            }
-            return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
         }
+
         return response()->json(['message'=>'No existe el estudiante dado el id'],206);
     }
 
@@ -250,8 +254,8 @@ class InscriptionService
 
     public static function getTotalAmountCredits($studentId,$organizationId)
     {
-        $postgraduateId = Student::getStudentById($studentId)[0]['postgraduate_id'];
-        return Postgraduate::getPostgraduateById($postgraduateId,$organizationId)[0]['num_cu'];
+        $schoolProgramId = Student::getStudentById($studentId)[0]['school_program_id'];
+        return SchoolProgram::getSchoolProgramById($schoolProgramId,$organizationId)[0]['num_cu'];
     }
 
     public static function getNumberCreditsInscription($schoolPeriodId,$subjects)

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-/*
+
 Route::get('administrators/active','AdministratorController@active');
 Route::get('administrators/principalCoordinator','AdministratorController@principal');
 Route::resource('administrators','AdministratorController');
@@ -24,7 +24,7 @@ Route::resource('teachers','TeacherController');
 Route::get('students/active','StudentController@active');
 Route::resource('students','StudentController');
 
-Route::resource('postgraduates','PostgraduateController'); // change to study program
+Route::resource('schoolPrograms','SchoolProgramController'); // change to study program
 
 Route::resource('subjects','SubjectController');
 
@@ -50,6 +50,7 @@ Route::resource('inscriptions','InscriptionController');
 Route::get('constance/study','ConstanceController@constanceOfStudy');
 Route::get('constance/academicLoad','ConstanceController@academicLoad');
 Route::get('constance/studentHistorical','ConstanceController@studentHistorical');
+Route::get('constance/studentHistoricalDownload','ConstanceController@studentHistoricalAllData');
 Route::get('constance/teacherHistorical','ConstanceController@teacherHistorical');
 Route::get('constance/workTeacher','ConstanceController@constanceOfWorkTeacher');
 Route::get('constance/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
@@ -81,10 +82,12 @@ Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm'
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
-*/
+
+Route::name('print')->get('/imprimir', 'GeneradorController@imprimir');
 
 
-//Administrator
+
+/*//Administrator
 Route::middleware('jwt.auth','role:A')->get('administrators/active','AdministratorController@active');
 Route::middleware('jwt.auth')->get('administrators/principalCoordinator','AdministratorController@principal');
 Route::middleware('jwt.auth','role:A')->get('administrators','AdministratorController@index');
@@ -110,11 +113,11 @@ Route::middleware('jwt.auth','role:A')->put('students/{id}','StudentController@u
 Route::middleware('jwt.auth','role:A')->delete('students/{id}','StudentController@destroy');
 
 //Postgraduate -> StudyProgram
-Route::middleware('jwt.auth','role:A')->get('postgraduates','PostgraduateController@index');
-Route::middleware('jwt.auth','role:A')->post('postgraduates','PostgraduateController@store');
-Route::middleware('jwt.auth','role:A')->get('postgraduates/{id}','PostgraduateController@show');
-Route::middleware('jwt.auth','role:A')->put('postgraduates/{id}','PostgraduateController@update');
-Route::middleware('jwt.auth','role:A')->delete('postgraduates/{id}','PostgraduateController@destroy');
+Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');
+Route::middleware('jwt.auth','role:A')->post('schoolPrograms','SchoolProgramController@store');
+Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgramController@show');
+Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
+Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
 
 //Subjects
 Route::middleware('jwt.auth','role:A')->get('subjects','SubjectController@index');
@@ -170,5 +173,6 @@ Route::middleware('jwt.auth')->post('updateUser', 'UserController@changeUserData
 
 // Password Reset 
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.email');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');*/
+
 

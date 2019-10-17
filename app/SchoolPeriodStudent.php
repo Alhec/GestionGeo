@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SchoolPeriodStudent extends Model
 {
-    protected $fillable = ['student_id','school_period_id','pay_ref','status'];
+    protected $fillable = ['student_id','school_period_id','status','pay_ref','financing','financing_description','amount_paid'];
     protected $table = 'school_period_student';
     public $timestamps = false;
 
@@ -75,7 +75,7 @@ class SchoolPeriodStudent extends Model
     }
 
     public static function addSchoolPeriodStudent($schoolPeriodStudent){
-        return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','pay_ref','status'));
+        return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','status','pay_ref','financing','financing_description','amount_paid'));
     }
 
     public static function existSchoolPeriodStudentById($id,$organizationId){

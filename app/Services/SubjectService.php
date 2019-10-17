@@ -10,8 +10,8 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\Subject;
-use App\Postgraduate;
-use App\PostgraduateSubject;
+use App\SchoolProgram;
+use App\SchoolProgramSubject;
 
 class SubjectService
 {
@@ -42,28 +42,29 @@ class SubjectService
              'subject_code'=>'required|max:10',
              'subject_name'=>'required|max:50',
              'uc'=>'required|numeric',
-             'subject_type'=>'max:3|ends_with:REG,AMP',
-             'postgraduates.*.id'=>'required|numeric',
-             'postgraduates.*.type'=>'required|max:1|ends_with:E,O',
+             'subject_type'=>'max:3|ends_with:REG,AMP,ACT,PER,PDC',
+             "is_final_subject?"=>'boolean',
+             'school_programs.*.id'=>'required|numeric',
+             'school_programs.*.type'=>'required|max:2|ends_with:EL,OP,OB',
         ]);
     }
 
-    public static function validatePostgraduates($postgraduates,$organizationId){
-        foreach ($postgraduates as $postgraduate){
-            if (!Postgraduate::existPostgraduateById($postgraduate['id'],$organizationId)){
+    public static function validateSchoolProgram($schoolPrograms,$organizationId){
+        foreach ($schoolPrograms as $schoolProgram){
+            if (!SchoolProgram::existSchoolProgramById($schoolProgram['id'],$organizationId)){
                 return false;
             }
         }
         return true;
     }
 
-    public static function addPostgraduatesInSubject($postgraduates, $subjectId)
+    public static function addSchoolProgramInSubject($schoolPrograms, $subjectId)
     {
-        foreach ($postgraduates as $postgraduate){
-            PostgraduateSubject::addPostgraduateSubject([
-                'postgraduate_id'=>$postgraduate['id'],
+        foreach ($schoolPrograms as $schoolProgram){
+            SchoolProgramSubject::addSchoolProgramSubject([
+                'school_program_id'=>$schoolProgram['id'],
                 'subject_id'=>$subjectId,
-                'type'=>$postgraduate['type'],
+                'type'=>$schoolProgram['type'],
             ]);
         }
     }
@@ -73,9 +74,9 @@ class SubjectService
         self::validate($request);
         $organizationId = $request->header('organization_key');
         if (!Subject::existSubjectByCode($request['subject_code'],$organizationId)){
-            if (self::validatePostgraduates($request['postgraduates'],$organizationId)){
+            if (self::validateSchoolProgram($request['school_programs'],$organizationId)){
                 $id = Subject::addSubject($request);
-                self::addPostgraduatesInSubject($request['postgraduates'],$id);
+                self::addSchoolProgramInSubject($request['school_programs'],$id);
                 return self::getSubjectsById($request,$id);
             }
             return response()->json(['message'=>'Postgrados invalidos'],206);
@@ -107,32 +108,32 @@ class SubjectService
         return response()->json(['message'=>'Materia no encontrada'],206);
     }
 
-    public static function updatePostgraduatesInSubject($postgraduates,$subject_id)
+    public static function updateSchoolProgramsInSubject($schoolPrograms, $subject_id)
     {
-        $postgraduatesInBd = PostgraduateSubject::getPostgraduateSubjectBySubjectId($subject_id);
-        $postgraduatesUpdated = [];
-        foreach ($postgraduates as $postgraduate){
-            $existPostgraduate = false;
-            foreach ($postgraduatesInBd as $postgraduateInBd){
-                if ($postgraduateInBd['postgraduate_id']==$postgraduate['id']){
-                    $postgraduate['subject_id']=$subject_id;
-                    PostgraduateSubject::updatePostgraduateSubject($postgraduateInBd['id'],$postgraduate);
-                    $postgraduatesUpdated[]=$postgraduateInBd['id'];
-                    $existPostgraduate = true;
+        $schoolProgramsInBd = SchoolProgramSubject::getSchoolProgramSubjectBySubjectId($subject_id);
+        $schoolProgramsUpdated = [];
+        foreach ($schoolPrograms as $schoolProgram){
+            $existSchoolProgram = false;
+            foreach ($schoolProgramsInBd as $schoolProgramInBd){
+                if ($schoolProgramInBd['school_program_id']==$schoolProgram['id']){
+                    $schoolProgram['subject_id']=$subject_id;
+                    SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramInBd['id'],$schoolProgram);
+                    $schoolProgramsUpdated[]=$schoolProgramInBd['id'];
+                    $existSchoolProgram = true;
                     break;
                 }
             }
-            if ($existPostgraduate == false){
-                $postgraduatesUpdated[]=PostgraduateSubject::addPostgraduateSubject([
-                    'postgraduate_id'=>$postgraduate['id'],
+            if ($existSchoolProgram == false){
+                $postgraduatesUpdated[]=SchoolProgramSubject::addSchoolProgramSubject([
+                    'school_program_id'=>$schoolProgram['id'],
                     'subject_id'=>$subject_id,
-                    'type'=>$postgraduate['type'],
+                    'type'=>$schoolProgram['type'],
                 ]);
             }
         }
-        foreach ($postgraduatesInBd as $postgraduateId){
-            if (!in_array($postgraduateId['id'],$postgraduatesUpdated)){
-               PostgraduateSubject::deletePostgraduateSubject($postgraduateId['id']);
+        foreach ($schoolProgramsInBd as $schoolProgramId){
+            if (!in_array($schoolProgramId['id'],$schoolProgramsUpdated)){
+               SchoolProgramSubject::deleteSchoolProgramSubject($schoolProgramId['id']);
             }
         }
     }
@@ -142,7 +143,7 @@ class SubjectService
         self::validate($request);
         $organizationId = $request->header('organization_key');
         if(Subject::existSubjectById($id,$organizationId)){
-            if (self::validatePostgraduates($request['postgraduates'],$organizationId)){
+            if (self::validateSchoolProgram($request['school_programs'],$organizationId)){
                 $subjectCode = Subject::getSubjectByCode($request['subject_code'],$organizationId);
                 if (count($subjectCode)>0) {
                     if ($subjectCode[0]['id'] != $id) {
@@ -150,7 +151,7 @@ class SubjectService
                     }
                 }
                 Subject::updateSubject($id,$request);
-                self::updatePostgraduatesInSubject($request['postgraduates'],$id);
+                self::updateSchoolProgramsInSubject($request['school_programs'],$id);
                 return self::getSubjectsById($request,$id);
             }
             return response()->json(['message'=>'Postgrados invalidos'],206);

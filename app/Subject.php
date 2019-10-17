@@ -7,20 +7,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Subject extends Model
 {
-    protected $fillable = ['subject_code','subject_name','uc','subject_type'];
+    protected $fillable = ['subject_code','subject_name','uc','subject_type','is_final_subject?'];
 
     public $timestamps = false;
 
-    public function Postgraduates()
+    public function SchoolPrograms()
     {
-        return $this->belongsToMany('App\Postgraduate','postgraduate_subject')
-            ->as('postgraduateSubject')
+        return $this->belongsToMany('App\SchoolProgram','school_program_subject')
+            ->as('schoolProgramSubject')
             ->withPivot('type');
     }
 
     public static function getSubjects($organizationId){
-        return self::with('postgraduates')
-            ->whereHas('postgraduates',function (Builder $query) use ($organizationId){
+        return self::with('schoolPrograms')
+            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
             })
@@ -29,8 +29,8 @@ class Subject extends Model
 
     public static function getSubjectById($id,$organizationId){
         return self::where('id',$id)
-            ->with('postgraduates')
-            ->whereHas('postgraduates',function (Builder $query) use ($organizationId){
+            ->with('schoolPrograms')
+            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
             })
@@ -39,8 +39,8 @@ class Subject extends Model
 
     public static function existSubjectByCode($code,$organizationId){
         return self::where('subject_code',$code)
-            ->with('postgraduates')
-            ->whereHas('postgraduates',function (Builder $query) use ($organizationId){
+            ->with('schoolPrograms')
+            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
             })
@@ -49,14 +49,14 @@ class Subject extends Model
 
     public static function addSubject($subject)
     {
-        return self::insertGetId($subject->only('subject_code','subject_name','uc','subject_type'));
+        return self::insertGetId($subject->only('subject_code','subject_name','uc','subject_type','is_final_subject?'));
     }
 
     public static function getSubjectByCode($code,$organizationId)
     {
         return self::where('subject_code',$code)
-            ->with('postgraduates')
-            ->whereHas('postgraduates',function (Builder $query) use ($organizationId){
+            ->with('schoolPrograms')
+            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
             })
@@ -66,8 +66,8 @@ class Subject extends Model
     public static function existSubjectById($id,$organizationId)
     {
         return self::where('id',$id)
-            ->with('postgraduates')
-            ->whereHas('postgraduates',function (Builder $query) use ($organizationId){
+            ->with('schoolPrograms')
+            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                 $query
                     ->where('organization_id','=',$organizationId);
             })
@@ -86,11 +86,11 @@ class Subject extends Model
             ->update($subject->all());
     }
 
-    public static function getSubjectsByPostgraduate($postgraduateId,$organizationId){
-        return self::whereHas('postgraduates',function (Builder $query) use ($postgraduateId,$organizationId){
+    public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId){
+        return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
                 $query
                     ->where('organization_id','=',$organizationId)
-                    ->where('postgraduate_id','=',$postgraduateId);
+                    ->where('school_program_id','=',$schoolProgramId);
             })
             ->get('id');
     }

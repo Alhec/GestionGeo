@@ -9,9 +9,10 @@
 namespace App\Services;
 
 use App\Http\Controllers\Controller;
-use Mail;
+//use Mail;
 use App\User;
 use App\Organization;
+use Illuminate\Support\Facades\Mail;
 
 class EmailService extends Controller
 {

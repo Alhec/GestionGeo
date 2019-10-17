@@ -49,9 +49,11 @@ class UserService
             'mobile'=>'required|max:15',
             'work_phone'=>'max:15',
             'email'=>'required|max:30|email',
-            'level_instruction'=>'max:20',
+            'level_instruction'=>'max:3|ends_with:TCU,TCM,Dr,Esp,Ing,MSc,Lic',
             'with_work'=>'boolean',
             'with_disabilities'=>'boolean',
+            'sex'=>'required|max:1|ends_with:M,F',
+            'nationality'=>'required|max:1|ends_with:V,E',
         ]);
     }
 
@@ -72,9 +74,9 @@ class UserService
                 //EmailService::userCreate($userId,$organizationId,$userType);
                 return $userId;
             }
-            return "identification_email";//Para service de profesor y estudiante errores
+            return "identification_email";
         }
-        return "organization";//Para service de profesor y estudiante errores
+        return "organization";
     }
 
     public static function deleteUser(Request $request, $userId, $userType)
@@ -109,17 +111,17 @@ class UserService
         if (Organization::existOrganization($organizationId)){
             if (User::existUserById($userId,$userType,$organizationId)){
                 if (!self::availableUser($request,$userId,$userType,$organizationId)){
-                    return "identification_email";//Para service de profesor y estudiante errores
+                    return "identification_email";
                 }
                 $user=User::getUserById($userId,$userType,$organizationId);
                 $request['password']=$user[0]['password'];
                 $request['user_type']=$userType;
                 User::updateUser($userId,$request);
-                return $userId;//Para service de profesor y estudiante retornar usuario
+                return $userId;
             }
-            return "user";//Para service de profesor y estudiante errores
+            return "user";
         }
-        return "organization";//Para service de profesor y estudiante errores
+        return "organization";
     }
 
     public static function activeUsers(Request $request,$userType)

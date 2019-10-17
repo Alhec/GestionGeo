@@ -21,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'identification', 'password','user_type','first_name','second_name','first_surname','second_surname','telephone',
-        'mobile','work_phone','email','active','with_work','with_disabilities',
+        'mobile','work_phone','email','active','with_work','with_disabilities','nationality','sex','level_instruction'
     ];
 
     /**
@@ -79,7 +79,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function student()
     {
-        return $this->hasOne('App\Student');
+        return $this->hasOne('App\Student')
+            ->with('degrees')
+            ->with('guideTeacher');
     }
 
     public function administrator()
@@ -169,8 +171,8 @@ class User extends Authenticatable implements JWTSubject
     public static function addUser($user)
     {
         return self::insertGetId($user->only('identification', 'password','user_type','first_name','second_name',
-            'first_surname','second_surname','telephone','mobile','work_phone','email','active','with_work',
-            'with_disabilities'));
+            'first_surname','second_surname','telephone','mobile','work_phone','email','level_instruction','active','with_work',
+            'with_disabilities','sex','nationality'));
     }
 
     public static function deleteUser($id)
