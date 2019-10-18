@@ -15,8 +15,9 @@ class DegreesTableSeeder extends Seeder
         Degree::query()->truncate();
         Degree::create([
             'student_id'=>1,
+            'degree_obtained'=>'Lic',
             'degree_name'=>'Licenciado en Geoquimica',
-            'degree_description'=>'Licenciado con mencion en Mineria'
+            'university'=>'UCV'
         ]);
     }
 }

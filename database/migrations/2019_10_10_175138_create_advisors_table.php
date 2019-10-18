@@ -15,9 +15,9 @@ class CreateAdvisorsTable extends Migration
     {
         Schema::create('advisors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('degree_works');
+            $table->unsignedBigInteger('final_works');
             $table->unsignedBigInteger('teacher_id');
-            $table->foreign('degree_works')->references('id')->on('degree_works')->onDelete('cascade');
+            $table->foreign('final_works')->references('id')->on('final_works')->onDelete('cascade');
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
         });
     }

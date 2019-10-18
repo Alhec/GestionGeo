@@ -55,6 +55,8 @@ Route::get('constance/teacherHistorical','ConstanceController@teacherHistorical'
 Route::get('constance/workTeacher','ConstanceController@constanceOfWorkTeacher');
 Route::get('constance/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
 
+Route::get('constance/inscription','ConstanceController@inscriptionConstance');
+
 Route::group([
     'prefix' => 'auth',
 ], function () {

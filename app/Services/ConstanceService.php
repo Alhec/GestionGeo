@@ -205,9 +205,48 @@ class ConstanceService
         return response()->json(['message'=>'No existe el estudiante'],206);
     }
 
-    public static function inscriptionConstance(Request $request)
+    public static function inscriptionConstance(Request $request, $studentId,$inscriptionId)
     {
+        $organizationId = $request->header('organization_key');
+        if ((auth()->payload()['user'][0]->user_type)!='A'){
+            $request['student_id']=$studentId;
+            $isValid = StudentService::validateStudent($request);
+            if ($isValid!='valid'){
+                return $isValid;
+            }
+        }
+        $data=[];
+        $student = Student::getStudentById($studentId);
+        if (count($student)>0){
+            $user=User::getUserById($student[0]['user_id'],'S',$organizationId);
+            if (count($user)>0){
+                $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($inscriptionId,$organizationId)->toArray();
+                dd($inscription[0]);
+                if (count($inscription)>0){
+                    if ($inscription[0]['student_id']==$studentId){
 
+                    }
+                }return response()->json(['message'=>'Inscripcion no encontrada'],206);
+                $data['user_data']=$user[0];
+                $data['coordinator_data']=AdministratorService::getPrincipalCoordinator($request);
+                $data['school_program_data']=SchoolProgram::getSchoolProgramById($user[0]['student']['school_program_id'],$organizationId)[0];
+                $now = Carbon::now();
+                $data['month']=self::numberToMonth($now->month);
+                $data['year']=$now->year;
+                $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
+                if (count($studentSubject)>0){
+                    $data['historical_data']=$studentSubject;
+                    $data['porcentual_data']=self::dataHistorical($studentSubject);
+                    if ($organizationId =='G'){
+                        $pdf = \PDF::loadView('constance/Geoquimica/constancia_notas',compact('data'));
+                        return $pdf->download('constancia_nota.pdf');
+                    }
+                    return $data;
+                }
+                return response()->json(['message'=>'Aun no tiene historial'],206);
+            }
+        }
+        return response()->json(['message'=>'No existe el estudiante'],206);
     }
 
     public static function teacherHistorical(Request $request, $teacherId)

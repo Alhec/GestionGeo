@@ -49,7 +49,7 @@ class UserService
             'mobile'=>'required|max:15',
             'work_phone'=>'max:15',
             'email'=>'required|max:30|email',
-            'level_instruction'=>'max:3|ends_with:TCU,TCM,Dr,Esp,Ing,MSc,Lic',
+            'level_instruction'=>'max:3|ends_with:TSU,TCM,Dr,Esp,Ing,MSc,Lic',
             'with_work'=>'boolean',
             'with_disabilities'=>'boolean',
             'sex'=>'required|max:1|ends_with:M,F',

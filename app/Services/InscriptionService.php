@@ -152,6 +152,10 @@ class InscriptionService
             'student_id'=>'required|numeric',
             'school_period_id'=>'required|numeric',
             'status'=>'required|max:5|ends_with:RET-A,RET-B,DES-A,DES-B,INC-A,INC-B,REI-A,REI-B,REG',
+            'pay_ref'=>'max:50',
+            'financing'=>'max:10',
+            'amount_paid'=>'numeric',
+            'financing_description'=>'max:60',
             'subjects.*.school_period_subject_teacher_id'=>'required|numeric',
             'subjects.*.status'=>'max:3|ends_with:CUR,RET,APR,REP',
             'subjects.*.qualification'=>'numeric'
@@ -367,7 +371,10 @@ class InscriptionService
                 ['student_id'=>$schoolPeriodStudent['student_id'],
                     'school_period_id'=>$schoolPeriodStudent['school_period_id'],
                     'pay_ref'=>$schoolPeriodStudent['pay_ref'],
-                    'status'=>$schoolPeriodStudent['status']
+                    'status'=>$schoolPeriodStudent['status'],
+                    'financing'=>$schoolPeriodStudent['financing'],
+                    'financing_description'=>$schoolPeriodStudent['financing_description'],
+                    'amount_paid'=>$schoolPeriodStudent['amount_paid'],
                 ]);
         }else{
             if ($schoolPeriodStudent['status']=='RET-A'||$schoolPeriodStudent['status']=='RET-B'){
@@ -376,7 +383,10 @@ class InscriptionService
                     ['student_id'=>$schoolPeriodStudent['student_id'],
                         'school_period_id'=>$schoolPeriodStudent['school_period_id'],
                         'pay_ref'=>$schoolPeriodStudent['pay_ref'],
-                        'status'=>$schoolPeriodStudent['status']
+                        'status'=>$schoolPeriodStudent['status'],
+                        'financing'=>$schoolPeriodStudent['financing'],
+                        'financing_description'=>$schoolPeriodStudent['financing_description'],
+                        'amount_paid'=>$schoolPeriodStudent['amount_paid'],
                     ]);
             }
         }
