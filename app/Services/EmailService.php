@@ -37,11 +37,17 @@ class EmailService extends Controller
                      break;
              }
              $data['web']=$organization['website'];
-             Mail::send('email.Geoquimica.emailTest',$data,function ($message) use ($user){
-                 $message->to($user['email'], $user['first_name'])
-                     ->subject('Usuario creado exitosamente');
-                 //$message->from('noyala96@gmail.com','Creacion de usuario');
-             });
+
+            try{
+                Mail::send('email.Geoquimica.emailTest',$data,function ($message) use ($user){
+                    $message->to($user['email'], $user['first_name'])
+                        ->subject('Usuario creado exitosamente');
+                    //$message->from('noyala96@gmail.com','Creacion de usuario');
+                });
+            }
+            catch(Exception $e){
+                //Never reached
+            }
             if (Mail::failures()) {
                 return 0;
             }else{

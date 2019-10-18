@@ -71,7 +71,7 @@ class UserService
                     'user_id'=>$userId,
                     'organization_id'=>$organizationId,
                 ]);
-                //EmailService::userCreate($userId,$organizationId,$userType);
+                EmailService::userCreate($userId,$organizationId,$userType);
                 return $userId;
             }
             return "identification_email";
