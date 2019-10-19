@@ -23,6 +23,7 @@ use Carbon\Carbon;
 
 class ConstanceService
 {
+
     public static function numberToMonth($month)
     {
         switch ($month){
@@ -75,6 +76,7 @@ class ConstanceService
                 $data['month']=self::numberToMonth($now->month);
                 $data['year']=$now->year;
                 if ($organizationId =='G'){
+                    \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                     $pdf = \PDF::loadView('constance/Geoquimica/constancia_estudio',compact('data'));
                     return $pdf->download('constancia_estudio.pdf');
                 }
@@ -154,6 +156,7 @@ class ConstanceService
                     $data['historical_data']=$studentSubject;
                     $data['porcentual_data']=self::dataHistorical($studentSubject);
                     if ($organizationId =='G'){
+                        \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                         $pdf = \PDF::loadView('constance/Geoquimica/constancia_notas',compact('data'));
                         return $pdf->download('constancia_nota.pdf');
                     }
@@ -221,29 +224,36 @@ class ConstanceService
             $user=User::getUserById($student[0]['user_id'],'S',$organizationId);
             if (count($user)>0){
                 $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($inscriptionId,$organizationId)->toArray();
-                dd($inscription[0]);
                 if (count($inscription)>0){
                     if ($inscription[0]['student_id']==$studentId){
+                        $data['user_data']=$user[0];
+                        $data['coordinator_data']=AdministratorService::getPrincipalCoordinator($request);
+                        $data['school_program_data']=SchoolProgram::getSchoolProgramById($user[0]['student']['school_program_id'],$organizationId)[0];
+                        $now = Carbon::now();
+                        $data['month']=self::numberToMonth($now->month);
+                        $data['year']=$now->year;
+                        $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
+                        if (count($studentSubject)>0){
+                            $data['porcentual_data']=self::dataHistorical($studentSubject);
+                        } else {
+                            $dataHistorical['enrolled_credits']=0;
+                            $dataHistorical['cumulative_notes']=0;
+                            $dataHistorical['cant_subjects']=0;
+                            $dataHistorical['porcentual']=0;
+                            $data['porcentual_data']=$dataHistorical;
+                        }
+                        $data['inscription']=$inscription[0];
+                        if ($organizationId =='G'){
+                            //dd($data['inscription']);
+                            \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                            $pdf = \PDF::loadView('constance/Geoquimica/constancia_inscripcion',compact('data'));
+                            return $pdf->download('inscripcion.pdf');
+                        }
+                        return $data;
 
                     }
                 }return response()->json(['message'=>'Inscripcion no encontrada'],206);
-                $data['user_data']=$user[0];
-                $data['coordinator_data']=AdministratorService::getPrincipalCoordinator($request);
-                $data['school_program_data']=SchoolProgram::getSchoolProgramById($user[0]['student']['school_program_id'],$organizationId)[0];
-                $now = Carbon::now();
-                $data['month']=self::numberToMonth($now->month);
-                $data['year']=$now->year;
-                $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
-                if (count($studentSubject)>0){
-                    $data['historical_data']=$studentSubject;
-                    $data['porcentual_data']=self::dataHistorical($studentSubject);
-                    if ($organizationId =='G'){
-                        $pdf = \PDF::loadView('constance/Geoquimica/constancia_notas',compact('data'));
-                        return $pdf->download('constancia_nota.pdf');
-                    }
-                    return $data;
-                }
-                return response()->json(['message'=>'Aun no tiene historial'],206);
+
             }
         }
         return response()->json(['message'=>'No existe el estudiante'],206);

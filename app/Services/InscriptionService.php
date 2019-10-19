@@ -148,12 +148,13 @@ class InscriptionService
 
     public static function validate(Request $request)
     {
+
         $request->validate([
             'student_id'=>'required|numeric',
             'school_period_id'=>'required|numeric',
             'status'=>'required|max:5|ends_with:RET-A,RET-B,DES-A,DES-B,INC-A,INC-B,REI-A,REI-B,REG',
             'pay_ref'=>'max:50',
-            'financing'=>'max:10',
+            'financing'=>'max:3|ends_with:EXO,SFI,SCS,FUN',//EXO exonerated, FUN Funded, SFI Self-financing, ScS Scholarship
             'amount_paid'=>'numeric',
             'financing_description'=>'max:60',
             'subjects.*.school_period_subject_teacher_id'=>'required|numeric',

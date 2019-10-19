@@ -22,7 +22,7 @@ class StudentService
             'home_university'=>'required|max:70',
             'current_postgraduate'=>'max:70',
             'type_income'=>'max:30',
-            'is_ucv_teacher?'=>'required|boolean',
+            'is_ucv_teacher'=>'required|boolean',
             'guide_teacher_id'=>'numeric',
             'credits_granted'=>'numeric'
         ]);
@@ -43,10 +43,10 @@ class StudentService
                 'student_type'=>$request['student_type'],
                 'home_university'=>$request['home_university'],
                 'current_postgraduate'=>$request['current_postgraduate'],
-                'is_ucv_teacher?'=>$request['is_ucv_teacher?'],
-                'is_available_final_work?'=>false,
-                'repeat_approved_subject?'=>false,
-                'repeat_reprobated_subject?'=>false,
+                'is_ucv_teacher'=>$request['is_ucv_teacher'],
+                'is_available_final_work'=>false,
+                'repeat_approved_subject'=>false,
+                'repeat_reprobated_subject'=>false,
                 'credits_granted'=>$request['credits_granted']
             ]);
             return UserService::getUserById($request,$result,'S');
@@ -56,9 +56,9 @@ class StudentService
     public static function validateUpdate(Request $request)
     {
         $request->validate([
-            'is_available_final_work?'=>'boolean',
-            'repeat_approved_subject?'=>'boolean',
-            'repeat_reprobated_subject?'=>'boolean'
+            'is_available_final_work'=>'boolean',
+            'repeat_approved_subject'=>'boolean',
+            'repeat_reprobated_subject'=>'boolean'
         ]);
     }
 
@@ -80,10 +80,10 @@ class StudentService
                 'student_type'=>$request['student_type'],
                 'home_university'=>$request['home_university'],
                 'current_postgraduate'=>$request['current_postgraduate'],
-                'is_ucv_teacher?'=>$request['is_ucv_teacher?'],
-                'is_available_final_work?'=>$request['is_available_final_work?'],
-                'repeat_approved_subject?'=>$request['repeat_approved_subject?'],
-                'repeat_reprobated_subject?'=>$request['repeat_reprobated_subject?'],
+                'is_ucv_teacher'=>$request['is_ucv_teacher'],
+                'is_available_final_work'=>$request['is_available_final_work'],
+                'repeat_approved_subject'=>$request['repeat_approved_subject'],
+                'repeat_reprobated_subject'=>$request['repeat_reprobated_subject'],
                 'credits_granted'=>$request['credits_granted']
             ]);
             return UserService::getUserById($request,$id,'S');

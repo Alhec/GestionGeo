@@ -22,10 +22,10 @@ class CreateStudentsTable extends Migration
             $table->string('home_university',70);
             $table->string('current_postgraduate',70)->nullable();
             $table->string('type_income',30)->nullable();
-            $table->boolean('is_available_final_work?');
-            $table->boolean('is_ucv_teacher?');
-            $table->boolean('repeat_approved_subject?');
-            $table->boolean('repeat_reprobated_subject?');
+            $table->boolean('is_available_final_work');
+            $table->boolean('is_ucv_teacher');
+            $table->boolean('repeat_approved_subject');
+            $table->boolean('repeat_reprobated_subject');
             $table->integer('credits_granted')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('guide_teacher_id')->references('id')->on('teachers')->onDelete('cascade');

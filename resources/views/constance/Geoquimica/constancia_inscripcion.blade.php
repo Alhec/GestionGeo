@@ -7,7 +7,7 @@
     <title>Document</title>
     <style>
         body {
-            margin: 1cm 2cm 2cm 2cm;
+            margin: 0cm 0cm 0cm 0cm;
             font-size: 12pt;
         }
 
@@ -90,36 +90,38 @@
 <body>
     <div class="header">
         <div class="image-geoquimica">
-            <img src="icon-banner.png" alt="">
+            <img src="{{ public_path() ."/images/icon-banner.png" }}">
         </div>
         <div class="image-ucv">
-            <img src="logo-ucv.png" alt="">
+            <img src="{{ public_path() ."/images/logo-ucv.png" }}" alt="">
         </div>
     </div>
     <div  class="section">
         <div class="title">
-            Planilla de Inscripcion semestral 1-2017
+            Planilla de Inscripcion semestral {{$data['inscription']['school_period']['cod_school_period']}}
         </div>
         <div class="content">
             <div class="article">
                 <table>
                     <tr>
                         <th colspan="4">APELLIDOS Y NOMBRES</th>
-                        <td colspan="5">CASANOVA RODRÍGUEZ  FERNANDA DANIELA</td>
+                        <td colspan="5">{{strtoupper($data['user_data']['first_surname'])}} {{strtoupper($data['user_data']['second_surname'])}}
+                            {{strtoupper($data['user_data']['first_name'])}} {{strtoupper($data['user_data']['second_name'])}}
+                            </td>
                         <th colspan="1">C.I</th>
-                        <td colspan="4">V-22.520.805</td>
+                        <td colspan="4"> {{$data['user_data']['identification'] }}</td>
                     </tr>
                      <tr>
                         <th colspan="4">TELF. HABT</th>
-                        <td colspan="4">(0212) 212 58 59</td>
+                        <td colspan="4">{{$data['user_data']['telephone'] }}</td>
                         <th colspan="2">TELF. TRAB.</th>
-                        <td colspan="4">(0212) 212 58 59</td>
+                        <td colspan="4">{{$data['user_data']['work_phone'] }}</td>
                     </tr>
                     <tr>
                         <th colspan="2">PROFESOR GUIA </th>
                         <td colspan="5">Prof.</td>
                         <th colspan="2">E-MAIL ESTU.</th>
-                        <td colspan="5">estudiante@email.com</td>
+                        <td colspan="5">{{$data['user_data']['email'] }}</td>
                     </tr>
                      <tr>
                         <th>Doctorado</th>
@@ -127,7 +129,7 @@
                         <th>Maestria</th>
                         <td></td>
                         <th>Especialización</th>
-                        <td>X</td>
+                        <td>-</td>
                         <th>Ampliación</th>
                         <td>-</td>
                         <th>Nivelación</th>
@@ -139,34 +141,53 @@
                     </tr>
                      <tr>
                         <th colspan="4">FECHA INICIO DEL PROGRAMA</th>
-                        <td colspan="3">20 10 1994</td>
+                        <td colspan="3"> {{substr($data['inscription']['school_period']['start_date'],8)}} {{substr($data['inscription']['school_period']['start_date'],5,-3)}}  {{substr($data['inscription']['school_period']['start_date'],0,-6)}}</td>
                         <th colspan="3">FECHA PROBABLE CULMINACION</th>
-                        <td colspan="4">20 10 1994</td>
+                        <td colspan="4">{{substr($data['inscription']['school_period']['start_date'],8)}} {{substr($data['inscription']['school_period']['start_date'],5,-3)}}  {{substr($data['inscription']['school_period']['start_date'],0,-6)}}</td>
                     </tr>
                     <tr>
                         <th colspan="4">UNIDADES POR CONVALIDACION</th>
-                        <td colspan="3">999</td>
+                        <td colspan="3"></td>
                         <th colspan="3">UNIDADES CURSADAS HASTA LA FECHA</th>
-                        <td colspan="4">999</td>
+                        <td colspan="4">{{$data['porcentual_data']['enrolled_credits']}}</td>
                     </tr>
                      <tr>
                         <th colspan="14">TITULOS OBTENIDOS</th>
                     </tr>
                      <tr>
-                        <td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>    
+                         <td colspan="14"> - </td>
+                         {{--<td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>    --}}
                     </tr>
                      <tr>
-                        <td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>    
+                         <td colspan="14"> - </td>
+                         {{--<td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>--}}
                     </tr>
                      <tr>
-                        <td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>    
+                         <td colspan="14"> - </td>
+                         {{--<td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>--}}
                     </tr>
                     <tr>
                         <th colspan="2">FINANCIAMIENTO:</th>
-                         <td colspan="14">PROPIO</td>
+                        <td colspan="14">
+                            @switch($data['inscription']['financing'])
+                                @case('EXO')
+                                Exonerado
+                                @break
+                                @case('FUN')
+                                Financiado
+                                @break
+                                @case('SCS')
+                                Becado
+                                @break
+                                @case('SFI')
+                                Propio
+                                @break
+                                @default
+                                PROPIO
+                            @endswitch
+                        </td>
                     </tr>
                 </table>
-                
             </div>
             <div class="article">
                     <table>
@@ -192,11 +213,14 @@
                             <th>UNIDADES</th>
                             <th>PROFESOR</th>
                         </tr>
+                        @foreach($data['inscription']['enrolled_subjects'] as $subject)
                         <tr>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td> {{$subject['data_subject']['subject']['subject_name']}} </td>
+                            <td> {{$subject['data_subject']['subject']['uc']}} </td>
+                            <td> {{$subject['data_subject']['teacher']['user']['first_name']}} {{$subject['data_subject']['teacher']['user']['first_surname']}}</td>
                         </tr>
+                        @endforeach
+
                     </table>
                 </div>
             <div class="article">
