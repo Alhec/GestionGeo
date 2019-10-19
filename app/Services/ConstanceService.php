@@ -233,6 +233,7 @@ class ConstanceService
                         $data['month']=self::numberToMonth($now->month);
                         $data['year']=$now->year;
                         $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
+                        dd($studentSubject);
                         if (count($studentSubject)>0){
                             $data['porcentual_data']=self::dataHistorical($studentSubject);
                         } else {
