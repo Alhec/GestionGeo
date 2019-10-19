@@ -141,9 +141,9 @@
                     </tr>
                      <tr>
                         <th colspan="4">FECHA INICIO DEL PROGRAMA</th>
-                        <td colspan="3"> {{substr($data['inscription']['school_period']['start_date'],8)}} {{substr($data['inscription']['school_period']['start_date'],5,-3)}}  {{substr($data['inscription']['school_period']['start_date'],0,-6)}}</td>
+                        <td colspan="3"> {{substr($data['historical_data'][0]['start_date'],8)}} {{substr($data['historical_data'][0]['start_date'],5,-3)}}  {{substr($data['historical_data'][0]['start_date'],0,-6)}}</td>
                         <th colspan="3">FECHA PROBABLE CULMINACION</th>
-                        <td colspan="4">{{substr($data['inscription']['school_period']['start_date'],8)}} {{substr($data['inscription']['school_period']['start_date'],5,-3)}}  {{substr($data['inscription']['school_period']['start_date'],0,-6)}}</td>
+                        <td colspan="4">{{substr($data['historical_data'][0]['start_date'],8)}} {{substr($data['historical_data'][0]['start_date'],5,-3)}}  {{intval(substr($data['historical_data'][0]['start_date'],0,-6)) + $data['school_program_data']['duration']}}</td>
                     </tr>
                     <tr>
                         <th colspan="4">UNIDADES POR CONVALIDACION</th>
@@ -240,10 +240,14 @@
             <div class="article">
                 <table>
                     <tr>
+                        {{substr($data['inscription']['school_period']['start_date'],8)}} {{substr($data['inscription']['school_period']['start_date'],5,-3)}}  {{substr($data['inscription']['school_period']['start_date'],0,-6)}}
                         <th>Período Académico:</th>
-                        <td>Octubre 2017 - Febrero 2018</td>
+                        <td>{{\App\Services\ConstanceService::numberToMonth(intval(substr($data['inscription']['school_period']['start_date'],5,-3)))}}
+                            {{substr($data['inscription']['school_period']['start_date'],0,-6)}} – {{\App\Services\ConstanceService::numberToMonth(intval(substr($data['inscription']['school_period']['end_date'],5,-3)))}}
+                            {{substr($data['inscription']['school_period']['end_date'],0,-6)}}
+                        </td>
                         <th>Fecha de Inscripción</th>
-                        <td>26 - 10 - 2017</td>
+                        <td> {{substr($data['inscription']['inscription_date'],8)}} - {{substr($data['inscription']['inscription_date'],5,-3)}} - {{substr($data['inscription']['inscription_date'],0,-6)}}</td>
                     </tr>
                 </table>
             </div>

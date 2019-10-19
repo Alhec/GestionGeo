@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SchoolPeriodStudent extends Model
 {
-    protected $fillable = ['student_id','school_period_id','status','pay_ref','financing','financing_description','amount_paid'];
+    protected $fillable = ['student_id','school_period_id','status','pay_ref','financing','financing_description','amount_paid','inscription_date'];
+
     protected $table = 'school_period_student';
+
     public $timestamps = false;
 
     public function schoolPeriod()

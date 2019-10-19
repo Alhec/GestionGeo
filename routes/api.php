@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-
+/*
 Route::get('administrators/active','AdministratorController@active');
 Route::get('administrators/principalCoordinator','AdministratorController@principal');
 Route::resource('administrators','AdministratorController');
@@ -86,10 +86,10 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
 
 Route::name('print')->get('/imprimir', 'GeneradorController@imprimir');
+*/
 
 
-
-/*//Administrator
+//Administrator
 Route::middleware('jwt.auth','role:A')->get('administrators/active','AdministratorController@active');
 Route::middleware('jwt.auth')->get('administrators/principalCoordinator','AdministratorController@principal');
 Route::middleware('jwt.auth','role:A')->get('administrators','AdministratorController@index');
@@ -161,6 +161,7 @@ Route::middleware('jwt.auth','role:A,S')->get('constance/studentHistorical','Con
 Route::middleware('jwt.auth','role:A,T')->get('constance/teacherHistorical','ConstanceController@teacherHistorical');
 Route::middleware('jwt.auth','role:A,T')->get('constance/workTeacher','ConstanceController@constanceOfWorkTeacher');
 Route::middleware('jwt.auth','role:A,T')->get('constance/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
+Route::middleware('jwt.auth','role:A,T')->get('constance/inscription','ConstanceController@inscriptionConstance');
 
 //Authentication
 Route::post('login', 'AuthController@login');
@@ -175,6 +176,6 @@ Route::middleware('jwt.auth')->post('updateUser', 'UserController@changeUserData
 
 // Password Reset 
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.email');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');*/
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 
 

@@ -22,6 +22,7 @@ class CreateSchoolPeriodStudentTable extends Migration
             $table->text('financing_description')->nullable();
             $table->string('pay_ref',50)->nullable();
             $table->float('amount_paid')->nullable();
+            $table->date('inscription_date')->default(now());
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->foreign('school_period_id')->references('id')->on('school_periods')->onDelete('cascade');
         });

@@ -33,6 +33,6 @@ class CreateFinalWorksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('degree_works');
+        Schema::dropIfExists('final_works');
     }
 }

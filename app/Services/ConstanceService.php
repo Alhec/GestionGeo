@@ -233,8 +233,8 @@ class ConstanceService
                         $data['month']=self::numberToMonth($now->month);
                         $data['year']=$now->year;
                         $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
-                        dd($studentSubject);
                         if (count($studentSubject)>0){
+                            $data['historical_data']=$studentSubject;
                             $data['porcentual_data']=self::dataHistorical($studentSubject);
                         } else {
                             $dataHistorical['enrolled_credits']=0;
@@ -245,7 +245,6 @@ class ConstanceService
                         }
                         $data['inscription']=$inscription[0];
                         if ($organizationId =='G'){
-                            //dd($data['inscription']);
                             \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                             $pdf = \PDF::loadView('constance/Geoquimica/constancia_inscripcion',compact('data'));
                             return $pdf->download('inscripcion.pdf');
