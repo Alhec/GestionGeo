@@ -71,12 +71,14 @@ class AdministratorService
                 if (((auth()->payload()['user'][0]->administrator->principal) ==false && auth()->payload()['user'][0]->administrator->rol=='COORDINATOR' )|| auth()->payload()['user'][0]->administrator->rol=='SECRETARY'){
                     return response()->json(['message'=>'Unauthorized'],401);
                 }
+                if(auth()->payload()['user'][0]->id == $id){
+                    return response()->json(['message'=>'Accion no permitida'],206);
+                }
                 Administrator::updateAdministrator(auth()->payload()['user'][0]->id, [
                     'user_id'=>auth()->payload()['user'][0]->id,
                     'rol'=>auth()->payload()['user'][0]->administrator->rol,
                     'principal'=>false
                 ]);
-
             }
             Administrator::updateAdministrator($id, [
                 'user_id'=>$id,
