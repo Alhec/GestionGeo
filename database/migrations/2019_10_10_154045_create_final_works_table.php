@@ -21,8 +21,14 @@ class CreateFinalWorksTable extends Migration
             $table->string('status',10);
             $table->text('description_status');
             $table->date('approval_date');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->foreign('student_id')
+                ->references('id')
+                ->on('students')
+                ->onDelete('cascade');
+            $table->foreign('subject_id')
+                ->references('id')
+                ->on('subjects')
+                ->onDelete('cascade');
         });
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
-    protected $fillable = ['user_id','teacher_type','dedication','home_institute','country'];
+    protected $fillable = ['id','teacher_type','dedication','home_institute','country'];
     public $timestamps = false;
 
     public function user() {
@@ -32,7 +32,7 @@ class Teacher extends Model
 
     public static function updateTeacher($userId,$teacher)
     {
-        self::where('user_id',$userId)
+        self::where('id',$userId)
             ->get()[0]
             ->update($teacher);
     }

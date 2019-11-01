@@ -14,11 +14,14 @@ class CreateAdministratorsTable extends Migration
     public function up()
     {
         Schema::create('administrators', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('id');
             $table->string('rol',11);
             $table->boolean('principal');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->primary('id');
+            $table->foreign('id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

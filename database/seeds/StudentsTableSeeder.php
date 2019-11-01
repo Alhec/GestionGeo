@@ -15,7 +15,7 @@ class StudentsTableSeeder extends Seeder
         Student::query()->truncate();
         Student::create([
             'school_program_id'=>1,
-            'user_id'=>7,
+            'id'=>7,
             'student_type'=>"REG", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
@@ -27,7 +27,7 @@ class StudentsTableSeeder extends Seeder
         ]);
         Student::create([
             'school_program_id'=>3,
-            'user_id'=>8,
+            'id'=>8,
             'student_type'=>"EXT", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
@@ -37,7 +37,7 @@ class StudentsTableSeeder extends Seeder
         ]);
         Student::create([
             'school_program_id'=>3,
-            'user_id'=>9,
+            'id'=>9,
             'student_type'=>"AMP", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
@@ -47,7 +47,7 @@ class StudentsTableSeeder extends Seeder
         ]);
         Student::create([
             'school_program_id'=>3,
-            'user_id'=>10,
+            'id'=>10,
             'student_type'=>"REG", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
@@ -57,7 +57,7 @@ class StudentsTableSeeder extends Seeder
         ]);
         Student::create([
             'school_program_id'=>2,
-            'user_id'=>11,
+            'id'=>11,
             'student_type'=>"EXT", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
@@ -67,7 +67,7 @@ class StudentsTableSeeder extends Seeder
         ]);
         Student::create([
             'school_program_id'=>2,
-            'user_id'=>12,
+            'id'=>12,
             'student_type'=>"AMP", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,

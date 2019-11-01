@@ -19,7 +19,10 @@ class CreateSchedulesTable extends Migration
             $table->string('classroom',20);
             $table->time('start_hour');
             $table->time('end_hour');
-            $table->foreign('school_period_subject_teacher_id')->references('id')->on('school_period_subject_teacher')->onDelete('cascade');
+            $table->foreign('school_period_subject_teacher_id')
+                ->references('id')
+                ->on('school_period_subject_teacher')
+                ->onDelete('cascade');
         });
     }
 

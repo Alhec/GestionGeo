@@ -24,7 +24,7 @@ Route::resource('teachers','TeacherController');
 Route::get('students/active','StudentController@active');
 Route::resource('students','StudentController');
 
-Route::resource('schoolPrograms','SchoolProgramController'); // change to study program
+//Route::resource('schoolPrograms','SchoolProgramController'); // change to study program
 
 Route::resource('subjects','SubjectController');
 
@@ -113,14 +113,14 @@ Route::middleware('jwt.auth','role:A')->post('students','StudentController@store
 Route::middleware('jwt.auth','role:A')->get('students/{id}','StudentController@show');
 Route::middleware('jwt.auth','role:A')->put('students/{id}','StudentController@update');
 Route::middleware('jwt.auth','role:A')->delete('students/{id}','StudentController@destroy');
-
-//Postgraduate -> StudyProgram
+*/
+//SchoolProgram
 Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');
 Route::middleware('jwt.auth','role:A')->post('schoolPrograms','SchoolProgramController@store');
 Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgramController@show');
 Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
 Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
-
+/*
 //Subjects
 Route::middleware('jwt.auth','role:A')->get('subjects','SubjectController@index');
 Route::middleware('jwt.auth','role:A')->post('subjects','SubjectController@store');

@@ -18,8 +18,14 @@ class CreateSchoolProgramSubjectTable extends Migration
             $table->unsignedBigInteger('school_program_id');
             $table->unsignedBigInteger('subject_id');
             $table->string('type',2);
-            $table->foreign('school_program_id')->references('id')->on('school_programs')->onDelete('cascade');
-            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->foreign('school_program_id')
+                ->references('id')
+                ->on('school_programs')
+                ->onDelete('cascade');
+            $table->foreign('subject_id')
+                ->references('id')
+                ->on('subjects')
+                ->onDelete('cascade');
         });
     }
 

@@ -14,12 +14,12 @@ class AdministratorsTableSeeder extends Seeder
     {
         Administrator::query()->truncate();
         Administrator::create([
-            'user_id'=>1,
+            'id'=>1,
             'rol'=>'COORDINATOR',
             'principal'=>true
         ]);
         Administrator::create([
-            'user_id'=>2,
+            'id'=>2,
             'rol'=>'COORINATOR',
             'principal'=>true
         ]);

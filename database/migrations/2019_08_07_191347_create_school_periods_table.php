@@ -19,10 +19,16 @@ class CreateSchoolPeriodsTable extends Migration
             $table->string('cod_school_period',10);
             $table->date('start_date');
             $table->date('end_date');
-            $table->date('withdrawal_deadline')->nullable();
-            $table->boolean('load_notes');
-            $table->boolean('inscription_visible');
-            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->date('withdrawal_deadline')
+                ->nullable();
+            $table->boolean('load_notes')
+                ->default(false);
+            $table->boolean('inscription_visible')
+                ->default(false);
+            $table->foreign('organization_id')
+                ->references('id')
+                ->on('organizations')
+                ->onDelete('cascade');
         });
     }
 

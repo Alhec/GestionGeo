@@ -21,19 +21,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        if (User::existUserByIdentification($request['identification'],$request['user_type'],$organizationId)){
-            $credentials= json_decode($request->getContent(),true);
-            if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],'password'=>$credentials['password'],'user_type'=>$credentials['user_type']])) {
-                return response()->json(['error' => 'Invalid User'], 401);
-            }
-            return response()->json([
-                'token' => $token,
-                'type' => 'bearer', // you can ommit this
-                'expires' => auth('api')->factory()->getTTL() * 60,
-                'user' => User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId)[0],
-            ]);
+        $credentials= json_decode($request->getContent(),true);
+        if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],'password'=>$credentials['password'],'user_type'=>$credentials['user_type'],'organization_id'=>$organizationId])) {
+            return response()->json(['error' => 'Invalid User'], 401);
         }
-        return response()->json(['error' => 'Invalid User'], 401);
+        return response()->json([
+            'token' => $token,
+            'type' => 'bearer', // you can ommit this
+            'expires' => auth('api')->factory()->getTTL() * 60,
+            'user' => User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId)[0],
+        ]);
     }
 
     public function me()

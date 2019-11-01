@@ -37,7 +37,7 @@ class StudentService
         }else if ($result=="organization"){
             return response()->json(['message'=>'No existe organizacion asociada'],206);
         }else{
-            Student::addStudent([
+            $student_id=Student::addStudent([
                 'user_id'=>$result,
                 'school_program_id'=>$request['school_program_id'],
                 'student_type'=>$request['student_type'],

@@ -17,8 +17,14 @@ class CreateAdvisorsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('final_works');
             $table->unsignedBigInteger('teacher_id');
-            $table->foreign('final_works')->references('id')->on('final_works')->onDelete('cascade');
-            $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
+            $table->foreign('final_works')
+                ->references('id')
+                ->on('final_works')
+                ->onDelete('cascade');
+            $table->foreign('teacher_id')
+                ->references('id')
+                ->on('teachers')
+                ->onDelete('cascade');
         });
     }
 

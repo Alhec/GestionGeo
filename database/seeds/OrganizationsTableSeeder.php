@@ -16,18 +16,21 @@ class OrganizationsTableSeeder extends Seeder
         Organization::create([
             'id'=>'G',
             'name'=>'Geoquimica',
-            'faculty_id'=>'CIENS'
+            'faculty_id'=>'CIENS',
+            'website'=>'GestionGeo.com'
         ]);
         Organization::create([
             'id'=>'C',
             'name'=>'Computacion',
-            'faculty_id'=>'CIENS'
+            'faculty_id'=>'CIENS',
+            'website'=>'GestionGeo.com'
         ]);
         Organization::create([
             'id'=>'ICT',
             'name'=>'Instituto de Ciencias de la Tierra',
             'faculty_id'=>'CIENS',
-            'organization_id'=>'G'
+            'organization_id'=>'G',
+            'website'=>'GestionGeo.com'
         ]);
     }
 }

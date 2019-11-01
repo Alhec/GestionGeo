@@ -17,22 +17,32 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('identification',20);
             $table->string('first_name',20);
-            $table->string('second_name',20)->nullable();
+            $table->string('second_name',20)
+                ->nullable();
             $table->string('first_surname',20);
-            $table->string('second_surname',20)->nullable();
-            $table->string('telephone',15)->nullable();
+            $table->string('second_surname',20)
+                ->nullable();
+            $table->string('telephone',15)
+                ->nullable();
             $table->string('mobile',15);
-            $table->string('work_phone',15)->nullable();
+            $table->string('work_phone',15)
+                ->nullable();
             $table->string('email',30);
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')
+                ->nullable();
             $table->string('password',250);
             $table->string('user_type',1);
             $table->string('level_instruction',5);
             $table->boolean('active');
-            $table->boolean('with_work')->nullable();
-            $table->boolean('with_disabilities')->nullable();
+            $table->boolean('with_disabilities')
+                ->default(false);
             $table->string('sex',1);
             $table->string('nationality',1);
+            $table->string('organization_id',10);
+            $table->foreign('organization_id')
+                ->references('id')
+                ->on('organizations')
+                ->onDelete('cascade');
             $table->rememberToken();
         });
     }

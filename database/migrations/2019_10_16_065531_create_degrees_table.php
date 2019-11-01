@@ -19,7 +19,10 @@ class CreateDegreesTable extends Migration
             $table->string('degree_name',50);
             $table->string('degree_description',200)->nullable();
             $table->string('university',50);
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreign('student_id')
+                ->references('id')
+                ->on('students')
+                ->onDelete('cascade');
         });
     }
 

@@ -35,6 +35,7 @@ class SchoolProgramService
             'school_program_name'=>'required|max:100',
             'num_cu'=>'required|numeric',
             'duration'=>'required|numeric',
+            "conducive_to_degree"=>"boolean"
         ]);
     }
 

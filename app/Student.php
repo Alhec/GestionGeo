@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
 
-    protected $fillable = ['school_program_id','user_id','home_university','guide_teacher_id','student_type',
+    protected $fillable = ['school_program_id','id','home_university','guide_teacher_id','student_type',
         'current_postgraduate','type_income','is_available_final_work','is_ucv_teacher','repeat_approved_subject',
         'repeat_reprobated_subject','credits_granted'];
 
@@ -31,12 +31,12 @@ class Student extends Model
 
     public static function addStudent($student)
     {
-        self::create($student);
+        return self::insertGetId($student);
     }
 
     public static function updateStudent($userId,$student)
     {
-        self::where('user_id',$userId)
+        self::where('id',$userId)
             ->get()[0]
             ->update($student);
     }

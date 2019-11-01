@@ -13,18 +13,20 @@ class CreateTeachersTable extends Migration
      */
     public function up()
     {
-
-
         Schema::create('teachers', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('id')
+                ->primary();
             $table->string('teacher_type',3);
             $table->string('dedication',3);//TC tiempo completo, EXC Exclusivo CON Convencional MT medio Tiempo y INV Invitado
-            $table->string('home_institute',40)->nullable();
-            $table->string('country',20)->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('home_institute',40)
+                ->nullable();
+            $table->string('country',20)
+                ->nullable();
+            $table->foreign('id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
-
     }
 
     /**

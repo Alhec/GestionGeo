@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Subject extends Model
 {
-    protected $fillable = ['subject_code','subject_name','uc','subject_type','is_final_subject?'];
+    protected $fillable = ['subject_code','subject_name','uc','is_final_subject?'];
 
     public $timestamps = false;
 
@@ -49,7 +49,7 @@ class Subject extends Model
 
     public static function addSubject($subject)
     {
-        return self::insertGetId($subject->only('subject_code','subject_name','uc','subject_type','is_final_subject?'));
+        return self::insertGetId($subject->only('subject_code','subject_name','uc','is_final_subject?'));
     }
 
     public static function getSubjectByCode($code,$organizationId)

@@ -13,16 +13,25 @@ class CreateOrganizationsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('organizations', function (Blueprint $table) {
             $table->string('id',10);
             $table->string('name',100);
-            $table->string('faculty_id',10)->nullable();
-            $table->string('organization_id',10)->nullable();
-            $table->string('website',50)->nullable();
-            $table->text('address')->nullable();
+            $table->string('faculty_id',10)
+                ->nullable();
+            $table->string('organization_id',10)
+                ->nullable();
+            $table->string('website',50);
+            $table->text('address')
+                ->nullable();
             $table->primary('id');
-            $table->foreign('faculty_id')->references('id')->on('faculties')->onDelete('cascade');
-            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('faculty_id')
+                ->references('id')
+                ->on('faculties')
+                ->onDelete('cascade');
+            $table->foreign('organization_id')
+                ->references('id')
+                ->on('organizations');
         });
     }
 

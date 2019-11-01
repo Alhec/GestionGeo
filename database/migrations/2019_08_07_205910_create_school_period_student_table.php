@@ -18,13 +18,24 @@ class CreateSchoolPeriodStudentTable extends Migration
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('school_period_id');
             $table->string('status',5);
-            $table->string('financing',10)->nullable();//EXO exonerated, FUN Funded, SFI Self-financing, ScS Scholarship
-            $table->text('financing_description')->nullable();
-            $table->string('pay_ref',50)->nullable();
-            $table->float('amount_paid')->nullable();
-            $table->date('inscription_date')->default(now());
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('school_period_id')->references('id')->on('school_periods')->onDelete('cascade');
+            $table->string('financing',10)
+                ->nullable();//EXO exonerated, FUN Funded, SFI Self-financing, ScS Scholarship
+            $table->text('financing_description')
+                ->nullable();
+            $table->string('pay_ref',50)
+                ->nullable();
+            $table->float('amount_paid')
+                ->nullable();
+            $table->date('inscription_date')
+                ->default(now());
+            $table->foreign('student_id')
+                ->references('id')
+                ->on('students')
+                ->onDelete('cascade');
+            $table->foreign('school_period_id')
+                ->references('id')
+                ->on('school_periods')
+                ->onDelete('cascade');
         });
     }
 

@@ -17,10 +17,17 @@ class CreateStudentSubjectTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('school_period_student_id');
             $table->unsignedBigInteger('school_period_subject_teacher_id');
-            $table->integer('qualification')->nullable();
+            $table->integer('qualification')
+                ->nullable();
             $table->string('status',3);
-            $table->foreign('school_period_student_id')->references('id')->on('school_period_student')->onDelete('cascade');
-            $table->foreign('school_period_subject_teacher_id')->references('id')->on('school_period_subject_teacher')->onDelete('cascade');
+            $table->foreign('school_period_student_id')
+                ->references('id')
+                ->on('school_period_student')
+                ->onDelete('cascade');
+            $table->foreign('school_period_subject_teacher_id')
+                ->references('id')
+                ->on('school_period_subject_teacher')
+                ->onDelete('cascade');
         });
     }
 

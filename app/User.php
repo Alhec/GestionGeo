@@ -21,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'identification', 'password','user_type','first_name','second_name','first_surname','second_surname','telephone',
-        'mobile','work_phone','email','active','with_work','with_disabilities','nationality','sex','level_instruction'
+        'mobile','work_phone','email','active','with_disabilities','nationality','sex','level_instruction','organization_id'
     ];
 
     /**
@@ -60,16 +60,12 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        $organization=OrganizationUser::getOrganizationUserByUserId($this['id']);
-        if (count($organization)>0){
-            return [
-                'user' =>self::getUserById($this['id'],$this['user_type'],$organization[0]['organization_id']),
-            ];
-        }
-        // TODO: Implement getJWTCustomClaims() method.
         return [
-            'user_type' =>$this['user_type'],
+            'user' =>self::getUserById($this['id'],$this['user_type'],$this['organization_id']),
         ];
+
+        // TODO: Implement getJWTCustomClaims() method.
+
     }
 
     public function teacher()
@@ -86,12 +82,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function administrator()
     {
-        return $this->hasOne('App\Administrator');
+        return $this->hasOne('App\Administrator','id','id');
     }
 
     public function organization()
     {
-        return $this->hasOne('App\OrganizationUser');
+        return $this->belongsTo('App\Organization');
     }
 
     public static function getUsers($userType,$organizationId)
@@ -99,7 +95,7 @@ class User extends Authenticatable implements JWTSubject
         $users = self::where('user_type',$userType)
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
-                    ->where('organization_id','=',$organizationId);
+                    ->where('id','=',$organizationId);
             });
         if ($userType == 'A'){
             return $users->with('administrator')
@@ -121,7 +117,7 @@ class User extends Authenticatable implements JWTSubject
             ->where('user_type',$userType)
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
-                    ->where('organization_id','=',$organizationId);
+                    ->where('id','=',$organizationId);
             });
         if ($userType == 'A'){
             return $user
@@ -145,7 +141,7 @@ class User extends Authenticatable implements JWTSubject
             ->where('user_type',$userType)
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
-                    ->where('organization_id','=',$organizationId);
+                    ->where('id','=',$organizationId);
             })->exists();
     }
     public static function existUserByIdentification($identification,$userType,$organizationId)
@@ -154,7 +150,7 @@ class User extends Authenticatable implements JWTSubject
             ->where('user_type',$userType)
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
-                    ->where('organization_id','=',$organizationId);
+                    ->where('id','=',$organizationId);
             })->exists();
     }
 
@@ -172,7 +168,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return self::insertGetId($user->only('identification', 'password','user_type','first_name','second_name',
             'first_surname','second_surname','telephone','mobile','work_phone','email','level_instruction','active','with_work',
-            'with_disabilities','sex','nationality'));
+            'with_disabilities','sex','nationality','organization_id'));
     }
 
     public static function deleteUser($id)

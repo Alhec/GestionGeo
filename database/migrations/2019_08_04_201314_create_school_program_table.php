@@ -19,7 +19,11 @@ class CreateSchoolProgramTable extends Migration
             $table->string('school_program_name',100);
             $table->integer('num_cu');
             $table->integer('duration');
-            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->boolean('conducive_to_degree');
+            $table->foreign('organization_id')
+                ->references('id')
+                ->on('organizations')
+                ->onDelete('cascade');
         });
     }
 

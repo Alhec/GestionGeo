@@ -9,7 +9,7 @@ class Administrator extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['id','user_id','rol','principal'];
+    protected $fillable = ['id','rol','principal'];
 
     public function user() {
         return $this->belongsTo('App\User');
@@ -34,7 +34,7 @@ class Administrator extends Model
 
     public static function updateAdministrator($userId,$administrator)
     {
-        self::where('user_id',$userId)
+        self::where('id',$userId)
             ->get()[0]
             ->update($administrator);
     }
@@ -46,7 +46,7 @@ class Administrator extends Model
         $user = User::where('user_type','A')
             ->whereHas('organization',function (Builder $query) use ($organizationId){
                 $query
-                    ->where('organization_id','=',$organizationId);
+                    ->where('id','=',$organizationId);
             })
             ->whereHas('administrator',function (Builder $query){
                 $query
