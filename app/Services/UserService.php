@@ -151,7 +151,6 @@ class UserService
     public static function validateChangePassword(Request $request)
     {
         $request->validate([
-            'id'=>'required|numeric',
             'old_password'=>'required',
             'password'=>'required|confirmed',
         ]);
@@ -160,12 +159,8 @@ class UserService
     public static function changePassword(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        if (auth()->payload()['user'][0]->id!=$request['id']){
-            return response()->json(['message'=>'Unauthorized'],401);
-        }
         self::validateChangePassword($request);
-        $user=User::getUserById(auth()->payload()['user'][0]->id,auth()->payload()['user'][0]->user_type,$organizationId)[0];
-
+        $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId)[0];
         if (!Hash::check($request['old_password'],$user['password'])){
             return response()->json(['message'=>'La clave esta errada'],206);
         }
@@ -178,7 +173,7 @@ class UserService
         } else {
             unset($user['student']);
         }
-        User::updateUserLikeArray($request['id'],$user);
+        User::updateUserLikeArray(auth()->payload()['user']->id,$user);
         return response()->json(['message'=>'Ok'],200);
     }
 }

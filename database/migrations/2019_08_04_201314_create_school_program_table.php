@@ -19,7 +19,8 @@ class CreateSchoolProgramTable extends Migration
             $table->string('school_program_name',100);
             $table->integer('num_cu');
             $table->integer('duration');
-            $table->boolean('conducive_to_degree');
+            $table->boolean('conducive_to_degree')
+                ->default(true);
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')

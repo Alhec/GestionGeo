@@ -61,21 +61,18 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'user' =>self::getUserById($this['id'],$this['user_type'],$this['organization_id']),
+            'user' =>self::getUserById($this['id'],$this['user_type'],$this['organization_id'])[0],
         ];
-
-        // TODO: Implement getJWTCustomClaims() method.
-
     }
 
     public function teacher()
     {
-        return $this->hasOne('App\Teacher');
+        return $this->hasOne('App\Teacher','id','id');
     }
 
     public function student()
     {
-        return $this->hasOne('App\Student')
+        return $this->hasMany('App\Student')
             ->with('degrees')
             ->with('guideTeacher');
     }

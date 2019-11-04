@@ -14,9 +14,9 @@ class CreateStudentsTable extends Migration
     public function up()
     {
         Schema::create('students', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('school_program_id');
-            $table->unsignedBigInteger('id')
-                ->primary();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('guide_teacher_id')
                 ->nullable();
             $table->string('student_type',3);
@@ -41,7 +41,7 @@ class CreateStudentsTable extends Migration
                 ->nullable();
             $table->boolean('end_program')
                 ->default(false);
-            $table->foreign('id')
+            $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');

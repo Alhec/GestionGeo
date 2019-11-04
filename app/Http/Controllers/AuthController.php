@@ -22,7 +22,10 @@ class AuthController extends Controller
     {
         $organizationId = $request->header('organization_key');
         $credentials= json_decode($request->getContent(),true);
-        if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],'password'=>$credentials['password'],'user_type'=>$credentials['user_type'],'organization_id'=>$organizationId])) {
+        if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],
+            'password'=>$credentials['password'],
+            'user_type'=>$credentials['user_type'],
+            'organization_id'=>$organizationId])) {
             return response()->json(['error' => 'Invalid User'], 401);
         }
         return response()->json([
@@ -83,7 +86,7 @@ class AuthController extends Controller
     {
         $token = auth('api')->getToken();
 
-//        $user = auth('api')->authenticate($token);
+        //$user = auth('api')->authenticate($token);
         //$user = auth('api')->getPayload($token)->toArray();
         //$payloadArray = auth('api')->decode($token);
 

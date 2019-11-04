@@ -15,7 +15,7 @@ class Organization extends Model
 
     public function users()
     {
-        return $this->hasMany('App\OrganizationUser','organization_id','id');
+        return $this->hasMany('App\User','organization_id','id');
     }
 
     public static function existOrganization($organizationId)
@@ -33,7 +33,7 @@ class Organization extends Model
     {
         return self::whereHas('users',function (Builder $query) use ($userId){
             $query
-                ->where('user_id','=',$userId);
+                ->where('id','=',$userId);
             })
             ->get();
     }

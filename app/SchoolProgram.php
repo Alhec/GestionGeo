@@ -3,11 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class SchoolProgram extends Model
 {
-    //
-    protected $fillable = ['school_program_name','num_cu','organization_id','duration'];
+    protected $fillable = ['school_program_name','num_cu','organization_id','duration','conducive_to_degree'];
 
     protected $hidden = ['organization_id'];
 
@@ -15,53 +15,88 @@ class SchoolProgram extends Model
 
     public static function getSchoolProgram($organizationId)
     {
-        return self::where('organization_id',$organizationId)
-            ->get();
+        try{
+            return self::where('organization_id',$organizationId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getSchoolProgramById($id, $organization_id)
     {
-        return self::where('id',$id)
-            ->where('organization_id',$organization_id)
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->where('organization_id',$organization_id)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existSchoolProgramByName($name, $organizationId)
     {
-        return self::where('school_program_name',$name)
-            ->where('organization_id',$organizationId)
-            ->exists();
+        try{
+            return self::where('school_program_name',$name)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function addSchoolProgram($schoolProgram)
     {
-        return self::insertGetId($schoolProgram->all());
+        try{
+            return self::insertGetId($schoolProgram->all());
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSchoolProgramByName($name, $organizationId)
     {
-        return self::where('school_program_name',$name)
-            ->where('organization_id',$organizationId)
-            ->get();
+        try{
+            return self::where('school_program_name',$name)
+                ->where('organization_id',$organizationId)
+                ->get();
+        }catch(\Exception $e){
+            return 0;
+        }
     }
 
     public static function existSchoolProgramById($id, $organizationId)
     {
-        return self::where('id',$id)
-            ->where('organization_id',$organizationId)
+        try{
+            return self::where('id',$id)
+                ->where('organization_id',$organizationId)
                 ->exists();
+        }catch(\Exception $e){
+            return 0;
+        }
     }
 
     public static function deleteSchoolProgram($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch(\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function updateSchoolProgram($id, $schoolProgram)
     {
-        self::find($id)
-            ->update($schoolProgram->all());
+        try{
+            self::find($id)
+                ->update($schoolProgram->all());
+        }catch(\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
 }

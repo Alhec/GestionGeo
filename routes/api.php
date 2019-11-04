@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 
-Route::get('administrators/active','AdministratorController@active');
+/*Route::get('administrators/active','AdministratorController@active');
 Route::get('administrators/principalCoordinator','AdministratorController@principal');
 Route::resource('administrators','AdministratorController');
 
@@ -87,9 +87,9 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 
 //Route::name('print')->get('/imprimir', 'GeneradorController@imprimir');
 
+*/
 
-
-/*//Administrator
+//Administrator
 Route::middleware('jwt.auth','role:A')->get('administrators/active','AdministratorController@active');
 Route::middleware('jwt.auth')->get('administrators/principalCoordinator','AdministratorController@principal');
 Route::middleware('jwt.auth','role:A')->get('administrators','AdministratorController@index');
@@ -113,14 +113,14 @@ Route::middleware('jwt.auth','role:A')->post('students','StudentController@store
 Route::middleware('jwt.auth','role:A')->get('students/{id}','StudentController@show');
 Route::middleware('jwt.auth','role:A')->put('students/{id}','StudentController@update');
 Route::middleware('jwt.auth','role:A')->delete('students/{id}','StudentController@destroy');
-*/
+
 //SchoolProgram
 Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');
 Route::middleware('jwt.auth','role:A')->post('schoolPrograms','SchoolProgramController@store');
 Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgramController@show');
 Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
 Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
-/*
+
 //Subjects
 Route::middleware('jwt.auth','role:A')->get('subjects','SubjectController@index');
 Route::middleware('jwt.auth','role:A')->post('subjects','SubjectController@store');
@@ -174,8 +174,7 @@ Route::middleware('jwt.auth')->post('payload', 'AuthController@payload');
 Route::middleware('jwt.auth')->post('changePassword', 'UserController@changePassword');
 Route::middleware('jwt.auth')->post('updateUser', 'UserController@changeUserData');
 
-// Password Reset 
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.email');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');*/
-
+// Password Reset
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
 
