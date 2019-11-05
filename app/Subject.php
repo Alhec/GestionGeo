@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Subject extends Model
 {
@@ -19,79 +20,122 @@ class Subject extends Model
     }
 
     public static function getSubjects($organizationId){
-        return self::with('schoolPrograms')
-            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->get();
+        try{
+            return self::with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getSubjectById($id,$organizationId){
-        return self::where('id',$id)
-            ->with('schoolPrograms')
-            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existSubjectByCode($code,$organizationId){
-        return self::where('subject_code',$code)
-            ->with('schoolPrograms')
-            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->exists();
+        try{
+            return self::where('subject_code',$code)
+                ->with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+
     }
 
     public static function addSubject($subject)
     {
-        return self::insertGetId($subject->only('subject_code','subject_name','uc','is_final_subject?'));
+        try{
+            return self::insertGetId($subject->only('subject_code','subject_name','uc','is_final_subject?'));
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSubjectByCode($code,$organizationId)
     {
-        return self::where('subject_code',$code)
-            ->with('schoolPrograms')
-            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->get();
+        try{
+            return self::where('subject_code',$code)
+                ->with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+
     }
 
     public static function existSubjectById($id,$organizationId)
     {
-        return self::where('id',$id)
-            ->with('schoolPrograms')
-            ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function deleteSubject($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function updateSubject($id,$subject)
     {
-        self::find($id)
-            ->update($subject->all());
+        try{
+            self::find($id)
+                ->update($subject->all());
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId){
-        return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
+        try{
+            return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
                 $query
                     ->where('organization_id','=',$organizationId)
                     ->where('school_program_id','=',$schoolProgramId);
             })
-            ->get('id');
+                ->get('id');
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 }

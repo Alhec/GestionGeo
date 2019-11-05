@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class SchoolProgramSubject extends Model
 {
@@ -14,24 +15,43 @@ class SchoolProgramSubject extends Model
 
     public static function addSchoolProgramSubject($schoolProgramSubject)
     {
-        return self::insertGetId($schoolProgramSubject);
+        try{
+            return self::insertGetId($schoolProgramSubject);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSchoolProgramSubjectBySubjectId($subjectId)
     {
-        return self::where('subject_id',$subjectId)
-            ->get();
+        try{
+            return self::where('subject_id',$subjectId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function updateSchoolProgramSubject($id, $schoolProgramSubject)
     {
-        self::find($id)
-            ->update($schoolProgramSubject);
+        try{
+            self::find($id)
+                ->update($schoolProgramSubject);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function deleteSchoolProgramSubject($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 }
