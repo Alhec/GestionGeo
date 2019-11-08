@@ -19,8 +19,16 @@ class EmailService extends Controller
     public static function userCreate($id,$organizationId,$userType)
     {
         if ($organizationId == 'G'){
-             $user= User::getUserById($id,$userType,$organizationId)[0];
-             $organization=Organization::getOrganization($organizationId)[0];
+             $user= User::getUserById($id,$userType,$organizationId);
+             if (is_numeric($user)&&$user==0){
+                 return 0;
+             }
+             $user=$user[0];
+             $organization=Organization::getOrganization($organizationId);
+            if (is_numeric($organization)&&$organization==0){
+                return 0;
+            }
+            $organization=$organization[0];
              $data['name']=$user['first_name'];
              $data['organization']=$organizationId;
              switch ($user['user_type']){
@@ -37,17 +45,10 @@ class EmailService extends Controller
                      break;
              }
              $data['web']=$organization['website'];
-
-            try{
-                Mail::send('email.Geoquimica.emailTest',$data,function ($message) use ($user){
-                    $message->to($user['email'], $user['first_name'])
-                        ->subject('Usuario creado exitosamente');
-                    //$message->from('noyala96@gmail.com','Creacion de usuario');
-                });
-            }
-            catch(Exception $e){
-                //Never reached
-            }
+             Mail::send('email.Geoquimica.emailTest',$data,function ($message) use ($user){
+                $message->to($user['email'], $user['first_name'])
+                    ->subject('Usuario creado exitosamente');
+             });
             if (Mail::failures()) {
                 return 0;
             }else{

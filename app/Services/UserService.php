@@ -13,28 +13,41 @@ use App\Organization;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
-use App\OrganizationUser;
+
 
 class UserService
 {
+    const taskError = 'No se puede proceder con la tarea';
+    const emptyUser = 'No existen usuarios con ese perfil';
+    const notFoundUser = 'Usuario no encontrado';
+    const ok = 'OK';
+    const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
+    const invalidPassword = 'La clave esta errada';
+
     public static function getUsers(Request $request, $userType)
     {
         $organizationId = $request->header('organization_key');
         $users= User::getUsers($userType,$organizationId);
+        if (is_numeric($users) && $users == 0){
+            return response()->json(['message'=>self::taskError],206);
+        }
         if (count($users)>0){
             return $users;
         }
-        return response()->json(['message'=>'No existen usuarios con ese perfil'],206);
+        return response()->json(['message'=>self::emptyUser],206);
     }
 
     public static function getUserById(Request $request, $userId, $userType)
     {
         $organizationId = $request->header('organization_key');
         $user = User::getUserById($userId,$userType,$organizationId);
+        if (is_numeric($user) && $user == 0){
+            return response()->json(['message'=>self::taskError],206);
+        }
         if (count($user)>0){
             return $user[0];
         }
-        return response()->json(['message'=>'Usuario no encontrado'],206);
+        return response()->json(['message'=>self::notFoundUser],206);
     }
 
     public static function validate(Request $request)
@@ -50,7 +63,6 @@ class UserService
             'work_phone'=>'max:15',
             'email'=>'required|max:30|email',
             'level_instruction'=>'max:3|ends_with:TSU,TCM,Dr,Esp,Ing,MSc,Lic',
-            'with_work'=>'boolean',
             'with_disabilities'=>'boolean',
             'sex'=>'required|max:1|ends_with:M,F',
             'nationality'=>'required|max:1|ends_with:V,E',
@@ -61,43 +73,67 @@ class UserService
     {
         $organizationId = $request->header('organization_key');
         self::validate($request);
-        if (Organization::existOrganization($organizationId)){
-            if (!(User::existUserByIdentification($request['identification'],$userType,$organizationId))AND!(User::existUserByEmail($request['email'],$userType,$organizationId))){
-                $request['password']=Hash::make($request['identification']);
-                $request['user_type']=$userType;
-                $request['active']=true;
-                $userId= User::addUser($request);
-                OrganizationUser::addOrganizationUser([
-                    'user_id'=>$userId,
-                    'organization_id'=>$organizationId,
-                ]);
-                EmailService::userCreate($userId,$organizationId,$userType);
-                return $userId;
-            }
-            return "identification_email";
+        $existUserByIdentification=User::existUserByIdentification($request['identification'],$userType,$organizationId);
+        $existUserByEmail=User::existUserByEmail($request['email'],$userType,$organizationId);
+        if ((is_numeric($existUserByIdentification)&&$existUserByIdentification==0)||(is_numeric($existUserByEmail)&&$existUserByEmail==0)){
+            return 0;
         }
-        return "organization";
+        if (!($existUserByIdentification)AND!($existUserByEmail)){
+            $request['password']=Hash::make($request['identification']);
+            $request['user_type']=$userType;
+            $request['active']=true;
+            $request['organization_id']=$organizationId;
+            $userId= User::addUser($request);
+            if ($userId == 0){
+                return 0;
+            }
+            return $userId;
+        }
+        return "busy_credential";
     }
 
     public static function deleteUser(Request $request, $userId, $userType)
     {
         $organizationId = $request->header('organization_key');
-        if (User::existUserById($userId,$userType,$organizationId)){
-            User::deleteUser($userId);
-            return response()->json(['message'=>'OK']);
+        $result = User::existUserById($userId,$userType,$organizationId);
+        if (is_numeric($result) && $result == 0){
+            return response()->json(['message'=>self::taskError],206);
         }
-        return response()->json(['message'=>'Usuario no encontrado'],206);
+        if ($result){
+            $result=User::deleteUser($userId);
+            if (is_numeric($result) && $result == 0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            return response()->json(['message'=>self::ok]);
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
     }
 
     public static function availableUser(Request $request, $userId, $userType,$organizationId)
     {
-        if (User::existUserByIdentification($request['identification'],$userType,$organizationId)){
-            if (User::getUserByIdentification($request['identification'],$userType,$organizationId)[0]['id']!=$userId){
+        $existUserByIdentification=User::existUserByIdentification($request['identification'],$userType,$organizationId);
+        if (is_numeric($existUserByIdentification) && $existUserByIdentification == 0){
+            return 0;
+        }
+        if ($existUserByIdentification){
+            $user =User::getUserByIdentification($request['identification'],$userType,$organizationId);
+            if (is_numeric($user) && $user ==0){
+                return 0;
+            }
+            if ($user[0]['id']!=$userId){
                 return false;
             }
         }
-        if (User::existUserByEmail($request['email'],$userType,$organizationId)){
-            if (User::getUserByEmail($request['email'],$userType,$organizationId)[0]['id']!=$userId){
+        $existUserByEmail=User::existUserByEmail($request['email'],$userType,$organizationId);
+        if (is_numeric($existUserByEmail) && $existUserByEmail == 0){
+            return 0;
+        }
+        if ($existUserByEmail){
+            $user =User::getUserByEmail($request['email'],$userType,$organizationId);
+            if (is_numeric($user) && $user ==0){
+                return 0;
+            }
+            if ($user[0]['id']!=$userId){
                 return false;
             }
         }
@@ -108,43 +144,62 @@ class UserService
     {
         self::validate($request);
         $organizationId = $request->header('organization_key');
-        if (Organization::existOrganization($organizationId)){
-            if (User::existUserById($userId,$userType,$organizationId)){
-                if (!self::availableUser($request,$userId,$userType,$organizationId)){
-                    return "identification_email";
-                }
-                $user=User::getUserById($userId,$userType,$organizationId);
-                $request['password']=$user[0]['password'];
-                $request['user_type']=$userType;
-                User::updateUser($userId,$request);
-                return $userId;
-            }
-            return "user";
+        $existUserById = User::existUserById($userId,$userType,$organizationId);
+        if (is_numeric($existUserById) && $existUserById == 0 ){
+            return 0;
         }
-        return "organization";
+        if ($existUserById){
+            $availableUser = self::availableUser($request,$userId,$userType,$organizationId);
+            if (is_numeric($availableUser) && $availableUser == 0){
+                return 0;
+            }
+            if (!$availableUser){
+                return "busy_credential";
+            }
+            $user=User::getUserById($userId,$userType,$organizationId);
+            if (is_numeric($user)&&$user == 0){
+                return 0;
+            }
+            $request['password']=$user[0]['password'];
+            $request['user_type']=$userType;
+            $result = User::updateUser($userId,$request);
+            if (is_numeric($result) && $result == 0){
+                return 0;
+            }
+            return $userId;
+        }
+        return "not_found";
     }
 
     public static function activeUsers(Request $request,$userType)
     {
         $organizationId = $request->header('organization_key');
         $users = User::getUsersActive($userType,$organizationId);
+        if (is_numeric($users) && $users == 0){
+            return response()->json(['message'=>self::taskError],206);
+        }
         if (count($users)>0){
             return $users;
         }
-        return response()->json(['message'=>'No existen usuarios activos con ese perfil'],206);
-
+        return response()->json(['message'=>self::notFoundActiveUser],206);
     }
 
     public function changeUserData(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        if (auth()->payload()['user'][0]->id!=$request['id']){
+        if (auth()->payload()['user']->id!=$request['id']){
             return response()->json(['message'=>'Unauthorized'],401);
         }
-        $user=User::getUserById(auth()->payload()['user'][0]->id,auth()->payload()['user'][0]->user_type,$organizationId)[0];
-        $request['password']=$user['password'];
-        $request['user_type']=$user['user_type'];
-        User::updateUser($request['id'],$request);
+        $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
+        if (is_numeric($user) && $user ==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        $request['password']=$user[0]['password'];
+        $request['user_type']=$user[0]['user_type'];
+        $result = User::updateUser($request['id'],$request);
+        if (is_numeric($result) && $result ==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
         return response()->json(['message'=>'Ok'],200);
     }
 
@@ -160,9 +215,12 @@ class UserService
     {
         $organizationId = $request->header('organization_key');
         self::validateChangePassword($request);
-        $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId)[0];
-        if (!Hash::check($request['old_password'],$user['password'])){
-            return response()->json(['message'=>'La clave esta errada'],206);
+        $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
+        if (is_numeric($user)&&$user==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (!Hash::check($request['old_password'],$user[0]['password'])){
+            return response()->json(['message'=>self::invalidPassword],206);
         }
         $user=$user->toArray();
         $user['password']=Hash::make($request['password']);
@@ -173,7 +231,10 @@ class UserService
         } else {
             unset($user['student']);
         }
-        User::updateUserLikeArray(auth()->payload()['user']->id,$user);
-        return response()->json(['message'=>'Ok'],200);
+        $result = User::updateUserLikeArray(auth()->payload()['user']->id,$user);
+        if (is_numeric($result) && $result ==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        return response()->json(['message'=>self::ok],200);
     }
 }

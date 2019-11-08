@@ -3,13 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Student extends Model
 {
 
-    protected $fillable = ['school_program_id','id','home_university','guide_teacher_id','student_type',
+    protected $fillable = ['school_program_id','user_id','home_university','guide_teacher_id','student_type',
         'current_postgraduate','type_income','is_available_final_work','is_ucv_teacher','repeat_approved_subject',
-        'repeat_reprobated_subject','credits_granted'];
+        'repeat_reprobated_subject','credits_granted','with_work','end_program'];
 
     public $timestamps = false;
 
@@ -29,27 +30,95 @@ class Student extends Model
             ->with('User');
     }
 
+    public function equivalence()
+    {
+        return $this->hasMany('App\Equivalence');
+    }
+
     public static function addStudent($student)
     {
         return self::insertGetId($student);
+        try{
+            return self::insertGetId($student);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
-    public static function updateStudent($userId,$student)
+    public static function updateStudent($studentId,$student)
     {
-        self::where('id',$userId)
-            ->get()[0]
-            ->update($student);
+        try{
+            self::where('id',$studentId)
+                ->get()[0]
+                ->update($student);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function existStudentById($id)
     {
-        return self::where('id',$id)
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getStudentById($id)
     {
-        return self::where('id',$id)
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function studentHasProgram($userId)
+    {
+        try{
+           return self::where('user_id',$userId)
+               ->where('end_program',false)
+               ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function existStudentInProgram($userId,$programId)
+    {
+        try{
+            return self::where('user_id',$userId)
+                ->where('school_program_id',false)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function activeStudentId($userId)
+    {
+        try{
+            return self::where('user_id',$userId)
+                ->where('end_program',false)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function deleteStudent($userId,$studentId)
+    {
+        try{
+            self::where('user_id',$userId)
+                ->where('id',$studentId)
+                ->delete();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 }

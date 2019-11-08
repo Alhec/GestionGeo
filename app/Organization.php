@@ -20,21 +20,33 @@ class Organization extends Model
 
     public static function existOrganization($organizationId)
     {
-        return self::where('id',$organizationId)
-            ->exists();
+        try{
+            return self::where('id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
     public static function getOrganization($organizationId)
     {
-        return self::where('id',$organizationId)
-            ->get();
+        try{
+            return self::where('id',$organizationId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getOrganizationByStudentId($userId)
     {
-        return self::whereHas('users',function (Builder $query) use ($userId){
-            $query
-                ->where('id','=',$userId);
+        try{
+            return self::whereHas('users',function (Builder $query) use ($userId){
+                $query
+                    ->where('id','=',$userId);
             })
-            ->get();
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 }

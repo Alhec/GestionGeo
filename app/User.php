@@ -74,7 +74,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Student')
             ->with('degrees')
-            ->with('guideTeacher');
+            ->with('guideTeacher')
+            ->with('equivalence');
     }
 
     public function administrator()
@@ -82,150 +83,185 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Administrator','id','id');
     }
 
-    public function organization()
-    {
-        return $this->belongsTo('App\Organization');
-    }
-
     public static function getUsers($userType,$organizationId)
     {
-        $users = self::where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('id','=',$organizationId);
-            });
-        if ($userType == 'A'){
-            return $users->with('administrator')
-                ->get();
-        }elseif ($userType=='T'){
-            return $users->with('teacher')
-                ->get();
-        }elseif ($userType=='S'){
-            return $users->with('student')
-                ->get();
-        }else{
-            return [];
+        try{
+            $users = self::where('user_type',$userType)
+                ->where('organization_id',$organizationId);
+            if ($userType == 'A'){
+                return $users->with('administrator')
+                    ->get();
+            }elseif ($userType=='T'){
+                return $users->with('teacher')
+                    ->get();
+            }elseif ($userType=='S'){
+                return $users->with('student')
+                    ->get();
+            }else{
+                return [];
+            }
+        }catch (\Exception $e){
+            return 0;
         }
     }
 
     public static function getUserById($id,$userType,$organizationId)
     {
-        $user =self::where('id',$id)
-            ->where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('id','=',$organizationId);
-            });
-        if ($userType == 'A'){
-            return $user
-                ->with('administrator')
-                ->get();
-        }elseif ($userType=='T'){
-            return $user
-                ->with('teacher')
-                ->get();
-        }elseif ($userType=='S'){
-            return $user
-                ->with('student')
-                ->get();
-        }else{
-            return [];
+        try{
+            $user =self::where('id',$id)
+                ->where('user_type',$userType)
+                ->where('organization_id',$organizationId);
+            if ($userType == 'A'){
+                return $user
+                    ->with('administrator')
+                    ->get();
+            }elseif ($userType=='T'){
+                return $user
+                    ->with('teacher')
+                    ->get();
+            }elseif ($userType=='S'){
+                return $user
+                    ->with('student')
+                    ->get();
+            }else{
+                return [];
+            }
+        }catch (\Exception $e){
+            return 0;
         }
     }
+
     public static function existUserById($id,$userType,$organizationId)
     {
-        return self::where('id',$id)
-            ->where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('id','=',$organizationId);
-            })->exists();
+        try{
+            return self::where('id',$id)
+                ->where('user_type',$userType)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
+
     public static function existUserByIdentification($identification,$userType,$organizationId)
     {
-        return self::where('identification',$identification)
-            ->where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('id','=',$organizationId);
-            })->exists();
+        try{
+            return self::where('identification',$identification)
+                ->where('user_type',$userType)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existUserByEmail($email,$userType,$organizationId)
     {
-        return self::where('email',$email)
-            ->where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })->exists();
+        try{
+            return self::where('email',$email)
+                ->where('user_type',$userType)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function addUser($user)
     {
-        return self::insertGetId($user->only('identification', 'password','user_type','first_name','second_name',
-            'first_surname','second_surname','telephone','mobile','work_phone','email','level_instruction','active','with_work',
-            'with_disabilities','sex','nationality','organization_id'));
+        try{
+            return self::insertGetId($user->only('identification', 'password','user_type','first_name','second_name',
+                'first_surname','second_surname','telephone','mobile','work_phone','email','level_instruction','active','with_work',
+                'with_disabilities','sex','nationality','organization_id'));
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function deleteUser($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 
     public static function getUserByIdentification($identification,$userType,$organizationId)
     {
-        return self::where('identification',$identification)
-            ->where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })->get();
+        try{
+            return self::where('identification',$identification)
+                ->where('user_type',$userType)
+                ->where('organization_id',$organizationId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+
     }
 
     public static function getUserByEmail($email,$userType,$organizationId)
     {
-        return self::where('email',$email)
-            ->where('user_type',$userType)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })->get();
+        try{
+            return self::where('email',$email)
+                ->where('user_type',$userType)
+                ->where('organization_id',$organizationId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function updateUser($id,$user)
     {
-        self::find($id)
-            ->update($user->all());
+        try{
+            self::find($id)
+                ->update($user->all());
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 
     public static function updateUserLikeArray($id,$user)
     {
-        self::find($id)
-            ->update($user);
+        try{
+            self::find($id)
+                ->update($user);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 
     public static function getUsersActive($userType,$organizationId)
     {
-        $users = self::where('user_type',$userType)
-            ->where('active',true)
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            });
-        if ($userType == 'A'){
-            return $users->with('administrator')
-                ->get();
-        }elseif ($userType=='T'){
-            return $users->with('teacher')
-                ->get();
-        }elseif ($userType=='S'){
-            return $users->with('student')
-                ->get();
-        }else{
-            return [];
+        try{
+            $users = self::where('user_type',$userType)
+                ->where('active',true)
+                ->where('organization_id',$organizationId);
+            if ($userType == 'A'){
+                return $users->with('administrator')
+                    ->get();
+            }elseif ($userType=='T'){
+                return $users->with('teacher')
+                    ->get();
+            }elseif ($userType=='S'){
+                return $users->with('student')
+                    ->get();
+            }else{
+                return [];
+            }
+        }catch (\Exception $e){
+            return 0;
         }
+
     }
 
     public function sendPasswordResetNotification($token)

@@ -3,25 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\Types\Self_;
+use Illuminate\Support\Facades\DB;
 
-class Degree extends Model
+class Equivalence extends Model
 {
-    protected $fillable = ['student_id','degree_obtained','degree_name','degree_description','university'];
-
     public $timestamps = false;
 
-    public static function addDegree($degree)
+    protected $fillable = ['student_id','subject_id','qualification'];
+
+    public static function addEquivalence($equivalence)
     {
+        self::create($equivalence);
         try{
-            self::create($degree);
+
         }catch (\Exception $e){
             DB::rollback();
             return 0;
         }
     }
 
-    public static function deleteDegree($studentId)
+    public static function deleteEquivalence($studentId)
     {
         try{
             self::where('student_id',$studentId)

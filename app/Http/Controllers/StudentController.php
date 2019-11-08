@@ -27,7 +27,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        return StudentService::addStudent($request);
+        return StudentService::addNewStudent($request);
     }
 
     /**
@@ -68,5 +68,16 @@ class StudentController extends Controller
     public function active(Request $request)
     {
         return UserService::activeUsers($request,'S');
+    }
+
+    public function addStudentToUser($id,Request $request)
+    {
+        return StudentService::addStudentContinue($request,$id);
+    }
+
+    public function deleteStudent($id,Request $request)
+    {
+        $studentId = $request->input('student_id');
+        return StudentService::deleteStudent($id,$studentId,$request);
     }
 }
