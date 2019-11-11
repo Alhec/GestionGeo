@@ -37,7 +37,6 @@ class Student extends Model
 
     public static function addStudent($student)
     {
-        return self::insertGetId($student);
         try{
             return self::insertGetId($student);
         }catch (\Exception $e){
@@ -93,7 +92,7 @@ class Student extends Model
     {
         try{
             return self::where('user_id',$userId)
-                ->where('school_program_id',false)
+                ->where('school_program_id',$programId)
                 ->exists();
         }catch (\Exception $e){
             return 0;

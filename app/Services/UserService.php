@@ -184,7 +184,7 @@ class UserService
         return response()->json(['message'=>self::notFoundActiveUser],206);
     }
 
-    public function changeUserData(Request $request)
+    public static function changeUserData(Request $request)
     {
         $organizationId = $request->header('organization_key');
         if (auth()->payload()['user']->id!=$request['id']){
