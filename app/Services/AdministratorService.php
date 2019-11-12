@@ -14,6 +14,17 @@ use App\User;
 
 class AdministratorService
 {
+
+    const taskError = 'No se puede proceder con la tarea';
+    const busyCredential = 'Identificacion o Correo ya registrados';
+    const notFoundUser = 'Usuario no encontrado';
+    const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
+    const notSendEmail = 'No se pudo enviar el correo electronico';
+    const noAction = "No esta permitido realizar esa accion";
+    const unauthorized = 'Unauthorized';
+    const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario';
+    const nothavePrincipal = 'No hay coordinador principal';
+
     public static function validate(Request $request)
     {
         $request->validate([
@@ -25,31 +36,43 @@ class AdministratorService
     public static function addAdministrator(Request $request)
     {
         self::validate($request);
-        $result =UserService::addUser($request,'A');
-        if ($result=="identification_email"){
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
-        }else if ($result=="organization"){
-            return response()->json(['message'=>'No existe organizacion asociada'],206);
+        $user =UserService::addUser($request,'A');
+        if ($user=="busy_credential") {
+            return response()->json(['message' => self::busyCredential], 206);
+        }else if(is_numeric($user) && $user==0){
+            return response()->json(['message' => self::taskError], 206);
         }else{
             if (!isset($request['principal'])){
                 $request['principal']=false;
             }
             if ($request['principal']){
-                if (((auth()->payload()['user'][0]->administrator->principal) ==false && auth()->payload()['user'][0]->administrator->rol=='COORDINATOR' )|| auth()->payload()['user'][0]->administrator->rol=='SECRETARY'){
-                    return response()->json(['message'=>'Unauthorized'],401);
+                if (((auth()->payload()['user']->administrator->principal) ==false &&
+                        auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
+                    auth()->payload()['user']->administrator->rol=='SECRETARY'){
+                    return response()->json(['message'=>self::unauthorized],401);
                 }
-                Administrator::updateAdministrator(auth()->payload()['user'][0]->id, [
-                    'user_id'=>auth()->payload()['user'][0]->id,
-                    'rol'=>auth()->payload()['user'][0]->administrator->rol,
+                $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
+                    'id'=>auth()->payload()['user']->id,
+                    'rol'=>auth()->payload()['user']->administrator->rol,
                     'principal'=>false
                 ]);
+                if(is_numeric($result) && $result==0){
+                    return response()->json(['message' => self::taskError], 206);
+                }
             }
-            Administrator::addAdministrator([
-                'user_id'=>$result,
+            $result = Administrator::addAdministrator([
+                'id'=>$user,
                 'rol'=>$request['rol'],
                 'principal'=>$request['principal']
             ]);
-            return UserService::getUserById($request,$result,'A');
+            if(is_numeric($result) && $result==0){
+                return response()->json(['message' => self::taskError], 206);
+            }
+            $result = EmailService::userCreate($user,$request->header('organization_key'),'S');
+            if ($result==0){
+                return response()->json(['message'=>self::notSendEmail],206);
+            }
+            return UserService::getUserById($request,$user,'A');
         }
     }
 
@@ -57,34 +80,42 @@ class AdministratorService
     {
         self::validate($request);
         $result =UserService::updateUser($request,$id,'A');
-        if ($result=="user"){
-            return response()->json(['message'=>'Usuario no encontrado'],206);
-        }else if ($result=="organization"){
-            return response()->json(['message'=>'No existe organizacion asociada'],206);
-        }else if ($result=="identification_email"){
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+        if ($result=="not_found"){
+            return response()->json(['message'=>self::notFoundUser],206);
+        }else if (is_numeric($result)&& $result==0){
+            return response()->json(['message'=>self::taskError],206);
+        }else if ($result=="busy_credential"){
+            return response()->json(['message'=>self::busyCredential],206);
         }else {
             if (!isset($request['principal'])){
                 $request['principal']=false;
             }
             if ($request['principal']){
-                if (((auth()->payload()['user'][0]->administrator->principal) ==false && auth()->payload()['user'][0]->administrator->rol=='COORDINATOR' )|| auth()->payload()['user'][0]->administrator->rol=='SECRETARY'){
+                if (((auth()->payload()['user']->administrator->principal) ==false &&
+                        auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
+                    auth()->payload()['user']->administrator->rol=='SECRETARY'){
                     return response()->json(['message'=>'Unauthorized'],401);
                 }
-                if(auth()->payload()['user'][0]->id == $id){
-                    return response()->json(['message'=>'Accion no permitida'],206);
+                if(auth()->payload()['user']->id == $id){
+                    return response()->json(['message'=>self::noAction],206);
                 }
-                Administrator::updateAdministrator(auth()->payload()['user'][0]->id, [
-                    'user_id'=>auth()->payload()['user'][0]->id,
-                    'rol'=>auth()->payload()['user'][0]->administrator->rol,
+                $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
+                    'id'=>auth()->payload()['user']->id,
+                    'rol'=>auth()->payload()['user']->administrator->rol,
                     'principal'=>false
                 ]);
+                if (is_numeric($result)&& $result==0){
+                    return response()->json(['message'=>self::taskError],206);
+                }
             }
-            Administrator::updateAdministrator($id, [
-                'user_id'=>$id,
+            $result=Administrator::updateAdministrator($id, [
+                'id'=>$id,
                 'rol'=>$request['rol'],
                 'principal'=>$request['principal']
             ]);
+            if (is_numeric($result)&& $result==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
             return UserService::getUserById($request, $id, 'A');
         }
     }
@@ -93,11 +124,14 @@ class AdministratorService
     {
         $organizationId = $request->header('organization_key');
         $administrator = User::getUserById($id,'A',$organizationId);
+        if (is_numeric($administrator)&&$administrator==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
         if (count($administrator)<=0){
-            return response()->json(['message'=>'Usuario no encontrado'],206);
+            return response()->json(['message'=>self::notFoundUser],206);
         }
         if ($administrator[0]['administrator']['principal'] && $administrator[0]['administrator']['rol']=='COORDINATOR'){
-            return response()->json(['message'=>'Debe designar otro coordinador principal para poder eliminar este usuario'],206);
+            return response()->json(['message'=>self::notDeletePrincipal],206);
         }
         return UserService::deleteUser($request,$id,'A');
     }
@@ -106,9 +140,12 @@ class AdministratorService
     {
         $organizationId = $request->header('organization_key');
         $administrator = Administrator::getPrincipalCoordinator($organizationId);
+        if (is_numeric($administrator)&&$administrator==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
         if (count($administrator)>0){
             return $administrator[0];
         }
-        return response()->json(['message'=>'No hay coordinador principal'],206);
+        return response()->json(['message'=>self::nothavePrincipal],206);
     }
 }

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Administrator extends Model
 {
@@ -17,44 +18,63 @@ class Administrator extends Model
 
     public static function getAdministratorById($id)
     {
-        return self::where('id',$id)
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existAdministratorById($id)
     {
-        return self::where('id',$id)
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function addAdministrator($administrator)
     {
-        self::create($administrator);
+        try{
+            self::create($administrator);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 
     public static function updateAdministrator($userId,$administrator)
     {
-        self::where('id',$userId)
-            ->get()[0]
-            ->update($administrator);
+        try{
+            self::where('id',$userId)
+                ->get()[0]
+                ->update($administrator);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
 
 
     public static function getPrincipalCoordinator($organizationId)
     {
-        $user = User::where('user_type','A')
-            ->whereHas('organization',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('id','=',$organizationId);
-            })
-            ->whereHas('administrator',function (Builder $query){
-                $query
-                    ->where('rol','=','COORDINATOR')
-                    ->where('principal','=',1);
-            });
-        return $user
-            ->with('administrator')
-            ->get();
+        try{
+            return User::where('user_type','A')
+                ->where('organization_id',$organizationId)
+                ->whereHas('administrator',function (Builder $query){
+                    $query
+                        ->where('rol','=','COORDINATOR')
+                        ->where('principal','=',1);
+                })
+                ->with('administrator')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 }
