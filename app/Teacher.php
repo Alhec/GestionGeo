@@ -15,25 +15,43 @@ class Teacher extends Model
 
     public static function getTeacherById($id)
     {
-        return self::where('id',$id)
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existTeacherById($id)
     {
-        return self::where('id',$id)
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function addTeacher($teacher)
     {
-        self::create($teacher);
+        try{
+            self::create($teacher);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function updateTeacher($userId,$teacher)
     {
-        self::where('id',$userId)
-            ->get()[0]
-            ->update($teacher);
+        try{
+            self::where('id',$userId)
+                ->get()[0]
+                ->update($teacher);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 }

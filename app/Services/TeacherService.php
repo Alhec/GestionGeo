@@ -15,6 +15,14 @@ use App\Teacher;
 
 class TeacherService
 {
+    const taskError = 'No se puede proceder con la tarea';
+    const busyCredential = 'Identificacion o Correo ya registrados';
+    const notFoundUser = 'Usuario no encontrado';
+    const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
+    const notSendEmail = 'No se pudo enviar el correo electronico';
+    const noAction = "No esta permitido realizar esa accion";
+
+
     public static function validate(Request $request)
     {
         $request->validate([
@@ -28,20 +36,23 @@ class TeacherService
     public static function addTeacher(Request $request)
     {
         self::validate($request);
-        $result =UserService::addUser($request,'T');
-        if ($result=="identification_email"){
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
-        }else if ($result=="organization"){
-            return response()->json(['message'=>'No existe organizacion asociada'],206);
+        $user =UserService::addUser($request,'T');
+        if ($user=="busy_credential"){
+            return response()->json(['message'=>self::busyCredential],206);
+        }else if (is_numeric($user)&&$user==0){
+            return response()->json(['message'=>self::taskError],206);
         }else{
-            Teacher::addTeacher([
-                'user_id'=>$result,
+            $result = Teacher::addTeacher([
+                'id'=>$user,
                 'teacher_type'=>$request['teacher_type'],
                 'dedication'=>$request['dedication'],
                 'home_institute'=>$request['home_institute'],
                 'country'=>$request['country'],
             ]);
-            return UserService::getUserById($request,$result,'T');
+            if (is_numeric($result)&&$result==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            return UserService::getUserById($request,$user,'T');
         }
     }
 
@@ -49,15 +60,15 @@ class TeacherService
     {
         self::validate($request);
         $result =UserService::updateUser($request,$id,'T');
-        if ($result=="user"){
-            return response()->json(['message'=>'Usuario no encontrado'],206);
-        }else if ($result=="organization"){
-            return response()->json(['message'=>'No existe organizacion asociada'],206);
-        }else if ($result=="identification_email"){
-            return response()->json(['message'=>'Identificacion o Correo ya registrados'],206);
+        if ($result=="not_found"){
+            return response()->json(['message'=>self::notFoundUser],206);
+        }else if (is_numeric($result)&&$result==0){
+            return response()->json(['message'=>self::taskError],206);
+        }else if ($result=="busy_credential"){
+            return response()->json(['message'=>self::busyCredential],206);
         }else {
             Teacher::updateTeacher($id, [
-                'user_id' => $id,
+                'id' => $id,
                 'teacher_type' => $request['teacher_type'],
                 'dedication'=>$request['dedication'],
                 'home_institute'=>$request['home_institute'],
@@ -67,6 +78,7 @@ class TeacherService
         }
     }
 
+    //cuando llegue a este endpoint lo cambio
     public static function validateTeacher(Request $request)
     {
         $organizationId = $request->header('organization_key');
