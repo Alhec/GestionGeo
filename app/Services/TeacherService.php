@@ -52,6 +52,10 @@ class TeacherService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskError],206);
             }
+            $result = EmailService::userCreate($user,$request->header('organization_key'),'S');
+            if ($result==0){
+                return response()->json(['message'=>self::notSendEmail],206);
+            }
             return UserService::getUserById($request,$user,'T');
         }
     }
@@ -67,13 +71,16 @@ class TeacherService
         }else if ($result=="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
-            Teacher::updateTeacher($id, [
+            $result = Teacher::updateTeacher($id, [
                 'id' => $id,
                 'teacher_type' => $request['teacher_type'],
                 'dedication'=>$request['dedication'],
                 'home_institute'=>$request['home_institute'],
                 'country'=>$request['country'],
             ]);
+            if (is_numeric($result)&&$result==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
             return UserService::getUserById($request, $id, 'T');
         }
     }
