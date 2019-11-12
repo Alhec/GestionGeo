@@ -23,7 +23,7 @@ class AdministratorService
     const noAction = "No esta permitido realizar esa accion";
     const unauthorized = 'Unauthorized';
     const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario';
-    const nothavePrincipal = 'No hay coordinador principal';
+    const noHasPrincipal = 'No hay coordinador principal';
 
     public static function validate(Request $request)
     {
@@ -146,6 +146,6 @@ class AdministratorService
         if (count($administrator)>0){
             return $administrator[0];
         }
-        return response()->json(['message'=>self::nothavePrincipal],206);
+        return response()->json(['message'=>self::noHasPrincipal],206);
     }
 }

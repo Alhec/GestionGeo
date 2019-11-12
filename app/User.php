@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
 use App\Notifications\CustomResetPassword;
@@ -188,7 +189,6 @@ class User extends Authenticatable implements JWTSubject
             DB::rollback();
             return 0;
         }
-
     }
 
     public static function getUserByIdentification($identification,$userType,$organizationId)
@@ -201,7 +201,6 @@ class User extends Authenticatable implements JWTSubject
         }catch (\Exception $e){
             return 0;
         }
-
     }
 
     public static function getUserByEmail($email,$userType,$organizationId)
@@ -225,7 +224,6 @@ class User extends Authenticatable implements JWTSubject
             DB::rollback();
             return 0;
         }
-
     }
 
     public static function updateUserLikeArray($id,$user)
@@ -261,7 +259,6 @@ class User extends Authenticatable implements JWTSubject
         }catch (\Exception $e){
             return 0;
         }
-
     }
 
     public function sendPasswordResetNotification($token)

@@ -44,7 +44,6 @@ class Administrator extends Model
             DB::rollback();
             return 0;
         }
-
     }
 
     public static function updateAdministrator($userId,$administrator)
