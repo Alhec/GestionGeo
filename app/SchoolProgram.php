@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class SchoolProgram extends Model
 {
-    protected $fillable = ['school_program_name','num_cu','organization_id','duration','conducive_to_degree'];
+    protected $fillable = ['school_program_name','num_cu','organization_id','duration','conducive_to_degree','min_num_cu_final_work','min_duration','grant_certificate'];
 
     protected $hidden = ['organization_id'];
 

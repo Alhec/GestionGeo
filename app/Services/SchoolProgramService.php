@@ -47,7 +47,10 @@ class SchoolProgramService
             'school_program_name'=>'required|max:100',
             'num_cu'=>'required|numeric',
             'duration'=>'required|numeric',
-            "conducive_to_degree"=>"required|boolean"
+            "conducive_to_degree"=>"required|boolean",
+            'min_duration'=>'numeric|required',
+            'min_num_cu_final_work'=>'numeric|required',
+            'grant_certificate'=>'boolean'
         ]);
     }
 

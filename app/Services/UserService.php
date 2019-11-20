@@ -187,16 +187,15 @@ class UserService
     public static function changeUserData(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        if (auth()->payload()['user']->id!=$request['id']){
-            return response()->json(['message'=>'Unauthorized'],401);
-        }
         $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
         if (is_numeric($user) && $user ==0){
             return response()->json(['message'=>self::taskError],206);
         }
-        $request['password']=$user[0]['password'];
-        $request['user_type']=$user[0]['user_type'];
-        $result = User::updateUser($request['id'],$request);
+        $user=$user[0];
+        $request['organization_id']=$organizationId;
+        $request['password']=$user['password'];
+        $request['user_type']=$user['user_type'];
+        $result = User::updateUser(auth()->payload()['user']->id,$request);
         if (is_numeric($result) && $result ==0){
             return response()->json(['message'=>self::taskError],206);
         }
@@ -223,6 +222,7 @@ class UserService
             return response()->json(['message'=>self::invalidPassword],206);
         }
         $user=$user->toArray();
+        $user=$user[0];
         $user['password']=Hash::make($request['password']);
         if ($user['user_type']=='A'){
             unset($user['administrator']);
