@@ -13,12 +13,23 @@ class Schedule extends Model
 
     public static function addSchedule($schedule)
     {
-        self::create($schedule);
+        try{
+            self::create($schedule);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function deleteAllSchedule($schoolPeriodSubjectTeacherId)
     {
-        self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
-            ->delete();
+        try{
+            self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 }
