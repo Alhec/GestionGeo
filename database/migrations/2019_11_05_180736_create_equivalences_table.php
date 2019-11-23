@@ -23,7 +23,7 @@ class CreateEquivalencesTable extends Migration
                 ->onDelete('cascade');
             $table->foreign('subject_id')
                 ->references('id')
-                ->on('students')
+                ->on('subjects')
                 ->onDelete('cascade');
         });
     }

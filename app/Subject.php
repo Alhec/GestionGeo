@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class Subject extends Model
 {
-    protected $fillable = ['subject_code','subject_name','uc','is_final_subject?'];
+    protected $fillable = ['subject_code','subject_name','uc','is_final_subject?','theoretical_hours','practical_hours','laboratory_hours'];
 
     public $timestamps = false;
 
@@ -64,7 +64,7 @@ class Subject extends Model
     public static function addSubject($subject)
     {
         try{
-            return self::insertGetId($subject->only('subject_code','subject_name','uc','is_final_subject?'));
+            return self::insertGetId($subject->only('subject_code','subject_name','uc','is_final_subject?','theoretical_hours','practical_hours','laboratory_hours'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;

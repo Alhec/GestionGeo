@@ -20,6 +20,12 @@ class CreateSubjectsTable extends Migration
             $table->integer('uc');
             $table->boolean('is_final_subject?')
                 ->default(false);
+            $table->integer('theoretical_hours')
+                ->default(0);
+            $table->integer('practical_hours')
+                ->default(0);
+            $table->integer('laboratory_hours')
+                ->default(0);
             //$table->string('subject_type',3); //REG AMP ACT PER PDC
         });
     }
