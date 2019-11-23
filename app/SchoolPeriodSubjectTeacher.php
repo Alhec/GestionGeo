@@ -32,78 +32,134 @@ class SchoolPeriodSubjectTeacher extends Model
 
     public static function addSchoolPeriodSubjectTeacher($schoolPeriodSubjectTeacher)
     {
-        unset($schoolPeriodSubjectTeacher['schedules']);
-        return self::insertGetId($schoolPeriodSubjectTeacher);
+        try{
+            unset($schoolPeriodSubjectTeacher['schedules']);
+            return self::insertGetId($schoolPeriodSubjectTeacher);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function  deleteSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
     {
-        self::where('school_period_id',$schoolPeriodId)
-            ->delete();
+        try{
+            self::where('school_period_id',$schoolPeriodId)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+
     }
 
     public static function getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId)
     {
-        return self::where('school_period_id',$schoolPeriodId)
-            ->with('subject')
-            ->with('teacher')
-            ->with('schoolPeriod')
-            ->with('schedules')
-            ->get();
+        try{
+            return self::where('school_period_id',$schoolPeriodId)
+                ->with('subject')
+                ->with('teacher')
+                ->with('schoolPeriod')
+                ->with('schedules')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher)
     {
-        self::find($id)
-            ->update($schoolPeriodSubjectTeacher);
+        try{
+            self::find($id)
+                ->update($schoolPeriodSubjectTeacher);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function findSchoolPeriodSubjectTeacherId($schoolPeriodId,$subjectId,$teacherId)
     {
-        return self::where('school_period_id',$schoolPeriodId)
-            ->where('subject_id',$subjectId)
-            ->where('teacher_id',$teacherId)
-            ->get('id');
+        try{
+            return self::where('school_period_id',$schoolPeriodId)
+                ->where('subject_id',$subjectId)
+                ->where('teacher_id',$teacherId)
+                ->get('id');
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existSchoolPeriodSubjectTeacherBySchoolPeriodId($schoolPeriodId)
     {
-        return self::where('school_period_id',$schoolPeriodId)
-            ->exists();
+        try{
+            return self::where('school_period_id',$schoolPeriodId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function deleteSchoolPeriodSubjectTeacher($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function updateEnrolledStudent($id)
     {
-        $schoolPeriodSubjectTeacher = self::where('id',$id)
-            ->get()->toArray();
-        $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
-        self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher[0]);
+        try{
+            $schoolPeriodSubjectTeacher = self::where('id',$id)
+                ->get()->toArray();
+            $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
+            $result=self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher[0]);
+            if (is_numeric($result)&& $result==0){
+                return 0;
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,$schoolPeriodId)
     {
-        return self::where('school_period_id',$schoolPeriodId)
-            ->where('teacher_id',$teacherId)
-            ->with('subject')
-            ->get();
+        try{
+            return self::where('school_period_id',$schoolPeriodId)
+                ->where('teacher_id',$teacherId)
+                ->with('subject')
+                ->get();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function existSchoolPeriodSubjectTeacherById($id)
     {
-        return self::where('id',$id)
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->exists();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSchoolPeriodSubjectTeacherById($id)
     {
-        return self::where('id',$id)
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->get();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
 }

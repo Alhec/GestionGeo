@@ -18,21 +18,28 @@ class SchoolProgramsTableSeeder extends Seeder
             'num_cu' => 50,
             'organization_id'=>'G',
             'duration'=>3,
-            'conducive_to_degree'=>true
+            'conducive_to_degree'=>true,
+            'min_duration'=>2,
+            'min_num_cu_final_work'=>8
+
         ]);
         SchoolProgram::create([
             'school_program_name' => 'Especializacion en Computacion',
             'num_cu' => 50,
             'organization_id'=>'C',
             'duration'=>3,
-            'conducive_to_degree'=>true
+            'conducive_to_degree'=>true,
+            'min_duration'=>2,
+            'min_num_cu_final_work'=>8
         ]);
         SchoolProgram::create([
             'school_program_name' => 'Especializacion de Geoquimica',
             'num_cu' => 10,
             'organization_id'=>'G',
             'duration'=>3,
-            'conducive_to_degree'=>true
+            'conducive_to_degree'=>true,
+            'min_duration'=>2,
+            'min_num_cu_final_work'=>8
         ]);
     }
 }

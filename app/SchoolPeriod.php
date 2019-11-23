@@ -26,87 +26,135 @@ class SchoolPeriod extends Model
     }
     public static function getSchoolPeriods($organizationId)
     {
-        return self::where('organization_id',$organizationId)
-            ->with('subjects')
-            ->get();
+        try{
+            return self::where('organization_id',$organizationId)
+                ->with('subjects')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getSchoolPeriodById($id,$organizationId)
     {
-        return self::where('id',$id)
-            ->where('organization_id',$organizationId)
-            ->with('subjects')
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->where('organization_id',$organizationId)
+                ->with('subjects')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getCurrentSchoolPeriod($organizationId)
     {
-        return self::where('organization_id',$organizationId)
-            ->whereDate('end_date','>=',date("Y-m-d"))
-            ->whereDate('start_date','<=',date("Y-m-d"))
-            ->orderBy('start_date','ASC')
-            ->with('subjects')
-            ->get();
+        try{
+            return self::where('organization_id',$organizationId)
+                ->whereDate('end_date','>=',date("Y-m-d"))
+                ->whereDate('start_date','<=',date("Y-m-d"))
+                ->orderBy('start_date','ASC')
+                ->with('subjects')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function deleteSchoolPeriod($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function existSchoolPeriodById($id,$organizationId)
     {
-        return self::where('id',$id)
-            ->where('organization_id',$organizationId)
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existSchoolPeriodByCodSchoolPeriod($codSchoolPeriod,$organizationId)
     {
-        return self::where('cod_school_period',$codSchoolPeriod)
-            ->where('organization_id',$organizationId)
-            ->exists();
+        try{
+            return self::where('cod_school_period',$codSchoolPeriod)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+
     }
 
     public static function addSchoolPeriod($schoolPeriod)
     {
-        return self::insertGetId($schoolPeriod->only('cod_school_period','start_date','end_date','withdrawal_deadline','inscription_visible','organization_id','load_notes'));
+        try{
+            return self::insertGetId($schoolPeriod->only('cod_school_period','start_date','end_date',
+                'withdrawal_deadline','inscription_visible','organization_id','load_notes'));
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSchoolPeriodByCodSchoolPeriod($codSchoolPeriod,$organizationId)
     {
-        return self::where('cod_school_period',$codSchoolPeriod)
-            ->where('organization_id',$organizationId)
-            ->with('subjects')
-            ->get();
+        try{
+            return self::where('cod_school_period',$codSchoolPeriod)
+                ->where('organization_id',$organizationId)
+                ->with('subjects')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function updateSchoolPeriod($id,$schoolPeriod)
     {
-        self::find($id)
-            ->update($schoolPeriod->all());
+        try{
+            self::find($id)
+                ->update($schoolPeriod->all());
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getSubjectsByTeacher($teacherId)
     {
-        return self::whereHas('subjects',function (Builder $query) use ($teacherId){
-            $query
-                ->where('teacher_id','=',$teacherId);
-            })
-            ->with('subjects')
-            ->orderBy('start_date','ASC')
-            ->get();
+        try{
+            return self::whereHas('subjects',function (Builder $query) use ($teacherId){
+                $query
+                    ->where('teacher_id','=',$teacherId);
+                })
+                ->with('subjects')
+                ->orderBy('start_date','ASC')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getEnrolledSubjectsByStudent($studentId)
     {
-        return self::whereHas('inscriptions',function (Builder $query) use ($studentId){
-            $query
-                ->where('student_id','=',$studentId);
-            })
-            ->with('inscriptions')
-            ->get();
-
+        try{
+            return self::whereHas('inscriptions',function (Builder $query) use ($studentId){
+                $query
+                    ->where('student_id','=',$studentId);
+                })
+                ->with('inscriptions')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 }

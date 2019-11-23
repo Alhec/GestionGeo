@@ -76,7 +76,8 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Student')
             ->with('degrees')
             ->with('guideTeacher')
-            ->with('equivalence');
+            ->with('equivalence')
+            ->with('schoolProgram');
     }
 
     public function administrator()

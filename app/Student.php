@@ -35,6 +35,11 @@ class Student extends Model
         return $this->hasMany('App\Equivalence');
     }
 
+    public function schoolProgram()
+    {
+        return $this->belongsTo('App\SchoolProgram');
+    }
+
     public static function addStudent($student)
     {
         try{

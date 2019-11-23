@@ -19,8 +19,7 @@ class CreateSchoolPeriodsTable extends Migration
             $table->string('cod_school_period',10);
             $table->date('start_date');
             $table->date('end_date');
-            $table->date('withdrawal_deadline')
-                ->nullable();
+            $table->date('withdrawal_deadline');
             $table->boolean('load_notes')
                 ->default(false);
             $table->boolean('inscription_visible')

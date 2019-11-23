@@ -13,9 +13,8 @@ class Equivalence extends Model
 
     public static function addEquivalence($equivalence)
     {
-        self::create($equivalence);
         try{
-
+            self::create($equivalence);
         }catch (\Exception $e){
             DB::rollback();
             return 0;
