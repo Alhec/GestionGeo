@@ -48,6 +48,7 @@ class SchoolPeriodSubjectTeacher extends Model
             ->with('subject')
             ->with('teacher')
             ->with('schoolPeriod')
+            ->with('schedules')
             ->get();
     }
 
