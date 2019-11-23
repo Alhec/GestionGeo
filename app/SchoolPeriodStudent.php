@@ -32,86 +32,131 @@ class SchoolPeriodStudent extends Model
 
     public static function getSchoolPeriodStudent($organizationId)
     {
-        return self::with('schoolPeriod')
-            ->with('student')
-            ->with('enrolledSubjects')
-            ->with('schoolPeriod')
-            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->get();
+        try{
+            return self::with('schoolPeriod')
+                ->with('student')
+                ->with('enrolledSubjects')
+                ->with('schoolPeriod')
+                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getSchoolPeriodStudentById($id,$organizationId)
     {
-        return self::where('id',$id)
-            ->with('student')
-            ->with('enrolledSubjects')
-            ->with('schoolPeriod')
-            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->with('student')
+                ->with('enrolledSubjects')
+                ->with('schoolPeriod')
+                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getSchoolPeriodStudentBySchoolPeriod($schoolPeriodId,$organizationId)
     {
-        return self::where('school_period_id',$schoolPeriodId)
-            ->with('student')
-            ->with('enrolledSubjects')
-            ->with('schoolPeriod')
-            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->get();
+        try{
+            return self::where('school_period_id',$schoolPeriodId)
+                ->with('student')
+                ->with('enrolledSubjects')
+                ->with('schoolPeriod')
+                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function existSchoolPeriodStudent($studentId,$schoolPeriodId)
     {
-        return self::where('student_id',$studentId)
-            ->where('school_period_id',$schoolPeriodId)
-            ->exists();
+        try{
+            return self::where('student_id',$studentId)
+                ->where('school_period_id',$schoolPeriodId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function addSchoolPeriodStudent($schoolPeriodStudent){
-        return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','status','pay_ref','financing','financing_description','amount_paid'));
+        try{
+            return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','status','pay_ref',
+                'financing','financing_description','amount_paid'));
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function existSchoolPeriodStudentById($id,$organizationId){
-        return self::where('id',$id)
-            ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId);
-            })
-            ->exists();
+        try{
+            return self::where('id',$id)
+                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function deleteSchoolPeriodStudent($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function findSchoolPeriodStudent($studentId,$schoolPeriodId)
     {
-        return self::where('student_id',$studentId)
-            ->where('school_period_id',$schoolPeriodId)
-            ->with('enrolledSubjects')
-            ->get();
+        try{
+            return self::where('student_id',$studentId)
+                ->where('school_period_id',$schoolPeriodId)
+                ->with('enrolledSubjects')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function updateSchoolPeriodStudent($id,$schoolPeriodSubject)
     {
-        self::find($id)
-            ->update($schoolPeriodSubject->all());
+        try{
+            self::find($id)
+                ->update($schoolPeriodSubject->all());
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function updateSchoolPeriodStudentLikeArray($id,$schoolPeriodSubject)
     {
-        self::find($id)
-            ->update($schoolPeriodSubject);
+        try{
+            self::find($id)
+                ->update($schoolPeriodSubject);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 }

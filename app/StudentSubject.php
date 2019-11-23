@@ -29,66 +29,105 @@ class StudentSubject extends Model
 
     public static function getApprovedSubjects($studentId)
     {
-        return self::where('status','APR')
-            ->with('dataSubject')
-            ->whereHas('dataStudent',function (Builder $query) use ($studentId){
-                $query
-                    ->where('student_id','=',$studentId);
-            })
-            ->get();
+        try{
+            return self::where('status','APR')
+                ->with('dataSubject')
+                ->whereHas('dataStudent',function (Builder $query) use ($studentId){
+                    $query
+                        ->where('student_id','=',$studentId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function getEnrolledSubjectsBySchoolPeriodStudent($studentId,$schoolPeriodId)
     {
-        return self::with('dataSubject')
-            ->whereHas('dataStudent',function (Builder $query) use ($studentId,$schoolPeriodId){
-                $query
-                    ->where('student_id','=',$studentId)
-                    ->where('school_period_id','=',$schoolPeriodId);
-            })
-            ->get();
+        try{
+            return self::with('dataSubject')
+                ->whereHas('dataStudent',function (Builder $query) use ($studentId,$schoolPeriodId){
+                    $query
+                        ->where('student_id','=',$studentId)
+                        ->where('school_period_id','=',$schoolPeriodId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function addStudentSubject($studentSubject)
     {
-        self::create($studentSubject);
+        try{
+            self::create($studentSubject);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId)
     {
-        return self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
-            ->with('dataStudent')
-            ->get();
+        try{
+            return self::where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+                ->with('dataStudent')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function studentSubjectBySchoolPeriodStudent($schoolPeriodStudentId)
     {
-        return self::where('school_period_student_id',$schoolPeriodStudentId)
-            ->get();
+        try{
+            return self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public  static function findSchoolPeriodStudentId($schoolPeriodStudentId,$schoolPeriodSubjectTeacherId)
     {
-        return self::where('school_period_student_id',$schoolPeriodStudentId)
-            ->where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
-            ->get('id');
+        try{
+            return self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->where('school_period_subject_teacher_id',$schoolPeriodSubjectTeacherId)
+                ->get('id');
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 
     public static function updateStudentSubject($id,$studentSubject)
     {
-        self::find($id)
-            ->update($studentSubject);
+        try{
+            self::find($id)
+                ->update($studentSubject);
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function deleteStudentSubject($id)
     {
-        self::find($id)
-            ->delete();
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
     }
 
     public static function getStudentSubjectById($id)
     {
-        return self::where('id',$id)
-            ->get();
+        try{
+            return self::where('id',$id)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
     }
 }
