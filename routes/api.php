@@ -132,7 +132,7 @@ Route::middleware('jwt.auth','role:A')->delete('subjects/{id}','SubjectControlle
 
 //SchoolPeriod
 Route::middleware('jwt.auth','role:A')->get('schoolPeriods/current','SchoolPeriodController@current');
-Route::middleware('jwt.auth','role:A')->get('schoolPeriods/subjectsTaught','SchoolPeriodController@subjectTaughtSchoolPeriod');
+Route::middleware('jwt.auth','role:A,T')->get('schoolPeriods/subjectsTaught','SchoolPeriodController@subjectTaughtSchoolPeriod');
 Route::middleware('jwt.auth','role:A')->get('schoolPeriods','SchoolPeriodController@index');
 Route::middleware('jwt.auth','role:A')->post('schoolPeriods','SchoolPeriodController@store');
 Route::middleware('jwt.auth','role:A')->get('schoolPeriods/{id}','SchoolPeriodController@show');

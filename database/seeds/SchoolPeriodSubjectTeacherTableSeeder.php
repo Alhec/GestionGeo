@@ -14,7 +14,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
     {
         SchoolPeriodSubjectTeacher::query()->truncate();
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>1,
+            'teacher_id'=>3,
             'subject_id'=>1,
             'school_period_id'=>1,
             'limit'=>30,
@@ -23,7 +23,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>2,
+            'teacher_id'=>4,
             'subject_id'=>2,
             'school_period_id'=>1,
             'limit'=>30,
@@ -32,7 +32,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>1,
+            'teacher_id'=>3,
             'subject_id'=>3,
             'school_period_id'=>2,
             'limit'=>1,
@@ -41,7 +41,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>1,
+            'teacher_id'=>3,
             'subject_id'=>2,
             'school_period_id'=>2,
             'limit'=>30,
@@ -50,7 +50,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>2,
+            'teacher_id'=>4,
             'subject_id'=>4,
             'school_period_id'=>2,
             'limit'=>30,
@@ -59,7 +59,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>3,
+            'teacher_id'=>5,
             'subject_id'=>5,
             'school_period_id'=>3,
             'limit'=>30,
@@ -68,7 +68,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
-            'teacher_id'=>4,
+            'teacher_id'=>6,
             'subject_id'=>6,
             'school_period_id'=>3,
             'limit'=>30,
