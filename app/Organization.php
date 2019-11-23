@@ -18,15 +18,6 @@ class Organization extends Model
         return $this->hasMany('App\User','organization_id','id');
     }
 
-    public static function existOrganization($organizationId)
-    {
-        try{
-            return self::where('id',$organizationId)
-                ->exists();
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
     public static function getOrganization($organizationId)
     {
         try{
