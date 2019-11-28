@@ -9,7 +9,6 @@
 namespace App\Services;
 
 
-use App\Organization;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
@@ -24,9 +23,8 @@ class UserService
     const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
     const invalidPassword = 'La clave esta errada';
 
-    public static function getUsers(Request $request, $userType)
+    public static function getUsers(Request $request, $userType,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $users= User::getUsers($userType,$organizationId);
         if (is_numeric($users) && $users == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -37,9 +35,8 @@ class UserService
         return response()->json(['message'=>self::emptyUser],206);
     }
 
-    public static function getUserById(Request $request, $userId, $userType)
+    public static function getUserById(Request $request, $userId, $userType,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $user = User::getUserById($userId,$userType,$organizationId);
         if (is_numeric($user) && $user == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -69,9 +66,8 @@ class UserService
         ]);
     }
 
-    public static function addUser(Request $request,$userType)
+    public static function addUser(Request $request,$userType,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         self::validate($request);
         $existUserByIdentification=User::existUserByIdentification($request['identification'],$userType,$organizationId);
         $existUserByEmail=User::existUserByEmail($request['email'],$userType,$organizationId);
@@ -92,9 +88,8 @@ class UserService
         return "busy_credential";
     }
 
-    public static function deleteUser(Request $request, $userId, $userType)
+    public static function deleteUser(Request $request, $userId, $userType,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $result = User::existUserById($userId,$userType,$organizationId);
         if (is_numeric($result) && $result == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -140,10 +135,9 @@ class UserService
         return true;
     }
 
-    public static function updateUser(Request $request, $userId, $userType)
+    public static function updateUser(Request $request, $userId, $userType,$organizationId)
     {
         self::validate($request);
-        $organizationId = $request->header('organization_key');
         $existUserById = User::existUserById($userId,$userType,$organizationId);
         if (is_numeric($existUserById) && $existUserById == 0 ){
             return 0;
@@ -171,9 +165,8 @@ class UserService
         return "not_found";
     }
 
-    public static function activeUsers(Request $request,$userType)
+    public static function activeUsers(Request $request,$userType,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $users = User::getUsersActive($userType,$organizationId);
         if (is_numeric($users) && $users == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -184,9 +177,8 @@ class UserService
         return response()->json(['message'=>self::notFoundActiveUser],206);
     }
 
-    public static function changeUserData(Request $request)
+    public static function changeUserData(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
         if (is_numeric($user) && $user ==0){
             return response()->json(['message'=>self::taskError],206);
@@ -210,9 +202,8 @@ class UserService
         ]);
     }
 
-    public static function changePassword(Request $request)
+    public static function changePassword(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         self::validateChangePassword($request);
         $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
         if (is_numeric($user)&&$user==0){

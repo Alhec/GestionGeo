@@ -9,11 +9,13 @@ class UserController extends Controller
 {
     public static function changePassword(Request $request)
     {
-        return UserService::changePassword($request);
+        $organizationId = $request->header('organization_key');
+        return UserService::changePassword($request,$organizationId);
     }
 
     public static function changeUserData(Request $request)
     {
-        return UserService::changeUserData($request);
+        $organizationId = $request->header('organization_key');
+        return UserService::changeUserData($request,$organizationId);
     }
 }

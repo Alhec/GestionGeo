@@ -25,12 +25,13 @@ class AuthController extends Controller
         if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],
             'password'=>$credentials['password'],
             'user_type'=>$credentials['user_type'],
-            'organization_id'=>$organizationId])) {
+            'organization_id'=>$organizationId,
+            'active'=>1])) {
             return response()->json(['error' => 'Invalid User'], 401);
         }
         return response()->json([
             'token' => $token,
-            'type' => 'bearer', // you can ommit this
+            'type' => 'bearer',
             'expires' => auth('api')->factory()->getTTL() * 60,
             'user' => User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId)[0],
         ]);
@@ -85,11 +86,6 @@ class AuthController extends Controller
     public function getToken(Request $request)
     {
         $token = auth('api')->getToken();
-
-        //$user = auth('api')->authenticate($token);
-        //$user = auth('api')->getPayload($token)->toArray();
-        //$payloadArray = auth('api')->decode($token);
-
         return $token;
     }
 

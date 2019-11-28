@@ -35,7 +35,8 @@ class AdministratorController extends Controller
      */
     public function index(Request $request)
     {
-        return UserService::getUsers($request,'A');
+        $organizationId = $request->header('organization_key');
+        return UserService::getUsers($request,'A',$organizationId);
     }
 
     /**
@@ -44,14 +45,10 @@ class AdministratorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    /*public function store(Request $request)
-    {
-        return UserService::addUser($request,'A');
-    }*/
-
     public function store(Request $request)
     {
-        return AdministratorService::addAdministrator($request);
+        $organizationId = $request->header('organization_key');
+        return AdministratorService::addAdministrator($request,$organizationId);
     }
     /**
      * Display the specified resource.
@@ -61,7 +58,8 @@ class AdministratorController extends Controller
      */
     public function show($id,Request $request)
     {
-        return UserService::getUserById($request,$id,'A');
+        $organizationId = $request->header('organization_key');
+        return UserService::getUserById($request,$id,'A',$organizationId);
     }
 
     /**
@@ -71,14 +69,10 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    /*public function update($id,Request $request)
-    {
-       return UserService::updateUser($request,$id,'A');
-    }*/
-
     public function update($id,Request $request)
     {
-        return AdministratorService::updateAdministrator($request,$id);
+        $organizationId = $request->header('organization_key');
+        return AdministratorService::updateAdministrator($request,$id,$organizationId);
     }
 
     /**
@@ -87,23 +81,21 @@ class AdministratorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    /*public function destroy($id, Request $request)
-    {
-        return UserService::deleteUser($request,$id,'A');
-    }*/
-
     public function destroy($id, Request $request)
     {
-        return AdministratorService::deleteAdministrator($request,$id);
+        $organizationId = $request->header('organization_key');
+        return AdministratorService::deleteAdministrator($request,$id,$organizationId);
     }
 
     public function active(Request $request)
     {
-        return UserService::activeUsers($request,'A');
+        $organizationId = $request->header('organization_key');
+        return UserService::activeUsers($request,'A',$organizationId);
     }
 
     public function principal(Request $request)
     {
-        return AdministratorService::getPrincipalCoordinator($request);
+        $organizationId = $request->header('organization_key');
+        return AdministratorService::getPrincipalCoordinator($request,$organizationId);
     }
 }

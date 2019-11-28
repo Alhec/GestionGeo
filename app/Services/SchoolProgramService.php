@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\SchoolProgram;
-use App\Organization;
 
 class SchoolProgramService
 {
@@ -15,9 +14,8 @@ class SchoolProgramService
     const busyName = 'Nombre del programa en uso';
     const ok = 'OK';
 
-    public static function getSchoolProgram(Request $request)
+    public static function getSchoolProgram(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId);
         if (is_numeric($schoolPrograms)&&$schoolPrograms == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -28,9 +26,8 @@ class SchoolProgramService
         return response()->json(['message'=>self::emptyProgram],206);
     }
 
-    public static function getSchoolProgramById(Request $request, $id)
+    public static function getSchoolProgramById(Request $request, $id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $schoolProgram = SchoolProgram::getSchoolProgramById($id,$organizationId);
         if (is_numeric($schoolProgram) && $schoolProgram == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -54,24 +51,22 @@ class SchoolProgramService
         ]);
     }
 
-    public static function addSchoolProgram(Request $request)
+    public static function addSchoolProgram(Request $request,$organizationId)
     {
         self::validate($request);
-        $organizationId = $request->header('organization_key');
         if (!SchoolProgram::existSchoolProgramByName($request['school_program_name'],$organizationId)){
             $request['organization_id']=$organizationId;
             $id = SchoolProgram::addSchoolProgram($request);
             if ($id == 0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            return self::getSchoolProgramById($request,$id);
+            return self::getSchoolProgramById($request,$id,$organizationId);
         }
         return response()->json(['message'=>self::busyName],206);
     }
 
-    public static function deleteSchoolProgram(Request $request, $id)
+    public static function deleteSchoolProgram(Request $request, $id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($id,$organizationId);
         if (is_numeric($existSchoolProgram) && $existSchoolProgram == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -86,10 +81,9 @@ class SchoolProgramService
         return response()->json(['message'=>self::notFoundProgram],206);
     }
 
-    public static function updateSchoolProgram(Request $request, $id)
+    public static function updateSchoolProgram(Request $request, $id,$organizationId)
     {
         self::validate($request);
-        $organizationId = $request->header('organization_key');
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($id,$organizationId);
         if (is_numeric($existSchoolProgram) && $existSchoolProgram == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -109,7 +103,7 @@ class SchoolProgramService
             if (is_numeric($result) && $result == 0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            return self::getSchoolProgramById($request,$id);
+            return self::getSchoolProgramById($request,$id,$organizationId);
         }
         return response()->json(['message'=>self::notFoundProgram],206);
     }

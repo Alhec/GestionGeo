@@ -24,9 +24,8 @@ class SubjectService
     const invalidProgram = 'Programas invalidos';
     const ok ='OK';
 
-    public static function getSubjects(Request $request)
+    public static function getSubjects(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $subjects = Subject::getSubjects($organizationId);
         if (is_numeric($subjects)&&$subjects == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -37,9 +36,8 @@ class SubjectService
         return response()->json(['message'=>self::emptySubject],206);
     }
 
-    public static function getSubjectsById(Request $request,$id)
+    public static function getSubjectsById(Request $request,$id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $subject = Subject::getSubjectById($id,$organizationId);
         if (is_numeric($subject)&&$subject == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -88,10 +86,9 @@ class SubjectService
         }
     }
 
-    public static function addSubject(Request $request)
+    public static function addSubject(Request $request,$organizationId)
     {
         self::validate($request);
-        $organizationId = $request->header('organization_key');
         $result =Subject::existSubjectByCode($request['subject_code'],$organizationId);
         if (is_numeric($result)&& $result == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -106,16 +103,15 @@ class SubjectService
                 if (is_numeric($result)&& $result == 0){
                     return response()->json(['message'=>self::taskPartialError],206);
                 }
-                return self::getSubjectsById($request,$id);
+                return self::getSubjectsById($request,$id,$organizationId);
             }
             return response()->json(['message'=>self::invalidProgram],206);
         }
         return response()->json(['message'=>self::busySubjectCode],206);
     }
 
-    public static function deleteSubject(Request $request,$id)
+    public static function deleteSubject(Request $request,$id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $result = Subject::existSubjectById($id,$organizationId);
         if (is_numeric($result)&& $result == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -173,10 +169,9 @@ class SubjectService
         }
     }
 
-    public static function updateSubject(Request $request,String $id)
+    public static function updateSubject(Request $request,String $id,$organizationId)
     {
         self::validate($request);
-        $organizationId = $request->header('organization_key');
         $result = Subject::existSubjectById($id,$organizationId);
         if (is_numeric($result)&& $result == 0){
             return response()->json(['message'=>self::taskError],206);
@@ -200,7 +195,7 @@ class SubjectService
                 if (is_numeric($result)&& $result == 0){
                     return response()->json(['message'=>self::taskPartialError],206);
                 }
-                return self::getSubjectsById($request,$id);
+                return self::getSubjectsById($request,$id,$organizationId);
             }
             return response()->json(['message'=> self::invalidProgram],206);
         }

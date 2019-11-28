@@ -14,7 +14,8 @@ class SubjectController extends Controller
      */
     public function index(Request $request)
     {
-       return SubjectService::getSubjects($request);
+       $organizationId = $request->header('organization_key');
+       return SubjectService::getSubjects($request,$organizationId);
     }
 
     /**
@@ -25,7 +26,8 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        return SubjectService::addSubject($request);
+        $organizationId = $request->header('organization_key');
+        return SubjectService::addSubject($request,$organizationId);
     }
 
     /**
@@ -36,7 +38,8 @@ class SubjectController extends Controller
      */
     public function show($id, Request $request)
     {
-        return SubjectService::getSubjectsById($request,$id);
+        $organizationId = $request->header('organization_key');
+        return SubjectService::getSubjectsById($request,$id,$organizationId);
     }
 
     /**
@@ -48,7 +51,8 @@ class SubjectController extends Controller
      */
     public function update($id,Request $request)
     {
-        return SubjectService::updateSubject($request,$id);
+        $organizationId = $request->header('organization_key');
+        return SubjectService::updateSubject($request,$id,$organizationId);
     }
 
     /**
@@ -59,6 +63,7 @@ class SubjectController extends Controller
      */
     public function destroy($id,Request $request)
     {
-       return SubjectService::deleteSubject($request,$id);
+       $organizationId = $request->header('organization_key');
+       return SubjectService::deleteSubject($request,$id,$organizationId);
     }
 }

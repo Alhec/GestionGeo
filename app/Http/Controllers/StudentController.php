@@ -15,7 +15,8 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        return UserService::getUsers($request,'S');
+        $organizationId = $request->header('organization_key');
+        return UserService::getUsers($request,'S',$organizationId);
     }
 
 
@@ -27,7 +28,8 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        return StudentService::addNewStudent($request);
+        $organizationId = $request->header('organization_key');
+        return StudentService::addNewStudent($request,$organizationId);
     }
 
     /**
@@ -38,7 +40,8 @@ class StudentController extends Controller
      */
     public function show($id,Request $request)
     {
-        return UserService::getUserById($request,$id,'S');
+        $organizationId = $request->header('organization_key');
+        return UserService::getUserById($request,$id,'S',$organizationId);
     }
 
 
@@ -51,7 +54,8 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return StudentService::updateStudent($request,$id);
+        $organizationId = $request->header('organization_key');
+        return StudentService::updateStudent($request,$id,$organizationId);
     }
 
     /**
@@ -62,22 +66,26 @@ class StudentController extends Controller
      */
     public function destroy($id,Request $request)
     {
-        return UserService::deleteUser($request,$id,'S');
+        $organizationId = $request->header('organization_key');
+        return UserService::deleteUser($request,$id,'S',$organizationId);
     }
 
     public function active(Request $request)
     {
-        return UserService::activeUsers($request,'S');
+        $organizationId = $request->header('organization_key');
+        return UserService::activeUsers($request,'S',$organizationId);
     }
 
     public function addStudentToUser($id,Request $request)
     {
-        return StudentService::addStudentContinue($request,$id);
+        $organizationId = $request->header('organization_key');
+        return StudentService::addStudentContinue($request,$id,$organizationId);
     }
 
     public function deleteStudent($id,Request $request)
     {
+        $organizationId = $request->header('organization_key');
         $studentId = $request->input('student_id');
-        return StudentService::deleteStudent($id,$studentId,$request);
+        return StudentService::deleteStudent($id,$studentId,$request,$organizationId);
     }
 }

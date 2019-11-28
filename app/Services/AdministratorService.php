@@ -33,10 +33,10 @@ class AdministratorService
         ]);
     }
 
-    public static function addAdministrator(Request $request)
+    public static function addAdministrator(Request $request,$organizationId)
     {
         self::validate($request);
-        $user =UserService::addUser($request,'A');
+        $user =UserService::addUser($request,'A',$organizationId);
         if ($user=="busy_credential") {
             return response()->json(['message' => self::busyCredential], 206);
         }else if(is_numeric($user) && $user==0){
@@ -68,18 +68,18 @@ class AdministratorService
             if(is_numeric($result) && $result==0){
                 return response()->json(['message' => self::taskError], 206);
             }
-            $result = EmailService::userCreate($user,$request->header('organization_key'),'S');
+            $result = EmailService::userCreate($user,$organizationId,'S');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
             }
-            return UserService::getUserById($request,$user,'A');
+            return UserService::getUserById($request,$user,'A',$organizationId);
         }
     }
 
-    public static function updateAdministrator(Request $request, $id)
+    public static function updateAdministrator(Request $request, $id,$organizationId)
     {
         self::validate($request);
-        $result =UserService::updateUser($request,$id,'A');
+        $result =UserService::updateUser($request,$id,'A',$organizationId);
         if ($result=="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&& $result==0){
@@ -116,13 +116,12 @@ class AdministratorService
             if (is_numeric($result)&& $result==0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            return UserService::getUserById($request, $id, 'A');
+            return UserService::getUserById($request, $id, 'A',$organizationId);
         }
     }
 
-    public static function deleteAdministrator(Request $request, $id)
+    public static function deleteAdministrator(Request $request, $id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $administrator = User::getUserById($id,'A',$organizationId);
         if (is_numeric($administrator)&&$administrator==0){
             return response()->json(['message' => self::taskError], 206);
@@ -136,9 +135,8 @@ class AdministratorService
         return UserService::deleteUser($request,$id,'A');
     }
 
-    public static function getPrincipalCoordinator(Request $request)
+    public static function getPrincipalCoordinator(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $administrator = Administrator::getPrincipalCoordinator($organizationId);
         if (is_numeric($administrator)&&$administrator==0){
             return response()->json(['message' => self::taskError], 206);

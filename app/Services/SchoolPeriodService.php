@@ -8,12 +8,10 @@
 
 namespace App\Services;
 
-use App\Organization;
 use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriod;
 use App\Subject;
-use App\Teacher;
 use App\SchoolPeriodSubjectTeacher;
 use App\Schedule;
 
@@ -28,9 +26,8 @@ class SchoolPeriodService
     const ok = 'OK';
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
 
-    public static function getSchoolPeriods(Request $request)
+    public static function getSchoolPeriods(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId);
         if (is_numeric($schoolPeriods)&&$schoolPeriods==0){
             return response()->json(['message' => self::taskError], 206);
@@ -41,9 +38,8 @@ class SchoolPeriodService
         return response()->json(['message'=>self::emptySchoolPeriod],206);
     }
 
-    public static function getSchoolPeriodById(Request $request,$id)
+    public static function getSchoolPeriodById(Request $request,$id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $schoolPeriod = SchoolPeriod::getSchoolPeriodById($id,$organizationId);
         if (is_numeric($schoolPeriod)&&$schoolPeriod==0){
             return response()->json(['message' => self::taskError], 206);
@@ -133,10 +129,9 @@ class SchoolPeriodService
         }
     }
 
-    public static function addSchoolPeriod(Request $request)
+    public static function addSchoolPeriod(Request $request,$organizationId)
     {
         self::validate($request);
-        $organizationId = $request->header('organization_key');
         $existSchoolPeriodByCod =SchoolPeriod::existSchoolPeriodbyCodSchoolPeriod($request['cod_school_period'],$organizationId);
         if (is_numeric($existSchoolPeriodByCod)&&$existSchoolPeriodByCod==0){
             return response()->json(['message' => self::taskError], 206);
@@ -170,14 +165,13 @@ class SchoolPeriodService
                     return response()->json(['message' => self::taskError], 206);
                 }
             }
-            return self::getSchoolPeriodById($request,$schoolPeriodId);
+            return self::getSchoolPeriodById($request,$schoolPeriodId,$organizationId);
         }
         return response()->json(['message'=>self::busyCodSchoolPeriod],206);
     }
 
-    public static function deleteSchoolPeriod(Request $request,$id)
-    {
-        $organizationId = $request->header('organization_key');
+    public static function deleteSchoolPeriod(Request $request,$id,$organizationId)
+    {;
         $existSchoolPeriod = SchoolPeriod::existSchoolPeriodById($id,$organizationId);
         if ($existSchoolPeriod){
             $result=SchoolPeriod::deleteSchoolPeriod($id);
@@ -196,12 +190,6 @@ class SchoolPeriodService
             'load_notes'=>'required|boolean',
         ]);
     }
-
-    /*public static function updateSchedules($schedules,$schoolPeriodSubjectTeacherId)
-    {
-        Schedule::deleteAllSchedule($schoolPeriodSubjectTeacherId);
-        self::addSchedules($schedules,$schoolPeriodSubjectTeacherId);
-    }*/
 
     public static function updateSubjectInSchoolPeriod($subjects,$schoolPeriodId)
     {
@@ -242,7 +230,6 @@ class SchoolPeriodService
                     return 0;
                 }
                 $subjectsUpdated[]=$result;
-                //$subjectsUpdated[]=SchoolPeriodSubjectTeacher::findSchoolPeriodSubjectTeacherId($schoolPeriodId,$subject['subject_id'],$subject['teacher_id'])[0]['id'];
             }
         }
         foreach ($subjectsInBd as $subjectId){
@@ -255,9 +242,8 @@ class SchoolPeriodService
         }
     }
 
-    public static function updateSchoolPeriod(Request $request,$id)
+    public static function updateSchoolPeriod(Request $request,$id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $request['organization_id']=$organizationId;
         $existSchoolPeriod=SchoolPeriod::existSchoolPeriodById($id,$organizationId);
         if (is_numeric($existSchoolPeriod)&&$existSchoolPeriod==0){
@@ -314,16 +300,17 @@ class SchoolPeriodService
                     }
                 }
             }
-            return self::getSchoolPeriodById($request,$id);
+            return self::getSchoolPeriodById($request,$id,$organizationId);
         }
         return response()->json(['message'=>self::notFoundSchoolPeriod],206);
     }
 
-    public static function getCurrentSchoolPeriod(Request $request)
+    public static function getCurrentSchoolPeriod(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $currentSchoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-
+        if (is_numeric($currentSchoolPeriod) && $currentSchoolPeriod ==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
         if (count($currentSchoolPeriod)>0){
             return $currentSchoolPeriod[0];
         }
@@ -331,9 +318,8 @@ class SchoolPeriodService
     }
 
     //cuando llegue a este endpoint se corrije
-    public static function getSubjectsTaughtSchoolPeriod($teacherId,Request $request)
+    public static function getSubjectsTaughtSchoolPeriod($teacherId,Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $request['teacher_id']=$teacherId;
         $isValid=TeacherService::validateTeacher($request);
         if ($isValid=='valid'){

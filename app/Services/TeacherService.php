@@ -33,10 +33,10 @@ class TeacherService
         ]);
     }
 
-    public static function addTeacher(Request $request)
+    public static function addTeacher(Request $request,$organizationId)
     {
         self::validate($request);
-        $user =UserService::addUser($request,'T');
+        $user =UserService::addUser($request,'T',$organizationId);
         if ($user=="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else if (is_numeric($user)&&$user==0){
@@ -52,18 +52,18 @@ class TeacherService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            $result = EmailService::userCreate($user,$request->header('organization_key'),'S');
+            $result = EmailService::userCreate($user,$organizationId,'S');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
             }
-            return UserService::getUserById($request,$user,'T');
+            return UserService::getUserById($request,$user,'T',$organizationId);
         }
     }
 
-    public static function updateTeacher(Request $request, $id)
+    public static function updateTeacher(Request $request, $id,$organizationId)
     {
         self::validate($request);
-        $result =UserService::updateUser($request,$id,'T');
+        $result =UserService::updateUser($request,$id,'T',$organizationId);
         if ($result=="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
@@ -81,7 +81,7 @@ class TeacherService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            return UserService::getUserById($request, $id, 'T');
+            return UserService::getUserById($request, $id, 'T',$organizationId);
         }
     }
 
