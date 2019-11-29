@@ -27,10 +27,10 @@ class StudentSubject extends Model
             ->with('teacher');
     }
 
-    public static function getApprovedSubjects($studentId)
+    public static function getAllSubjectsEnrolled($studentId)
     {
         try{
-            return self::where('status','APR')
+            return self::where('status','!=','RET')
                 ->with('dataSubject')
                 ->whereHas('dataStudent',function (Builder $query) use ($studentId){
                     $query

@@ -21,34 +21,48 @@ use phpDocumentor\Reflection\Types\Self_;
 
 class InscriptionService
 {
-    public static function getInscriptions(Request $request)
+
+    const taskError = 'No se puede proceder con la tarea';
+    const emptyInscriptions ='No existen inscripciones';
+    const notFoundInscription = 'Inscripcion no encontrada';
+    const emptyInscriptionInCurrentSchoolPeriod = 'Periodo escolar no posee inscripciones';
+    const OK = 'OK';
+    const nontFoundStudentGivenId = 'No existe el estudiante dado el id';
+
+    public static function getInscriptions(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudent($organizationId);
+        if (is_numeric($inscriptions)&&$inscriptions==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
         if (count($inscriptions)>0){
             return ($inscriptions);
         }
-        return response()->json(['message'=>'No existen inscripciones'],206);
+        return response()->json(['message'=>self::emptyInscriptions],206);
     }
 
-    public static function getInscriptionById(Request $request, $id)
+    public static function getInscriptionById(Request $request, $id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($id,$organizationId);
+        if (is_numeric($inscription)&&$inscription==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
         if (count($inscription)>0){
             return ($inscription)[0];
         }
-        return response()->json(['message'=>'Inscripcion no encontrada'],206);
+        return response()->json(['message'=>self::notFoundInscription],206);
     }
 
-    public static function getInscriptionsBySchoolPeriod(Request $request, $schoolPeriodId)
+    public static function getInscriptionsBySchoolPeriod(Request $request, $schoolPeriodId,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
-        $inscription = SchoolPeriodStudent::getSchoolPeriodStudentBySchoolPeriod($schoolPeriodId,$organizationId);
-        if (count($inscription)>0){
-            return ($inscription);
+        $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudentBySchoolPeriod($schoolPeriodId,$organizationId);
+        if (is_numeric($inscriptions)&&$inscriptions==0){
+            return response()->json(['message' => self::taskError], 206);
         }
-        return response()->json(['message'=>'Periodo escolar no posee inscripciones'],206);
+        if (count($inscriptions)>0){
+            return ($inscriptions);
+        }
+        return response()->json(['message'=>self::emptyInscriptionInCurrentSchoolPeriod],206);
     }
 
     public static function isApprovedSubject($subjectId,$approvedSubjects)
@@ -61,14 +75,14 @@ class InscriptionService
         return false;
     }
 
-    public static function getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod)
+    public static function getUnregisteredSubjects($studentId,$subjectsInSchoolPeriod)
     {
-        $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
+        $allSubjectsEnrolled = StudentSubject::getAllSubjectsEnrolled($studentId);
         $availableSubjects=[];
         foreach ($subjectsInSchoolPeriod as $subjectInSchoolPeriod){
             if ($subjectInSchoolPeriod['enrolled_students']<$subjectInSchoolPeriod['limit']){
-                if (count($approvedSubjects)>0){
-                    if (!self::isApprovedSubject($subjectInSchoolPeriod['subject_id'],$approvedSubjects)){
+                if (count($allSubjectsEnrolled)>0){
+                    if (!self::isApprovedSubject($subjectInSchoolPeriod['subject_id'],$allSubjectsEnrolled)){
                         $availableSubjects[]=$subjectInSchoolPeriod;
                     }
                 }else{
@@ -116,16 +130,25 @@ class InscriptionService
         return $availableSubjects;
     }
 
-    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request,$internalCall)
+    public static function getAvailableSubjects($studentId,$schoolPeriodId,Request $request,$organizationId,$internalCall)
     {
-        $organizationId = $request->header('organization_key');
         $student= Student::getStudentById($studentId);
+        if (is_numeric($student)&&$student==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
         if (count($student)>0){
             $student=$student[0];
-            if (User::existUserById($student['user_id'],'S',$organizationId)){
+            $existUserById = User::existUserById($student['user_id'],'S',$organizationId);
+            if (is_numeric($existUserById)&&$existUserById==0){
+                return response()->json(['message' => self::taskError], 206);
+            }
+            if ($existUserById){
                 $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
-                if (count($subjectsInSchoolPeriod)>0 && (self::getCurrentAmountCredits($studentId)<self::getTotalAmountCredits($studentId,$organizationId))){
-                    $subjectsNotYetApproved = self::getSubjectsNotYetApproved($studentId,$subjectsInSchoolPeriod);
+                if (is_numeric($subjectsInSchoolPeriod)&&$subjectsInSchoolPeriod==0){
+                    return response()->json(['message' => self::taskError], 206);
+                }
+                if (count($subjectsInSchoolPeriod)>0){
+                    $subjectsNotYetApproved = self::getUnregisteredSubjects($studentId,$subjectsInSchoolPeriod);
                     if (count($subjectsNotYetApproved)>0){
                         $filterSubjectsBySchoolProgram = self::filterSubjectsBySchoolProgram($student,$organizationId,$subjectsNotYetApproved);
                         if (count($filterSubjectsBySchoolProgram)>0){
@@ -142,8 +165,7 @@ class InscriptionService
                 return response()->json(['message'=>'No hay materias disponibles para inscribir'],206);
             }
         }
-
-        return response()->json(['message'=>'No existe el estudiante dado el id'],206);
+        return response()->json(['message'=>self::nontFoundStudentGivenId],206);
     }
 
     public static function validate(Request $request)
@@ -248,7 +270,7 @@ class InscriptionService
     public static function getCurrentAmountCredits($studentId)
     {
         $currentAmountCredits = 0;
-        $approvedSubjects = StudentSubject::getApprovedSubjects($studentId);
+        $approvedSubjects = StudentSubject::getAllSubjectsEnrolled($studentId);
         if (count($approvedSubjects)>0){
             foreach ($approvedSubjects as $approvedSubject){
                 $currentAmountCredits += $approvedSubject['dataSubject']['subject']['uc'];
@@ -288,9 +310,9 @@ class InscriptionService
         return true;
     }
 
-    public static function addInscription(Request $request)
+    public static function addInscription(Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
+
         self::validate($request);
         if (!SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],$request['school_period_id'])) {
             if(self::validateRelation($organizationId,$request)){
@@ -310,14 +332,20 @@ class InscriptionService
         return response()->json(['message'=>'Inscripcion ya realizada'],206);
     }
 
-    public static function deleteInscription(Request $request,$id)
+    public static function deleteInscription(Request $request,$id,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
-        if(SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId)){
-            SchoolPeriodStudent::deleteSchoolPeriodStudent($id);
-            return response()->json(['message'=>'OK']);
+        $existSchoolPeriodStudentById=SchoolPeriodStudent::existSchoolPeriodStudentById($id,$organizationId);
+        if (is_numeric($existSchoolPeriodStudentById) && $existSchoolPeriodStudentById==0){
+            return response()->json(['message' => self::taskError], 206);
         }
-        return response()->json(['message'=>'Inscripcion no encontrada'],206);
+        if($existSchoolPeriodStudentById){
+            $result=SchoolPeriodStudent::deleteSchoolPeriodStudent($id);
+            if (is_numeric($result)&&$result==0){
+                return response()->json(['message' => self::taskError], 206);
+            }
+            return response()->json(['message'=>self::OK]);
+        }
+        return response()->json(['message'=>self::notFoundInscription],206);
     }
 
     public static function validateRelationUpdate($organizationId,Request $request)
@@ -449,9 +477,8 @@ class InscriptionService
         return response()->json(['message'=>'Inscripcion no encontrada'],206);
     }
 
-    public static function studentAvailableSubjects($studentId,Request $request)
+    public static function studentAvailableSubjects($studentId,Request $request,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
         $request['student_id']=$studentId;
         $isValid=StudentService::validateStudent($request);
         if ($isValid=='valid'){

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
+use App\Services\AuthService;
 
 class AuthController extends Controller
 {
@@ -21,26 +21,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        $credentials= json_decode($request->getContent(),true);
-        if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],
-            'password'=>$credentials['password'],
-            'user_type'=>$credentials['user_type'],
-            'organization_id'=>$organizationId,
-            'active'=>1])) {
-            return response()->json(['error' => 'Invalid User'], 401);
-        }
-        return response()->json([
-            'token' => $token,
-            'type' => 'bearer',
-            'expires' => auth('api')->factory()->getTTL() * 60,
-            'user' => User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId)[0],
-        ]);
+        return AuthService::login($request,$organizationId);
     }
 
     public function me()
     {
         return response()->json(auth()->user());
     }
+
     public function payload()
     {
         return response()->json(auth()->payload());
