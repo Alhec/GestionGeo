@@ -28,6 +28,9 @@ class CreateSchoolPeriodStudentTable extends Migration
                 ->nullable();
             $table->date('inscription_date')
                 ->default(now());
+            $table->boolean('test_period')
+                ->default(false)
+                ->nullable();
             $table->foreign('student_id')
                 ->references('id')
                 ->on('students')

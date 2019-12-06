@@ -75,7 +75,7 @@ class StudentsTableSeeder extends Seeder
             'repeat_approved_subject' =>false,
             'repeat_reprobated_subject'=>false,
         ]);
-        Student::create([
+        /*Student::create([
             'school_program_id'=>2,
             'user_id'=>7,
             'student_type'=>"REG", // REG EXT AMP
@@ -86,6 +86,6 @@ class StudentsTableSeeder extends Seeder
             'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>1
 
-        ]);
+        ]);*/
     }
 }
