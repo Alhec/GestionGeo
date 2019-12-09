@@ -159,4 +159,15 @@ class SchoolPeriodStudent extends Model
             return 0;
         }
     }
+
+    public static function thereIsUnpaidSchoolPeriod($studentId)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->where('amount_paid',null)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 }

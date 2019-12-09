@@ -27,7 +27,7 @@ class StudentSubject extends Model
             ->with('teacher');
     }
 
-    public static function getAllSubjectsEnrolled($studentId)
+    public static function getAllSubjectsEnrolledWithoutRET($studentId)
     {
         try{
             return self::where('status','!=','RET')
@@ -42,6 +42,36 @@ class StudentSubject extends Model
         }
     }
 
+    public static function getAllSubjectsEnrolledWithoutRETCUR($studentId)
+    {
+        try{
+            return self::where('status','!=','RET')
+                ->where('status','!=','CUR')
+                ->with('dataSubject')
+                ->whereHas('dataStudent',function (Builder $query) use ($studentId){
+                    $query
+                        ->where('student_id','=',$studentId);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+    public static function cantAllSubjectsEnrolledWithoutRETCUR($studentId)
+    {
+        try{
+            return self::where('status','!=','RET')
+                ->where('status','!=','CUR')
+                ->with('dataSubject')
+                ->whereHas('dataStudent',function (Builder $query) use ($studentId){
+                    $query
+                        ->where('student_id','=',$studentId);
+                })
+                ->count();
+        }catch (\Exception $e){
+            return 'e';//retorna e porque este caso en un caso correcto puede devolver 0
+        }
+    }
     public static function getEnrolledSubjectsBySchoolPeriodStudent($studentId,$schoolPeriodId)
     {
         try{
@@ -131,14 +161,5 @@ class StudentSubject extends Model
         }
     }
 
-    public static function thereIsUnpaidSchoolPeriod($studentId)
-    {
-        try{
-            return self::where('student_id',$studentId)
-                ->where('amount_paid',null)
-                ->exists();
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
+
 }
