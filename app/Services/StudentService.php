@@ -30,6 +30,7 @@ class StudentService
     const studentProgram = "El estudiante esta cursando un programa academico";
     const studentHasProgram = "El estudiante ya esta en el programa";
     const invalidEquivalences = "Equivalencias invalidas";
+    const unauthorized = "Unauthorized";
 
     public static function validate(Request $request)
     {
@@ -318,21 +319,25 @@ class StudentService
         return response()->json(['message'=>self::noAction],206);
     }
 
-    //acomodar cuando se llegue al endpoint
-    public static function validateStudent(Request $request)
+    public static function validateStudent(Request $request, $organizationId,$studentId)
     {
-        $organizationId = $request->header('organization_key');
-        if (Student::existStudentById($request['student_id'])){
-            $student = Student::getStudentById($request['student_id']);
-            if (!User::existUserById($student[0]['user_id'],'S',$organizationId)) {
-                return response()->json(['message'=>'Usuario no encontrado'],206);
-            }
-            if ($student[0]['user_id'] != auth()->user()['id']  ){
-                return response()->json(['message'=>'Unauthorized'],401);
-            }
-        }else{
-            return response()->json(['message'=>'Usuario no encontrado'],206);
+        $existStudentById = Student::existStudentById($studentId);
+        if (is_numeric($existStudentById) && $existStudentById == 0) {
+            return response()->json(['message' => self::taskError], 206);
         }
-        return 'valid';
+        if ($existStudentById) {
+            $student = Student::getStudentById($request['student_id'], $organizationId);
+            if (is_numeric($student) && $student == 0) {
+                return response()->json(['message' => self::taskError], 206);
+            }
+            if (count($student) > 0) {
+                $studentsId = array_column(auth()->payload()['user']->student, 'id');
+                if (in_array($studentId, $studentsId)) {
+                    return 'valid';
+                }
+                return response()->json(['message' => self::unauthorized], 206);
+            }
+            return response()->json(['message' => self::notFoundUser], 401);
+        }
     }
 }

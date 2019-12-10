@@ -98,7 +98,7 @@ class InscriptionController extends Controller
     {
         $organizationId = $request->header('organization_key');
         $studentId = $request->input('student_id');
-        return InscriptionService::getCurrentEnrolledSubjects($studentId,$request);
+        return InscriptionService::getCurrentEnrolledSubjects($studentId,$organizationId,$request);
     }
 
     public function withdrawSubjects(Request $request)
@@ -112,7 +112,7 @@ class InscriptionController extends Controller
         $organizationId = $request->header('organization_key');
         $teacherId = $request->input('teacher_id');
         $schoolPeriodSubjectTeacherId = $request->input('school_period_subject_teacher_id');
-        return InscriptionService::getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$request);
+        return InscriptionService::getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$organizationId,$request);
     }
 
     public static function loadNotes(Request $request){

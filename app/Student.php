@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class Student extends Model
 {
@@ -72,10 +73,14 @@ class Student extends Model
         }
     }
 
-    public static function getStudentById($id)
+    public static function getStudentById($id,$organizationId)
     {
         try{
             return self::where('id',$id)
+                ->whereHas('user',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
                 ->get();
         }catch (\Exception $e){
             return 0;

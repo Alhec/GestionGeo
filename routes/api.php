@@ -140,7 +140,7 @@ Route::middleware('jwt.auth','role:A')->put('schoolPeriods/{id}','SchoolPeriodCo
 Route::middleware('jwt.auth','role:A')->delete('schoolPeriods/{id}','SchoolPeriodController@destroy');
 
 //Inscription
-Route::middleware('jwt.auth','role:T')->get('teacherInscription/enrolledStudent','InscriptionController@enrolledStudentsInSchoolPeriod');
+Route::middleware('jwt.auth','role:A,T')->get('teacherInscription/enrolledStudent','InscriptionController@enrolledStudentsInSchoolPeriod');
 Route::middleware('jwt.auth','role:T')->post('teacherInscription/loadNotes','InscriptionController@loadNotes');
 
 Route::middleware('jwt.auth','role:S')->get('studentInscription/availableSubjects','InscriptionController@studentAvailableSubjects');

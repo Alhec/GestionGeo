@@ -320,7 +320,6 @@ class SchoolPeriodService
 
     public static function getSubjectsTaughtSchoolPeriod($teacherId,Request $request,$organizationId)
     {
-        $request['teacher_id']=$teacherId;
         $isValid=TeacherService::validateTeacher($request,$teacherId,$organizationId);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
