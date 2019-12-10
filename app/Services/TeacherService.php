@@ -21,7 +21,7 @@ class TeacherService
     const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
     const notSendEmail = 'No se pudo enviar el correo electronico';
     const noAction = "No esta permitido realizar esa accion";
-
+    const unauthorized = "Unauthorized";
 
     public static function validate(Request $request)
     {
@@ -85,21 +85,18 @@ class TeacherService
         }
     }
 
-    //cuando llegue a este endpoint lo cambio
-    public static function validateTeacher(Request $request)
+    public static function validateTeacher(Request $request,$teacherId,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
-        if (Teacher::existTeacherById($request['teacher_id'])){
-            $teacher = Teacher::getTeacherById($request['teacher_id']);
-            if (!User::existUserById($teacher[0]['user_id'],'T',$organizationId)) {
-                return response()->json(['message'=>'Usuario no encontrado'],206);
-            }
-            if ($teacher[0]['user_id'] != auth()->user()['id']  ){
-                return response()->json(['message'=>'Unauthorized'],401);
-            }
-        }else{
-            return response()->json(['message'=>'Usuario no encontrado'],206);
+        $existTeacherId=User::existUserById($teacherId,'T',$organizationId);
+        if (is_numeric($existTeacherId)&&$existTeacherId==0){
+            return response()->json(['message'=>self::taskError],206);
         }
-        return 'valid';
+        if ($existTeacherId){
+            if(auth()->payload()['user']->user_type!='A' && auth()->payload()['user']->id!=$teacherId){
+                return response()->json(['message'=>self::unauthorized],206);
+            }
+            return 'valid';
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
     }
 }

@@ -25,6 +25,7 @@ class SchoolPeriodService
     const invalidSubjectOrTeacher = 'Materia o profesor invalido';
     const ok = 'OK';
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
+    const noTeachSubjects='No impartes materias en el periodo escolar actual';
 
     public static function getSchoolPeriods(Request $request,$organizationId)
     {
@@ -317,22 +318,27 @@ class SchoolPeriodService
         return response()->json(['message'=>self::noCurrentSchoolPeriod],206);
     }
 
-    //cuando llegue a este endpoint se corrije
     public static function getSubjectsTaughtSchoolPeriod($teacherId,Request $request,$organizationId)
     {
         $request['teacher_id']=$teacherId;
-        $isValid=TeacherService::validateTeacher($request);
+        $isValid=TeacherService::validateTeacher($request,$teacherId,$organizationId);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
+            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
+                return response()->json(['message' => self::taskError], 206);
+            }
             if (count($currentSchoolPeriod)>0){
                 $subjectsTaught = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,$currentSchoolPeriod[0]['id']);
+                if (is_numeric($subjectsTaught)&&$subjectsTaught==0){
+                    return response()->json(['message' => self::taskError], 206);
+                }
                 if (count($subjectsTaught)>0){
                     return $subjectsTaught;
                 }
-                return response()->json(['message'=>'No impartes materias en el periodo escolar actual'],206);
+                return response()->json(['message'=>self::noTeachSubjects],206);
             }
-            return response()->json(['message'=>'No hay periodo escolar en curso'],206);
+            return response()->json(['message'=>self::noCurrentSchoolPeriod],206);
         }
-        return $isValid;
+        return $isValid;//Error que arroja validateTeacher
     }
 }
