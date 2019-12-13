@@ -170,4 +170,20 @@ class SchoolPeriodStudent extends Model
             return 0;
         }
     }
+
+    public static function getLastEnrolledSchoolPeriod($studentId,$organizationId)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
 }

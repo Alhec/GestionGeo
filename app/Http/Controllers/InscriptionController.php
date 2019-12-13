@@ -117,7 +117,7 @@ class InscriptionController extends Controller
 
     public static function loadNotes(Request $request){
         $organizationId = $request->header('organization_key');
-        return InscriptionService::loadNotes($request);
+        return InscriptionService::loadNotes($request,$organizationId);
     }
 
 }
