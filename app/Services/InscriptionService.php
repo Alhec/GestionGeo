@@ -17,12 +17,13 @@ use App\Student;
 use App\SchoolPeriod;
 use App\SchoolPeriodSubjectTeacher;
 use App\StudentSubject;
-use phpDocumentor\Reflection\Types\Self_;
+
 
 class InscriptionService
 {
 
     const taskError = 'No se puede proceder con la tarea';
+    const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
     const emptyInscriptions ='No hay inscripciones';
     const notFoundInscription = 'Inscripcion no encontrada';
     const emptyInscriptionInCurrentSchoolPeriod = 'Periodo escolar no posee inscripciones';
@@ -149,7 +150,7 @@ class InscriptionService
         }
         if (count($student)>0){
             $student=$student[0];
-            if ($student['current_status']!='CUR' && $student['current_status']!='REI-A'
+            if ($student['current_status']!='REG' && $student['current_status']!='REI-A'
                 && $student['current_status']!='REI-B' && $student['current_status']!='RIN-A'
                 && $student['current_status']!='RIN-B'){
                 if ($internalCall){
@@ -485,9 +486,12 @@ class InscriptionService
         return true;
     }
 
-    public static function updateStatus($schoolPeriodStudentId,$organizationId)
+    public static function updateStatus($schoolPeriodStudentId,$organizationId) //Actualiza el status del estudiante sobre el periodo escolar
     {
         $schoolPeriodStudent = SchoolPeriodStudent::getSchoolPeriodStudentById($schoolPeriodStudentId,$organizationId)[0];
+        if (is_numeric($schoolPeriodStudent)&&$schoolPeriodStudent==0){
+            return 0;
+        }
         $enrolledSubjects = $schoolPeriodStudent['enrolledSubjects'];
         $allWithdrawn=true;
         foreach ($enrolledSubjects as $enrolledSubject){
@@ -497,8 +501,8 @@ class InscriptionService
             }
         }
         if ($allWithdrawn){
-            $schoolPeriodStudent['status']='RET-A';
-            SchoolPeriodStudent::updateSchoolPeriodStudentLikeArray($schoolPeriodStudentId,
+            $schoolPeriodStudent['status']='DES-A'; //Si un estudiante retira todas las materias debe caer en DES-A
+            $result =SchoolPeriodStudent::updateSchoolPeriodStudentLikeArray($schoolPeriodStudentId,
                 ['student_id'=>$schoolPeriodStudent['student_id'],
                     'school_period_id'=>$schoolPeriodStudent['school_period_id'],
                     'pay_ref'=>$schoolPeriodStudent['pay_ref'],
@@ -507,7 +511,10 @@ class InscriptionService
                     'financing_description'=>$schoolPeriodStudent['financing_description'],
                     'amount_paid'=>$schoolPeriodStudent['amount_paid'],
                 ]);
-        }else{
+            if (is_numeric($result)&&$result==0){
+                return 0;
+            }
+        }/*else{
             if ($schoolPeriodStudent['status']=='RET-A'||$schoolPeriodStudent['status']=='RET-B'){
                 $schoolPeriodStudent['status']='REG';
                 SchoolPeriodStudent::updateSchoolPeriodStudentLikeArray($schoolPeriodStudentId,
@@ -520,7 +527,7 @@ class InscriptionService
                         'amount_paid'=>$schoolPeriodStudent['amount_paid'],
                     ]);
             }
-        }
+        }*/
     }
 
     public static function updateSubjects($subjects,$schoolPeriodStudentId,$organizationId,$isWithdrawn)
@@ -737,7 +744,7 @@ class InscriptionService
     {
         $request->validate([
             'teacher_id'=>'required|numeric',
-            'school_period__subject_teacher_id'=>'required|numeric',
+            'school_period_subject_teacher_id'=>'required|numeric',
             'student_notes.*.student_subject_id'=>'required|numeric',
             'student_notes.*.qualification'=>'required|numeric'
         ]);
@@ -784,10 +791,15 @@ class InscriptionService
         $schoolPeriodStudentForUpdate= [];
         foreach($studentNotes as $studentNote){
             $studentSubject= StudentSubject::getStudentSubjectById($studentNote['student_subject_id']);
-            if (is_numeric($studentSubject))
+            if (is_numeric($studentSubject)&&$studentSubject==0){
+                return 0;
+            }
             $studentSubject[0]['qualification']=$studentNote['qualification'];
             $studentSubjectPrepare = self::prepareArrayOfSubject($studentSubject[0],$studentSubject[0]['school_period_student_id'],false);
-            StudentSubject::updateStudentSubject($studentSubject[0]['id'],$studentSubjectPrepare);
+            $result=StudentSubject::updateStudentSubject($studentSubject[0]['id'],$studentSubjectPrepare);
+            if (is_numeric($result)&&$result==0){
+                return 0;
+            }
             if (!in_array($studentSubject[0]['school_period_student_id'],$schoolPeriodStudentForUpdate)){
                 $schoolPeriodStudentsForUpdate[]=$studentSubject[0]['school_period_student_id'];
             }
@@ -811,8 +823,14 @@ class InscriptionService
                 }
                 if ($validNotes && $currentSchoolPeriod[0]['load_notes']==true){
                     $schoolPeriodsStudentForUpdate=self::changeNotes($request['student_notes']);
+                    if (is_numeric($schoolPeriodsStudentForUpdate)&&$schoolPeriodsStudentForUpdate==0){
+                        return response()->json(['message' => self::taskError], 206);
+                    }
                     foreach ($schoolPeriodsStudentForUpdate as $schoolPeriodStudentForUpdate){
-                        self::updateStatus($schoolPeriodStudentForUpdate,$organizationId);
+                        $result = self::updateStatus($schoolPeriodStudentForUpdate,$organizationId);
+                        if (is_numeric($result)&&$result==0){
+                            return response()->json(['message' => self::taskPartialError], 206);
+                        }
                     }
                     return response()->json(['message'=>self::OK],200);
                 }

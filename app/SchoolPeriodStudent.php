@@ -178,7 +178,6 @@ class SchoolPeriodStudent extends Model
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);
-
                 })
                 ->get();
         }catch (\Exception $e){
