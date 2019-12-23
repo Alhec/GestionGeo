@@ -416,19 +416,19 @@ class InscriptionService
                 return response()->json(['message' => self::taskError], 206);
             }
             if($validateRelation){
-                //$schoolPeriodStudentId=SchoolPeriodStudent::addSchoolPeriodStudent($request);
+                $schoolPeriodStudentId=SchoolPeriodStudent::addSchoolPeriodStudent($request);
                 $student=Student::getStudentById($request['student_id'],$organizationId);
                 if (is_numeric($student)&&$student==0){
                     return response()->json(['message' => self::taskError], 206);
                 }
                 $lastSchoolPeriod = SchoolPeriodStudent::getLastEnrolledSchoolPeriod($request['student_id'],$organizationId);
                 dd([$lastSchoolPeriod->toArray(),$student->toArray()]);
-                /*if($request['status']=='RET-A'||$request['status']=='RET-B'){
+                if($request['status']=='RET-A'||$request['status']=='RET-B'){
                     self::addSubjects($request['subjects'],$schoolPeriodStudentId,true);
                 }else{
                     self::addSubjects($request['subjects'],$schoolPeriodStudentId,false);
-                }*/
-                //return self::getInscriptionById($request,$schoolPeriodStudentId,$organizationId);
+                }
+                return self::getInscriptionById($request,$schoolPeriodStudentId,$organizationId);
             }
             return response()->json(['message'=>self::invalidRelation],206);
         }
@@ -488,10 +488,12 @@ class InscriptionService
 
     public static function updateStatus($schoolPeriodStudentId,$organizationId) //Actualiza el status del estudiante sobre el periodo escolar
     {
-        $schoolPeriodStudent = SchoolPeriodStudent::getSchoolPeriodStudentById($schoolPeriodStudentId,$organizationId)[0];
+        $schoolPeriodStudent['status']='REG';
+        $schoolPeriodStudent = SchoolPeriodStudent::getSchoolPeriodStudentById($schoolPeriodStudentId,$organizationId);
         if (is_numeric($schoolPeriodStudent)&&$schoolPeriodStudent==0){
             return 0;
         }
+        $schoolPeriodStudent = $schoolPeriodStudent[0];
         $enrolledSubjects = $schoolPeriodStudent['enrolledSubjects'];
         $allWithdrawn=true;
         foreach ($enrolledSubjects as $enrolledSubject){
@@ -511,6 +513,15 @@ class InscriptionService
                     'financing_description'=>$schoolPeriodStudent['financing_description'],
                     'amount_paid'=>$schoolPeriodStudent['amount_paid'],
                 ]);
+            if (is_numeric($result)&&$result==0){
+                return 0;
+            }
+            $student = Student::getStudentById($schoolPeriodStudent['student_id'],$organizationId);
+            if (is_numeric($student)&&$student==0){
+                return 0;
+            }
+            $student[0]['current_status']='DES-A';
+            $result = Student::updateStudent($schoolPeriodStudent['student_id'],$student[0]);
             if (is_numeric($result)&&$result==0){
                 return 0;
             }

@@ -91,7 +91,7 @@ class InscriptionController extends Controller
     public  function addStudentInscription(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        return InscriptionService::studentAddInscription($request);
+        return InscriptionService::studentAddInscription($request,$organizationId);
     }
 
     public function currentEnrolledSubjects(Request $request)
