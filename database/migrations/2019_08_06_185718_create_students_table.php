@@ -44,7 +44,7 @@ class CreateStudentsTable extends Migration
             $table->boolean('test_period')
                 ->default(false);
             $table->string('current_status',5)
-                ->default('CUR');
+                ->default('REG');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

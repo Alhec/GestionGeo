@@ -115,9 +115,16 @@ class SchoolPeriodSubjectTeacher extends Model
     {
         try{
             $schoolPeriodSubjectTeacher = self::where('id',$id)
-                ->get()->toArray();
-            $schoolPeriodSubjectTeacher[0]['enrolled_students']= count(StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id));
-            $result=self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher[0]);
+                ->get();
+            if (is_numeric($schoolPeriodSubjectTeacher)&&$schoolPeriodSubjectTeacher==0){
+                return 0;
+            }
+            $studentInSubject=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id);
+            if (is_numeric($studentInSubject)&&$studentInSubject==0){
+                return 0;
+            }
+            $schoolPeriodSubjectTeacher->toArray()[0]['enrolled_students']= count($studentInSubject);
+            $result = self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher->toArray()[0]);
             if (is_numeric($result)&& $result==0){
                 return 0;
             }
