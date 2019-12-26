@@ -94,6 +94,7 @@ class StudentService
             'guide_teacher_id'=>$request['guide_teacher_id'],
             'with_work'=>$request['with_work'],
             'end_program'=>false,
+            'type_income'=>$request['type_income']
         ]);
     }
 
@@ -180,6 +181,7 @@ class StudentService
             'repeat_approved_subject'=>'boolean|required',
             'repeat_reprobated_subject'=>'boolean|required',
             'end_program'=>'boolean|required',
+            'test_period'=>'boolean',
             'active'=>'boolean|required'
         ]);
     }
@@ -265,9 +267,12 @@ class StudentService
             if (!$request['end_program'] && count($student)>0 && $student[0]['id']!=$request['student_id']) {
                 return response()->json(['message'=>self::noAction],206);
             }
-            $student = Student::getStudentById($request['student_id']);
+            $student = Student::getStudentById($request['student_id'],$organizationId);
             if (is_numeric($student)&&$student==0){
                 return response()->json(['message'=>self::taskError],206);
+            }
+            if ($request['current_status']=='RET-B'){
+                $request['end_program']=true;
             }
             $result = Student::updateStudent($request['student_id'],[
                 'user_id'=>$id,
@@ -283,6 +288,9 @@ class StudentService
                 'guide_teacher_id'=>$request['guide_teacher_id'],
                 'with_work'=>$request['with_work'],
                 'end_program'=>$request['end_program'],
+                'test_period'=>$request['test_period'],
+                'current_status'=>$request['current_status'],
+                'type_income'=>$request['type_income']
             ]);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskError],206);

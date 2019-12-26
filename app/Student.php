@@ -65,12 +65,6 @@ class Student extends Model
 
     public static function existStudentById($id,$organizationId)
     {
-        /*try{
-            return self::where('id',$id)
-                ->exists();
-        }catch (\Exception $e){
-            return 0;
-        }*/
         try{
             return self::where('id',$id)
                 ->whereHas('user',function (Builder $query) use ($organizationId){
@@ -113,6 +107,7 @@ class Student extends Model
         try{
             return self::where('user_id',$userId)
                 ->where('school_program_id',$programId)
+                ->where('current_status','!=','RET-B')
                 ->exists();
         }catch (\Exception $e){
             return 0;
