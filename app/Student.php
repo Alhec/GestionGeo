@@ -11,7 +11,7 @@ class Student extends Model
 
     protected $fillable = ['school_program_id','user_id','home_university','guide_teacher_id','student_type',
         'current_postgraduate','type_income','is_available_final_work','is_ucv_teacher','repeat_approved_subject',
-        'repeat_reprobated_subject','credits_granted','with_work','end_program'];
+        'repeat_reprobated_subject','credits_granted','with_work','end_program','current_status','test_period'];
 
     public $timestamps = false;
 
