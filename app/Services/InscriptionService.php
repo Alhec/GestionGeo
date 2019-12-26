@@ -247,9 +247,9 @@ class InscriptionService
         $request->validate([
             'student_id'=>'required|numeric',
             'school_period_id'=>'required|numeric',
-            'status'=>'required|max:5|ends_with:RET-A,RET-B,DES-A,DES-B,RIN-A,RIN-B,REI-A,REI-B,REG',//REI REINCORPORADO RIN REINGRESO
+            'status'=>'max:5|ends_with:RET-A,RET-B,DES-A,DES-B,RIN-A,RIN-B,REI-A,REI-B,REG',//REI REINCORPORADO RIN REINGRESO
             'pay_ref'=>'max:50',
-            'financing'=>'max:3|ends_with:EXO,SFI,SCS,FUN',//EXO exonerated, FUN Funded, SFI Self-financing, ScS Scholarship
+            'financing'=>'max:3|ends_with:EXO,SFI,SCS,FUN',//EXO exonerated, FUN Funded, SFI Self-financing, SCS Scholarship
             'amount_paid'=>'numeric',
             'financing_description'=>'max:60',
             'subjects.*.school_period_subject_teacher_id'=>'required|numeric',
@@ -461,7 +461,6 @@ class InscriptionService
 
     public static function updateStatus($schoolPeriodStudentId,$organizationId) //Actualiza el status del estudiante sobre el periodo escolar
     {
-        /*$schoolPeriodStudent['status']='REG';*/
         $schoolPeriodStudent = SchoolPeriodStudent::getSchoolPeriodStudentById($schoolPeriodStudentId,$organizationId);
         if (is_numeric($schoolPeriodStudent)&&$schoolPeriodStudent==0){
             return 0;
@@ -494,24 +493,11 @@ class InscriptionService
                 return 0;
             }
             $student[0]['current_status']='DES-A';
-            $result = Student::updateStudent($schoolPeriodStudent['student_id'],$student[0]);
+            $result = Student::updateStudent($schoolPeriodStudent['student_id'],$student[0]->toArray());
             if (is_numeric($result)&&$result==0){
                 return 0;
             }
-        }/*else{
-            if ($schoolPeriodStudent['status']=='RET-A'||$schoolPeriodStudent['status']=='RET-B'){
-                $schoolPeriodStudent['status']='REG';
-                SchoolPeriodStudent::updateSchoolPeriodStudentLikeArray($schoolPeriodStudentId,
-                    ['student_id'=>$schoolPeriodStudent['student_id'],
-                        'school_period_id'=>$schoolPeriodStudent['school_period_id'],
-                        'pay_ref'=>$schoolPeriodStudent['pay_ref'],
-                        'status'=>$schoolPeriodStudent['status'],
-                        'financing'=>$schoolPeriodStudent['financing'],
-                        'financing_description'=>$schoolPeriodStudent['financing_description'],
-                        'amount_paid'=>$schoolPeriodStudent['amount_paid'],
-                    ]);
-            }
-        }*/
+        }
     }
 
     public static function updateSubjects($subjects,$schoolPeriodStudentId,$organizationId,$isWithdrawn)
