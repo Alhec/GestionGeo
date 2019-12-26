@@ -321,7 +321,7 @@ class StudentService
 
     public static function validateStudent(Request $request, $organizationId,$studentId)
     {
-        $existStudentById = Student::existStudentById($studentId);
+        $existStudentById = Student::existStudentById($studentId,$organizationId);
         if (is_numeric($existStudentById) && $existStudentById == 0) {
             return response()->json(['message' => self::taskError], 206);
         }

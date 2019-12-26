@@ -63,11 +63,21 @@ class Student extends Model
         }
     }
 
-    public static function existStudentById($id)
+    public static function existStudentById($id,$organizationId)
     {
-        try{
+        /*try{
             return self::where('id',$id)
                 ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }*/
+        try{
+            return self::where('id',$id)
+                ->whereHas('user',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
         }catch (\Exception $e){
             return 0;
         }

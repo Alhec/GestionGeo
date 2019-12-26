@@ -52,7 +52,7 @@ class InscriptionController extends Controller
     public function update(Request $request, $id)
     {
         $organizationId = $request->header('organization_key');
-        return InscriptionService::updateInscription($request,$id);
+        return InscriptionService::updateInscription($request,$id,$organizationId);
     }
 
     /**
@@ -104,7 +104,7 @@ class InscriptionController extends Controller
     public function withdrawSubjects(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        return InscriptionService::withdrawSubjects($request);
+        return InscriptionService::withdrawSubjects($request,$organizationId);
     }
 
     public static function enrolledStudentsInSchoolPeriod(Request $request)
