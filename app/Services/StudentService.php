@@ -31,7 +31,7 @@ class StudentService
     const studentHasProgram = "El estudiante ya esta en el programa";
     const invalidEquivalences = "Equivalencias invalidas";
     const unauthorized = "Unauthorized";
-    const notWarningStudent="Todos los estudiantes estan en un esttus regular";
+    const notWarningStudent="Todos los estudiantes estan en un estatus regular";
 
     public static function validate(Request $request)
     {

@@ -143,11 +143,10 @@ class Student extends Model
                     $query
                         ->where('organization_id','=',$organizationId);
                 })
-                ->orWhere('current_status','!=','REG')
-                ->orWhere('current_status','!=','REI-A')
-                ->orWhere('current_status','!=','REI-B')
-                ->orWhere('current_status','!=','RIN-A')
-                ->orWhere('current_status','!=','RIN-B')
+                ->where('current_status','DES-A')
+                ->orWhere('current_status','DES-B')
+                ->orWhere('current_status','RET-A')
+                ->orWhere('current_status','RET-B')
                 ->orWhere('test_period',true)
                 ->get();
         }catch (\Exception $e){
