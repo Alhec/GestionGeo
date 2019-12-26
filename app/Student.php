@@ -135,4 +135,23 @@ class Student extends Model
             return 0;
         }
     }
+
+    public static function warningStudent($organizationId)
+    {
+        try{
+            return self::whereHas('user',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->orWhere('current_status','!=','REG')
+                ->orWhere('current_status','!=','REI-A')
+                ->orWhere('current_status','!=','REI-B')
+                ->orWhere('current_status','!=','RIN-A')
+                ->orWhere('current_status','!=','RIN-B')
+                ->orWhere('test_period',true)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 }

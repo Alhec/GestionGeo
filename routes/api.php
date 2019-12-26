@@ -115,6 +115,7 @@ Route::middleware('jwt.auth','role:A')->put('students/{id}','StudentController@u
 Route::middleware('jwt.auth','role:A')->delete('students/{id}','StudentController@destroy');
 Route::middleware('jwt.auth','role:A')->put('students/continue/{id}','StudentController@addStudentToUser');
 Route::middleware('jwt.auth','role:A')->delete('students/delete/{id}','StudentController@deleteStudent');
+Route::middleware('jwt.auth','role:A')->get('warningStudents','StudentController@warningStudent');
 
 //SchoolProgram
 Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');

@@ -88,4 +88,10 @@ class StudentController extends Controller
         $studentId = $request->input('student_id');
         return StudentService::deleteStudent($id,$studentId,$request,$organizationId);
     }
+
+    public function warningStudent(Request $request)
+    {
+        $organizationId = $request->header('organization_key');
+        return StudentService::warningStudent($request,$organizationId);
+    }
 }

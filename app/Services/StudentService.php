@@ -31,6 +31,7 @@ class StudentService
     const studentHasProgram = "El estudiante ya esta en el programa";
     const invalidEquivalences = "Equivalencias invalidas";
     const unauthorized = "Unauthorized";
+    const notWarningStudent="Todos los estudiantes estan en un esttus regular";
 
     public static function validate(Request $request)
     {
@@ -273,6 +274,8 @@ class StudentService
             }
             if ($request['current_status']=='RET-B'){
                 $request['end_program']=true;
+            }else{
+                $request['end_program']=false;
             }
             $result = Student::updateStudent($request['student_id'],[
                 'user_id'=>$id,
@@ -347,5 +350,17 @@ class StudentService
             }
             return response()->json(['message' => self::notFoundUser], 401);
         }
+    }
+
+    public static function warningStudent(Request $request,$organizationId)
+    {
+        $warningStudent=Student::warningStudent($organizationId);
+        if (is_numeric($warningStudent)&&$warningStudent==0){
+            return response()->json(['message' => self::taskError], 206);
+        }
+        if (count($warningStudent)>0){
+            return $warningStudent;
+        }
+        return response()->json(['message' => self::notWarningStudent], 206);
     }
 }
