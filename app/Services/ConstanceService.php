@@ -24,6 +24,10 @@ use Carbon\Carbon;
 class ConstanceService
 {
 
+    const taskError = 'No se puede proceder con la tarea';
+    const notFoundUser = 'Usuario no encontrado';
+    const noHasPrincipal = 'No hay coordinador principal';
+
     public static function numberToMonth($month)
     {
         switch ($month){
@@ -54,37 +58,47 @@ class ConstanceService
         }
     }
 
-    public static function constanceOfStudy(Request $request, $studentId)
+    public static function constanceOfStudy(Request $request, $studentId,$organizationId)
     {
-        $organizationId = $request->header('organization_key');
-        if ((auth()->payload()['user'][0]->user_type)!='A'){
+        if ((auth()->payload()['user']->user_type)!='A'){
             $request['student_id']=$studentId;
-            $isValid = StudentService::validateStudent($request);
+            $isValid = StudentService::validateStudent($request,$organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
             }
         }
         $data=[];
-        $student = Student::getStudentById($studentId);
-        if (count($student)>0){
-            $user=User::getUserById($student[0]['user_id'],'S',$organizationId);
-            if (count($user)>0){
-                $data['user_data']=$user[0];
-                $data['coordinator_data']=AdministratorService::getPrincipalCoordinator($request);
-                $data['school_program_data']=SchoolProgram::getSchoolProgramById($user[0]['student']['school_program_id'],$organizationId)[0];
-                $now = Carbon::now();
-                $data['month']=self::numberToMonth($now->month);
-                $data['year']=$now->year;
-                if ($organizationId =='G'){
-                    \PDF::setOptions(['isHtml5ParserEnabled' => true]);
-                    $pdf = \PDF::loadView('constance/Geoquimica/constancia_estudio',compact('data'));
-                    return $pdf->download('constancia_estudio.pdf');
-                }
-                return $data;
-            }
-
+        $student = Student::getStudentById($studentId,$organizationId);
+        if (is_numeric($student)&&$student==0){
+            return response()->json(['message'=>self::taskError],206);
         }
-        return response()->json(['message'=>'Usuario no encontrado'],206);
+        if (count($student)>0){
+            $student=$student[0]->toArray();
+            $data['user_data']=$student;
+            $coordinator=AdministratorService::getPrincipalCoordinator($request,$organizationId,true);
+            if (is_numeric($coordinator)&&$coordinator==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            if ($coordinator=='noExist'){
+                return response()->json(['message'=>self::noHasPrincipal],206);
+            }
+            $data['coordinator_data']=$coordinator->toArray();
+            $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+            if (is_numeric($schoolProgram)&&$schoolProgram==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            $data['school_program_data']=$schoolProgram[0]->toArray();
+            $now = Carbon::now();
+            $data['month']=self::numberToMonth($now->month);
+            $data['year']=$now->year;
+            if ($organizationId =='G'){
+                \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                $pdf = \PDF::loadView('constance/Geoquimica/constancia_estudio',compact('data'));
+                return $pdf->download('constancia_estudio.pdf');
+            }
+            return $data;
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
     }
 
     public static function academicLoad(Request $request, $studentId)

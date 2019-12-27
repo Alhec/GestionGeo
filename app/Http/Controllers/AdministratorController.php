@@ -96,6 +96,6 @@ class AdministratorController extends Controller
     public function principal(Request $request)
     {
         $organizationId = $request->header('organization_key');
-        return AdministratorService::getPrincipalCoordinator($request,$organizationId);
+        return AdministratorService::getPrincipalCoordinator($request,$organizationId,false);
     }
 }

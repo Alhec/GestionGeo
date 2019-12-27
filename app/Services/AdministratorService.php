@@ -135,14 +135,20 @@ class AdministratorService
         return UserService::deleteUser($request,$id,'A');
     }
 
-    public static function getPrincipalCoordinator(Request $request,$organizationId)
+    public static function getPrincipalCoordinator(Request $request,$organizationId,$internalCall)
     {
         $administrator = Administrator::getPrincipalCoordinator($organizationId);
         if (is_numeric($administrator)&&$administrator==0){
+            if ($internalCall){
+                return 0;
+            }
             return response()->json(['message' => self::taskError], 206);
         }
         if (count($administrator)>0){
             return $administrator[0];
+        }
+        if ($internalCall){
+            return 'noExist';
         }
         return response()->json(['message'=>self::noHasPrincipal],206);
     }

@@ -10,7 +10,8 @@ class ConstanceController extends Controller
     public function constanceOfStudy(Request $request)
     {
         $studentId = $request->input('student_id');
-        return ConstanceService::constanceOfStudy($request,$studentId);
+        $organizationId = $request->header('organization_key');
+        return ConstanceService::constanceOfStudy($request,$studentId,$organizationId);
     }
 
     public function academicLoad(Request $request)

@@ -84,9 +84,9 @@
             <div class="article">
                 Quien  suscribe,  Coordinadora  del  Postgrado  en  Geoquímica,  Facultad  de  Ciencias de  la  
                 Universidad   Central  de Venezuela, por  medio  de   la   presente   hace  constar  que el
-                <strong>{{$data['user_data']['level_instruction']}}. {{strtoupper($data['user_data']['first_name'])}} {{strtoupper($data['user_data']['second_name'])}}
-                    {{strtoupper($data['user_data']['first_surname'])}} {{strtoupper($data['user_data']['second_surname'])}}</strong>,
-                titular  de  la  cédula de identidad  N° {{$data['user_data']['identification'] }}, es
+                <strong>{{$data['user_data']['user']['level_instruction']}}. {{strtoupper($data['user_data']['user']['first_name'])}} {{strtoupper($data['user_data']['user']['second_name'])}}
+                    {{strtoupper($data['user_data']['user']['first_surname'])}} {{strtoupper($data['user_data']['user']['second_surname'])}}</strong>,
+                titular  de  la  cédula de identidad  N° {{$data['user_data']['user']['identification'] }}, es
                 estudiante  regular  del  programa  de <strong>{{strtoupper($data['school_program_data']['school_program_name'])}}</strong>.
             </div>
             <div class="article">

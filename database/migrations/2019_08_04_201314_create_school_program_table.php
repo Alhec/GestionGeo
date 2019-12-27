@@ -27,6 +27,8 @@ class CreateSchoolProgramTable extends Migration
                 ->default(false);
             $table->boolean('conducive_to_degree')
                 ->default(true);
+            $table->boolean('doctoral_exam')
+                ->default(false);
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')

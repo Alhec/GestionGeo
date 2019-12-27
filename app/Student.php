@@ -85,6 +85,7 @@ class Student extends Model
                     $query
                         ->where('organization_id','=',$organizationId);
                 })
+                ->with('user')
                 ->get();
         }catch (\Exception $e){
             return 0;

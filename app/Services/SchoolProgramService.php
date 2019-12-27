@@ -47,7 +47,8 @@ class SchoolProgramService
             "conducive_to_degree"=>"required|boolean",
             'min_duration'=>'numeric|required',
             'min_num_cu_final_work'=>'numeric|required',
-            'grant_certificate'=>'boolean'
+            'grant_certificate'=>'boolean',
+            'doctoral_exam'=>'boolean'
         ]);
     }
 
