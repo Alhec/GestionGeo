@@ -86,6 +86,8 @@ class Student extends Model
                         ->where('organization_id','=',$organizationId);
                 })
                 ->with('user')
+                ->with('degrees')
+                ->with('guideTeacher')
                 ->get();
         }catch (\Exception $e){
             return 0;

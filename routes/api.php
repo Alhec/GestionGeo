@@ -164,7 +164,7 @@ Route::middleware('jwt.auth','role:A,S')->get('constance/studentHistorical','Con
 Route::middleware('jwt.auth','role:A,T')->get('constance/teacherHistorical','ConstanceController@teacherHistorical');
 Route::middleware('jwt.auth','role:A,T')->get('constance/workTeacher','ConstanceController@constanceOfWorkTeacher');
 Route::middleware('jwt.auth','role:A,T')->get('constance/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
-Route::middleware('jwt.auth','role:A,T')->get('constance/inscription','ConstanceController@inscriptionConstance');
+Route::middleware('jwt.auth','role:A,S')->get('constance/inscription','ConstanceController@inscriptionConstance');
 
 //Authentication
 Route::post('login', 'AuthController@login');

@@ -377,7 +377,6 @@ class InscriptionService
                 return response()->json(['message' => self::taskError], 206);
             }
             if($validateRelation){
-                //$lastSchoolPeriod = SchoolPeriodStudent::getLastEnrolledSchoolPeriod($request['student_id'],$organizationId);
                 $student=Student::getStudentById($request['student_id'],$organizationId);
                 if (is_numeric($student)&&$student==0){
                     return response()->json(['message' => self::taskError], 206);

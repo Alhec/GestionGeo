@@ -36,7 +36,6 @@ class SchoolPeriodStudent extends Model
             return self::with('schoolPeriod')
                 ->with('student')
                 ->with('enrolledSubjects')
-                ->with('schoolPeriod')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);
@@ -171,18 +170,25 @@ class SchoolPeriodStudent extends Model
         }
     }
 
-    public static function getLastEnrolledSchoolPeriod($studentId,$organizationId)
+    public static function getEnrolledSubjectsByStudent($studentId,$organizationId)
     {
         try{
             return self::where('student_id',$studentId)
+                ->with('student')
+                ->with('enrolledSubjects')
+                ->with('schoolPeriod')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);
                 })
+                ->orderBy('inscription_date','ASC')
                 ->get();
         }catch (\Exception $e){
             return 0;
         }
     }
+
+
+
 
 }

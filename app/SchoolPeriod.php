@@ -143,20 +143,4 @@ class SchoolPeriod extends Model
             return 0;
         }
     }
-
-    public static function getEnrolledSubjectsByStudent($studentId)
-    {
-        try{
-            return self::whereHas('inscriptions',function (Builder $query) use ($studentId){
-                $query
-                    ->where('student_id','=',$studentId);
-                })
-                ->with('inscriptions')
-                ->get();
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
-
-
 }

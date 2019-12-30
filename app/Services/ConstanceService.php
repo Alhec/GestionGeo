@@ -27,6 +27,7 @@ class ConstanceService
     const taskError = 'No se puede proceder con la tarea';
     const notFoundUser = 'Usuario no encontrado';
     const noHasPrincipal = 'No hay coordinador principal';
+    const notFoundInscription = 'Inscripcion no encontrada';
 
     public static function numberToMonth($month)
     {
@@ -101,6 +102,90 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    public static function stadisticsDataHistorical($historical)
+    {
+        $enrolledCredits=0;
+        $cumulativeNotes=0;
+        $cantSubjects=0;
+        /*dd($historical->toArray());*/
+        foreach ($historical->toArray() as $schoolPeriod){
+            foreach ($schoolPeriod['enrolled_subjects'] as $inscription){
+                if ($inscription['qualification']){
+                    $enrolledCredits+=$inscription['data_subject']['subject']['uc'];
+                    $cumulativeNotes+=$inscription['qualification'];
+                    $cantSubjects +=1;
+                }
+            }
+        }
+        $dataHistorical = [];
+        $dataHistorical['enrolled_credits']=$enrolledCredits;
+        $dataHistorical['cumulative_notes']=$cumulativeNotes;
+        $dataHistorical['cant_subjects']=$cantSubjects;
+        $dataHistorical['porcentual']=$cumulativeNotes/$cantSubjects;
+        return $dataHistorical;
+    }
+
+    public static function inscriptionConstance(Request $request, $studentId,$inscriptionId,$organizationId)
+    {
+        if ((auth()->payload()['user']->user_type)!='A'){
+            $request['student_id']=$studentId;
+            $isValid = StudentService::validateStudent($request,$organizationId,$studentId);
+            if ($isValid!='valid'){
+                return $isValid;
+            }
+        }
+        $data=[];
+        $student = Student::getStudentById($studentId,$organizationId);
+        if (is_numeric($student)&&$student==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($student)>0){
+            $student=$student[0]->toArray();
+            $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($inscriptionId,$organizationId);
+            if (is_numeric($inscription)&&$inscription==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            if (count($inscription)>0){
+                if ($inscription[0]['student_id']==$studentId){
+                    $data['user_data']=$student;
+                    $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+                    if (is_numeric($schoolProgram)&&$schoolProgram==0){
+                        return response()->json(['message'=>self::taskError],206);
+                    }
+                    $data['school_program_data']=$schoolProgram->toArray()[0];
+                    $now = Carbon::now();
+                    $data['month']=self::numberToMonth($now->month);
+                    $data['year']=$now->year;
+                    //return $inscription->toArray();
+                    $data['inscription']=$inscription->toArray()[0];
+                    $studentSubject=SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
+                    if (is_numeric($studentSubject)&&$studentSubject==0){
+                        return response()->json(['message'=>self::taskError],206);
+                    }
+                    if (count($studentSubject)>0){
+                        $data['historical_data']=$studentSubject;
+                        $data['porcentual_data']=self::stadisticsDataHistorical($studentSubject);
+                    } else {
+                        $data['historical_data']=[];
+                        $dataHistorical['enrolled_credits']=0;
+                        $dataHistorical['cumulative_notes']=0;
+                        $dataHistorical['cant_subjects']=0;
+                        $dataHistorical['porcentual']=0;
+                        $data['porcentual_data']=$dataHistorical;
+                    }
+                    if ($organizationId =='G'){
+                        \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                        $pdf = \PDF::loadView('constance/Geoquimica/constancia_inscripcion',compact('data'));
+                        return $pdf->download('inscripcion.pdf');
+                    }
+                    return $data;
+
+                }
+            }return response()->json(['message'=>self::notFoundInscription],206);
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
+    }
+
     public static function academicLoad(Request $request, $studentId)
     {
         $organizationId = $request->header('organization_key');
@@ -120,28 +205,6 @@ class ConstanceService
             return response()->json(['message'=>'No tiene carga academica'],206);
         }
         return response()->json(['message'=>'No hay periodo escolar en curso o no existe el estudiante'],206);
-    }
-
-    public static function dataHistorical($historical)
-    {
-        $enrolledCredits=0;
-        $cumulativeNotes=0;
-        $cantSubjects=0;
-        foreach ($historical as $schoolPeriod){
-            foreach ($schoolPeriod['inscriptions']['enrolled_subjects'] as $inscription){
-                if ($inscription['qualification']){
-                    $enrolledCredits+=$inscription['data_subject']['subject']['uc'];
-                    $cumulativeNotes+=$inscription['qualification'];
-                    $cantSubjects +=1;
-                }
-            }
-        }
-        $dataHistorical = [];
-        $dataHistorical['enrolled_credits']=$enrolledCredits;
-        $dataHistorical['cumulative_notes']=$cumulativeNotes;
-        $dataHistorical['cant_subjects']=$cantSubjects;
-        $dataHistorical['porcentual']=$cumulativeNotes/$cantSubjects;
-        return $dataHistorical;
     }
 
     public static function studentHistoricalAllData(Request $request, $studentId)
@@ -168,7 +231,7 @@ class ConstanceService
                 $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
                 if (count($studentSubject)>0){
                     $data['historical_data']=$studentSubject;
-                    $data['porcentual_data']=self::dataHistorical($studentSubject);
+                    $data['porcentual_data']=self::stadisticsDataHistorical($studentSubject);
                     if ($organizationId =='G'){
                         \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                         $pdf = \PDF::loadView('constance/Geoquimica/constancia_notas',compact('data'));
@@ -182,22 +245,7 @@ class ConstanceService
         return response()->json(['message'=>'No existe el estudiante'],206);
     }
 
-    public static function clearHistoricalByStudentId($studentSubject,$studentId)
-    {
-        $studentSubjectReturn = [];
-        foreach ($studentSubject as $schoolPeriod){
-            $inscriptionReturn=[];
-            foreach ($schoolPeriod['inscriptions'] as $inscription){
-                if ($inscription['student_id'] ==$studentId){
-                    $inscriptionReturn=$inscription;
-                }
-            }
-            unset($schoolPeriod['inscriptions']);
-            $schoolPeriod['inscriptions']=$inscriptionReturn;
-            $studentSubjectReturn[]=$schoolPeriod;
-        }
-        return $studentSubjectReturn;
-    }
+
 
     public static function studentHistorical(Request $request, $studentId)
     {
@@ -217,57 +265,6 @@ class ConstanceService
                     return self::clearHistoricalByStudentId($studentSubject,$studentId);
                 }
                 return response()->json(['message'=>'Aun no tiene historial'],206);
-            }
-        }
-        return response()->json(['message'=>'No existe el estudiante'],206);
-    }
-
-    public static function inscriptionConstance(Request $request, $studentId,$inscriptionId)
-    {
-        $organizationId = $request->header('organization_key');
-        if ((auth()->payload()['user'][0]->user_type)!='A'){
-            $request['student_id']=$studentId;
-            $isValid = StudentService::validateStudent($request);
-            if ($isValid!='valid'){
-                return $isValid;
-            }
-        }
-        $data=[];
-        $student = Student::getStudentById($studentId);
-        if (count($student)>0){
-            $user=User::getUserById($student[0]['user_id'],'S',$organizationId);
-            if (count($user)>0){
-                $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($inscriptionId,$organizationId)->toArray();
-                if (count($inscription)>0){
-                    if ($inscription[0]['student_id']==$studentId){
-                        $data['user_data']=$user[0];
-                        $data['coordinator_data']=AdministratorService::getPrincipalCoordinator($request);
-                        $data['school_program_data']=SchoolProgram::getSchoolProgramById($user[0]['student']['school_program_id'],$organizationId)[0];
-                        $now = Carbon::now();
-                        $data['month']=self::numberToMonth($now->month);
-                        $data['year']=$now->year;
-                        $studentSubject =self::clearHistoricalByStudentId(SchoolPeriod::getEnrolledSubjectsByStudent($studentId)->toArray(),$studentId);
-                        if (count($studentSubject)>0){
-                            $data['historical_data']=$studentSubject;
-                            $data['porcentual_data']=self::dataHistorical($studentSubject);
-                        } else {
-                            $dataHistorical['enrolled_credits']=0;
-                            $dataHistorical['cumulative_notes']=0;
-                            $dataHistorical['cant_subjects']=0;
-                            $dataHistorical['porcentual']=0;
-                            $data['porcentual_data']=$dataHistorical;
-                        }
-                        $data['inscription']=$inscription[0];
-                        if ($organizationId =='G'){
-                            \PDF::setOptions(['isHtml5ParserEnabled' => true]);
-                            $pdf = \PDF::loadView('constance/Geoquimica/constancia_inscripcion',compact('data'));
-                            return $pdf->download('inscripcion.pdf');
-                        }
-                        return $data;
-
-                    }
-                }return response()->json(['message'=>'Inscripcion no encontrada'],206);
-
             }
         }
         return response()->json(['message'=>'No existe el estudiante'],206);
