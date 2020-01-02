@@ -28,6 +28,7 @@ class ConstanceService
     const notFoundUser = 'Usuario no encontrado';
     const noHasPrincipal = 'No hay coordinador principal';
     const notFoundInscription = 'Inscripcion no encontrada';
+    const notYetHaveHistorical = 'Aun no tienes historial';
 
     public static function numberToMonth($month)
     {
@@ -156,7 +157,6 @@ class ConstanceService
                     $now = Carbon::now();
                     $data['month']=self::numberToMonth($now->month);
                     $data['year']=$now->year;
-                    //return $inscription->toArray();
                     $data['inscription']=$inscription->toArray()[0];
                     $studentSubject=SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
                     if (is_numeric($studentSubject)&&$studentSubject==0){
@@ -181,7 +181,8 @@ class ConstanceService
                     return $data;
 
                 }
-            }return response()->json(['message'=>self::notFoundInscription],206);
+            }
+            return response()->json(['message'=>self::notFoundInscription],206);
         }
         return response()->json(['message'=>self::notFoundUser],206);
     }
@@ -256,6 +257,69 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    public static function studentHistorical(Request $request, $studentId,$organizationId)
+    {
+        if ((auth()->payload()['user']->user_type)!='A'){
+            $request['student_id']=$studentId;
+            $isValid = StudentService::validateStudent($request,$organizationId,$studentId);
+            if ($isValid!='valid'){
+                return $isValid;
+            }
+        }
+        $data=[];
+        $student = Student::getStudentById($studentId,$organizationId);
+        if (is_numeric($student)&&$student==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($student)>0){
+            $student=$student[0]->toArray();
+            $enrolledSubjects = SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
+            if (is_numeric($enrolledSubjects)&&$enrolledSubjects==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            if (count($enrolledSubjects)>0){
+                dd($enrolledSubjects->toArray());
+                if ($inscription[0]['student_id']==$studentId){
+                    $data['user_data']=$student;
+                    $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+                    if (is_numeric($schoolProgram)&&$schoolProgram==0){
+                        return response()->json(['message'=>self::taskError],206);
+                    }
+                    $data['school_program_data']=$schoolProgram->toArray()[0];
+                    $now = Carbon::now();
+                    $data['month']=self::numberToMonth($now->month);
+                    $data['year']=$now->year;
+                    //return $inscription->toArray();
+                    $data['inscription']=$inscription->toArray()[0];
+                    $studentSubject=SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
+                    if (is_numeric($studentSubject)&&$studentSubject==0){
+                        return response()->json(['message'=>self::taskError],206);
+                    }
+                    if (count($studentSubject)>0){
+                        $data['historical_data']=$studentSubject;
+                        $data['porcentual_data']=self::stadisticsDataHistorical($studentSubject);
+                    } else {
+                        $data['historical_data']=[];
+                        $dataHistorical['enrolled_credits']=0;
+                        $dataHistorical['cumulative_notes']=0;
+                        $dataHistorical['cant_subjects']=0;
+                        $dataHistorical['porcentual']=0;
+                        $data['porcentual_data']=$dataHistorical;
+                    }
+                    if ($organizationId =='G'){
+                        \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                        $pdf = \PDF::loadView('constance/Geoquimica/constancia_inscripcion',compact('data'));
+                        return $pdf->download('inscripcion.pdf');
+                    }
+                    return $data;
+
+                }
+            }
+            return response()->json(['message'=>self::notYetHaveHistorical],206);
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
+    }
+
     public static function studentHistoricalAllData(Request $request, $studentId)
     {
         $organizationId = $request->header('organization_key');
@@ -296,28 +360,7 @@ class ConstanceService
 
 
 
-    public static function studentHistorical(Request $request, $studentId)
-    {
-        $organizationId = $request->header('organization_key');
-        if ((auth()->payload()['user'][0]->user_type)!='A'){
-            $request['student_id']=$studentId;
-            //$isValid = StudentService::validateStudent($request)eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTU3NjE1Nzk1OCwiZXhwIjoxNTc2MTkzOTU4LCJuYmYiOjE1NzYxNTc5NTgsImp0aSI6ImhBeUk1dlhXdlVlUWdXbmEiLCJzdWIiOjEsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEiLCJ1c2VyIjp7ImlkIjoxLCJpZGVudGlmaWNhdGlvbiI6IjI0Njk4OTE2IiwiZmlyc3RfbmFtZSI6IkhlY3RvciIsInNlY29uZF9uYW1lIjpudWxsLCJmaXJzdF9zdXJuYW1lIjoiQWxheW9uIiwic2Vjb25kX3N1cm5hbWUiOm51bGwsInRlbGVwaG9uZSI6bnVsbCwibW9iaWxlIjoiKDEyMzQpIDU2Ny04OTAxIiwid29ya19waG9uZSI6bnVsbCwiZW1haWwiOiJoZWN0b3JAYWRtaW4uY29tIiwidXNlcl90eXBlIjoiQSIsImxldmVsX2luc3RydWN0aW9uIjoiRHIiLCJhY3RpdmUiOjEsIndpdGhfZGlzYWJpbGl0aWVzIjowLCJzZXgiOiJNIiwibmF0aW9uYWxpdHkiOiJWIiwib3JnYW5pemF0aW9uX2lkIjoiRyIsImFkbWluaXN0cmF0b3IiOnsiaWQiOjEsInJvbCI6IkNPT1JESU5BVE9SIiwicHJpbmNpcGFsIjoxfX19.4V9Ni7Vuh0LFJo_lsFS3e8zOswW929H29hAVZtKSdS8
-            //if ($isValid!='valid'){
-               // return $isValid;
-           // }
-        }
-        $student = Student::getStudentById($studentId);
-        if (count($student)>0){
-            if (User::existUserById($student[0]['user_id'],'S',$organizationId)){
-                $studentSubject =SchoolPeriod::getEnrolledSubjectsByStudent($studentId);
-                if (count($studentSubject)>0){
-                    return self::clearHistoricalByStudentId($studentSubject,$studentId);
-                }
-                return response()->json(['message'=>'Aun no tiene historial'],206);
-            }
-        }
-        return response()->json(['message'=>'No existe el estudiante'],206);
-    }
+
 
     public static function teacherHistorical(Request $request, $teacherId)
     {

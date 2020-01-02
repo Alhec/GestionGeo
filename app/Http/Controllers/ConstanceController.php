@@ -22,24 +22,25 @@ class ConstanceController extends Controller
         return ConstanceService::academicLoad($request,$studentId,$organizationId);
     }
 
-    public function studentHistorical(Request $request)
-    {
-        $studentId = $request->input('student_id');
-        return ConstanceService::studentHistorical($request,$studentId);
-    }
-
-    public function studentHistoricalAllData(Request $request)
-    {
-        $studentId = $request->input('student_id');
-        return ConstanceService::studentHistoricalAllData($request,$studentId);
-    }
-
     public function inscriptionConstance(Request $request)
     {
         $studentId = $request->input('student_id');
         $inscriptionId = $request->input('inscription_id');
         $organizationId = $request->header('organization_key');
         return ConstanceService::inscriptionConstance($request,$studentId,$inscriptionId,$organizationId);
+    }
+
+    public function studentHistorical(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        $organizationId = $request->header('organization_key');
+        return ConstanceService::studentHistorical($request,$studentId,$organizationId);
+    }
+
+    public function studentHistoricalAllData(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        return ConstanceService::studentHistoricalAllData($request,$studentId);
     }
 
     public function teacherHistorical(Request $request)
