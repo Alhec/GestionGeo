@@ -186,25 +186,74 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
-    public static function academicLoad(Request $request, $studentId)
+    public static function cmpSubjectCode($a, $b)
     {
-        $organizationId = $request->header('organization_key');
-        if ((auth()->payload()['user'][0]->user_type)!='A'){
+        return strcmp($a["subject_code"], $b["subject_code"]);
+    }
+
+    public static function countCreditsOfSubjects($subjects){
+        $acum = 0;
+        foreach ($subjects as $subject){
+            $acum +=$subject['uc'];
+        }
+        return $acum;
+    }
+
+    public static function academicLoad(Request $request, $studentId,$organizationId)
+    {
+        if ((auth()->payload()['user']->user_type)!='A'){
             $request['student_id']=$studentId;
-            $isValid = StudentService::validateStudent($request);
+            $isValid = StudentService::validateStudent($request,$organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
             }
         }
-        $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-        if (count($currentSchoolPeriod)>0 && Student::existStudentById($studentId)){
-            $schoolPeriodStudent=SchoolPeriodStudent::findSchoolPeriodStudent($studentId,$currentSchoolPeriod[0]['id']);
-            if (count($schoolPeriodStudent)>0){
-                return$schoolPeriodStudent;
-            }
-            return response()->json(['message'=>'No tiene carga academica'],206);
+        $data=[];
+        $student = Student::getStudentById($studentId,$organizationId);
+        if (is_numeric($student)&&$student==0){
+            return response()->json(['message'=>self::taskError],206);
         }
-        return response()->json(['message'=>'No hay periodo escolar en curso o no existe el estudiante'],206);
+        if (count($student)>0){
+            $student=$student[0]->toArray();
+            $subjects = StudentSubject::getAllSubjectsEnrolledWithoutRET($studentId);
+            if (is_numeric($subjects)&&$subjects==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            if (count($subjects)>0){
+                $subjects = array_column(array_column( $subjects->toArray(),'data_subject'),'subject');
+                usort($subjects,'self::cmpSubjectCode');
+                $data['user_data']=$student;
+                $coordinator=AdministratorService::getPrincipalCoordinator($request,$organizationId,true);
+                if (is_numeric($coordinator)&&$coordinator==0){
+                    return response()->json(['message'=>self::taskError],206);
+                }
+                if ($coordinator=='noExist'){
+                    return response()->json(['message'=>self::noHasPrincipal],206);
+                }
+                $data['coordinator_data']=$coordinator->toArray();
+                $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+                if (is_numeric($schoolProgram)&&$schoolProgram==0){
+                    return response()->json(['message'=>self::taskError],206);
+                }
+                $data['school_program_data']=$schoolProgram->toArray()[0];
+                $now = Carbon::now();
+                $data['month']=self::numberToMonth($now->month);
+                $data['year']=$now->year;
+                $data['day']=$now->day;
+                $data['subjects_data']=$subjects;
+                $data['total_credits']=self::countCreditsOfSubjects($subjects);
+                if ($organizationId =='G'){
+                    \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                    $pdf = \PDF::loadView('constance/Geoquimica/carga_academica',compact('data'));
+                    return $pdf->download('carga_academica.pdf');
+                }
+                return $data;
+
+
+
+            }return response()->json(['message'=>self::notFoundInscription],206);
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
     }
 
     public static function studentHistoricalAllData(Request $request, $studentId)

@@ -160,6 +160,4 @@ class StudentSubject extends Model
             return 0;
         }
     }
-
-
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ConstanceService;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Integer;
 
 class ConstanceController extends Controller
 {
@@ -17,7 +18,8 @@ class ConstanceController extends Controller
     public function academicLoad(Request $request)
     {
         $studentId = $request->input('student_id');
-        return ConstanceService::academicLoad($request,$studentId);
+        $organizationId = $request->header('organization_key');
+        return ConstanceService::academicLoad($request,$studentId,$organizationId);
     }
 
     public function studentHistorical(Request $request)
