@@ -95,7 +95,6 @@
         </div>
     </div>
     <div class="section">
-       
         <div class="coordinador">
             {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}} {{$data['coordinator_data']['second_name']}}
             {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}} <br>

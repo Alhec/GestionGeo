@@ -96,45 +96,57 @@
     </div>
     <div  class="section">
         <div class="title">
-            CONSTANCIA DE NOTAS
+            CONSTANCIA
         </div>
         <div class="article" style="padding-top: 1.5cm">
-            Quien suscribe, Coordinador del Postgrado en Geoquímica de la Facultad de Ciencias, Universidad Central de
-            Venezuela, hace constar por medio de la presente que el <strong>{{$data['user_data']['user']['level_instruction']}}.
-                {{strtoupper($data['user_data']['user']['first_name'])}} {{strtoupper($data['user_data']['user']['second_name'])}}
-                {{strtoupper($data['user_data']['user']['first_surname'])}} {{strtoupper($data['user_data']['user']['second_surname'])}}
-            </strong>, titular de la cédula de identidad <strong>N° {{$data['user_data']['user']['identification']}} </strong>,
-            cursó y aprobó las siguientes asignaturas, obteniendo un promedio general de {{$data['porcentual_data']['porcentual']}}
-            puntos y un total de {{$data['porcentual_data']['porcentual']}} créditos
-            en el programa de {{strtoupper($data['school_program_data']['school_program_name'])}}, de este Postgrado.
-
+            Por medio de la presente hago constar que el <strong>{{$data['user_data']['level_instruction']}}.
+                {{strtoupper($data['user_data']['first_name'])}} {{strtoupper($data['user_data']['second_name'])}}
+                {{strtoupper($data['user_data']['first_surname'])}} {{strtoupper($data['user_data']['second_surname'])}}
+            </strong> , titular de la cedula de identidad  <strong>N° {{$data['user_data']['identification']}} </strong>,
+            ha dictado en el Postgrado en Geoquímica como <strong> Profesor
+            @switch($data['user_data']['teacher']['dedication'])
+                @case('INV')
+                Invitado
+                @break
+                //INV,MT,CON,TC,EXC
+                @case('MT')
+                Medio Tiempo
+                @break
+                @case('CON')
+                Contratado
+                @break
+                @case('TC')
+                Tiempo Completo
+                @break
+                @case('EXC')
+                Exclusivo
+                @break
+                @default
+                Contratado
+            @endswitch
+            </strong>
+            las siguientes asignaturas.
         </div>
         <div class="content">
             <div class="article">
                 <table>
                     <tr>
-                        <th colspan="4">SEMESTRE</th>
-                        <th colspan="8">ASIGNATURA</th>
-                        <th colspan="4">CALIFICACIÓN</th>
-                        <th colspan="2">U.C.</th>
+                        <th colspan="3">SEMESTRE</th>
+                        <th colspan="7">ASIGNATURA</th>
                     </tr>
-                    @foreach($data['enrolled_subjects'] as $schoolPeriod)
-                        <tr>
-                            <td colspan="4" rowspan="{{count($schoolPeriod['enrolled_subjects'])}}">{{$schoolPeriod['school_period']['cod_school_period']}}</td>
-                            @foreach($schoolPeriod['enrolled_subjects'] as $subject)
-                               <td colspan="8">{{$subject['data_subject']['subject']['subject_name']}}</td>
-                                @if($subject['status']=='APR')
-                                    <td colspan="4">{{$subject['qualification']}}</td>
-                                    <td colspan="2">{{$subject['data_subject']['subject']['uc']}}</td>
-                                @elseif($subject['status']=='RET')
-                                    <td colspan="4">RET</td>
-                                    <td colspan="2"> - </td>
-                                @else
-                                    <td colspan="4">CUR</td>
-                                    <td colspan="2"> - </td>
+                    @foreach($data['historical_data'] as $schoolPeriod)
+                        @foreach($schoolPeriod['subjects'] as $subject)
+                            <tr>
+                                @if ($loop->first)
+                                    <td colspan="3" rowspan="{{count($schoolPeriod['subjects'])}}">{{$schoolPeriod['cod_school_period']}}</td>
                                 @endif
-                            @endforeach
-                        </tr>
+                                @if($subject['teacher_id']==$data['user_data']['id'])
+                                    <td colspan="7">{{$subject['subject']['subject_name']}}</td>
+                                @else
+                                    <td colspan="7"> - </td>
+                                @endif
+                            </tr>
+                        @endforeach
                     @endforeach
                 </table>
             </div>

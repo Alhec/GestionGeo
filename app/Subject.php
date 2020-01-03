@@ -19,6 +19,12 @@ class Subject extends Model
             ->withPivot('type');
     }
 
+   /* public function relationsSubjects()
+    {
+        return $this->hasMany('App\SchoolPeriodSubjectTeacher','subject_id','id')
+            ->with('schoolPeriod');
+    }*/
+
     public static function getSubjects($organizationId){
         try{
             return self::with('schoolPrograms')
@@ -136,6 +142,19 @@ class Subject extends Model
             DB::rollback();
             return 0;
         }
-
     }
+
+   /* public static function getSubjectsByTeacher($teacherId){
+        try{
+            return self::whereHas('relationsSubjects',function (Builder $query) use ($teacherId){
+                $query
+                    ->where('teacher_id','=',$teacherId);
+            })
+                ->with('relationsSubjects')
+                ->get();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }*/
 }
