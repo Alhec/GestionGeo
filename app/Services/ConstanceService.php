@@ -311,7 +311,7 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
-    public static function teacherHistorical(Request $request, $teacherId,$organizationId)
+    public static function constanceOfWorkTeacher(Request $request, $teacherId,$organizationId)
     {
         if ((auth()->payload()['user']->user_type)!='A'){
             $request['teacher_id']=$teacherId;
@@ -356,27 +356,6 @@ class ConstanceService
             return response()->json(['message'=>self::notYetHaveHistorical],206);
         }
         return response()->json(['message'=>self::notFoundUser],206);
-    }
-
-    public static function constanceOfWorkTeacher(Request $request, $teacherId)
-    {
-        $organizationId = $request->header('organization_key');
-        if ((auth()->payload()['user'][0]->user_type)!='A'){
-            $request['teacher_id']=$teacherId;
-            $isValid = TeacherService::validateTeacher($request);
-            if ($isValid!='valid'){
-                return $isValid;
-            }
-        }
-        $data=[];
-        $teacher = Teacher::getTeacherById($teacherId);
-        if (count($teacher)>0){
-            $data['user_data']=UserService::getUserById($request,$teacher[0]['user_id'],'T');
-            $data['coordinator_data']=AdministratorService::getPrincipalCoordinator($request);
-            $data['organization_data']=Organization::getOrganization($organizationId);
-            return $data;
-        }
-        return response()->json(['message'=>'Usuario no encontrado'],206);
     }
 
     public static function constanceOfWorkAdministrator(Request $request, $administratorId)
