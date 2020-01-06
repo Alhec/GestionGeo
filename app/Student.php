@@ -156,4 +156,20 @@ class Student extends Model
             return 0;
         }
     }
+
+    public static function getStudentActive($organizationId)
+    {
+        try{
+            return self::whereHas('user',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId)
+                    ->where('active','=',true);
+                })
+                ->where('end_program',false)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
 }

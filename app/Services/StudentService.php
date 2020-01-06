@@ -12,6 +12,7 @@ use App\Degree;
 use App\Equivalence;
 use App\SchoolProgram;
 use App\Student;
+use App\StudentSubject;
 use App\Subject;
 use App\User;
 use Illuminate\Http\Request;
@@ -362,5 +363,33 @@ class StudentService
             return $warningStudent;
         }
         return response()->json(['message' => self::notWarningStudent], 206);
+    }
+
+    public static function warningUpdateStudent($organizationId)
+    {
+        $students=Student::getStudentActive($organizationId);
+        if (is_numeric($students)&&$students==0){
+            return 0;
+        }
+        if (count($students)>0){
+            foreach ($students as $student){
+                $totalQualification = InscriptionService::getTotalQualification($student['id']);
+                if (is_string($totalQualification)&&$totalQualification=='e'){
+                    return 0;
+                }
+                $cantSubjectsEnrolled=StudentSubject::cantAllSubjectsEnrolledWithoutRETCUR($student['id']);
+                if (is_string($cantSubjectsEnrolled)&&$cantSubjectsEnrolled=='e'){
+                    return 0;
+                }
+                if($cantSubjectsEnrolled>0 && ($totalQualification/$cantSubjectsEnrolled)<14){
+                    $student['testPeriod']=true;
+                    $student = Student::updateStudent($student['id'],$student->toArray());
+                    if (is_numeric($student)&& $student==0){
+                        return 0;
+                    }
+                }
+            }
+        }
+        return 'emptyStuent';
     }
 }

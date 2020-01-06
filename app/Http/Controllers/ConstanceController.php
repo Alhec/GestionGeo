@@ -37,6 +37,13 @@ class ConstanceController extends Controller
         return ConstanceService::studentHistorical($request,$studentId,$organizationId);
     }
 
+    public function studentHistoricalData(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        $organizationId = $request->header('organization_key');
+        return ConstanceService::studentHistoricalData($request,$studentId,$organizationId);
+    }
+
     public function constanceOfWorkTeacher(Request $request)
     {
         $teacherId = $request->input('teacher_id');
@@ -47,6 +54,7 @@ class ConstanceController extends Controller
     public function constanceOfWorkAdministrator(Request $request)
     {
         $administratorId = $request->input('administrator_id');
-        return ConstanceService::constanceOfWorkAdministrator($request,$administratorId);
+        $organizationId = $request->header('organization_key');
+        return ConstanceService::constanceOfWorkAdministrator($request,$administratorId,$organizationId);
     }
 }

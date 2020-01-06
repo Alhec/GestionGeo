@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Student;
 use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriod;
@@ -165,6 +166,10 @@ class SchoolPeriodService
                 if (is_numeric($schoolPeriodId)&&$schoolPeriodId==0){
                     return response()->json(['message' => self::taskError], 206);
                 }
+            }
+            $updateStudent=StudentService::warningUpdateStudent($organizationId);
+            if (is_numeric($updateStudent)&&$updateStudent){
+                return response()->json(['message' => self::taskError], 206);
             }
             return self::getSchoolPeriodById($request,$schoolPeriodId,$organizationId);
         }
