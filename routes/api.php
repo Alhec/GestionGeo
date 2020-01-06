@@ -159,7 +159,7 @@ Route::middleware('jwt.auth','role:A')->delete('inscriptions/{id}','InscriptionC
 
 //Constance
 Route::middleware('jwt.auth','role:A,S')->get('constance/study','ConstanceController@constanceOfStudy');
-Route::middleware(\'jwt.auth','role:A,S')->get('constance/academicLoad','ConstanceController@academicLoad');
+Route::middleware('jwt.auth','role:A,S')->get('constance/academicLoad','ConstanceController@academicLoad');
 Route::middleware('jwt.auth','role:A,S')->get('constance/studentHistorical','ConstanceController@studentHistorical');
 Route::middleware('jwt.auth','role:A,S')->get('constance/studentHistoricalData','ConstanceController@studentHistoricalData');
 Route::middleware('jwt.auth','role:A,T')->get('constance/workTeacher','ConstanceController@constanceOfWorkTeacher');
