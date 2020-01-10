@@ -109,7 +109,6 @@ class ConstanceService
         $enrolledCredits=0;
         $cumulativeNotes=0;
         $cantSubjects=0;
-        /*dd($historical->toArray());*/
         foreach ($historical->toArray() as $schoolPeriod){
             foreach ($schoolPeriod['enrolled_subjects'] as $inscription){
                 if ($inscription['qualification']){

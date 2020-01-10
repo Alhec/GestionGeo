@@ -188,7 +188,20 @@ class SchoolPeriodStudent extends Model
         }
     }
 
-
+    public static function getCantEnrolledSchoolPeriodByStudent($studentId,$organizationId)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->with('student')
+                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get('id');
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 
 
 }

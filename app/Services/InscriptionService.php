@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\SchoolProgram;
 use App\Subject;
 use Illuminate\Http\Request;
 use App\SchoolPeriodStudent;
@@ -223,6 +224,12 @@ class InscriptionService
                                     $response['message']=self::warningAverage;
                                 }
                                 $response['available_subjects']=$availableSubjects;
+                                if (!$internalCall){
+                                    $availableTesis = self::availableTesis($studentId,$organizationId);
+                                    if (is_numeric($availableTesis)&&$availableTesis==0){
+                                        $response['available_tesis']=true;
+                                    }
+                                }
                                 return $response;
                             }
                         }
@@ -240,6 +247,28 @@ class InscriptionService
 
         }
         return response()->json(['message'=>self::notFoundStudentGivenId],206);
+    }
+
+    public static function availableTesis($student,$organizationId){
+        $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+        if (is_numeric($schoolProgram) && $schoolProgram==0){
+            return 0;
+        }
+        $cantSchoolPrograms = SchoolPeriodStudent::getCantEnrolledSchoolPeriodByStudent($student['id'],$organizationId);
+        if (is_numeric($cantSchoolPrograms)&&$cantSchoolPrograms==0){
+            return 0;
+        }
+        $enrolledSubjects = SchoolPeriodStudent::getEnrolledSubjectsByStudent($student['id'],$organizationId);
+        if (is_numeric($enrolledSubjects)&&$enrolledSubjects==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($enrolledSubjects)>0){
+            $dataPorcentualStudent=ConstanceService::stadisticsDataHistorical($enrolledSubjects);
+            if ($cantSchoolPrograms>=$schoolProgram['min_duration'] && $dataPorcentualStudent['enrolled_credits']>=$schoolProgram['min_num_cu_final_work'] ){
+                return true;
+            }
+        }
+
     }
 
     public static function validate(Request $request)
@@ -390,6 +419,9 @@ class InscriptionService
                     $result = self::addSubjects($request['subjects'],$schoolPeriodStudentId,false);
                     if (is_numeric($result)&&$result==0){
                         return response()->json(['message' => self::taskPartialError], 206);
+                    }
+                    if (isset($request['final_work'])){
+
                     }
                 }else{
                     return response()->json(['message' => self::notAllowedRegister], 206);

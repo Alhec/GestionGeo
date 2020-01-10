@@ -18,9 +18,12 @@ class CreateFinalWorksTable extends Migration
             $table->string('title',100);
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('subject_id');
-            $table->string('status',10);
-            $table->text('description_status');
-            $table->date('approval_date');
+            $table->string('status',10)
+                ->default('progress');
+            $table->text('description_status')
+                ->nullable();
+            $table->date('approval_date')
+                ->nullable();
             $table->foreign('student_id')
                 ->references('id')
                 ->on('students')
