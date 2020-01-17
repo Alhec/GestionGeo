@@ -9,7 +9,7 @@ class SchoolProgramSubject extends Model
 {
     protected $table = 'school_program_subject';
 
-    protected $fillable = ['school_program_id','subject_id','type'];
+    protected $fillable = ['school_program_id','subject_id','type','subject_group'];
 
     public $timestamps = false;
 
@@ -51,6 +51,17 @@ class SchoolProgramSubject extends Model
                 ->delete();
         }catch (\Exception $e){
             DB::rollback();
+            return 0;
+        }
+    }
+
+    public static function getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgramId)
+    {
+        try{
+            self::where('subject_id',$subjectId)
+                ->where('school_program_id',$schoolProgramId)
+                ->get('subject_together_id');
+        }catch (\Exception $e){
             return 0;
         }
     }

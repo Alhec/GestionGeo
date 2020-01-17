@@ -41,6 +41,11 @@ class Student extends Model
         return $this->belongsTo('App\SchoolProgram');
     }
 
+    public function schoolPeriod()
+    {
+        return $this->belongsTo('App\SchoolPeriodStudent');
+    }
+
     public static function addStudent($student)
     {
         try{
@@ -171,5 +176,4 @@ class Student extends Model
             return 0;
         }
     }
-
 }

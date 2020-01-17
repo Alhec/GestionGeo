@@ -27,6 +27,7 @@ class SchoolPeriodService
     const ok = 'OK';
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
     const noTeachSubjects='No impartes materias en el periodo escolar actual';
+    const emptyStudent='No hay estudintes con advertencia';
 
     public static function getSchoolPeriods(Request $request,$organizationId)
     {
@@ -170,6 +171,9 @@ class SchoolPeriodService
             $updateStudent=StudentService::warningUpdateStudent($organizationId);
             if (is_numeric($updateStudent)&&$updateStudent){
                 return response()->json(['message' => self::taskError], 206);
+            }
+            if ($updateStudent=='emptyStudent'){
+                return response()->json(['message'=>self::emptyStudent],206);
             }
             return self::getSchoolPeriodById($request,$schoolPeriodId,$organizationId);
         }

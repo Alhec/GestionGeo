@@ -18,8 +18,14 @@ class CreateFinalWorksTable extends Migration
             $table->string('title',100);
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('subject_id');
+            $table->unsignedBigInteger('project_id')
+                ->nullable();
             $table->string('status',10)
                 ->default('progress');
+            $table->boolean('is_project?')
+                ->default(false);
+            $table->integer('attempts')
+                ->default(1);
             $table->text('description_status')
                 ->nullable();
             $table->date('approval_date')
@@ -31,6 +37,10 @@ class CreateFinalWorksTable extends Migration
             $table->foreign('subject_id')
                 ->references('id')
                 ->on('subjects')
+                ->onDelete('cascade');
+            $table->foreign('project_id')
+                ->references('id')
+                ->on('final_works')
                 ->onDelete('cascade');
         });
     }

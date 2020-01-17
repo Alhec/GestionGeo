@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Organization;
 use App\SchoolProgram;
 use App\Subject;
 use Illuminate\Http\Request;
@@ -897,4 +898,5 @@ class InscriptionService
         }
         return $isValid;
     }
+
 }

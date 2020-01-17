@@ -94,7 +94,16 @@ class SchoolPeriodStudent extends Model
     public static function addSchoolPeriodStudent($schoolPeriodStudent){
         try{
             return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','status','pay_ref',
-                'financing','financing_description','pay_ref','amount_paid','test_period'));
+                'financing','financing_description','amount_paid','test_period'));
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
+
+    public static function addSchoolPeriodStudentLikeArray($schoolPeriodStudent){
+        try{
+            return self::create($schoolPeriodStudent);
         }catch (\Exception $e){
             DB::rollback();
             return 0;

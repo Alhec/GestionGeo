@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use phpDocumentor\Reflection\Types\Self_;
 
 class Organization extends Model
 {
@@ -36,6 +37,14 @@ class Organization extends Model
                     ->where('id','=',$userId);
             })
                 ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function getOrganizations(){
+        try{
+            return self::get('id');
         }catch (\Exception $e){
             return 0;
         }

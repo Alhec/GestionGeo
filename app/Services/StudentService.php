@@ -390,6 +390,6 @@ class StudentService
                 }
             }
         }
-        return 'emptyStuent';
+        return 'emptyStudent';
     }
 }

@@ -60,6 +60,7 @@ class SubjectService
              "is_final_subject?"=>'boolean',
              'school_programs.*.id'=>'required|numeric',
              'school_programs.*.type'=>'required|max:2|ends_with:EL,OP,OB',
+             'school_programs.*.with_subject'=>'numeric',
         ]);
     }
 
@@ -75,11 +76,40 @@ class SubjectService
     public static function addSchoolProgramInSubject($schoolPrograms, $subjectId)
     {
         foreach ($schoolPrograms as $schoolProgram){
-            $result = SchoolProgramSubject::addSchoolProgramSubject([
-                'school_program_id'=>$schoolProgram['id'],
-                'subject_id'=>$subjectId,
-                'type'=>$schoolProgram['type'],
-            ]);
+            if (isset($schoolProgram['with_subject'])){
+                $groupId = SchoolProgramSubject::getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgram['id']);
+                if (is_numeric($groupId)&&$groupId==0){
+                    return 0;
+                }else{
+                    $result = SchoolProgramSubject::addSchoolProgramSubject([
+                        'school_program_id'=>$schoolProgram['id'],
+                        'subject_id'=>$subjectId,
+                        'type'=>$schoolProgram['type'],
+                        'subject_group_id'=>$groupId
+                    ]);
+                    if (is_numeric($result)&&$result==0){
+                        return 0;
+                    }
+                }
+            }else{
+                $result = SchoolProgramSubject::addSchoolProgramSubject([
+                    'school_program_id'=>$schoolProgram['id'],
+                    'subject_id'=>$subjectId,
+                    'type'=>$schoolProgram['type']
+                ]);
+                if (is_numeric($result)&&$result==0){
+                    $result=SchoolProgramSubject::updateSchoolProgramSubject($result,
+                        [
+                            'school_program_id'=>$schoolProgram['id'],
+                            'subject_id'=>$subjectId,
+                            'type'=>$schoolProgram['type'],
+                            'subject_group_id'=>$result
+                        ]);
+                    if (is_numeric($result) && $result == 0){
+                        return 0;
+                    }
+                }
+            }
             if (is_numeric($result) && $result == 0){
                 return 0;
             }
@@ -126,21 +156,30 @@ class SubjectService
         return response()->json(['message'=>self::notFoundSubject],206);
     }
 
-    public static function updateSchoolProgramsInSubject($schoolPrograms, $subject_id)
+    public static function updateSchoolProgramsInSubject($schoolPrograms, $subjectId)
     {
-        $result =$schoolProgramsInBd = SchoolProgramSubject::getSchoolProgramSubjectBySubjectId($subject_id);
-        if (is_numeric($result)&& $result == 0){
-            return response()->json(['message'=>self::taskError],206);
+        $schoolProgramsInBd = SchoolProgramSubject::getSchoolProgramSubjectBySubjectId($subjectId);
+        if (is_numeric($schoolProgramsInBd)&& $schoolProgramsInBd == 0){
+            return 0;
         }
         $schoolProgramsUpdated = [];
         foreach ($schoolPrograms as $schoolProgram){
             $existSchoolProgram = false;
             foreach ($schoolProgramsInBd as $schoolProgramInBd){
                 if ($schoolProgramInBd['school_program_id']==$schoolProgram['id']){
-                    $schoolProgram['subject_id']=$subject_id;
+                    $schoolProgram['subject_id']=$subjectId;
+                    if (isset($schoolProgram['with_subject'])){
+                        $groupId = SchoolProgramSubject::getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgram['id']);
+                        if (is_numeric($groupId)&&$groupId==0){
+                            return 0;
+                        }
+                        $schoolProgram['subject_group']=$groupId;
+                    }else{
+                        $schoolProgram['subject_group']=$subjectId;
+                    }
                     $result = SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramInBd['id'],$schoolProgram);
                     if (is_numeric($result)&& $result == 0){
-                        return response()->json(['message'=>self::taskError],206);
+                        return 0;
                     }
                     $schoolProgramsUpdated[]=$schoolProgramInBd['id'];
                     $existSchoolProgram = true;
@@ -148,13 +187,22 @@ class SubjectService
                 }
             }
             if ($existSchoolProgram == false) {
+                if (isset($schoolProgram['with_subject'])){
+                    $groupId = SchoolProgramSubject::getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgram['id']);
+                    if (is_numeric($groupId)&&$groupId==0){
+                        return 0;
+                    }
+                    $schoolProgram['subject_group']=$groupId;
+                }else{
+                    //cooregir a partir de aqui
+                }
                 $result =SchoolProgramSubject::addSchoolProgramSubject([
                     'school_program_id'=>$schoolProgram['id'],
-                    'subject_id'=>$subject_id,
+                    'subject_id'=>$subjectId,
                     'type'=>$schoolProgram['type'],
                 ]);
                 if ($result == 0){
-                    return response()->json(['message'=>self::taskError],206);
+                   return 0;
                 }
                 $postgraduatesUpdated[]=$result;
             }
@@ -163,7 +211,7 @@ class SubjectService
             if (!in_array($schoolProgramId['id'],$schoolProgramsUpdated)){
                $result = SchoolProgramSubject::deleteSchoolProgramSubject($schoolProgramId['id']);
                 if (is_numeric($result)&& $result == 0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return 0;
                 }
             }
         }

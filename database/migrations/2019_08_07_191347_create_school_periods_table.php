@@ -22,6 +22,7 @@ class CreateSchoolPeriodsTable extends Migration
             $table->date('withdrawal_deadline');
             $table->boolean('load_notes')
                 ->default(false);
+            $table->date('inscription_start_date');
             $table->boolean('inscription_visible')
                 ->default(false);
             $table->foreign('organization_id')
