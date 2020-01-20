@@ -85,7 +85,7 @@ class SubjectService
                         'school_program_id'=>$schoolProgram['id'],
                         'subject_id'=>$subjectId,
                         'type'=>$schoolProgram['type'],
-                        'subject_group_id'=>$groupId
+                        'subject_group'=>$groupId
                     ]);
                     if (is_numeric($result)&&$result==0){
                         return 0;
@@ -98,12 +98,14 @@ class SubjectService
                     'type'=>$schoolProgram['type']
                 ]);
                 if (is_numeric($result)&&$result==0){
+                    return 0;
+                }else{
                     $result=SchoolProgramSubject::updateSchoolProgramSubject($result,
                         [
                             'school_program_id'=>$schoolProgram['id'],
                             'subject_id'=>$subjectId,
                             'type'=>$schoolProgram['type'],
-                            'subject_group_id'=>$result
+                            'subject_group'=>$result
                         ]);
                     if (is_numeric($result) && $result == 0){
                         return 0;
@@ -192,17 +194,35 @@ class SubjectService
                     if (is_numeric($groupId)&&$groupId==0){
                         return 0;
                     }
-                    $schoolProgram['subject_group']=$groupId;
+                    $result =SchoolProgramSubject::addSchoolProgramSubject([
+                        'school_program_id'=>$schoolProgram['id'],
+                        'subject_id'=>$subjectId,
+                        'type'=>$schoolProgram['type'],
+                        'subject_group'=>$groupId
+                    ]);
+                    if (is_numeric($result)&&$result==0){
+                        return 0;
+                    }
                 }else{
-                    //cooregir a partir de aqui
-                }
-                $result =SchoolProgramSubject::addSchoolProgramSubject([
-                    'school_program_id'=>$schoolProgram['id'],
-                    'subject_id'=>$subjectId,
-                    'type'=>$schoolProgram['type'],
-                ]);
-                if ($result == 0){
-                   return 0;
+                    $result =SchoolProgramSubject::addSchoolProgramSubject([
+                        'school_program_id'=>$schoolProgram['id'],
+                        'subject_id'=>$subjectId,
+                        'type'=>$schoolProgram['type'],
+                    ]);
+                    if (is_numeric($result)&&$result==0){
+                        return 0;
+                    }else{
+                        $result=SchoolProgramSubject::updateSchoolProgramSubject($result,
+                            [
+                                'school_program_id'=>$schoolProgram['id'],
+                                'subject_id'=>$subjectId,
+                                'type'=>$schoolProgram['type'],
+                                'subject_group'=>$result
+                            ]);
+                        if (is_numeric($result) && $result == 0){
+                            return 0;
+                        }
+                    }
                 }
                 $postgraduatesUpdated[]=$result;
             }
