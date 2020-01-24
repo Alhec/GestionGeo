@@ -8,6 +8,8 @@
 
 namespace App\Services;
 
+use App\FinalWork;
+use App\FinalWorkSchoolPeriod;
 use App\Organization;
 use App\SchoolProgram;
 use App\Subject;
@@ -226,9 +228,20 @@ class InscriptionService
                                 }
                                 $response['available_subjects']=$availableSubjects;
                                 if (!$internalCall){
-                                    $availableTesis = self::availableTesis($studentId,$organizationId);
-                                    if (is_numeric($availableTesis)&&$availableTesis==0){
+                                    $approvedProject = FinalWork::existApprovedProject($studentId);
+                                    if(is_numeric($approvedProject)&&$approvedProject==0){
+                                        return 0;
+                                    }
+                                    if ($approvedProject==true){
                                         $response['available_tesis']=true;
+                                    }else{
+                                        $availableProject = self::availableProject($student,$organizationId);
+                                        if (is_numeric($availableProject)&&$availableProject==0){
+                                            return 0;
+                                        }
+                                        if ($availableProject==true){
+                                            $response['available_project']=true;
+                                        }
                                     }
                                 }
                                 return $response;
@@ -250,7 +263,7 @@ class InscriptionService
         return response()->json(['message'=>self::notFoundStudentGivenId],206);
     }
 
-    public static function availableTesis($student,$organizationId){
+    public static function availableProject($student, $organizationId){
         $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
         if (is_numeric($schoolProgram) && $schoolProgram==0){
             return 0;
@@ -265,7 +278,7 @@ class InscriptionService
         }
         if (count($enrolledSubjects)>0){
             $dataPorcentualStudent=ConstanceService::stadisticsDataHistorical($enrolledSubjects);
-            if ($cantSchoolPrograms>=$schoolProgram['min_duration'] && $dataPorcentualStudent['enrolled_credits']>=$schoolProgram['min_num_cu_final_work'] ){
+            if (count($cantSchoolPrograms)>=$schoolProgram[0]['min_duration'] && $dataPorcentualStudent['enrolled_credits']>=$schoolProgram[0]['min_num_cu_final_work'] ){
                 return true;
             }
         }
@@ -394,6 +407,74 @@ class InscriptionService
         return $totalQualification;
     }
 
+    public static function setProjectOrFinalWork($student, $finalWork,$schoolPeriodId,$organizationId)
+    {
+        $approvedProject = FinalWork::existApprovedProject($student['id']);
+        if (is_numeric($approvedProject)&&$approvedProject==0){
+            return 0;
+        }
+        $cantProjects = FinalWork::getProjectsByStudent($student['id']);
+        if (is_numeric($cantProjects)&&$cantProjects==0){
+            return 0;
+        }
+        $project=FinalWork::getProjectInProgressByStudent($student['id']);
+        if (is_numeric($project)&&$project==0){
+            return 0;
+        }
+        if ($approvedProject==false){//project
+            if (count($cantProjects)>0){//update segundo intento
+                $result=FinalWork::updateFinalWork($project['id'],[
+                    'title'=>$finalWork['title'],
+                    'student_id'=>$project['student_id'],
+                    'subject_id'=>$project['subject_id'],
+                    'is_project?'=>true,
+                    'approval_date'=>$finalWork['approval_date']
+                ]);
+                if (is_numeric($result)&&$result==0){
+                    return 0;
+                }
+                if ($schoolPeriodId != $project['school_periods'][0]['id'] && count($project['school_periods'])==1  ){//crear relacion del segundo intento en un semestre diferente
+                    $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod([
+                        'status'=>'progress',
+                        'final_work_id'=>$project['id'],
+                        'school_period_id'=>$schoolPeriodId
+                    ]);
+                    if (is_numeric($result)&&$result==0){
+                        return 0;
+                    }
+                }else{
+
+                }
+            }else{//create primer intento
+                $subjectId=Subject::getProjectIdBySchoolProgram($student['school_program_id'],$organizationId);
+                if (is_numeric($subjectId)&&$subjectId==0){
+                    return 0;
+                }
+                $projectId=FinalWork::addFinalWork([
+                    'title'=>$finalWork['title'],
+                    'student_id'=>$student['id'],
+                    'subject_id'=>$subjectId,
+                    'is_project?'=>true,
+                    'approval_date'=>$finalWork['approval_date']
+                ]);
+                if (is_numeric($projectId)&&$projectId==0){
+                    return 0;
+                }
+                $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod([
+                    'status'=>$finalWork['status'],
+                    'description_status'=>$finalWork['description'],
+                    'final_work_id'=>$projectId,
+                    'school_program_id'=>$student['school_program_id']
+                ]);
+                if (is_numeric($result)&&$result==0){
+                    return 0;
+                }
+            }
+        }else{//tesis
+
+        }
+    }
+
     public static function addInscription(Request $request,$organizationId)
     {
         self::validate($request);
@@ -422,7 +503,10 @@ class InscriptionService
                         return response()->json(['message' => self::taskPartialError], 206);
                     }
                     if (isset($request['final_work'])){
-
+                        $result = self::setProjectOrFinalWork($student[0],$request['final_work'],$request['school_period_id'],$organizationId);
+                        if (is_numeric($result)&&$result==0){
+                            return response()->json(['message' => self::taskPartialError], 206);
+                        }
                     }
                 }else{
                     return response()->json(['message' => self::notAllowedRegister], 206);
@@ -645,6 +729,18 @@ class InscriptionService
         return $isValid;
     }
 
+    public static function validateGroupSubject($subjects,$schoolProgramId,$organizationId){
+        $subjectsInProgram=Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId);
+        if (is_numeric($subjectsInProgram)&&$subjectsInProgram == 0){
+            return 0;
+        }
+        $subjectsValues= array_values($subjects[0]);
+        dd($subjectsValues);
+        foreach ($subjects as $subject){
+
+        }
+    }
+
     public static function studentAddInscription(Request $request,$organizationId)
     {
         $isValid=StudentService::validateStudent($request,$organizationId,$request['student_id']);
@@ -730,7 +826,6 @@ class InscriptionService
 
     public static function withdrawSubjects(Request $request,$organizationId)
     {
-
         $isValid=StudentService::validateStudent($request,$organizationId,$request['student_id']);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);

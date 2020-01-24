@@ -201,8 +201,14 @@ class SchoolPeriodStudent extends Model
     {
         try{
             return self::where('student_id',$studentId)
-                ->with('student')
-                ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
+                ->where(function ($query){
+                    $query->where('status','REG')
+                        ->orWhere('status','RIN-A')
+                        ->orWhere('status','RIN-B')
+                        ->orWhere('status','REI-A')
+                        ->orWhere('status','REI-B');
+                })
+                ->WhereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);
                 })

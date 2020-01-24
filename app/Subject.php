@@ -139,7 +139,21 @@ class Subject extends Model
             })
                 ->get('id');
         }catch (\Exception $e){
-            DB::rollback();
+            return 0;
+        }
+    }
+
+    public static function getProjectIdBySchoolProgram($schoolProgramId,$organizationId)
+    {
+        try{
+            return self::where('is_project_subject?',true)
+                ->whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId)
+                    ->where('school_program_id','=',$schoolProgramId);
+                })
+                ->get('id');
+        }catch (\Exception $e){
             return 0;
         }
     }

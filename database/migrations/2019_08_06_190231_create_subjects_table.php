@@ -20,6 +20,8 @@ class CreateSubjectsTable extends Migration
             $table->integer('uc');
             $table->boolean('is_final_subject?')
                 ->default(false);
+            $table->boolean('is_project_subject?')
+                ->default(false);
             $table->integer('theoretical_hours')
                 ->default(0);
             $table->integer('practical_hours')

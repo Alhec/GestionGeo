@@ -65,4 +65,5 @@ class SchoolProgramSubject extends Model
             return 0;
         }
     }
+
 }
