@@ -523,7 +523,7 @@ class InscriptionService
                     return 0;
                 }
             }
-        }else{//tesis
+        }else{
 
         }
     }

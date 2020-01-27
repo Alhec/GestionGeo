@@ -35,7 +35,20 @@ class FinalWork extends Model
         try{
             return self::where('student_id',$studentId)
                 ->where('is_project?',true)
-                ->where('status','progress')
+                ->where('status','PRS')
+                ->with('SchoolPeriods')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function getProjectInApprovedByStudent($studentId)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->where('is_project?',true)
+                ->where('status','APR')
                 ->with('SchoolPeriods')
                 ->get();
         }catch (\Exception $e){
