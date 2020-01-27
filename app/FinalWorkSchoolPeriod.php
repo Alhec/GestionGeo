@@ -19,4 +19,13 @@ class FinalWorkSchoolPeriod extends Model
         }
     }
 
+    public static function updateFinalWorkSchoolPeriod($id,$finalWorkSchoolPeriod)
+    {
+        try{
+            return self::find($id)
+                ->update($finalWorkSchoolPeriod);
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 }
