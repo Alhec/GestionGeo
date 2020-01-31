@@ -30,12 +30,19 @@ class SchoolPeriodStudent extends Model
             ->with('dataSubject');
     }
 
+    public function finalWorkData()
+    {
+        return $this->hasOne('final_work_school_period')
+            ->with('finalWork');
+    }
+
     public static function getSchoolPeriodStudent($organizationId)
     {
         try{
             return self::with('schoolPeriod')
                 ->with('student')
                 ->with('enrolledSubjects')
+                ->with('finalWorkData')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);
@@ -53,6 +60,7 @@ class SchoolPeriodStudent extends Model
                 ->with('student')
                 ->with('enrolledSubjects')
                 ->with('schoolPeriod')
+                ->with('finalWorkData')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);
@@ -70,6 +78,7 @@ class SchoolPeriodStudent extends Model
                 ->with('student')
                 ->with('enrolledSubjects')
                 ->with('schoolPeriod')
+                ->with('finalWorkData')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);

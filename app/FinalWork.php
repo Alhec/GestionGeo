@@ -8,8 +8,7 @@ class FinalWork extends Model
 {
     public $timestamps = false;
     protected $table = 'final_works';
-    protected $fillable = ['id','title','student_id','subject_id','project_id','is_project?','status',
-        'description_status','approval_date'];
+    protected $fillable = ['id','title','student_id','subject_id','project_id','is_project?','approval_date'];
 
     public function SchoolPeriods()
     {
@@ -18,11 +17,18 @@ class FinalWork extends Model
             ->withPivot('status','description_status','final_work_id','school_period_id');
     }
 
-    public static function existApprovedProject($studentId)
+    public function Advisors()
+    {
+        return $this->belongsToMany('App\Teachers','advisors')
+            ->as('advisors')
+            ->withPivot('teacher_id','final_work_id');
+    }
+
+    public static function existApprovedFinalWork($studentId, $isProject)
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('is_project?',true)
+                ->where('is_project?',$isProject)
                 ->where('status','APR')
                 ->exists();
         }catch (\Exception $e){
@@ -30,12 +36,12 @@ class FinalWork extends Model
         }
     }
 
-    public static function getProjectInProgressByStudent($studentId)
+    public static function getFinalWorkByStudentAndStatus($studentId, $isProject, $status)
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('is_project?',true)
-                ->where('status','PRS')
+                ->where('is_project?',$isProject)
+                ->where('status',$status)
                 ->with('SchoolPeriods')
                 ->get();
         }catch (\Exception $e){
@@ -43,37 +49,13 @@ class FinalWork extends Model
         }
     }
 
-    public static function getProjectInApprovedByStudent($studentId)
+    public static function getFinalWorksByStudent($studentId, $isProject)
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('is_project?',true)
-                ->where('status','APR')
-                ->with('SchoolPeriods')
-                ->get();
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
-
-    public static function getProjectsByStudent($studentId)
-    {
-        try{
-            return self::where('student_id',$studentId)
-                ->where('is_project?',true)
+                ->where('is_project?',$isProject)
                 ->with('SchoolPeriods')
                 ->get('id');
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
-
-    public static function getTesisByStudent($studentId)
-    {
-        try{
-            return self::where('student_id',$studentId)
-                ->where('is_project?',false)
-                ->get();
         }catch (\Exception $e){
             return 0;
         }

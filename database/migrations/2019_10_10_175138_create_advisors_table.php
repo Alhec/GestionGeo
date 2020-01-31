@@ -14,10 +14,9 @@ class CreateAdvisorsTable extends Migration
     public function up()
     {
         Schema::create('advisors', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('final_works');
+            $table->unsignedBigInteger('final_work_id');
             $table->unsignedBigInteger('teacher_id');
-            $table->foreign('final_works')
+            $table->foreign('final_work_id')
                 ->references('id')
                 ->on('final_works')
                 ->onDelete('cascade');

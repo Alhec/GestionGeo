@@ -20,14 +20,14 @@ class CreateFinalWorkSchoolPeriodTable extends Migration
             $table->text('description_status')
                 ->nullable();
             $table->unsignedBigInteger('final_work_id');
-            $table->unsignedBigInteger('school_period_id');
+            $table->unsignedBigInteger('school_period_student_id');
             $table->foreign('final_work_id')
                 ->references('id')
                 ->on('final_works')
                 ->onDelete('cascade');
-            $table->foreign('school_period_id')
+            $table->foreign('school_period_student_id')
                 ->references('id')
-                ->on('school_periods')
+                ->on('school_period_student')
                 ->onDelete('cascade');
         });
     }
