@@ -14,32 +14,70 @@ class SchoolProgramsTableSeeder extends Seeder
     {
         SchoolProgram::query()->truncate();
         SchoolProgram::create([
-            'school_program_name' => 'Especializacion de Geoquimica 2',
-            'num_cu' => 50,
-            'organization_id'=>'G',
+            'school_program_name' => 'Especializacion',
+            'num_cu' => 3,
+            'organization_id'=>'ICT',
+            'duration'=>1,
+            'conducive_to_degree'=>true,
+            'min_duration'=>1,
+            'min_num_cu_final_work'=>3
+        ]);
+        SchoolProgram::create([
+            'school_program_name' => 'Maestria',
+            'num_cu' => 6,
+            'organization_id'=>'ICT',
+            'duration'=>2,
+            'conducive_to_degree'=>true,
+            'min_duration'=>1,
+            'min_num_cu_final_work'=>3
+        ]);
+        SchoolProgram::create([
+            'school_program_name' => 'Doctorado',
+            'num_cu' => 9,
+            'organization_id'=>'ICT',
             'duration'=>3,
             'conducive_to_degree'=>true,
             'min_duration'=>2,
-            'min_num_cu_final_work'=>8
-
+            'min_num_cu_final_work'=>3
         ]);
         SchoolProgram::create([
-            'school_program_name' => 'Especializacion en Computacion',
-            'num_cu' => 50,
+            'school_program_name' => 'Ampliacion',
+            'grant_certificate' => true,
+            'organization_id'=>'ICT',
+            'conducive_to_degree'=>false,
+        ]);
+        SchoolProgram::create([
+            'school_program_name' => 'Especializacion',
+            'num_cu' => 3,
+            'organization_id'=>'C',
+            'duration'=>1,
+            'conducive_to_degree'=>true,
+            'min_duration'=>1,
+            'min_num_cu_final_work'=>3
+        ]);
+        SchoolProgram::create([
+            'school_program_name' => 'Maestria',
+            'num_cu' => 6,
+            'organization_id'=>'C',
+            'duration'=>2,
+            'conducive_to_degree'=>true,
+            'min_duration'=>1,
+            'min_num_cu_final_work'=>3
+        ]);
+        SchoolProgram::create([
+            'school_program_name' => 'Doctorado',
+            'num_cu' => 9,
             'organization_id'=>'C',
             'duration'=>3,
             'conducive_to_degree'=>true,
             'min_duration'=>2,
-            'min_num_cu_final_work'=>8
+            'min_num_cu_final_work'=>3
         ]);
         SchoolProgram::create([
-            'school_program_name' => 'Especializacion de Geoquimica',
-            'num_cu' => 10,
-            'organization_id'=>'G',
-            'duration'=>3,
-            'conducive_to_degree'=>true,
-            'min_duration'=>2,
-            'min_num_cu_final_work'=>8
+            'school_program_name' => 'Perfeccionamiento',
+            'grant_certificate' => true,
+            'organization_id'=>'C',
+            'conducive_to_degree'=>false,
         ]);
     }
 }

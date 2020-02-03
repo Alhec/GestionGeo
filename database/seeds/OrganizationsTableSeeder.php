@@ -17,13 +17,13 @@ class OrganizationsTableSeeder extends Seeder
             'id'=>'G',
             'name'=>'Geoquimica',
             'faculty_id'=>'CIENS',
-            'website'=>'GestionGeo.com'
+            'website'=>'Geoquimica.com'
         ]);
         Organization::create([
             'id'=>'C',
             'name'=>'Computacion',
             'faculty_id'=>'CIENS',
-            'website'=>'GestionGeo.com'
+            'website'=>'Computacion.com'
         ]);
         Organization::create([
             'id'=>'ICT',

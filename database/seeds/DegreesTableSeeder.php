@@ -17,7 +17,7 @@ class DegreesTableSeeder extends Seeder
             'student_id'=>1,
             'degree_obtained'=>'Lic',
             'degree_name'=>'Licenciado en Geoquimica',
-            'university'=>'UCV'
+            'university'=>'Universidad Central de Venezuela'
         ]);
     }
 }

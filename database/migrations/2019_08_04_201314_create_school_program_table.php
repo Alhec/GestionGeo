@@ -17,12 +17,16 @@ class CreateSchoolProgramTable extends Migration
             $table->bigIncrements('id');
             $table->string('organization_id',10);
             $table->string('school_program_name',100);
-            $table->integer('num_cu');
+            $table->integer('num_cu')
+                ->nullable();
             $table->integer('min_num_cu_final_work')
-                ->default(8);
-            $table->integer('duration');
+                ->default(8)
+                ->nullable();
+            $table->integer('duration')
+                ->nullable();
             $table->integer('min_duration')
-                ->default(2);
+                ->default(2)
+                ->nullable();
             $table->boolean('grant_certificate')
                 ->default(false);
             $table->boolean('conducive_to_degree')

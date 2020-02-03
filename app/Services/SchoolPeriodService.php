@@ -67,7 +67,7 @@ class SchoolPeriodService
             'subjects.*.modality'=>'required|max:3|ends_with:REG,INT,SUF',
             'subjects.*start_date'=>'size:10',
             'subjects.*end_date'=>'size:10',
-            'subjects.*.schedules.*.day'=>'required|max:10',
+            'subjects.*.schedules.*.day'=>'required|size:1|ends_with:1,2,3,4,5,6,7',
             'subjects.*.schedules.*.classroom'=>'required|max:20',
             'subjects.*.schedules.*.start_hour'=>'required|size:8',
             'subjects.*.schedules.*.end_hour'=>'required|size:8',

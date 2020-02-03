@@ -17,7 +17,8 @@ class CreateSchoolProgramSubjectTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('school_program_id');
             $table->unsignedBigInteger('subject_id');
-            $table->string('type',2);
+            $table->string('type',2)
+                ->nullable();
             $table->unsignedBigInteger('subject_group')
                 ->nullable();
             $table->foreign('school_program_id')

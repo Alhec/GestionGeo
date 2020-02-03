@@ -14,8 +14,8 @@ class SchedulesTableSeeder extends Seeder
     {
         Schedule::query()->truncate();
         Schedule::create([
-            'school_period_subject_teacher_id'=>3,
-            'day'=>'Lunes',
+            'school_period_subject_teacher_id'=>1,
+            'day'=>'1',
             'classroom'=>'2',
             'start_hour'=>'07:00:00',
             'end_hour'=>'09:00:00',
