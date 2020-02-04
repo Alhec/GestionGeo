@@ -17,7 +17,7 @@ class SchoolProgramsTableSeeder extends Seeder
             'school_program_name' => 'Especializacion',
             'num_cu' => 3,
             'organization_id'=>'ICT',
-            'duration'=>1,
+            'duration'=>3,
             'conducive_to_degree'=>true,
             'min_duration'=>1,
             'min_num_cu_final_work'=>3
@@ -26,7 +26,7 @@ class SchoolProgramsTableSeeder extends Seeder
             'school_program_name' => 'Maestria',
             'num_cu' => 6,
             'organization_id'=>'ICT',
-            'duration'=>2,
+            'duration'=>3,
             'conducive_to_degree'=>true,
             'min_duration'=>1,
             'min_num_cu_final_work'=>3

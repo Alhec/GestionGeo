@@ -166,5 +166,22 @@ class SchoolProgramSubjectTableSeeder extends Seeder
             'subject_id'=>12,
             'type'=>'OP',
         ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>1,
+            'subject_id'=>13,
+            'type'=>'OB',
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>1,
+            'subject_id'=>14,
+            'type'=>'OB',
+            'subject_group'=>33
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>1,
+            'subject_id'=>15,
+            'type'=>'OB',
+            'subject_group'=>33
+        ]);
     }
 }

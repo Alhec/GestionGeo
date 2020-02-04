@@ -85,5 +85,24 @@ class SubjectsTableSeeder extends Seeder
             'uc'=>3,
             'laboratory_hours'=>2,
         ]);
+        Subject::create([
+            'subject_code'=>'Tesis',
+            'subject_name'=>'Tesis',
+            'is_final_subject?'=>true,
+            'uc'=>0,
+        ]);
+        Subject::create([
+            'subject_code'=>'Seminario',
+            'subject_name'=>'Seminario',
+            'uc'=>0,
+        ]);
+        Subject::create([
+            'subject_code'=>'Proyecto',
+            'subject_name'=>'Proyeto',
+            'is_project_subject?'=>true,
+            'uc'=>0,
+        ]);
+
+
     }
 }

@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
          $this->call(SchedulesTableSeeder::class);
          $this->call(SchoolPeriodStudentTableSeeder::class);
          $this->call(StudentSubjectTableSeeder::class);
+         $this->call(FinalWorkTableSeeder::class);
+         $this->call(FinalWorkSchoolPeriodTableSeeder::class);
+         $this->call(AdvisorsTableSeeder::class);
          Schema::enableForeignKeyConstraints();
     }
 }
