@@ -27,7 +27,7 @@ class TeacherService
     {
         $request->validate([
             'teacher_type'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT,JUB,INV',
-            'dedication'=>'required|max:3|ends_with:INV,MT,CON,TC,EXC',
+            'dedication'=>'required|max:3|ends_with:MT,CON,TC,EXC',
             'home_institute'=>'max:40',
             'country'=>'max:20'
         ]);

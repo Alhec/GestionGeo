@@ -14,11 +14,11 @@ class CreateUniversitiesTable extends Migration
     public function up()
     {
         Schema::create('universities', function (Blueprint $table) {
-            $table->string('id',20)
+            $table->string('id',10)
                 ->primary();
             $table->string('name',100)
                 ->unique();
-            $table->string('acronym',20)
+            $table->string('acronym',10)
                 ->nullable()
                 ->unique();
         });

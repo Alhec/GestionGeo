@@ -16,7 +16,8 @@ class CreateAdministratorsTable extends Migration
         Schema::create('administrators', function (Blueprint $table) {
             $table->unsignedBigInteger('id');
             $table->string('rol',11);
-            $table->boolean('principal');
+            $table->boolean('principal')
+                ->default(false);
             $table->primary('id');
             $table->foreign('id')
                 ->references('id')

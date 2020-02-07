@@ -16,9 +16,9 @@ class CreateFacultiesTable extends Migration
         Schema::create('faculties', function (Blueprint $table) {
             $table->String('id',10)
                 ->primary();
-            $table->string('university_id',20);
+            $table->string('university_id',10);
             $table->string('name',100);
-            $table->string('acronym',20)
+            $table->string('acronym',10)
                 ->nullable();
             $table->foreign('university_id')
                 ->references('id')
