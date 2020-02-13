@@ -40,17 +40,12 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
-    // Comentamos esto que no hace falta
-    // public function __construct()
-    // {
-    //     $this-&gt;middleware('guest');
-    // }
     protected function rules()
     {
         return [
             'token' => 'required',
-            'user_type'=>'required',
-            'email' => 'required',
+            'user_type'=>'required|max:1|ends_with:A,S,T',
+            'email' => 'required|max:30|email',
             'password' => 'required|confirmed',
         ];
     }
@@ -64,7 +59,12 @@ class ResetPasswordController extends Controller
 
     public function reset(Request $request)
     {
-        $this->validate($request, $this->rules(), $this->validationErrorMessages());
+        $request->validate( [
+            'token' => 'required',
+            'user_type'=>'required|max:1|ends_with:A,S,T',
+            'email' => 'required|max:30|email',
+            'password' => 'required|confirmed',
+        ]);
 
         $response = $this->broker()->reset(
             $this->credentials($request), function ($user, $password) {
@@ -73,22 +73,15 @@ class ResetPasswordController extends Controller
         );
 
         return $response == \Password::PASSWORD_RESET
-            ? response()->json($response, 200)
-                    : response()->json($response, 422);
+            ? response()->json(['message'=>'Clave reseteada'], 200)
+                    : response()->json(['message'=>'Token invalido o vencido'], 422);
     }
 
     protected function resetPassword($user, $password)
     {
-        /*$user->forceFill([
-        'password' => $password,
-            'remember_token' => str_random(60),
-        ])->save();*/
         $user->forceFill([
             'password' => Hash::make($password),
             'remember_token' => Str::random(60),
         ])->save();
-
-        // GENERAR TOKEN PARA SATELLIZER AQUI ??
-        // $this-&gt;guard()-&gt;login($user);
     }
 }

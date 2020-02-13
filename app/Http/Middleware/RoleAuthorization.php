@@ -18,7 +18,7 @@ class RoleAuthorization
         if(!in_array(auth()->payload()['user']->user_type,$roles)){
             return response()->json(['error' => 'Unauthorized'],401);
         }
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         if (auth()->payload()['user']->organization_id!=$organizationId){
             return response()->json(['error' => 'Unauthorized'],401);
         }

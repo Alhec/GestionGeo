@@ -35,7 +35,7 @@ class AdministratorController extends Controller
      */
     public function index(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return UserService::getUsers($request,'A',$organizationId);
     }
 
@@ -47,7 +47,7 @@ class AdministratorController extends Controller
      */
     public function store(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return AdministratorService::addAdministrator($request,$organizationId);
     }
     /**
@@ -58,7 +58,7 @@ class AdministratorController extends Controller
      */
     public function show($id,Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return UserService::getUserById($request,$id,'A',$organizationId);
     }
 
@@ -71,7 +71,7 @@ class AdministratorController extends Controller
      */
     public function update($id,Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return AdministratorService::updateAdministrator($request,$id,$organizationId);
     }
 
@@ -83,19 +83,19 @@ class AdministratorController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return AdministratorService::deleteAdministrator($request,$id,$organizationId);
     }
 
     public function active(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return UserService::activeUsers($request,'A',$organizationId);
     }
 
     public function principal(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return AdministratorService::getPrincipalCoordinator($request,$organizationId,false);
     }
 }

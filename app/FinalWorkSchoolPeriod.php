@@ -8,7 +8,7 @@ class FinalWorkSchoolPeriod extends Model
 {
     public $timestamps = false;
     protected $table = 'final_work_school_period';
-    protected $fillable = ['id','final_work_id','school_period_student_id','status','description_status'];
+    protected $fillable = ['id','status','description_status','final_work_id','school_period_student_id'];
 
     public function finalWork()
     {

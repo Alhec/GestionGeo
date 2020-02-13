@@ -20,7 +20,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return AuthService::login($request,$organizationId);
     }
 
@@ -42,7 +42,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'Cerro sesión exitosamente']);
     }
     /**
      * Refresh a token.

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SchoolPeriodStudent extends Model
 {
-    protected $fillable = ['student_id','school_period_id','status','pay_ref','financing','financing_description','amount_paid','inscription_date'];
+    protected $fillable = ['student_id','school_period_id','status','financing','financing_description','pay_ref',
+        'amount_paid','inscription_date','test_period'];
 
     protected $table = 'school_period_student';
 

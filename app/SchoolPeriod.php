@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SchoolPeriod extends Model
 {
-    protected $fillable = ['cod_school_period','start_date','end_date','withdrawal_deadline','inscription_visible','organization_id','load_notes'];
+    protected $fillable = ['organization_id','cod_school_period','start_date','end_date','withdrawal_deadline',
+        'load_notes','inscription_start_date','inscription_visible'];
     protected $hidden = ['organization_id'];
     public $timestamps = false;
 

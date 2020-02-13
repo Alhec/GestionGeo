@@ -21,7 +21,7 @@ class UserService
     const notFoundUser = 'Usuario no encontrado';
     const ok = 'OK';
     const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
-    const invalidPassword = 'La clave esta errada';
+    const invalidPassword = 'La clave no puede ser igual a la anterior';
 
     public static function getUsers(Request $request, $userType,$organizationId)
     {
@@ -187,11 +187,12 @@ class UserService
         $request['organization_id']=$organizationId;
         $request['password']=$user['password'];
         $request['user_type']=$user['user_type'];
+        $request['activate']=$user['activate'];
         $result = User::updateUser(auth()->payload()['user']->id,$request);
         if (is_numeric($result) && $result ==0){
             return response()->json(['message'=>self::taskError],206);
         }
-        return response()->json(['message'=>'Ok'],200);
+        return response()->json(['message'=>self::ok],200);
     }
 
     public static function validateChangePassword(Request $request)
@@ -209,7 +210,7 @@ class UserService
         if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if (!Hash::check($request['old_password'],$user[0]['password'])){
+        if (Hash::check($request['old_password'],$user[0]['password'])){
             return response()->json(['message'=>self::invalidPassword],206);
         }
         $user=$user->toArray();

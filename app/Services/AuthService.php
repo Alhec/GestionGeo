@@ -14,15 +14,20 @@ use App\User;
 class AuthService
 {
     const taskError = 'No se puede proceder con la tarea';
+    const invalidUser='Usuario invalido';
 
     public static function login(Request $request,$organizationId){
         $credentials= json_decode($request->getContent(),true);
-        if (!$token = auth('api')->attempt(['identification'=>$credentials['identification'],
-            'password'=>$credentials['password'],
-            'user_type'=>$credentials['user_type'],
-            'organization_id'=>$organizationId,
-            'active'=>1])) {
-            return response()->json(['error' => 'Invalid User'], 401);
+        $token = auth('api')->attempt(
+            [
+                'identification'=>$credentials['identification'],
+                'password'=>$credentials['password'],
+                'user_type'=>$credentials['user_type'],
+                'organization_id'=>$organizationId,
+                'active'=>1
+            ]);
+        if (!$token) {
+            return response()->json(['error' => self::invalidUser], 401);
         }
         $user=User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId);
         if (is_numeric($user)&&$user==0){

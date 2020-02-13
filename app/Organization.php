@@ -10,7 +10,7 @@ class Organization extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['id','name','faculty_id','organization_id','website'];
+    protected $fillable = ['id','name','faculty_id','organization_id','website','address'];
 
     protected $keyType='string';
 

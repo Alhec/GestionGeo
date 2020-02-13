@@ -10,5 +10,5 @@ class Faculty extends Model
 
     protected $keyType='string';
 
-    protected $fillable = ['id','name','university_id'];
+    protected $fillable = ['id','name','university_id','acronym'];
 }

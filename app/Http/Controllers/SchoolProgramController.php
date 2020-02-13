@@ -14,7 +14,7 @@ class SchoolProgramController extends Controller
      */
     public function index(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return  SchoolProgramService::getSchoolProgram($request,$organizationId);
     }
 
@@ -26,7 +26,7 @@ class SchoolProgramController extends Controller
      */
     public function store(Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return SchoolProgramService::addSchoolProgram($request,$organizationId);
     }
 
@@ -38,7 +38,7 @@ class SchoolProgramController extends Controller
      */
     public function show($id, Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return SchoolProgramService::getSchoolProgramById($request, $id,$organizationId);
     }
 
@@ -51,7 +51,7 @@ class SchoolProgramController extends Controller
      */
     public function update($id,Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return SchoolProgramService::updateSchoolProgram($request,$id,$organizationId);
     }
 
@@ -63,7 +63,7 @@ class SchoolProgramController extends Controller
      */
     public function destroy($id,Request $request)
     {
-        $organizationId = $request->header('organization_key');
+        $organizationId = $request->header('Organization-Key');
         return SchoolProgramService::deleteSchoolProgram($request,$id,$organizationId);
     }
 }

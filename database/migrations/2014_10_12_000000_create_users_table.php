@@ -33,7 +33,8 @@ class CreateUsersTable extends Migration
             $table->string('password',250);
             $table->string('user_type',1);
             $table->string('level_instruction',5);
-            $table->boolean('active');
+            $table->boolean('active')
+                ->default(true);
             $table->boolean('with_disabilities')
                 ->default(false);
             $table->string('sex',1);

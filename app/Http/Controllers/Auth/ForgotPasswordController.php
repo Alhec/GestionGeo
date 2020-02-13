@@ -47,22 +47,25 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $this->validate($request, ['email' => 'required|email','user_type' => 'required']);
-
-        $response = $this->broker()->sendResetLink(
-            $request->only('email','user_type')
-        );
-        switch ($response) {
-            case \Password::INVALID_USER:
-                return response()->json($response, 422);
-                break;
-            case \Password::INVALID_PASSWORD:
-                return response()->json($response, 422);
-                break;
-            case \Password::INVALID_TOKEN:
-                return response()->json($response, 422);
-                break;
-            default:
-                return response()->json($response, 200);
+        try{
+            $response = $this->broker()->sendResetLink(
+                $request->only('email','user_type')
+            );
+            switch ($response) {
+                case \Password::INVALID_USER:
+                    return response()->json(['message'=>'Usuario Invalido'], 422);
+                    break;
+                case \Password::INVALID_PASSWORD:
+                    return response()->json(['message'=>'Clave Invalida'], 422);
+                    break;
+                case \Password::INVALID_TOKEN:
+                    return response()->json(['message'=>'Token Invalido'], 422);
+                    break;
+                default:
+                    return response()->json(['message'=>'Correo enviado'], 200);
+            }
+        }catch(\Exception $e){
+            return response()->json(['message'=>'No se pudo enviar el correo'], 206);
         }
     }
 }

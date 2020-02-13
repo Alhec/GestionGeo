@@ -10,6 +10,6 @@ class university extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['id','name'];
+    protected $fillable = ['id','name','acronym'];
 
 }

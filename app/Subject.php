@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 class Subject extends Model
 {
-    protected $fillable = ['subject_code','subject_name','uc','is_final_subject?','theoretical_hours','practical_hours','laboratory_hours'];
+    protected $fillable = ['subject_code','subject_name','uc','is_final_subject?','is_project_subject?',
+        'theoretical_hours','practical_hours','laboratory_hours'];
 
     public $timestamps = false;
 
