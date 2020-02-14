@@ -16,26 +16,6 @@ class Administrator extends Model
         return $this->belongsTo('App\User');
     }
 
-    public static function getAdministratorById($id)
-    {
-        try{
-            return self::where('id',$id)
-                ->get();
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
-
-    public static function existAdministratorById($id)
-    {
-        try{
-            return self::where('id',$id)
-                ->exists();
-        }catch (\Exception $e){
-            return 0;
-        }
-    }
-
     public static function addAdministrator($administrator)
     {
         try{
@@ -57,8 +37,6 @@ class Administrator extends Model
             return 0;
         }
     }
-
-
 
     public static function getPrincipalCoordinator($organizationId)
     {

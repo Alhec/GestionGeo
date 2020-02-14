@@ -47,9 +47,10 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $this->validate($request, ['email' => 'required|email','user_type' => 'required']);
+        $request['organization_id'] = $request->header('Organization-Key');
         try{
             $response = $this->broker()->sendResetLink(
-                $request->only('email','user_type')
+                $request->only('email','user_type','organization_id')
             );
             switch ($response) {
                 case \Password::INVALID_USER:
