@@ -154,6 +154,9 @@ class UserService
             if (is_numeric($user)&&$user == 0){
                 return 0;
             }
+            if(isset($user['administrator']) && $user['administrator']['principal']){
+                $request['status']=true;
+            }
             $request['password']=$user[0]['password'];
             $request['user_type']=$userType;
             $result = User::updateUser($userId,$request);

@@ -52,7 +52,7 @@ class TeacherService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            $result = EmailService::userCreate($user,$organizationId,'S');
+            $result = EmailService::userCreate($user,$organizationId,'T');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
             }

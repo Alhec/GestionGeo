@@ -23,7 +23,7 @@ class AdministratorService
     const noAction = "No esta permitido realizar esa accion";
     const unauthorized = 'Unauthorized';
     const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario';
-    const noHasPrincipal = 'No hay coordinador principal';
+    const hasNotPrincipal = 'No hay coordinador principal';
 
     public static function validate(Request $request)
     {
@@ -45,7 +45,7 @@ class AdministratorService
             if (!isset($request['principal'])){
                 $request['principal']=false;
             }
-            if ($request['principal']){
+            if ($request['principal']&& $request['rol']=='COORDINATOR'){
                 if (((auth()->payload()['user']->administrator->principal) ==false &&
                         auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
                     auth()->payload()['user']->administrator->rol=='SECRETARY'){
@@ -60,15 +60,23 @@ class AdministratorService
                     return response()->json(['message' => self::taskError], 206);
                 }
             }
-            $result = Administrator::addAdministrator([
-                'id'=>$user,
-                'rol'=>$request['rol'],
-                'principal'=>$request['principal']
-            ]);
+            if ($request['rol']=='COORDINATOR'){
+                $result = Administrator::addAdministrator([
+                    'id'=>$user,
+                    'rol'=>$request['rol'],
+                    'principal'=>$request['principal']
+                ]);
+            }else{
+                $result = Administrator::addAdministrator([
+                    'id'=>$user,
+                    'rol'=>$request['rol'],
+                    'principal'=>false
+                ]);
+            }
             if(is_numeric($result) && $result==0){
                 return response()->json(['message' => self::taskError], 206);
             }
-            $result = EmailService::userCreate($user,$organizationId,'S');
+            $result = EmailService::userCreate($user,$organizationId,'A');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
             }
@@ -90,29 +98,37 @@ class AdministratorService
             if (!isset($request['principal'])){
                 $request['principal']=false;
             }
-            if ($request['principal']){
+            if ($request['principal'] && $request['rol']=='COORDINATOR' ){
                 if (((auth()->payload()['user']->administrator->principal) ==false &&
                         auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
                     auth()->payload()['user']->administrator->rol=='SECRETARY'){
                     return response()->json(['message'=>'Unauthorized'],401);
                 }
-                if(auth()->payload()['user']->id == $id){
-                    return response()->json(['message'=>self::noAction],206);
-                }
-                $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
-                    'id'=>auth()->payload()['user']->id,
-                    'rol'=>auth()->payload()['user']->administrator->rol,
-                    'principal'=>false
-                ]);
-                if (is_numeric($result)&& $result==0){
-                    return response()->json(['message'=>self::taskError],206);
+                if(auth()->payload()['user']->id != $id){
+                    $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
+                        'id'=>auth()->payload()['user']->id,
+                        'rol'=>auth()->payload()['user']->administrator->rol,
+                        'principal'=>false
+                    ]);
+                    if (is_numeric($result)&& $result==0){
+                        return response()->json(['message'=>self::taskError],206);
+                    }
                 }
             }
-            $result=Administrator::updateAdministrator($id, [
-                'id'=>$id,
-                'rol'=>$request['rol'],
-                'principal'=>$request['principal']
-            ]);
+            if ($request['rol']=='COORDINATOR'){
+                $result=Administrator::updateAdministrator($id, [
+                    'id'=>$id,
+                    'rol'=>$request['rol'],
+                    'principal'=>$request['principal']
+                ]);
+            }else{
+                $result=Administrator::updateAdministrator($id, [
+                    'id'=>$id,
+                    'rol'=>$request['rol'],
+                    'principal'=>false
+                ]);
+            }
+
             if (is_numeric($result)&& $result==0){
                 return response()->json(['message'=>self::taskError],206);
             }
@@ -132,7 +148,7 @@ class AdministratorService
         if ($administrator[0]['administrator']['principal'] && $administrator[0]['administrator']['rol']=='COORDINATOR'){
             return response()->json(['message'=>self::notDeletePrincipal],206);
         }
-        return UserService::deleteUser($request,$id,'A');
+        return UserService::deleteUser($request,$id,'A',$organizationId);
     }
 
     public static function getPrincipalCoordinator(Request $request,$organizationId,$internalCall)
@@ -150,6 +166,6 @@ class AdministratorService
         if ($internalCall){
             return 'noExist';
         }
-        return response()->json(['message'=>self::noHasPrincipal],206);
+        return response()->json(['message'=>self::hasNotPrincipal],206);
     }
 }

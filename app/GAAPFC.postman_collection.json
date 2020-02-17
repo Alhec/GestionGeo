@@ -1,0 +1,3590 @@
+{
+	"info": {
+		"_postman_id": "5adbf7ba-f0de-4ada-b927-5bcbeef1c95d",
+		"name": "GAAPFC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"old_password\":\"24698917\",\n\t\"password\":\"24698917\", \n\t\"password_confirmation\":\"24698917\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/changePassword/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"changePassword",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeUserData",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Organization-Key",
+								"type": "text",
+								"value": "ICT"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"24698916\",\n    \"first_name\": \"Hector\",\n    \"first_surname\":\"Alayon\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\": \"Lic\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/updateUser",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"updateUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Organization-Key",
+								"type": "text",
+								"value": "ICT"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"identification\":\"24698916\",\n\t\"password\":\"12345678\",\n\t\"user_type\":\"A\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/logout",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/me",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payload",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/payload",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"payload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/refresh",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestResetPassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/password/email",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"password",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\",\n\t\"password\":\"12345678\", \n\t\"password_confirmation\":\"12345678\", \n\t\"token\":\"08b4d6684d13f2d536600a729c043a9f9b600710a3aca0e05665f7cde61fc94e\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/password/reset",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"password",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Administrators",
+			"item": [
+				{
+					"name": "AdministratorGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorGetActive",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Organization-Key",
+								"type": "text",
+								"value": "ICT"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/active",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorGetPrincipalCoordinator",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "IC"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/principalCoordinator",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"principalCoordinator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorsGetID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorDeleteID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/49",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"49"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorsPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "organization_key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"24698847\",\n    \"first_name\": \"Jesus\",\n    \"first_surname\": \"Vezga\",\n    \"mobile\": \"(1234) 567-8901\",\n    \"email\": \"hector080896@gmail.com\",\n    \"rol\":\"SECRETARY\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Dr\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/49",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"49"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorsPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Jesus\",\n    \"first_surname\": \"Vezga\",\n    \"mobile\": \"(1234) 567-8901\",\n    \"email\": \"hector080896@gmail.com\",\n    \"rol\":\"COORDINATOR\",\n    \"principal\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Dr\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e55a4c8a-d365-4a7b-bc74-06445e30ac46",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "770e7d2e-89b1-43a5-9b3d-ae0e4b77a02b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Teacher",
+			"item": [
+				{
+					"name": "teachersGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teachers",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "teachersGetActive",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Organization-Key",
+								"type": "text",
+								"value": "ICT"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teachers/active",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teachers",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "teachersGetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teachers/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teachers",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "teachersPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"24698950\",\n    \"first_name\": \"Gabriel\",\n    \"first_surname\": \"Uribe\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"teacher_type\":\"TIT\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Dr\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"UCV\",\n    \"country\":\"Venezuela\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teachers",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "teachersPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"24698950\",\n    \"first_name\": \"Gabriel\",\n    \"first_surname\": \"Urbano\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"teacher_type\":\"TIT\",\n    \"active\":true,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Lic\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"USB\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teachers/52",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teachers",
+								"52"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "teachersDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teachers/52",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teachers",
+								"52"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "SchoolProgram",
+			"item": [
+				{
+					"name": "schoolProgramGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPrograms"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schoolProgramGetID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPrograms",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schoolProgramDeleteID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms/6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPrograms",
+								"6"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schoolProgramPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school_program_name\": \"Especializacion de Geoquimica 5\",\n    \"num_cu\":50,\n    \"duration\":3,\n    \"conducive_to_degree\": true,\n    \"min_num_cu_final_work\":8,\n    \"min_duration\":2,\n    \"grant_certificate\":false\n}\n"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPrograms"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schoolProgramPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school_program_name\": \"Especializacion de Geoquimica 6\",\n    \"num_cu\": 43,\n    \"duration\": 4,\n    \"conducive_to_degree\": 1\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms/6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPrograms",
+								"6"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Student",
+			"item": [
+				{
+					"name": "StudentsGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WarningStudentsGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/warningStudents",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"warningStudents"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentsGetByID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students/13",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentsGetActive",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students/active",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentsPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"123456\",\n    \"first_name\": \"Keny\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@123456.com\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"school_program_id\":1,\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentsPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"9d76z3\",\n    \"first_name\": \"Keny\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@idvd.zom\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ],\n    \n    \"active\":true,\n    \"is_available_final_work\": true,\n    \"repeat_approved_subject\": false,\n    \"repeat_reprobated_subject\": false,\n    \"student_id\":8,\n    \"end_program\":true,\n    \"current_status\":\"REG\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students/13",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddStudentToUser",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"9d76z3\",\n    \"first_name\": \"Keny\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@idvd.zom\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"school_program_id\":3,\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ],\n    \n    \"active\":true,\n    \"is_available_final_work\": true,\n    \"repeat_approved_subject\": false,\n    \"repeat_reprobated_subject\": false,\n    \"end_program\":false\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students/continue/13",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students",
+								"continue",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentsDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students/13",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentsDeleteOfUser",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/students/delete/13?student_id=8",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"students",
+								"delete",
+								"13"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Subjects",
+			"item": [
+				{
+					"name": "subjectsGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subjects",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsGetID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subjects/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subjects",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectDeleteID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subjects/9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subjects",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "organization_key",
+								"name": "Content-Type",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"subject_code\":22350,\n\t\"subject_name\":\"BD2\",\n\t\"uc\":4,\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject?\":false,\n\t\"school_programs\":[\n\t\t{\n            \"id\":1,\n            \"type\": \"EL\",\n        \t\"with_subject\":\"\"\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subjects",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"subject_code\":22350,\n\t\"subject_name\":\"BD2\",\n\t\"uc\":\"4\",\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject?\":false,\n\t\"school_programs\":[\n\t\t{\n            \"id\":1,\n            \"type\": \"OB\"\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subjects/9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subjects",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "SchoolPeriod",
+			"item": [
+				{
+					"name": "SchoolPeriodsGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsCurrent",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/current",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsGetByID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPostPeriod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cod_school_period\": \"1-2020\",\n    \"start_date\": \"2020-01-01\",\n    \"end_date\": \"2020-06-30\",\n    \"withdrawal_deadline\":\"2020-03-01\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPostPeriodTeacherSubject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \t\"cod_school_period\": \"8-2021\",\n        \"start_date\": \"2020-07-01\",\n        \"end_date\": \"2020-12-31\",\n        \"withdrawal_deadline\":\"2020-09-01\",\n        \"subjects\": [\n            {\n                \"teacher_id\": 3,\n                \"subject_id\": 2,\n                \"limit\":40,\n                \"duty\":10,\n                 \"modality\": \"REG\"\n            }\n        ]\n    \n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPostPeriodTeacherSubjectSchedule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cod_school_period\": \"1-2022\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-06-30\",\n    \"withdrawal_deadline\":\"2022-03-01\",\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\":30,\n            \"duty\":10,\n            \"modality\": \"REG\",\n            \"schedules\": [\n              \t{\n                    \"day\": \"Lunes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                },\n                {\n                    \"day\": \"Martes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPutPeriod",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cod_school_period\": \"Q-2019\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": false,\n    \"inscription_visible\": true\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPutPeriodTeacherSubject",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cod_school_period\": \"1-2021\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": true,\n    \"inscription_visible\": false,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\": 40,\n            \"modality\":\"REG\",\n            \"duty\": 10\n        },\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\": 50,\n            \"modality\":\"REG\",\n            \"duty\": 10\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPutPeriodTeacherSubjectSchedule",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cod_school_period\": \"1-2021\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": true,\n    \"inscription_visible\": false,\n    \"subjects\": [\n        {\n            \"teacher_id\": 4,\n            \"subject_id\": 1,\n            \"limit\": 40,\n            \"modality\":\"REG\",\n            \"duty\": 10,\n            \"schedules\": [\n               \t{\n                    \"day\": \"Lunes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n              \t},\n              \t{\n                   \"day\": \"Miercoles\",\n                   \"classroom\": \"2\",\n                   \"start_hour\": \"13:39:20\",\n                   \"end_hour\": \"13:39:20\"\t\t\t\n              \t}\n            ]\n        },\n         {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\": 40,\n            \"modality\":\"REG\",\n            \"duty\": 10,\n            \"schedules\": [\n               \t{\n                    \"day\": \"Lunes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n              \t},\n              \t{\n                   \"day\": \"Miercoles\",\n                   \"classroom\": \"2\",\n                   \"start_hour\": \"13:39:20\",\n                   \"end_hour\": \"13:39:20\"\t\t\t\n              \t}\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Inscription",
+			"item": [
+				{
+					"name": "InscriptionGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionGetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions/10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionGetBySchoolPeriod",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions/schoolPeriod/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions",
+								"schoolPeriod",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionAvailableSubjects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions/availableSubjects?student_id=3&school_period_id=2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions",
+								"availableSubjects"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "3"
+								},
+								{
+									"key": "school_period_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 2,\n    \"school_period_id\": 2,\n    \"status\":\"REG\",\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 3\n        }\n    ],\n    \"final_work\":{\n    \t\"title\":\"test\",\n    \t\"advisors\":[\n    \t\t{\n    \t\t\"teacher_id\":4\n    \t\t}\n    \t\t]\n    }\n   \n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 2,\n    \"school_period_id\": 2,\n    \"pay_ref\": \"1234567811\",\n    \"financing\":\"EXO\",\n    \"amount_paid\":30.3,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 3,\n            \"status\": \"REP\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions/10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/inscriptions/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inscriptions",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsGetSubjectsTaught",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenTeacher}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/subjectsTaught?teacher_id=3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPeriods",
+								"subjectsTaught"
+							],
+							"query": [
+								{
+									"key": "teacher_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoadNotes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenTeacher}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"teacher_id\":3,\n\t\"school_period_subject_teacher_id\":4,\n\t\"student_notes\":[\n\t\t{\n\t\t\t\"student_subject_id\":5,\n\t\t\t\"qualification\":9\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teacherInscription/loadNotes",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teacherInscription",
+								"loadNotes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionEnrolledStudentsInSubject",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenTeacher}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/teacherInscription/enrolledStudent?teacher_id=3&school_period_subject_teacher_id=4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teacherInscription",
+								"enrolledStudent"
+							],
+							"query": [
+								{
+									"key": "teacher_id",
+									"value": "3"
+								},
+								{
+									"key": "school_period_subject_teacher_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentAvailableSubjects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/studentInscription/availableSubjects?student_id=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"studentInscription",
+								"availableSubjects"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentCurrentEnrolledSubjects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/studentInscription/currentEnrolledSubjects?student_id=2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"studentInscription",
+								"currentEnrolledSubjects"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTU2OTk2MTM0MywiZXhwIjoxNTY5OTY0OTQzLCJuYmYiOjE1Njk5NjEzNDMsImp0aSI6IjZqUmtnVDRiSEtJMWk4WEwiLCJzdWIiOjksInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEiLCJ1c2VyX3R5cGUiOiJTIn0.YC4w97FCP0Eua1nnGss8cssymN5BgVqnbuXefCdY19Q"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 3,\n    \"status\":\"REG\",\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 3\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/studentInscription",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"studentInscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentWithdrawSubjects",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 2,\n    \"withdrawSubjects\": [\n        {\n            \"student_subject_id\": 11\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/studentInscription/withdrawSubjects",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"studentInscription",
+								"withdrawSubjects"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Constance",
+			"item": [
+				{
+					"name": "ConstanceStudy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/constance/study?student_id=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"constance",
+								"study"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceInscription",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/constance/inscription?student_id=3&inscription_id=3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"constance",
+								"inscription"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "3"
+								},
+								{
+									"key": "inscription_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceWorkTeacher",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/constance/workTeacher?teacher_id=3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"constance",
+								"workTeacher"
+							],
+							"query": [
+								{
+									"key": "teacher_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceWorkAdministrator",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/constance/workAdministrator?administrator_id=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"constance",
+								"workAdministrator"
+							],
+							"query": [
+								{
+									"key": "administrator_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AcademicLoad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/constance/academicLoad?student_id=3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"constance",
+								"academicLoad"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentHistorical",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/constance/studentHistorical?student_id=3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"constance",
+								"studentHistorical"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"protocolProfileBehavior": {}
+}

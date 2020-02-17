@@ -210,7 +210,7 @@
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr>
                                             <td class="bodycopy">
-                                                Hola {{ $name }}, se ha creado un usuario con el rol de {{ $profile }}, ingresa al sistema con tu cedula de identidad, use su cedula como contrase;a y cambiela lo antes posible.
+                                                Hola {{ $name }}, se ha creado un usuario con el rol de {{ $profile }}, ingresa al sistema con tu cedula de identidad, use su cedula como contraseña y cambiela lo antes posible.
                                             </td>
                                         </tr>
                                         <tr>
