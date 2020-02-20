@@ -1088,15 +1088,14 @@
 								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
-								"key": "organization_key",
+								"key": "Organization-Key",
 								"type": "text",
-								"value": "G"
+								"value": "ICT"
 							},
 							{
 								"key": "Accept",
 								"type": "text",
-								"value": "application/json",
-								"disabled": true
+								"value": "application/json"
 							},
 							{
 								"key": "Content-Type",
@@ -1137,12 +1136,12 @@
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{token}}"
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
-								"key": "organization_key",
+								"key": "Organization-Key",
 								"type": "text",
-								"value": "G"
+								"value": "ICT"
 							},
 							{
 								"key": "Accept",
@@ -1182,59 +1181,6 @@
 					"response": []
 				},
 				{
-					"name": "schoolProgramDeleteID",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							},
-							{
-								"key": "organization_key",
-								"value": "G",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPrograms/6",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"schoolPrograms",
-								"6"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "schoolProgramPost",
 					"request": {
 						"method": "POST",
@@ -1242,7 +1188,7 @@
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{token}}"
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
 								"key": "Content-Type",
@@ -1253,18 +1199,17 @@
 							{
 								"key": "Accept",
 								"type": "text",
-								"value": "application/json",
-								"disabled": true
+								"value": "application/json"
 							},
 							{
-								"key": "organization_key",
+								"key": "Organization-Key",
 								"type": "text",
-								"value": "G"
+								"value": "ICT"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"school_program_name\": \"Especializacion de Geoquimica 5\",\n    \"num_cu\":50,\n    \"duration\":3,\n    \"conducive_to_degree\": true,\n    \"min_num_cu_final_work\":8,\n    \"min_duration\":2,\n    \"grant_certificate\":false\n}\n"
+							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"duration\":1,\n    \"conducive_to_degree\": false,\n    \"min_num_cu_final_work\":0,\n    \"min_duration\":1,\n    \"grant_certificate\":true\n}\n"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/schoolPrograms",
@@ -1299,7 +1244,7 @@
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{token}}"
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
 								"key": "Content-Type",
@@ -1310,21 +1255,20 @@
 							{
 								"key": "Accept",
 								"type": "text",
-								"value": "application/json",
-								"disabled": true
+								"value": "application/json"
 							},
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "ICT"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"school_program_name\": \"Especializacion de Geoquimica 6\",\n    \"num_cu\": 43,\n    \"duration\": 4,\n    \"conducive_to_degree\": 1\n}"
+							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"duration\":1,\n    \"conducive_to_degree\": false,\n    \"min_num_cu_final_work\":0,\n    \"min_duration\":2,\n    \"grant_certificate\":true\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPrograms/6",
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms/10",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1336,7 +1280,59 @@
 							"path": [
 								"api",
 								"schoolPrograms",
-								"6"
+								"10"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schoolProgramDeleteID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "ICT",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/schoolPrograms/10",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"schoolPrograms",
+								"10"
 							],
 							"query": [
 								{

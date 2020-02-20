@@ -42,20 +42,45 @@ class SchoolProgramService
     {
         $request->validate([
             'school_program_name'=>'required|max:100',
-            'num_cu'=>'required|numeric',
-            'duration'=>'required|numeric',
             "conducive_to_degree"=>"required|boolean",
-            'min_duration'=>'numeric|required',
-            'min_num_cu_final_work'=>'numeric|required',
             'grant_certificate'=>'boolean',
             'doctoral_exam'=>'boolean'
+        ]);
+    }
+
+    public static function validateWithDegree(Request $request)
+    {
+        $request->validate([
+            'num_cu'=>'required|numeric',
+            'duration'=>'required|numeric',
+            'min_duration'=>'numeric|required',
+            'min_num_cu_final_work'=>'numeric|required',
+        ]);
+    }
+
+    public static function validateWithoutDegree(Request $request)
+    {
+        $request->validate([
+            'num_cu'=>'numeric',
+            'duration'=>'numeric',
+            'min_duration'=>'numeric',
+            'min_num_cu_final_work'=>'numeric',
         ]);
     }
 
     public static function addSchoolProgram(Request $request,$organizationId)
     {
         self::validate($request);
-        if (!SchoolProgram::existSchoolProgramByName($request['school_program_name'],$organizationId)){
+        if ($request['conducive_to_degree']){
+            self::validateWithDegree($request);
+        }else{
+            self::validateWithoutDegree($request);
+        }
+        $existSchoolProgramByName=SchoolProgram::existSchoolProgramByName($request['school_program_name'],$organizationId);
+        if (is_numeric($existSchoolProgramByName)&& $existSchoolProgramByName==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (!$existSchoolProgramByName){
             $request['organization_id']=$organizationId;
             $id = SchoolProgram::addSchoolProgram($request);
             if ($id == 0){
@@ -85,6 +110,11 @@ class SchoolProgramService
     public static function updateSchoolProgram(Request $request, $id,$organizationId)
     {
         self::validate($request);
+        if ($request['conducive_to_degree']){
+            self::validateWithDegree($request);
+        }else{
+            self::validateWithoutDegree($request);
+        }
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($id,$organizationId);
         if (is_numeric($existSchoolProgram) && $existSchoolProgram == 0){
             return response()->json(['message'=>self::taskError],206);

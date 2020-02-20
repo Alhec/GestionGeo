@@ -91,7 +91,7 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 
 //Administrator
 Route::middleware('jwt.auth','role:A')->get('administrators/active','AdministratorController@active');
-Route::middleware('jwt.auth')->get('administrators/principalCoordinator','AdministratorController@principal');
+Route::middleware('jwt.auth','role:A,T,S')->get('administrators/principalCoordinator','AdministratorController@principal');
 Route::middleware('jwt.auth','role:A')->get('administrators','AdministratorController@index');
 Route::middleware('jwt.auth','role:A')->post('administrators','AdministratorController@store');
 Route::middleware('jwt.auth','role:A')->get('administrators/{id}','AdministratorController@show');

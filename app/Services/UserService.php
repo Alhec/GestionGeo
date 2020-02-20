@@ -22,6 +22,7 @@ class UserService
     const ok = 'OK';
     const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
     const invalidPassword = 'La clave no puede ser igual a la anterior';
+    const busyCredential = 'Identificacion o Correo ya registrados';
 
     public static function getUsers(Request $request, $userType,$organizationId)
     {
@@ -59,7 +60,7 @@ class UserService
             'mobile'=>'required|max:15',
             'work_phone'=>'max:15',
             'email'=>'required|max:30|email',
-            'level_instruction'=>'max:3|ends_with:TSU,TCM,Dr,Esp,Ing,MSc,Lic',
+            'level_instruction'=>'required|max:3|ends_with:TSU,TCM,Dr,Esp,Ing,MSc,Lic',
             'with_disabilities'=>'boolean',
             'sex'=>'required|max:1|ends_with:M,F',
             'nationality'=>'required|max:1|ends_with:V,E',
@@ -187,6 +188,13 @@ class UserService
             return response()->json(['message'=>self::taskError],206);
         }
         $user=$user[0];
+        $availableUser = self::availableUser($request,$user['id'],$user['user_type'],$organizationId);
+        if (is_numeric($availableUser) && $availableUser == 0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (!$availableUser){
+            return response()->json(['message'=>self::busyCredential],206);
+        }
         $request['organization_id']=$organizationId;
         $request['password']=$user['password'];
         $request['user_type']=$user['user_type'];
