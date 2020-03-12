@@ -33,6 +33,7 @@ class StudentService
     const invalidEquivalences = "Equivalencias invalidas";
     const unauthorized = "Unauthorized";
     const notWarningStudent="Todos los estudiantes estan en un estatus regular";
+    const ok = "OK";
 
     public static function validate(Request $request)
     {
@@ -327,6 +328,25 @@ class StudentService
                 return response()->json(['message'=>self::taskError],206);
             }
             return UserService::getUserById($request,$userId,'S',$organizationId);
+        }
+        return response()->json(['message'=>self::noAction],206);
+    }
+
+    public static function deleteStudentUser($userId,$request,$organizationId)
+    {
+        $user = User::getUserById($userId,'S',$organizationId);
+        if (is_numeric($user)&& $user == 0 ){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($user)<1){
+            return response()->json(['message'=>self::notFoundUser],206);
+        }
+        if (count($user[0]['student'])>=2){
+            $result = User::deleteUser($userId);
+            if (is_numeric($result)&&$result == 0 ){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            return response()->json(['message'=>self::ok],206);
         }
         return response()->json(['message'=>self::noAction],206);
     }
