@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
             'first_surname' => 'Ortiz',
             'mobile' => '(1234) 567-8901',
             'email' => 'jose@admin.com',
-            'password' => Hash::make('24698916'),
+            'password' => Hash::make('24698917'),
             'user_type' => 'A',  //S T A,
             'level_instruction'=>'Dr',
             'active'=>true,
@@ -76,7 +76,7 @@ class UsersTableSeeder extends Seeder
             'first_surname' => 'Castillo',
             'mobile' => '(1234) 567-8901',
             'email' => 'jonatan@teacher.com',
-            'password' => Hash::make('24698918'),
+            'password' => Hash::make('24698919'),
             'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',

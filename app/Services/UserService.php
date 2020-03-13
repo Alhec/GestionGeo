@@ -22,6 +22,7 @@ class UserService
     const ok = 'OK';
     const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
     const invalidPassword = 'La clave no puede ser igual a la anterior';
+    const invalidNewPassword = 'La clave actual esta mal';
     const busyCredential = 'Identificacion o Correo ya registrados';
 
     public static function getUsers(Request $request, $userType,$organizationId)
@@ -221,7 +222,10 @@ class UserService
         if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if (Hash::check($request['old_password'],$user[0]['password'])){
+        if (!Hash::check($request['old_password'],$user[0]['password'])){
+            return response()->json(['message'=>self::invalidNewPassword],206);
+        }
+        if ($request['old_password']==$request['password']){
             return response()->json(['message'=>self::invalidPassword],206);
         }
         $user=$user->toArray();
