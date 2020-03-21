@@ -22,7 +22,7 @@ class UserService
     const ok = 'OK';
     const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
     const invalidPassword = 'La clave no puede ser igual a la anterior';
-    const invalidNewPassword = 'La clave actual esta mal';
+    const invalidNewPassword = 'La clave actual esta errada';
     const busyCredential = 'Identificacion o Correo ya registrados';
 
     public static function getUsers(Request $request, $userType,$organizationId)
