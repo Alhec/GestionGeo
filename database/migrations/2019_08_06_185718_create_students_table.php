@@ -37,7 +37,8 @@ class CreateStudentsTable extends Migration
                 ->default(0)
                 ->nullable();
             $table->boolean('with_work')
-                ->default(false);
+                ->default(false)
+                ->nullable();
             $table->boolean('end_program')
                 ->default(false);
             $table->boolean('test_period')
