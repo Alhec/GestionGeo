@@ -12,9 +12,9 @@ class Administrator extends Model
 
     protected $fillable = ['id','rol','principal'];
 
-    /*public function user() {
+    public function user() {
         return $this->belongsTo('App\User');
-    }*/
+    }
 
     public static function addAdministrator($administrator)
     {
