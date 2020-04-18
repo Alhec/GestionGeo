@@ -110,8 +110,12 @@ class SchoolPeriodService
     {
         foreach ($schedules as $schedule){
             $schedule['school_period_subject_teacher_id']=$schoolPeriodSubjectTeacherId;
-            return Schedule::addSchedule($schedule);
+            $result = Schedule::addSchedule($schedule);
+            if ($result == 1) {
+                return 0;
+            }
         }
+        return 1;
     }
 
     public static function addSubjectInSchoolPeriod($subjects,$schoolPeriodId)

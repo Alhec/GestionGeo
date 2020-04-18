@@ -17,7 +17,7 @@ class Schedule extends Model
             self::create($schedule);
         }catch (\Exception $e){
             DB::rollback();
-            return 0;
+            return 1;
         }
     }
 
