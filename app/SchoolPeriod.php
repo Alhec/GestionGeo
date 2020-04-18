@@ -99,9 +99,10 @@ class SchoolPeriod extends Model
 
     public static function addSchoolPeriod($schoolPeriod)
     {
+
         try{
             return self::insertGetId($schoolPeriod->only('cod_school_period','start_date','end_date',
-                'withdrawal_deadline','inscription_visible','organization_id','load_notes'));
+                'withdrawal_deadline','inscription_start_date','inscription_visible','organization_id','load_notes'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;

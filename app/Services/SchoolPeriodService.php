@@ -172,11 +172,11 @@ class SchoolPeriodService
             if (is_numeric($updateStudent)&&$updateStudent){
                 return response()->json(['message' => self::taskError], 206);
             }
-            if ($updateStudent=='emptyStudent'){
+            /*if ($updateStudent=='emptyStudent'){
                 return response()->json(['message'=>self::emptyStudent],206);
-            }
+            }*/
             return self::getSchoolPeriodById($request,$schoolPeriodId,$organizationId);
-        }
+        };
         return response()->json(['message'=>self::busyCodSchoolPeriod],206);
     }
 
