@@ -156,10 +156,10 @@ class StudentService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
-            $result = EmailService::userCreate($userId,$organizationId,'S');
+            /*$result = EmailService::userCreate($userId,$organizationId,'S');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
-            }
+            }*/
             return UserService::getUserById($request,$userId,'S',$organizationId);
         }
     }
