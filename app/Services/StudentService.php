@@ -137,8 +137,10 @@ class StudentService
         if (!$existSchoolProgram){
             return response()->json(['message'=>self::invalidSchoolProgram],206);
         }
-        if (!self::validateEquivalences($organizationId,$request['equivalences'],$request['school_program_id'])){
-            return response()->json(['message'=>self::invalidEquivalences],206);
+        if (isset($request['equivalences'])){
+            if (!self::validateEquivalences($organizationId,$request['equivalences'],$request['school_program_id'])){
+                return response()->json(['message'=>self::invalidEquivalences],206);
+            }
         }
         $userId = UserService::addUser($request,'S',$organizationId);
         if ($userId=='busy_credential'){
