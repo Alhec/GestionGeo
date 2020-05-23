@@ -186,7 +186,7 @@ class StudentService
             'repeat_approved_subject'=>'boolean|required',
             'repeat_reprobated_subject'=>'boolean|required',
             'end_program'=>'boolean|required',
-            'test_period'=>'boolean',
+            'test_period'=>'boolean|required',
             'active'=>'boolean|required'
         ]);
     }

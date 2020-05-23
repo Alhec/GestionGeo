@@ -20,8 +20,8 @@ class CreateStudentsTable extends Migration
             $table->unsignedBigInteger('guide_teacher_id')
                 ->nullable();
             $table->string('student_type',3);
-            $table->string('home_university',70);
-            $table->string('current_postgraduate',70)
+            $table->string('home_university',100);
+            $table->string('current_postgraduate',100)
                 ->nullable();
             $table->string('type_income',30)
                 ->nullable();

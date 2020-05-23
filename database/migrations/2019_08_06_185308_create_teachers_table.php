@@ -18,7 +18,7 @@ class CreateTeachersTable extends Migration
                 ->primary();
             $table->string('teacher_type',3);
             $table->string('dedication',3);
-            $table->string('home_institute',40)
+            $table->string('home_institute',100)
                 ->nullable();
             $table->string('country',20)
                 ->nullable();
