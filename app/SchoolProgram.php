@@ -24,11 +24,11 @@ class SchoolProgram extends Model
         }
     }
 
-    public static function getSchoolProgramById($id, $organization_id)
+    public static function getSchoolProgramById($id, $organizationId)
     {
         try{
             return self::where('id',$id)
-                ->where('organization_id',$organization_id)
+                ->where('organization_id',$organizationId)
                 ->get();
         }catch (\Exception $e){
             return 0;

@@ -22,10 +22,10 @@ class UserService
     const ok = 'OK';
     const notFoundActiveUser = 'No existen usuarios activos con ese perfil';
     const invalidPassword = 'La clave no puede ser igual a la anterior';
-    const invalidNewPassword = 'La clave actual esta errada';
+    const invalidNewPassword = 'La clave que ha introducido esta errada';
     const busyCredential = 'Identificacion o Correo ya registrados';
 
-    public static function getUsers(Request $request, $userType,$organizationId)
+    public static function getUsers($userType,$organizationId)
     {
         $users= User::getUsers($userType,$organizationId);
         if (is_numeric($users) && $users == 0){
@@ -37,7 +37,7 @@ class UserService
         return response()->json(['message'=>self::emptyUser],206);
     }
 
-    public static function getUserById(Request $request, $userId, $userType,$organizationId)
+    public static function getUserById($userId, $userType,$organizationId)
     {
         $user = User::getUserById($userId,$userType,$organizationId);
         if (is_numeric($user) && $user == 0){
@@ -73,7 +73,8 @@ class UserService
         self::validate($request);
         $existUserByIdentification=User::existUserByIdentification($request['identification'],$userType,$organizationId);
         $existUserByEmail=User::existUserByEmail($request['email'],$userType,$organizationId);
-        if ((is_numeric($existUserByIdentification)&&$existUserByIdentification==0)||(is_numeric($existUserByEmail)&&$existUserByEmail==0)){
+        if ((is_numeric($existUserByIdentification) && $existUserByIdentification==0) ||
+            (is_numeric($existUserByEmail) && $existUserByEmail==0)){
             return 0;
         }
         if (!($existUserByIdentification)AND!($existUserByEmail)){
@@ -90,7 +91,7 @@ class UserService
         return "busy_credential";
     }
 
-    public static function deleteUser(Request $request, $userId, $userType,$organizationId)
+    public static function deleteUser($userId,$userType,$organizationId)
     {
         $result = User::existUserById($userId,$userType,$organizationId);
         if (is_numeric($result) && $result == 0){
@@ -170,7 +171,7 @@ class UserService
         return "not_found";
     }
 
-    public static function activeUsers(Request $request,$userType,$organizationId)
+    public static function activeUsers($userType,$organizationId)
     {
         $users = User::getUsersActive($userType,$organizationId);
         if (is_numeric($users) && $users == 0){

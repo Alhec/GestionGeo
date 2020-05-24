@@ -14,7 +14,7 @@ use App\User;
 class AuthService
 {
     const taskError = 'No se puede proceder con la tarea';
-    const invalidUser='Usuario invalido';
+    const invalidUser='Usuario o clave errados';
 
     public static function login(Request $request,$organizationId){
         $credentials= json_decode($request->getContent(),true);
@@ -36,7 +36,7 @@ class AuthService
         return response()->json([
             'token' => $token,
             'type' => 'bearer',
-            'expires' => auth('api')->factory()->getTTL() * 60,
+            'expires' => auth('api')->factory()->getTTL(),
             'user' => $user[0],
         ]);
     }
