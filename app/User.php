@@ -32,7 +32,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','email_verified_at',
+        'password', 'remember_token','email_verified_at','organization_id'
     ];
 
     /**
@@ -173,9 +173,9 @@ class User extends Authenticatable implements JWTSubject
     public static function addUser($user)
     {
         try{
-            return self::insertGetId($user->only('identification', 'password','user_type','first_name','second_name',
-                'first_surname','second_surname','telephone','mobile','work_phone','email','level_instruction','active','with_work',
-                'with_disabilities','sex','nationality','organization_id'));
+            return self::insertGetId($user->only('identification','first_name','second_name','first_surname',
+                'second_surname','telephone','mobile','work_phone','email', 'password','user_type','level_instruction',
+                'active','with_work', 'with_disabilities','sex','nationality','organization_id'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;
