@@ -14,7 +14,7 @@ class SchoolProgramService
     const busyName = 'Nombre del programa en uso';
     const ok = 'OK';
 
-    public static function getSchoolProgram(Request $request,$organizationId)
+    public static function getSchoolProgram($organizationId)
     {
         $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId);
         if (is_numeric($schoolPrograms)&&$schoolPrograms == 0){
@@ -26,7 +26,7 @@ class SchoolProgramService
         return response()->json(['message'=>self::emptyProgram],206);
     }
 
-    public static function getSchoolProgramById(Request $request, $id,$organizationId)
+    public static function getSchoolProgramById($id,$organizationId)
     {
         $schoolProgram = SchoolProgram::getSchoolProgramById($id,$organizationId);
         if (is_numeric($schoolProgram) && $schoolProgram == 0){
@@ -83,15 +83,15 @@ class SchoolProgramService
         if (!$existSchoolProgramByName){
             $request['organization_id']=$organizationId;
             $id = SchoolProgram::addSchoolProgram($request);
-            if ($id == 0){
+            if (is_numeric($id) && $id == 0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            return self::getSchoolProgramById($request,$id,$organizationId);
+            return self::getSchoolProgramById($id,$organizationId);
         }
         return response()->json(['message'=>self::busyName],206);
     }
 
-    public static function deleteSchoolProgram(Request $request, $id,$organizationId)
+    public static function deleteSchoolProgram($id,$organizationId)
     {
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($id,$organizationId);
         if (is_numeric($existSchoolProgram) && $existSchoolProgram == 0){
@@ -134,7 +134,7 @@ class SchoolProgramService
             if (is_numeric($result) && $result == 0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            return self::getSchoolProgramById($request,$id,$organizationId);
+            return self::getSchoolProgramById($id,$organizationId);
         }
         return response()->json(['message'=>self::notFoundProgram],206);
     }

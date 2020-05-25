@@ -11,6 +11,8 @@ class Equivalence extends Model
 
     protected $fillable = ['student_id','subject_id','qualification'];
 
+    protected $hidden = ['student_id'];
+
     public static function addEquivalence($equivalence)
     {
         try{

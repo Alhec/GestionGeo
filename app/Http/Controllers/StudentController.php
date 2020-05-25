@@ -41,7 +41,7 @@ class StudentController extends Controller
     public function show($id,Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUserById($request,$id,'S',$organizationId);
+        return UserService::getUserById($id,'S',$organizationId);
     }
 
 
@@ -67,13 +67,13 @@ class StudentController extends Controller
     public function destroy($id,Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::deleteUser($request,$id,'S',$organizationId);
+        return UserService::deleteUser($id,'S',$organizationId);
     }
 
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::activeUsers($request,'S',$organizationId);
+        return UserService::activeUsers('S',$organizationId);
     }
 
     public function addStudentToUser($id,Request $request)
@@ -86,12 +86,12 @@ class StudentController extends Controller
     {
         $organizationId = $request->header('Organization-Key');
         $studentId = $request->input('student_id');
-        return StudentService::deleteStudent($id,$studentId,$request,$organizationId);
+        return StudentService::deleteStudent($id,$studentId,$organizationId);
     }
 
     public function warningStudent(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return StudentService::warningStudent($request,$organizationId);
+        return StudentService::warningStudent($organizationId);
     }
 }

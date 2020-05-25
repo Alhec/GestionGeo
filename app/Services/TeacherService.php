@@ -20,7 +20,7 @@ class TeacherService
     const notFoundUser = 'Usuario no encontrado';
     const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
     const notSendEmail = 'No se pudo enviar el correo electronico';
-    const noAction = "No esta permitido realizar esa accion";
+    const noAction = "No esta permitido realizar esta accion";
     const unauthorized = "Unauthorized";
 
     public static function validate(Request $request)
@@ -28,7 +28,7 @@ class TeacherService
         $request->validate([
             'teacher_type'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT,JUB,INV',
             'dedication'=>'required|max:3|ends_with:MT,CON,TC,EXC',
-            'home_institute'=>'max:40',
+            'home_institute'=>'max:100',
             'country'=>'max:20'
         ]);
     }
@@ -50,13 +50,13 @@ class TeacherService
                 'country'=>$request['country'],
             ]);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskPartialError],206);
             }
             $result = EmailService::userCreate($user,$organizationId,'T');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
             }
-            return UserService::getUserById($request,$user,'T',$organizationId);
+            return UserService::getUserById($user,'T',$organizationId);
         }
     }
 
@@ -79,13 +79,13 @@ class TeacherService
                 'country'=>$request['country'],
             ]);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskPartialError],206);
             }
-            return UserService::getUserById($request, $id, 'T',$organizationId);
+            return UserService::getUserById($id, 'T',$organizationId);
         }
     }
 
-    public static function validateTeacher(Request $request,$teacherId,$organizationId)
+    public static function validateTeacher($teacherId,$organizationId)
     {
         $existTeacherId=User::existUserById($teacherId,'T',$organizationId);
         if (is_numeric($existTeacherId)&&$existTeacherId==0){

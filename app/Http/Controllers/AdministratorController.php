@@ -36,7 +36,7 @@ class AdministratorController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUsers($request,'A',$organizationId);
+        return UserService::getUsers('A',$organizationId);
     }
 
     /**
@@ -50,6 +50,7 @@ class AdministratorController extends Controller
         $organizationId = $request->header('Organization-Key');
         return AdministratorService::addAdministrator($request,$organizationId);
     }
+
     /**
      * Display the specified resource.
      *
@@ -59,7 +60,7 @@ class AdministratorController extends Controller
     public function show($id,Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUserById($request,$id,'A',$organizationId);
+        return UserService::getUserById($id,'A',$organizationId);
     }
 
     /**
@@ -84,18 +85,18 @@ class AdministratorController extends Controller
     public function destroy($id, Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return AdministratorService::deleteAdministrator($request,$id,$organizationId);
+        return AdministratorService::deleteAdministrator($id,$organizationId);
     }
 
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::activeUsers($request,'A',$organizationId);
+        return UserService::activeUsers('A',$organizationId);
     }
 
     public function principal(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return AdministratorService::getPrincipalCoordinator($request,$organizationId,false);
+        return AdministratorService::getPrincipalCoordinator($organizationId,false);
     }
 }

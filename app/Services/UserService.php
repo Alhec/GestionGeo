@@ -138,9 +138,16 @@ class UserService
         return true;
     }
 
+    public static function validateUpdate(Request $request)
+    {
+        $request->validate([
+            'active'=>'required|boolean',
+        ]);
+    }
     public static function updateUser(Request $request, $userId, $userType,$organizationId)
     {
         self::validate($request);
+        self::validateUpdate($request);
         $existUserById = User::existUserById($userId,$userType,$organizationId);
         if (is_numeric($existUserById) && $existUserById == 0 ){
             return 0;

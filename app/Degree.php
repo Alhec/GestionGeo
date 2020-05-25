@@ -9,6 +9,8 @@ class Degree extends Model
 {
     protected $fillable = ['student_id','degree_obtained','degree_name','degree_description','university'];
 
+    protected $hidden = ['student_id'];
+
     public $timestamps = false;
 
     public static function addDegree($degree)

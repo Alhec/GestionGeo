@@ -15,10 +15,12 @@ class CreateDegreesTable extends Migration
     {
         Schema::create('degrees', function (Blueprint $table) {
             $table->unsignedBigInteger('student_id');
-            $table->string('degree_obtained',5);
+            $table->string('degree_obtained',3);
             $table->string('degree_name',50);
-            $table->string('degree_description',200)->nullable();
-            $table->string('university',50);
+            $table->string('degree_description',200)
+                ->nullable();
+            $table->string('university',100);
+            $table->primary('student_id');
             $table->foreign('student_id')
                 ->references('id')
                 ->on('students')

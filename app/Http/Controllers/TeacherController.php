@@ -16,7 +16,7 @@ class TeacherController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUsers($request,'T',$organizationId);
+        return UserService::getUsers('T',$organizationId);
     }
 
     /**
@@ -40,7 +40,7 @@ class TeacherController extends Controller
     public function show($id,Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUserById($request,$id,'T',$organizationId);
+        return UserService::getUserById($id,'T',$organizationId);
     }
 
     /**
@@ -65,12 +65,12 @@ class TeacherController extends Controller
     public function destroy($id,Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::deleteUser($request,$id,'T',$organizationId);
+        return UserService::deleteUser($id,'T',$organizationId);
     }
 
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::activeUsers($request,'T',$organizationId);
+        return UserService::activeUsers('T',$organizationId);
     }
 }
