@@ -110,7 +110,7 @@ class User extends Authenticatable implements JWTSubject
 
     public static function getUserById($id,$userType,$organizationId)
     {
-        try{
+       try{
             $user =self::where('id',$id)
                 ->where('user_type',$userType)
                 ->where('organization_id',$organizationId);
