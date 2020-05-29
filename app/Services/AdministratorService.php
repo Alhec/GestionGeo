@@ -20,9 +20,8 @@ class AdministratorService
     const notFoundUser = 'Usuario no encontrado';
     const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
     const notSendEmail = 'No se pudo enviar el correo electronico';
-    const noAction = "No esta permitido realizar esta accion";
     const unauthorized = 'Unauthorized';
-    const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario';
+    const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario, solo el coordinador principal puede realizar esta accion';
     const hasNotPrincipal = 'No hay coordinador principal';
 
     public static function validate(Request $request)
@@ -36,6 +35,13 @@ class AdministratorService
     public static function addAdministrator(Request $request,$organizationId)
     {
         self::validate($request);
+        if ($request['principal']&& $request['rol']=='COORDINATOR'){
+            if (((auth()->payload()['user']->administrator->principal) ==false &&
+                    auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
+                auth()->payload()['user']->administrator->rol=='SECRETARY'){
+                return response()->json(['message'=>self::unauthorized],401);
+            }
+        }
         $user = UserService::addUser($request,'A',$organizationId);
         if ($user=="busy_credential") {
             return response()->json(['message' => self::busyCredential], 206);
@@ -46,11 +52,6 @@ class AdministratorService
                 $request['principal']=false;
             }
             if ($request['principal']&& $request['rol']=='COORDINATOR'){
-                if (((auth()->payload()['user']->administrator->principal) ==false &&
-                        auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
-                    auth()->payload()['user']->administrator->rol=='SECRETARY'){
-                    return response()->json(['message'=>self::unauthorized],401);
-                }
                 $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
                     'id'=>auth()->payload()['user']->id,
                     'rol'=>auth()->payload()['user']->administrator->rol,
@@ -87,6 +88,13 @@ class AdministratorService
     public static function updateAdministrator(Request $request, $id,$organizationId)
     {
         self::validate($request);
+        if ($request['principal']&& $request['rol']=='COORDINATOR'){
+            if (((auth()->payload()['user']->administrator->principal) ==false &&
+                    auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
+                auth()->payload()['user']->administrator->rol=='SECRETARY'){
+                return response()->json(['message'=>self::unauthorized],401);
+            }
+        }
         $result =UserService::updateUser($request,$id,'A',$organizationId);
         if ($result=="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
@@ -99,11 +107,6 @@ class AdministratorService
                 $request['principal']=false;
             }
             if ($request['principal'] && $request['rol']=='COORDINATOR' ){
-                if (((auth()->payload()['user']->administrator->principal) ==false &&
-                        auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
-                    auth()->payload()['user']->administrator->rol=='SECRETARY'){
-                    return response()->json(['message'=>'Unauthorized'],401);
-                }
                 if(auth()->payload()['user']->id != $id){
                     $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
                         'id'=>auth()->payload()['user']->id,
