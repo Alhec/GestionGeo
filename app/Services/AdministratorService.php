@@ -89,6 +89,7 @@ class AdministratorService
     {
         self::validate($request);
         if ($request['principal']&& $request['rol']=='COORDINATOR'){
+            $request['active']=true;
             if (((auth()->payload()['user']->administrator->principal) ==false &&
                     auth()->payload()['user']->administrator->rol=='COORDINATOR' )||
                 auth()->payload()['user']->administrator->rol=='SECRETARY'){
