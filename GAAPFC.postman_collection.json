@@ -27,30 +27,28 @@
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"old_password\":\"24698917\",\n\t\"password\":\"24698917\", \n\t\"password_confirmation\":\"24698917\"\n}"
+							"raw": "{\n\t\"old_password\":\"12345678\",\n\t\"password\":\"24698916\", \n\t\"password_confirmation\":\"24698916\"\n}\n",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/changePassword/",
-							"protocol": "http",
+							"raw": "{{url}}api/changePassword/",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"changePassword",
 								""
 							]
@@ -72,7 +70,7 @@
 							{
 								"key": "Organization-Key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Authorization",
@@ -87,20 +85,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"24698916\",\n    \"first_name\": \"Hector\",\n    \"first_surname\":\"Alayon\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\": \"Lic\"\n}"
+							"raw": "{\n    \"identification\": \"24698916\",\n    \"first_name\": \"Hector\",\n    \"second_name\":\"Luis\",\n    \"first_surname\":\"Alayon\",\n    \"second_surname\":\"Hubrea\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\"\n}\n",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/updateUser",
-							"protocol": "http",
+							"raw": "{{url}}api/updateUser",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"updateUser"
 							]
 						}
@@ -109,6 +104,18 @@
 				},
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "44abe3b1-dde6-4384-ae36-149b93dbbbd8",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -121,7 +128,7 @@
 							{
 								"key": "Organization-Key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -131,20 +138,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"identification\":\"24698916\",\n\t\"password\":\"12345678\",\n\t\"user_type\":\"A\"\n}"
+							"raw": "{\n\t\"identification\":\"24698916\",\n\t\"password\":\"24698916\",\n\t\"user_type\":\"A\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/login",
-							"protocol": "http",
+							"raw": "{{url}}api/login",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"login"
 							]
 						}
@@ -171,30 +175,21 @@
 								"key": "Accept",
 								"type": "text",
 								"value": "application/json"
-							},
-							{
-								"key": "",
-								"type": "text",
-								"value": "",
-								"disabled": true
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/logout",
-							"protocol": "http",
+							"raw": "{{url}}api/logout",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"logout"
 							]
 						}
@@ -231,20 +226,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/me",
-							"protocol": "http",
+							"raw": "{{url}}api/me",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"me"
 							]
 						}
@@ -281,20 +273,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/payload",
-							"protocol": "http",
+							"raw": "{{url}}api/payload",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"payload"
 							]
 						}
@@ -331,20 +320,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/refresh",
-							"protocol": "http",
+							"raw": "{{url}}api/refresh",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"refresh"
 							]
 						}
@@ -369,26 +355,23 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\"\n}"
+							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\"\n}\n\n",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/password/email",
-							"protocol": "http",
+							"raw": "{{url}}api/password/email",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"password",
 								"email"
 							]
@@ -415,7 +398,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\",\n\t\"password\":\"12345678\", \n\t\"password_confirmation\":\"12345678\", \n\t\"token\":\"08b4d6684d13f2d536600a729c043a9f9b600710a3aca0e05665f7cde61fc94e\"\n}"
+							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\",\n\t\"password\":\"12345678\", \n\t\"password_confirmation\":\"12345678\", \n\t\"token\":\"507f9180486781f32c8228a93d886e0b16f112e80e7e82338bfc067cde09fe82\"\n}\n",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/password/reset",
@@ -454,13 +440,14 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Content-Type",
@@ -469,17 +456,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators"
 							]
 						}
@@ -499,7 +480,7 @@
 							{
 								"key": "Organization-Key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -513,17 +494,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/active",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators/active",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators",
 								"active"
 							]
@@ -544,7 +519,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "IC"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -588,7 +563,7 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -603,114 +578,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/1",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AdministratorDeleteID",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Organization-Key",
-								"value": "ICT",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{tokenAdmin}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/49",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"administrators",
-								"49"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AdministratorsPut",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "organization_key",
-								"value": "ICT",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{tokenAdmin}}",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"identification\": \"24698847\",\n    \"first_name\": \"Jesus\",\n    \"first_surname\": \"Vezga\",\n    \"mobile\": \"(1234) 567-8901\",\n    \"email\": \"hector080896@gmail.com\",\n    \"rol\":\"SECRETARY\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Dr\"\n}"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/49",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"administrators",
-								"49"
 							]
 						}
 					},
@@ -729,13 +603,14 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Authorization",
@@ -745,7 +620,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Jesus\",\n    \"first_surname\": \"Vezga\",\n    \"mobile\": \"(1234) 567-8901\",\n    \"email\": \"hector080896@gmail.com\",\n    \"rol\":\"COORDINATOR\",\n    \"principal\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Dr\"\n}"
+							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Jesus\",\n    \"second_name\":\"Ramon\",\n    \"first_surname\":\"Vega\",\n    \"second_surname\":\"Gonzales\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"rol\":\"COORDINATOR\",\n    \"principal\":false\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/administrators",
@@ -760,6 +635,101 @@
 							"path": [
 								"api",
 								"administrators"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorsPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "organization_key",
+								"value": "{{organization}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Jesus\",\n    \"second_name\":\"Ramon\",\n    \"first_surname\":\"Vezga\",\n    \"second_surname\":\"Gonzales\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Dr\",\n    \"active\":true,\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"rol\":\"COORDINATOR\",\n    \"principal\":false\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/35",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"35"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdministratorDeleteID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "{{organization}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/administrators/35",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"administrators",
+								"35"
 							]
 						}
 					},
@@ -805,7 +775,7 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -850,7 +820,7 @@
 							{
 								"key": "Organization-Key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -894,7 +864,7 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -950,13 +920,13 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"24698950\",\n    \"first_name\": \"Gabriel\",\n    \"first_surname\": \"Uribe\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"teacher_type\":\"TIT\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Dr\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"UCV\",\n    \"country\":\"Venezuela\"\n}"
+							"raw": "{\n\t\"identification\": \"24698948\",\n    \"first_name\": \"Abraham\",\n    \"second_name\":\"Leonardo\",\n    \"first_surname\":\"Navarro\",\n    \"second_surname\":\"Jimenez\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Dr\",\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"teacher_type\":\"TIT\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"Universidad Central de Venezuela\",\n    \"country\":\"Venezuela\"\n}\n"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/teachers",
@@ -999,16 +969,16 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"24698950\",\n    \"first_name\": \"Gabriel\",\n    \"first_surname\": \"Urbano\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"teacher_type\":\"TIT\",\n    \"active\":true,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"level_instruction\":\"Lic\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"USB\"\n}"
+							"raw": "{\n\t\"identification\": \"24698948\",\n    \"first_name\": \"Abraham\",\n    \"second_name\":\"Leonardo\",\n    \"first_surname\":\"Navarro\",\n    \"second_surname\":\"Jimenez\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"active\":true,\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"teacher_type\":\"TIT\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"Universidad Central de Venezuela\",\n    \"country\":\"Venezuela\"\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers/52",
+							"raw": "http://127.0.0.1:8000/api/teachers/37",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1020,7 +990,7 @@
 							"path": [
 								"api",
 								"teachers",
-								"52"
+								"37"
 							]
 						}
 					},
@@ -1038,7 +1008,7 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -1053,7 +1023,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers/52",
+							"raw": "http://127.0.0.1:8000/api/teachers/37",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1065,7 +1035,7 @@
 							"path": [
 								"api",
 								"teachers",
-								"52"
+								"37"
 							]
 						}
 					},
@@ -1404,69 +1374,18 @@
 					"response": []
 				},
 				{
-					"name": "WarningStudentsGet",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenAdmin}}"
-							},
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/warningStudents",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"warningStudents"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "StudentsGetByID",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -1482,7 +1401,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/13",
+							"raw": "http://127.0.0.1:8000/api/students/35",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1494,7 +1413,7 @@
 							"path": [
 								"api",
 								"students",
-								"13"
+								"35"
 							]
 						}
 					},
@@ -1547,7 +1466,79 @@
 					"response": []
 				},
 				{
+					"name": "WarningStudentsGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "G"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/warningStudents",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"warningStudents"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "StudentsPost",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17fa0e41-b96c-4bbd-bde8-ff3f455b1077",
+								"exec": [
+									"pm.test(\"Payload must be valid and have a body\", function () { ",
+									"     pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
+									"     pm.response.to.be.withBody; // body tiene que exitir",
+									"     pm.response.to.be.json; // además que sea un JSON válido",
+									"});",
+									"// Pedimos a nuestro response payload que tengo Content-Type en el header",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1559,24 +1550,23 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "ICT",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"123456\",\n    \"first_name\": \"Keny\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@123456.com\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"school_program_id\":1,\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ]\n}"
+							"raw": "{\"identification\":\"43452777\",\"first_name\":\"dddd\",\"second_name\":\"gggg\",\"first_surname\":\"gggg\",\"second_surname\":\"aaaa\",\"mobile\":\"(443) 454-3445\",\"telephone\":\"(643) 454-3543\",\"work_phone\":\"(567) 657-5675\",\"email\":\"jdf@email.com\",\"school_program_id\":1,\"with_disabilities\":false,\"level_instruction\":\"TCM\",\"equivalences\":[{\"subject_id\":2,\"qualification\":\"20\"}],\"student_type\":\"REG\",\"home_university\":\"ucv\",\"sex\":\"M\",\"nationality\":\"V\",\"is_ucv_teacher\":false,\"is_available_final_work\":false,\"repeat_approved_subject\":false,\"repeat_reprobated_subject\":false}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/students",
@@ -1615,21 +1605,21 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"9d76z3\",\n    \"first_name\": \"Keny\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@idvd.zom\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ],\n    \n    \"active\":true,\n    \"is_available_final_work\": true,\n    \"repeat_approved_subject\": false,\n    \"repeat_reprobated_subject\": false,\n    \"student_id\":8,\n    \"end_program\":true,\n    \"current_status\":\"REG\"\n}"
+							"raw": "{\n    \"identification\": \"9d76z3\",\n    \"first_name\": \"Kenyy\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@idvd.zom\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ],\n    \"active\":true,\n    \"is_available_final_work\": true,\n    \"repeat_approved_subject\": false,\n    \"repeat_reprobated_subject\": false,\n    \"student_id\":12,\n    \"end_program\":true,\n    \"current_status\":\"REG\",\n    \"test_period\": false\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/13",
+							"raw": "http://127.0.0.1:8000/api/students/35",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1641,7 +1631,7 @@
 							"path": [
 								"api",
 								"students",
-								"13"
+								"35"
 							]
 						}
 					},
@@ -1894,52 +1884,6 @@
 					"response": []
 				},
 				{
-					"name": "subjectDeleteID",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							},
-							{
-								"key": "organization_key",
-								"value": "G",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/subjects/9",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"subjects",
-								"9"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "subjectsPost",
 					"request": {
 						"method": "POST",
@@ -2020,6 +1964,52 @@
 							"mode": "raw",
 							"raw": "{\n\t\"subject_code\":22350,\n\t\"subject_name\":\"BD2\",\n\t\"uc\":\"4\",\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject?\":false,\n\t\"school_programs\":[\n\t\t{\n            \"id\":1,\n            \"type\": \"OB\"\n\t\t}\n\t]\n}"
 						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subjects/9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subjects",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectDeleteID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "G",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/subjects/9",
 							"protocol": "http",
@@ -2206,18 +2196,18 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"1-2020\",\n    \"start_date\": \"2020-01-01\",\n    \"end_date\": \"2020-06-30\",\n    \"withdrawal_deadline\":\"2020-03-01\"\n}"
+							"raw": "{\n    \"cod_school_period\": \"4-2020\",\n    \"start_date\": \"2020-01-01\",\n    \"end_date\": \"2020-06-30\",\n    \"withdrawal_deadline\":\"2020-03-01\",\n    \"inscription_start_date\":\"2020-01-01\"\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
@@ -2251,23 +2241,22 @@
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \t\"cod_school_period\": \"8-2021\",\n        \"start_date\": \"2020-07-01\",\n        \"end_date\": \"2020-12-31\",\n        \"withdrawal_deadline\":\"2020-09-01\",\n        \"subjects\": [\n            {\n                \"teacher_id\": 3,\n                \"subject_id\": 2,\n                \"limit\":40,\n                \"duty\":10,\n                 \"modality\": \"REG\"\n            }\n        ]\n    \n}"
+							"raw": "{\n    \t\"cod_school_period\": \"8-2021\",\n        \"start_date\": \"2020-07-01\",\n        \"end_date\": \"2020-12-31\",\n        \"withdrawal_deadline\":\"2020-09-01\",\n        \"inscription_start_date\":\"2020-01-01\",\n        \"subjects\": [\n            {\n                \"teacher_id\": 3,\n                \"subject_id\": 2,\n                \"limit\":40,\n                \"duty\":10,\n                 \"modality\": \"REG\"\n            }\n        ]\n    \n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
@@ -2289,6 +2278,27 @@
 				},
 				{
 					"name": "SchoolPeriodsPostPeriodTeacherSubjectSchedule",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e5163e80-04f7-45d1-b528-7f5fa673b5e3",
+								"exec": [
+									"pm.test(\"Payload must be valid and have a body\", function () { ",
+									"     pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
+									"     pm.response.to.be.withBody; // body tiene que exitir",
+									"     pm.response.to.be.json; // además que sea un JSON válido",
+									"});",
+									"// Pedimos a nuestro response payload que tengo Content-Type en el header",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -2306,18 +2316,18 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "ICT",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"1-2022\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-06-30\",\n    \"withdrawal_deadline\":\"2022-03-01\",\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\":30,\n            \"duty\":10,\n            \"modality\": \"REG\",\n            \"schedules\": [\n              \t{\n                    \"day\": \"Lunes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                },\n                {\n                    \"day\": \"Martes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                }\n            ]\n        }\n    ]\n}"
+							"raw": "{\n    \"cod_school_period\": \"6-2022\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-06-30\",\n    \"inscription_start_date\":\"2022-04-01\",\n    \"withdrawal_deadline\":\"2022-03-01\",\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\":30,\n            \"duty\":10,\n            \"modality\": \"REG\",\n            \"schedules\": [\n              \t{\n                    \"day\": \"1\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                },\n                {\n                    \"day\": \"2\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                }\n            ]\n        }\n    ]\n}"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
@@ -3582,5 +3592,39 @@
 	"auth": {
 		"type": "bearer"
 	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "71a5566b-47ba-44a2-a21e-78b3a2150d6f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8c71fc0c-4e7e-432b-bd04-5e12055fd3b7",
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Payload must be valid and have a body\", function () { ",
+					"     pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
+					"     pm.response.to.be.withBody; // body tiene que exitir",
+					"     pm.response.to.be.json; // además que sea un JSON válido",
+					"});",
+					"// Pedimos a nuestro response payload que tengo Content-Type en el header",
+					"pm.test(\"Content-Type is present\", function () {",
+					"    pm.response.to.have.header(\"Content-Type\");",
+					"});",
+					"// Y comprobamos que la petición se haya servido en un determinado tiempo",
+					"pm.test(\"Response time is less than 1000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+					"});"
+				]
+			}
+		}
+	],
 	"protocolProfileBehavior": {}
 }

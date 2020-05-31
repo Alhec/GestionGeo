@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Log;
+use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -23,6 +25,13 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
+    const taskError = 'No se puede proceder con la tarea';
+    const emailNotFound = 'Correo no encontrado';
+    const resetPassword = 'Clave reseteada';
+    const notResetPassword = 'Token invalido o vencido';
+
+    const logResetPasword = 'Reseteo su clave';
+    const logNotResetPasword = 'Provee token invalido';
     /**
      * Where to redirect users after resetting their password.
      *
@@ -65,16 +74,31 @@ class ResetPasswordController extends Controller
             'email' => 'required|max:30|email',
             'password' => 'required|confirmed',
         ]);
-
+        $request['organization_id'] = $request->header('Organization-Key');
         $response = $this->broker()->reset(
             $this->credentials($request), function ($user, $password) {
                 $this->resetPassword($user, $password);
             }
         );
-
-        return $response == \Password::PASSWORD_RESET
-            ? response()->json(['message'=>'Clave reseteada'], 200)
-                    : response()->json(['message'=>'Token invalido o vencido'], 422);
+        $user = User::getUserByEmail($request['email'],$request['user_type'],$request['organization_id']);
+        if (is_numeric($user) && $user==0){
+            return response()->json(['message'=>self::taskError],401);
+        }
+        if (count($user)>0){
+            if($response == \Password::PASSWORD_RESET){
+                $log = Log::addLog($user[0]['id'],self::logResetPasword);
+                if (is_numeric($log) && $log==0){
+                    return response()->json(['message'=>self::taskError],401);
+                }
+                return response()->json(['message'=>self::resetPassword], 200);
+            };
+            $log = Log::addLog($user[0]['id'],self::logNotResetPasword);
+            if (is_numeric($log) && $log==0){
+                return response()->json(['message'=>self::taskError],401);
+            }
+            return response()->json(['message'=>self::notResetPassword], 422);
+        }
+        return response()->json(['message'=>self::emailNotFound], 422);
     }
 
     protected function resetPassword($user, $password)

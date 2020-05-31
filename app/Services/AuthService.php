@@ -10,11 +10,14 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Log;
 
 class AuthService
 {
     const taskError = 'No se puede proceder con la tarea';
     const invalidUser='Usuario o clave errados';
+
+    const logUserLogin= 'El usuario se ha autenticado';
 
     public static function login(Request $request,$organizationId){
         $credentials= json_decode($request->getContent(),true);
@@ -31,6 +34,10 @@ class AuthService
         }
         $user=User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId);
         if (is_numeric($user)&&$user==0){
+            return response()->json(['message'=>self::taskError],401);
+        }
+        $log = Log::addLog($user[0]['id'],self::logUserLogin);
+        if (is_numeric($log)&&$log==0){
             return response()->json(['message'=>self::taskError],401);
         }
         return response()->json([

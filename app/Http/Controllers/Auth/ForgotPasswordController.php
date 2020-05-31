@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Log;
+use App\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -23,6 +25,15 @@ class ForgotPasswordController extends Controller
 
     use SendsPasswordResetEmails;
 
+    const taskError = 'No se puede proceder con la tarea';
+    const invalidUser ='Usuario Invalido';
+    const invalidPass = 'Clave Invalida';
+    const invalidToken = 'Token Invalido';
+    const sendEmail = 'Correo enviado';
+    const notSendEmail = 'No se pudo enviar el correo';
+    const logUserRequestRecoverPass = 'Solicitud de recuperacion de clave';
+    const logSendEmailRecoverPass = 'Correo enviado para recuperacion de clave';
+    const logNotSendEmailRecoverPass = 'Correo no enviado para recuperacion de clave';
     /**
      * Create a new controller instance.
      *
@@ -33,15 +44,6 @@ class ForgotPasswordController extends Controller
         $this->middleware('guest');
     }
 
-    //use SendsPasswordResetEmails;
-
-    // Comentamos esto que no nos hace falta
-    // public function __construct()
-    // {
-    //     $this-&gt;middleware('guest');
-    // }
-
-    // Añadimos las respuestas JSON, ya que el Frontend solo recibe JSON
 
 
     public function sendResetLinkEmail(Request $request)
@@ -52,21 +54,39 @@ class ForgotPasswordController extends Controller
             $response = $this->broker()->sendResetLink(
                 $request->only('email','user_type','organization_id')
             );
+            $user = User::getUserByEmail($request['email'],$request['user_type'],$request['organization_id']);
+            if (is_numeric($user) && $user==0){
+                return response()->json(['message'=>self::taskError],401);
+            }
+            if (count($user)>0){
+                $log = Log::addLog($user[0]['id'],self::logUserRequestRecoverPass);
+                if (is_numeric($log) && $log==0){
+                    return response()->json(['message'=>self::taskError],401);
+                }
+            }
             switch ($response) {
                 case \Password::INVALID_USER:
-                    return response()->json(['message'=>'Usuario Invalido'], 422);
+                    return response()->json(['message'=>self::invalidUser], 422);
                     break;
                 case \Password::INVALID_PASSWORD:
-                    return response()->json(['message'=>'Clave Invalida'], 422);
+                    return response()->json(['message'=>self::invalidPass], 422);
                     break;
                 case \Password::INVALID_TOKEN:
-                    return response()->json(['message'=>'Token Invalido'], 422);
+                    return response()->json(['message'=> self::invalidToken], 422);
                     break;
                 default:
-                    return response()->json(['message'=>'Correo enviado'], 200);
+                    $log = Log::addLog($user[0]['id'],self::logSendEmailRecoverPass);
+                    if (is_numeric($log) && $log==0){
+                        return response()->json(['message'=>self::taskError],401);
+                    }
+                    return response()->json(['message'=>self::sendEmail], 200);
             }
         }catch(\Exception $e){
-            return response()->json(['message'=>'No se pudo enviar el correo'], 206);
+            $log = Log::addLog($user[0]['id'],self::logNotSendEmailRecoverPass);
+            if (is_numeric($log) && $log==0){
+                return response()->json(['message'=>self::taskError],401);
+            }
+            return response()->json(['message'=>self::notSendEmail], 206);
         }
     }
 }
