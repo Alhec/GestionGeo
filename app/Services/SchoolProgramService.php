@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Log;
 use Illuminate\Http\Request;
 use App\SchoolProgram;
 
@@ -13,6 +14,10 @@ class SchoolProgramService
     const notFoundProgram = 'Programa no encontrado';
     const busyName = 'Nombre del programa en uso';
     const ok = 'OK';
+
+    const logCreateSchoolProgram = 'Creo el programa escolar ';
+    const logUpdateSchoolProgram = 'Actualizo el programa escolar ';
+    const logDeleteSchoolProgram = 'Elimino el programa escolar ';
 
     public static function getSchoolProgram($organizationId)
     {
@@ -86,6 +91,10 @@ class SchoolProgramService
             if (is_numeric($id) && $id == 0){
                 return response()->json(['message'=>self::taskError],206);
             }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateSchoolProgram.$request['school_program_name']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
+            }
             return self::getSchoolProgramById($id,$organizationId);
         }
         return response()->json(['message'=>self::busyName],206);
@@ -93,14 +102,19 @@ class SchoolProgramService
 
     public static function deleteSchoolProgram($id,$organizationId)
     {
-        $existSchoolProgram = SchoolProgram::existSchoolProgramById($id,$organizationId);
-        if (is_numeric($existSchoolProgram) && $existSchoolProgram == 0){
+        $schoolProgram = SchoolProgram::getSchoolProgramById($id,$organizationId);
+        if (is_numeric($schoolProgram) && $schoolProgram == 0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if ($existSchoolProgram){
+        if (count($schoolProgram)>0){
             $result = SchoolProgram::deleteSchoolProgram($id);
             if (is_numeric($result) && $result == 0){
                 return response()->json(['message'=>self::taskError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolProgram.
+                $schoolProgram[0]['school_program_name']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -133,6 +147,10 @@ class SchoolProgramService
             $result = SchoolProgram::updateSchoolProgram($id,$request);
             if (is_numeric($result) && $result == 0){
                 return response()->json(['message'=>self::taskError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateSchoolProgram.$request['school_program_name']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
             }
             return self::getSchoolProgramById($id,$organizationId);
         }
