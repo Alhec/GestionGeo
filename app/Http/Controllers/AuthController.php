@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Log;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 
@@ -13,6 +14,9 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    const logLogout = 'Realizo cierre de sesion';
+    const taskError = 'No se puede proceder con la tarea';
+
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
@@ -41,6 +45,10 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        $log = Log::addLog(auth('api')->user()['id'],self::logLogout);
+        if (is_numeric($log)&&$log==0){
+            return response()->json(['message'=>self::taskError],401);
+        }
         auth()->logout();
         return response()->json(['message' => 'Cerro sesión exitosamente']);
     }

@@ -75,7 +75,7 @@ class AdministratorService
                 ]);
             }
             if(is_numeric($result) && $result==0){
-                return response()->json(['message' => self::taskPartialErrorError], 206);
+                return response()->json(['message' => self::taskPartialError], 206);
             }
             $result = EmailService::userCreate($user,$organizationId,'A');
             if ($result==0){
@@ -132,7 +132,6 @@ class AdministratorService
                     'principal'=>false
                 ]);
             }
-
             if (is_numeric($result)&& $result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }

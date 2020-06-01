@@ -61,7 +61,7 @@ class ForgotPasswordController extends Controller
             if (count($user)>0){
                 $log = Log::addLog($user[0]['id'],self::logUserRequestRecoverPass);
                 if (is_numeric($log) && $log==0){
-                    return response()->json(['message'=>self::taskError],401);
+                    return response()->json(['message'=>self::taskError],206);
                 }
             }
             switch ($response) {
@@ -77,14 +77,14 @@ class ForgotPasswordController extends Controller
                 default:
                     $log = Log::addLog($user[0]['id'],self::logSendEmailRecoverPass);
                     if (is_numeric($log) && $log==0){
-                        return response()->json(['message'=>self::taskError],401);
+                        return response()->json(['message'=>self::taskError],206);
                     }
                     return response()->json(['message'=>self::sendEmail], 200);
             }
         }catch(\Exception $e){
             $log = Log::addLog($user[0]['id'],self::logNotSendEmailRecoverPass);
             if (is_numeric($log) && $log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message'=>self::taskError],206);
             }
             return response()->json(['message'=>self::notSendEmail], 206);
         }

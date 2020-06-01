@@ -9,6 +9,7 @@
 namespace App\Services;
 
 
+use App\Log;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
@@ -24,6 +25,13 @@ class UserService
     const invalidPassword = 'La clave no puede ser igual a su clave anterior';
     const invalidCurrentPassword = 'Su clave actual esta errada';
     const busyCredential = 'Identificacion o Correo ya registrados';
+
+    const logChangePassword = 'Realizo un cambio de contraseña';
+    const logChangeUserData = 'Realizo cambios en sus datos de usuario';
+    const logDeleteUser = 'Elimino al usuario ';
+    const logCreateUser = 'Creo al usuario ';
+    const logUpdateUser = 'Actualizo al usuario ';
+    const logRol = ' con rol ';
 
     public static function getUsers($userType,$organizationId)
     {
@@ -86,6 +94,11 @@ class UserService
             if ($userId == 0){
                 return 0;
             }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateUser.$request['first_name'].
+                ' '.$request['first_surname'].self::logRol.$request['user_type']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
+            }
             return $userId;
         }
         return "busy_credential";
@@ -93,14 +106,19 @@ class UserService
 
     public static function deleteUser($userId,$userType,$organizationId)
     {
-        $result = User::existUserById($userId,$userType,$organizationId);
-        if (is_numeric($result) && $result == 0){
+        $user = User::getUserById($userId,$userType,$organizationId);
+        if (is_numeric($user) && $user == 0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if ($result){
+        if (count($user)>0){
             $result=User::deleteUser($userId);
             if (is_numeric($result) && $result == 0){
                 return response()->json(['message'=>self::taskError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteUser.$user[0]['first_name']
+                .$user[0]['first_surname'].self::logRol.$user[0]['user_type']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -173,6 +191,11 @@ class UserService
             if (is_numeric($result) && $result == 0){
                 return 0;
             }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateUser.$request['first_name'].
+                ' '.$request['first_surname'].self::logRol.$request['user_type']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
+            }
             return $userId;
         }
         return "not_found";
@@ -213,6 +236,10 @@ class UserService
         if (is_numeric($result) && $result ==0){
             return response()->json(['message'=>self::taskError],206);
         }
+        $log = Log::addLog(auth()->payload()['user']->id,self::logChangePassword);
+        if (is_numeric($log) && $log==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
         return response()->json(['message'=>self::ok],200);
     }
 
@@ -249,6 +276,10 @@ class UserService
         }
         $result = User::updateUserLikeArray(auth()->payload()['user']->id,$user);
         if (is_numeric($result) && $result ==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        $log = Log::addLog(auth()->payload()['user']->id,self::logChangePassword);
+        if (is_numeric($log) && $log==0){
             return response()->json(['message'=>self::taskError],206);
         }
         return response()->json(['message'=>self::ok],200);

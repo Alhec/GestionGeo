@@ -82,23 +82,23 @@ class ResetPasswordController extends Controller
         );
         $user = User::getUserByEmail($request['email'],$request['user_type'],$request['organization_id']);
         if (is_numeric($user) && $user==0){
-            return response()->json(['message'=>self::taskError],401);
+            return response()->json(['message'=>self::taskError],206);
         }
         if (count($user)>0){
             if($response == \Password::PASSWORD_RESET){
                 $log = Log::addLog($user[0]['id'],self::logResetPasword);
                 if (is_numeric($log) && $log==0){
-                    return response()->json(['message'=>self::taskError],401);
+                    return response()->json(['message'=>self::taskError],206);
                 }
                 return response()->json(['message'=>self::resetPassword], 200);
             };
             $log = Log::addLog($user[0]['id'],self::logNotResetPasword);
             if (is_numeric($log) && $log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message'=>self::taskError],206);
             }
             return response()->json(['message'=>self::notResetPassword], 422);
         }
-        return response()->json(['message'=>self::emailNotFound], 422);
+        return response()->json(['message'=>self::emailNotFound], 206);
     }
 
     protected function resetPassword($user, $password)

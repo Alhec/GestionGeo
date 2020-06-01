@@ -36,7 +36,7 @@ class AuthService
         if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],401);
         }
-        $log = Log::addLog($user[0]['id'],self::logUserLogin);
+        $log = Log::addLog(auth('api')->user()['id'],self::logUserLogin);
         if (is_numeric($log)&&$log==0){
             return response()->json(['message'=>self::taskError],401);
         }
