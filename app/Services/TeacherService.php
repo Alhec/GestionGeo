@@ -9,6 +9,7 @@
 namespace App\Services;
 
 
+use App\Log;
 use Illuminate\Http\Request;
 use App\User;
 use App\Teacher;
@@ -22,6 +23,9 @@ class TeacherService
     const notSendEmail = 'No se pudo enviar el correo electronico';
     const noAction = "No esta permitido realizar esta accion";
     const unauthorized = "Unauthorized";
+
+    const logCreateTeacher = 'Creo la entidad teacher para ';
+    const logUpdateTeacher = 'Actualizo la entidad teacher para ';
 
     public static function validate(Request $request)
     {
@@ -52,6 +56,11 @@ class TeacherService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateTeacher.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
+            }
             $result = EmailService::userCreate($user,$organizationId,'T');
             if ($result==0){
                 return response()->json(['message'=>self::notSendEmail],206);
@@ -80,6 +89,11 @@ class TeacherService
             ]);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateTeacher.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             return UserService::getUserById($id, 'T',$organizationId);
         }

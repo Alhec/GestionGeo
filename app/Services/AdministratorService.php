@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Log;
 use Illuminate\Http\Request;
 use App\Administrator;
 use App\User;
@@ -24,6 +25,8 @@ class AdministratorService
     const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario, solo el coordinador principal puede realizar esta accion';
     const hasNotPrincipal = 'No hay coordinador principal';
 
+    const logCreateAdmin = 'Creo la entidad administrator para ';
+    const logUpdateAdmin = 'Actualizo la entidad administrator para ';
     public static function validate(Request $request)
     {
         $request->validate([
@@ -76,6 +79,11 @@ class AdministratorService
             }
             if(is_numeric($result) && $result==0){
                 return response()->json(['message' => self::taskPartialError], 206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateAdmin.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             $result = EmailService::userCreate($user,$organizationId,'A');
             if ($result==0){
@@ -134,6 +142,11 @@ class AdministratorService
             }
             if (is_numeric($result)&& $result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateAdmin.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             return UserService::getUserById($id, 'A',$organizationId);
         }
