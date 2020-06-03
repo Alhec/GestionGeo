@@ -16,7 +16,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUsers($request,'S',$organizationId);
+        return UserService::getUsers('S',$organizationId);
     }
 
 

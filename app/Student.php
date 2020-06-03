@@ -27,7 +27,7 @@ class Student extends Model
 
     public function guideTeacher()
     {
-        return $this->belongsTo('App\Teacher','id','guide_teacher_id')
+        return $this->hasOne('App\Teacher','id','guide_teacher_id')
             ->with('User');
     }
 
