@@ -13,6 +13,10 @@ class Equivalence extends Model
 
     protected $hidden = ['student_id'];
 
+    public function subject() {
+        return $this->belongsTo('App\Subject');
+    }
+
     public static function addEquivalence($equivalence)
     {
         try{

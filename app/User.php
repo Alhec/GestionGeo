@@ -110,7 +110,7 @@ class User extends Authenticatable implements JWTSubject
 
     public static function getUserById($id,$userType,$organizationId)
     {
-       try{
+
             $user =self::where('id',$id)
                 ->where('user_type',$userType)
                 ->where('organization_id',$organizationId);
@@ -129,9 +129,9 @@ class User extends Authenticatable implements JWTSubject
             }else{
                 return [];
             }
-        }catch (\Exception $e){
-            return 0;
-        }
+//        }catch (\Exception $e){
+//            return 0;
+//        }
     }
 
     public static function existUserById($id,$userType,$organizationId)
@@ -175,7 +175,7 @@ class User extends Authenticatable implements JWTSubject
         try{
             return self::insertGetId($user->only('identification','first_name','second_name','first_surname',
                 'second_surname','telephone','mobile','work_phone','email', 'password','user_type','level_instruction',
-                'active','with_work', 'with_disabilities','sex','nationality','organization_id'));
+                'active', 'with_disabilities','sex','nationality','organization_id'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;

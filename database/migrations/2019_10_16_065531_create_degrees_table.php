@@ -20,7 +20,6 @@ class CreateDegreesTable extends Migration
             $table->string('degree_description',200)
                 ->nullable();
             $table->string('university',100);
-            $table->primary('student_id');
             $table->foreign('student_id')
                 ->references('id')
                 ->on('students')

@@ -41,7 +41,7 @@ class StudentService
             'guide_teacher_id'=>'numeric',
             'student_type'=>'required|max:3|ends_with:REG,EXT,AMP,PER,PDO,ACT',
             'home_university'=>'required|max:100',
-            'current_postgraduate'=>'max:70',
+            'current_postgraduate'=>'max:100',
             'type_income'=>'max:30',
             'is_ucv_teacher'=>'boolean',
             'credits_granted'=>'numeric|required',
@@ -152,7 +152,7 @@ class StudentService
             }
         }
         $userId = UserService::addUser($request,'S',$organizationId);
-        if ($userId=='busy_credential'){
+        if (is_string($userId)&&$userId =='busy_credential'){
             return response()->json(['message'=>self::busyCredential],206);
         }else if (is_numeric($userId)&&$userId==0){
             return response()->json(['message'=>self::taskError],206);
@@ -253,8 +253,15 @@ class StudentService
         if (!$existTeacher){
             return response()->json(['message'=>self::invalidTeacher],206);
         }
+        $student = Student::getStudentById($request['student_id'],$organizationId);
+        if (is_numeric($student)&&$student==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($student)<1){
+            return response()->json(['message'=>self::notFoundUser],206);
+        }
         if (isset($request['equivalences'])){
-            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],$request['school_program_id']);
+            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],$student[0]['school_program_id']);
             if (!$validEquivalence){
                 return response()->json(['message'=>self::invalidEquivalences],206);
             }
@@ -267,17 +274,6 @@ class StudentService
         }else if ($result=="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
-            /*$student = Student::activeStudentId($userId);
-            if (is_numeric($student)&&$student==0){
-                return response()->json(['message'=>self::taskPartialError],206);
-            }
-            if (!$request['end_program'] && count($student)>0 && $student[0]['id']!=$request['student_id']) {
-                return response()->json(['message'=>self::noAction],206);
-            }*/
-            $student = Student::getStudentById($request['student_id'],$organizationId);
-            if (is_numeric($student)&&$student==0){
-                return response()->json(['message'=>self::taskError],206);
-            }
             if ($request['current_status']=='RET-B'){
                 $request['end_program']=true;
             }else{
@@ -372,7 +368,7 @@ class StudentService
         if (count($warningStudent)>0){
             return $warningStudent;
         }
-        return response()->json(['message' => self::notWarningStudent], 206);
+        return response()->json(['message' => self::notWarningStudent], 200);
     }
 
     public static function warningUpdateStudent($organizationId)

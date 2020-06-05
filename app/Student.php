@@ -33,7 +33,8 @@ class Student extends Model
 
     public function equivalence()
     {
-        return $this->hasMany('App\Equivalence');
+        return $this->hasMany('App\Equivalence')
+            ->with('subject');
     }
 
     public function schoolProgram()
@@ -156,6 +157,9 @@ class Student extends Model
                 ->orWhere('current_status','RET-A')
                 ->orWhere('current_status','RET-B')
                 ->orWhere('test_period',true)
+                ->with('user')
+                ->with('degrees')
+                ->with('guideTeacher')
                 ->get();
         }catch (\Exception $e){
             return 0;

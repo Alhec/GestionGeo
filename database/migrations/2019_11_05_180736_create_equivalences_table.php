@@ -17,7 +17,6 @@ class CreateEquivalencesTable extends Migration
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('subject_id');
             $table->integer('qualification');
-            $table->primary('student_id');
             $table->foreign('student_id')
                 ->references('id')
                 ->on('students')
