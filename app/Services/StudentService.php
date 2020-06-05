@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Degree;
 use App\Equivalence;
+use App\Log;
 use App\SchoolProgram;
 use App\Student;
 use App\StudentSubject;
@@ -34,6 +35,9 @@ class StudentService
     const unauthorized = "Unauthorized";
     const notWarningStudent="Todos los estudiantes estan en un estatus regular";
     const ok = "OK";
+
+    const logCreateStudent = 'Creo la entidad student para ';
+    const logUpdateStudent = 'Actualizo la entidad student para ';
 
     public static function validate(Request $request)
     {
@@ -164,6 +168,11 @@ class StudentService
             $result = self::addEquivalencesAndDegrees($request,$studentId);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
             }
             $result = EmailService::userCreate($userId,$organizationId,'S');
             if ($result==0){
@@ -308,6 +317,11 @@ class StudentService
             $result=self::addEquivalencesAndDegrees($request,$request['student_id']);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
