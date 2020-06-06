@@ -30,7 +30,7 @@ class StudentService
     const studentInProgram = 'El estudiante no ha culminado su programa escolar actual';
     const noAction = "No esta permitido realizar esa accion";
     const studentProgram = "El estudiante esta cursando un programa academico";
-    const studentHasProgram = "El estudiante ya esta en el programa";
+    const studentHasProgram = "El estudiante ya curso el programa escolar";
     const invalidEquivalences = "Equivalencias invalidas";
     const unauthorized = "Unauthorized";
     const notWarningStudent="Todos los estudiantes estan en un estatus regular";
@@ -172,7 +172,7 @@ class StudentService
             $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
                 ' '.$request['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             $result = EmailService::userCreate($userId,$organizationId,'S');
             if ($result==0){
@@ -230,6 +230,11 @@ class StudentService
             $result = self::addEquivalencesAndDegrees($request,$studentId);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
+                ' '.$request['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
@@ -321,7 +326,7 @@ class StudentService
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$request['first_name'].
                 ' '.$request['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
@@ -340,6 +345,11 @@ class StudentService
             $result = Student::deleteStudent($userId,$studentId);
             if (is_numeric($result)&&$result == 0 ){
                 return response()->json(['message'=>self::taskError],206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$user[0]['first_name'].
+                ' '.$user[0]['first_surname']);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskError],401);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
