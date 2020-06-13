@@ -42,8 +42,7 @@ class CustomResetPassword extends ResetPassword
      */
     public function toMail($notifiable)
     {
-        $organization = Organization::getOrganizationByStudentId($notifiable['id']);
-
+        $organization = Organization::getOrganizationById($notifiable['organization_id']);
         return (new MailMessage)
             ->subject('Recuperar contraseña')
             ->greeting('Hola')

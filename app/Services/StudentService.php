@@ -118,6 +118,9 @@ class StudentService
         if (is_numeric($subjects) && $subjects==0){
             return 0;
         }
+        if (count($subjectsInBd)<1){
+            return false;
+        }
         $subjectsId=array_column($subjectsInBd->toArray(),'id');
         foreach ($subjects as $subject){
             if (!in_array($subject['subject_id'],$subjectsId)){
@@ -216,11 +219,11 @@ class StudentService
             return response()->json(['message'=>self::studentHasProgram],206);
         }
         $result = UserService::updateUser($request,$userId,'S',$organizationId);
-        if ($result=="not_found"){
+        if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
             return response()->json(['message'=>self::taskError],206);
-        }else if ($result=="busy_credential"){
+        }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
             $studentId=self::addStudent($userId,$request);
@@ -281,11 +284,11 @@ class StudentService
             }
         }
         $result = UserService::updateUser($request,$userId,'S',$organizationId);
-        if ($result=="not_found"){
+        if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
             return response()->json(['message'=>self::taskError],206);
-        }else if ($result=="busy_credential"){
+        }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
             if ($request['current_status']=='RET-B'){

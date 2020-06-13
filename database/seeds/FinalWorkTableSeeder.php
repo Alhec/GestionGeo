@@ -17,7 +17,7 @@ class FinalWorkTableSeeder extends Seeder
             'title'=>'proyecto',
             'student_id'=>1,
             'subject_id'=>15,
-            'is_project?'=>true,
+            'is_project'=>true,
             'approval_date'=>'2020-01-09'
         ]);
         FinalWork::create([

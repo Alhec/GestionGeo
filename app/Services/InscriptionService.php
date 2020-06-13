@@ -647,7 +647,7 @@ class InscriptionService
                 if (is_numeric($cantTesis)&&$cantTesis==0){
                     return 0;
                 }
-                $subjectId=Subject::getTesisIdBySchoolProgram($student['school_program_id'],$organizationId);
+                $subjectId=Subject::getFinalWorkIdBySchoolProgram($student['school_program_id'],$organizationId);
                 if (is_numeric($subjectId)&&$subjectId==0){
                     return 0;
                 }

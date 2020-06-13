@@ -97,7 +97,7 @@ class UserService
             $log = Log::addLog(auth('api')->user()['id'],self::logCreateUser.$request['first_name'].
                 ' '.$request['first_surname'].self::logRol.$request['user_type']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return 0;
             }
             return $userId;
         }
@@ -194,7 +194,7 @@ class UserService
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateUser.$request['first_name'].
                 ' '.$request['first_surname'].self::logRol.$request['user_type']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return 0;
             }
             return $userId;
         }

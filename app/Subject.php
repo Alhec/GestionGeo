@@ -8,23 +8,17 @@ use Illuminate\Support\Facades\DB;
 
 class Subject extends Model
 {
-    protected $fillable = ['subject_code','subject_name','uc','is_final_subject?','is_project_subject?',
-        'theoretical_hours','practical_hours','laboratory_hours'];
+    protected $fillable = ['code','name','uc','is_final_subject','is_project_subject','theoretical_hours',
+        'practical_hours','laboratory_hours'];
 
     public $timestamps = false;
 
-    public function SchoolPrograms()
+    public function schoolPrograms()
     {
         return $this->belongsToMany('App\SchoolProgram','school_program_subject')
             ->as('schoolProgramSubject')
-            ->withPivot('type');
+            ->withPivot('type','subject_group');
     }
-
-   /* public function relationsSubjects()
-    {
-        return $this->hasMany('App\SchoolPeriodSubjectTeacher','subject_id','id')
-            ->with('schoolPeriod');
-    }*/
 
     public static function getSubjects($organizationId){
         try{
@@ -55,7 +49,7 @@ class Subject extends Model
 
     public static function existSubjectByCode($code,$organizationId){
         try{
-            return self::where('subject_code',$code)
+            return self::where('code',$code)
                 ->with('schoolPrograms')
                 ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                     $query
@@ -71,7 +65,8 @@ class Subject extends Model
     public static function addSubject($subject)
     {
         try{
-            return self::insertGetId($subject->only('subject_code','subject_name','uc','is_final_subject?','theoretical_hours','practical_hours','laboratory_hours'));
+            return self::insertGetId($subject->only('code','name','uc','is_final_subject','is_project_subject',
+                'theoretical_hours','practical_hours','laboratory_hours'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;
@@ -81,7 +76,7 @@ class Subject extends Model
     public static function getSubjectByCode($code,$organizationId)
     {
         try{
-            return self::where('subject_code',$code)
+            return self::where('code',$code)
                 ->with('schoolPrograms')
                 ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
                     $query
@@ -147,7 +142,7 @@ class Subject extends Model
     public static function getProjectIdBySchoolProgram($schoolProgramId,$organizationId)
     {
         try{
-            return self::where('is_project_subject?',true)
+            return self::where('is_project_subject',true)
                 ->whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
                 $query
                     ->where('organization_id','=',$organizationId)
@@ -159,10 +154,10 @@ class Subject extends Model
         }
     }
 
-    public static function getTesisIdBySchoolProgram($schoolProgramId,$organizationId)
+    public static function getFinalWorkIdBySchoolProgram($schoolProgramId, $organizationId)
     {
         try{
-            return self::where('is_final_subject?',true)
+            return self::where('is_final_subject',true)
                 ->whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
                     $query
                         ->where('organization_id','=',$organizationId)
@@ -174,17 +169,4 @@ class Subject extends Model
         }
     }
 
-   /* public static function getSubjectsByTeacher($teacherId){
-        try{
-            return self::whereHas('relationsSubjects',function (Builder $query) use ($teacherId){
-                $query
-                    ->where('teacher_id','=',$teacherId);
-            })
-                ->with('relationsSubjects')
-                ->get();
-        }catch (\Exception $e){
-            DB::rollback();
-            return 0;
-        }
-    }*/
 }

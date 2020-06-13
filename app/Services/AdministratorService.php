@@ -46,7 +46,7 @@ class AdministratorService
             }
         }
         $user = UserService::addUser($request,'A',$organizationId);
-        if ($user=="busy_credential") {
+        if ($user==="busy_credential") {
             return response()->json(['message' => self::busyCredential], 206);
         }else if(is_numeric($user) && $user==0){
             return response()->json(['message' => self::taskError], 206);
@@ -104,12 +104,12 @@ class AdministratorService
                 return response()->json(['message'=>self::unauthorized],401);
             }
         }
-        $result =UserService::updateUser($request,$id,'A',$organizationId);
-        if ($result=="not_found"){
+        $result = UserService::updateUser($request,$id,'A',$organizationId);
+        if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&& $result==0){
             return response()->json(['message'=>self::taskError],206);
-        }else if ($result=="busy_credential"){
+        }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
             if (!isset($request['principal'])){

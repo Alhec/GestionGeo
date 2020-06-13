@@ -412,7 +412,7 @@ class ConstanceService
         }
         if (count($administrator)>0){
             $data['user_data']=$administrator[0]->toArray();
-            $organization=Organization::getOrganization($organizationId);
+            $organization=Organization::getOrganizationById($organizationId);
             if (is_numeric($organization)&&$organization==0){
                 return response()->json(['message'=>self::taskError],206);
             }

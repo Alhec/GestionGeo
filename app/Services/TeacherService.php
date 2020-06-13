@@ -41,7 +41,7 @@ class TeacherService
     {
         self::validate($request);
         $user =UserService::addUser($request,'T',$organizationId);
-        if ($user=="busy_credential"){
+        if ($user==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],206);
@@ -73,11 +73,11 @@ class TeacherService
     {
         self::validate($request);
         $result =UserService::updateUser($request,$id,'T',$organizationId);
-        if ($result=="not_found"){
+        if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
             return response()->json(['message'=>self::taskError],206);
-        }else if ($result=="busy_credential"){
+        }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
             $result = Teacher::updateTeacher($id, [

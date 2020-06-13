@@ -2,24 +2,25 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class FinalWork extends Model
 {
     public $timestamps = false;
     protected $table = 'final_works';
-    protected $fillable = ['id','title','student_id','subject_id','project_id','is_project?','approval_date'];
+    protected $fillable = ['title','student_id','subject_id','project_id','is_project','approval_date'];
 
-    public function SchoolPeriods()
+    public function schoolPeriods()
     {
         return $this->belongsToMany('App\SchoolPeriod','final_work_school_period')
             ->as('finalWorkSchoolPeriod')
-            ->withPivot('status','description_status','final_work_id','school_period_id');
+            ->withPivot('id','status','description_status','final_work_id','school_period_id');
     }
 
-    public function Advisors()
+    public function teachers()
     {
-        return $this->belongsToMany('App\Teachers','advisors')
+        return $this->belongsToMany('App\Teacher','advisors')
             ->as('advisors')
             ->withPivot('teacher_id','final_work_id');
     }
@@ -28,8 +29,11 @@ class FinalWork extends Model
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('is_project?',$isProject)
-                ->where('status','APR')
+                ->where('is_project',$isProject)
+                ->whereHas('schoolPrograms',function (Builder $query) {
+                    $query
+                        ->where('status','=','APPROVED');
+                })
                 ->exists();
         }catch (\Exception $e){
             return 0;
@@ -40,9 +44,13 @@ class FinalWork extends Model
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('is_project?',$isProject)
-                ->where('status',$status)
-                ->with('SchoolPeriods')
+                ->where('is_project',$isProject)
+                ->whereHas('schoolPrograms',function (Builder $query) use ($status) {
+                    $query
+                        ->where('status','=',$status);
+                })
+                ->with('schoolPeriods')
+                ->with('teachers')
                 ->get();
         }catch (\Exception $e){
             return 0;
@@ -53,8 +61,9 @@ class FinalWork extends Model
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('is_project?',$isProject)
-                ->with('SchoolPeriods')
+                ->where('is_project',$isProject)
+                ->with('schoolPeriods')
+                ->with('teachers')
                 ->get('id');
         }catch (\Exception $e){
             return 0;

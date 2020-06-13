@@ -22,7 +22,7 @@ class EmailService extends Controller
             return 0;
         }
         $user=$user[0];
-        $organization=Organization::getOrganization($organizationId);
+        $organization=Organization::getOrganizationById($organizationId);
         if (is_numeric($organization)&&$organization==0){
             return 0;
         }

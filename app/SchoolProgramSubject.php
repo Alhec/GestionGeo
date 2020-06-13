@@ -55,12 +55,12 @@ class SchoolProgramSubject extends Model
         }
     }
 
-    public static function getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgramId)
+    public static function getSubjectGroup($subjectId, $schoolProgramId)
     {
         try{
             self::where('subject_id',$subjectId)
                 ->where('school_program_id',$schoolProgramId)
-                ->get('subject_together_id');
+                ->get('subject_group');
         }catch (\Exception $e){
             return 0;
         }

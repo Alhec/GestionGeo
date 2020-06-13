@@ -20,7 +20,7 @@ class CreateFinalWorksTable extends Migration
             $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('project_id')
                 ->nullable();
-            $table->boolean('is_project?')
+            $table->boolean('is_project')
                 ->default(false);
             $table->date('approval_date')
                 ->nullable();

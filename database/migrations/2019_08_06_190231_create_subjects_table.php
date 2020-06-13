@@ -15,12 +15,12 @@ class CreateSubjectsTable extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('subject_code',10);
-            $table->string('subject_name',100);
+            $table->string('code',10);
+            $table->string('name',100);
             $table->integer('uc');
-            $table->boolean('is_final_subject?')
+            $table->boolean('is_final_subject')
                 ->default(false);
-            $table->boolean('is_project_subject?')
+            $table->boolean('is_project_subject')
                 ->default(false);
             $table->integer('theoretical_hours')
                 ->default(0);
@@ -28,7 +28,6 @@ class CreateSubjectsTable extends Migration
                 ->default(0);
             $table->integer('laboratory_hours')
                 ->default(0);
-            //$table->string('subject_type',3); //REG AMP ACT PER PDC
         });
     }
 

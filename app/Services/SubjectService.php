@@ -77,7 +77,7 @@ class SubjectService
     {
         foreach ($schoolPrograms as $schoolProgram){
             if (isset($schoolProgram['with_subject'])){
-                $groupId = SchoolProgramSubject::getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgram['id']);
+                $groupId = SchoolProgramSubject::getSubjectGroup($subjectId,$schoolProgram['id']);
                 if (is_numeric($groupId)&&$groupId==0){
                     return 0;
                 }else{
@@ -171,7 +171,7 @@ class SubjectService
                 if ($schoolProgramInBd['school_program_id']==$schoolProgram['id']){
                     $schoolProgram['subject_id']=$subjectId;
                     if (isset($schoolProgram['with_subject'])){
-                        $groupId = SchoolProgramSubject::getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgram['id']);
+                        $groupId = SchoolProgramSubject::getSubjectGroup($subjectId,$schoolProgram['id']);
                         if (is_numeric($groupId)&&$groupId==0){
                             return 0;
                         }
@@ -190,7 +190,7 @@ class SubjectService
             }
             if ($existSchoolProgram == false) {
                 if (isset($schoolProgram['with_subject'])){
-                    $groupId = SchoolProgramSubject::getSchoolProgramSubjectBySubjectSchoolPogram($subjectId,$schoolProgram['id']);
+                    $groupId = SchoolProgramSubject::getSubjectGroup($subjectId,$schoolProgram['id']);
                     if (is_numeric($groupId)&&$groupId==0){
                         return 0;
                     }
