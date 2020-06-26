@@ -17,159 +17,193 @@ class SchoolProgramSubjectTableSeeder extends Seeder
             'school_program_id'=>1,
             'subject_id'=>1,
             'type'=>'OP',
+            'subject_group'=>1
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>1,
             'type'=>'OP',
+            'subject_group'=>2
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>1,
             'type'=>'OP',
+            'subject_group'=>3
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>4,
             'subject_id'=>1,
+            'type'=>'OP',
+            'subject_group'=>4
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>2,
             'type'=>'OP',
+            'subject_group'=>5
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>2,
             'type'=>'OP',
+            'subject_group'=>6
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>2,
             'type'=>'OP',
+            'subject_group'=>7
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>3,
             'type'=>'OP',
+            'subject_group'=>8
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>3,
             'type'=>'OP',
+            'subject_group'=>9
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>3,
             'type'=>'OP',
+            'subject_group'=>10
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>4,
             'type'=>'OP',
+            'subject_group'=>11
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>4,
             'type'=>'OP',
+            'subject_group'=>12
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>4,
             'type'=>'OP',
+            'subject_group'=>13
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>5,
             'type'=>'OP',
+            'subject_group'=>14
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>5,
             'type'=>'OP',
+            'subject_group'=>15
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>5,
             'type'=>'OP',
+            'subject_group'=>16
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>6,
             'type'=>'OP',
+            'subject_group'=>17
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>6,
             'type'=>'OP',
+            'subject_group'=>18
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>6,
             'type'=>'OP',
+            'subject_group'=>19
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>4,
             'subject_id'=>6,
+            'type'=>'OP',
+            'subject_group'=>20
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>7,
             'type'=>'OP',
+            'subject_group'=>21
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>7,
             'type'=>'OP',
+            'subject_group'=>22
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>7,
             'type'=>'OP',
+            'subject_group'=>23
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>8,
             'type'=>'OP',
+            'subject_group'=>24
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>8,
             'type'=>'OP',
+            'subject_group'=>25
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>9,
             'type'=>'OP',
+            'subject_group'=>26
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>9,
             'type'=>'OP',
+            'subject_group'=>27
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>2,
             'subject_id'=>10,
             'type'=>'OP',
+            'subject_group'=>28
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>10,
             'type'=>'OP',
+            'subject_group'=>29
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>11,
             'type'=>'OP',
+            'subject_group'=>30
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>3,
             'subject_id'=>12,
             'type'=>'OP',
+            'subject_group'=>31
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,
             'subject_id'=>13,
             'type'=>'OB',
+            'subject_group'=>32
         ]);
         SchoolProgramSubject::create([
             'school_program_id'=>1,

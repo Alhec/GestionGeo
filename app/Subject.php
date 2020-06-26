@@ -133,7 +133,7 @@ class Subject extends Model
                     ->where('organization_id','=',$organizationId)
                     ->where('school_program_id','=',$schoolProgramId);
             })
-                ->get('id');
+                ->get();
         }catch (\Exception $e){
             return 0;
         }
@@ -164,6 +164,19 @@ class Subject extends Model
                         ->where('school_program_id','=',$schoolProgramId);
                 })
                 ->get('id');
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function getSimpleSubjectById($id,$organizationId){
+        try{
+            return self::where('id',$id)
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->get();
         }catch (\Exception $e){
             return 0;
         }

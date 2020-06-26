@@ -8,12 +8,11 @@
 
 namespace App\Services;
 
-use App\Http\Controllers\Controller;
 use App\User;
 use App\Organization;
 use Illuminate\Support\Facades\Mail;
 
-class EmailService extends Controller
+class EmailService
 {
     public static function createUserICT($id,$userType,$organizationId)
     {

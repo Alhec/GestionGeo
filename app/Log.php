@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 class Log extends Model
 {
     protected $fillable = ['user_id','log_description'];
+    public $timestamps = ["created_at"]; //only want to used created_at column
+    const UPDATED_AT = null; //and updated by default null set
 
     public static function addLog($userId,$logDescription)
     {
@@ -21,4 +23,5 @@ class Log extends Model
             return 0;
         }
     }
+
 }

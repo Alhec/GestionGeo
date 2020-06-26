@@ -23,7 +23,18 @@ class SchoolProgramSubject extends Model
         }
     }
 
-    public static function getSchoolProgramSubjectBySubjectId($subjectId)
+    public static function getSchoolProgramSubjectBySubjectAndSchoolProgram($subjectId,$schoolProgramId)
+    {
+        try{
+            return self::where('subject_id',$subjectId)
+                ->where('school_program_id',$schoolProgramId)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function getSchoolProgramSubjectsBySubjectId($subjectId)
     {
         try{
             return self::where('subject_id',$subjectId)
@@ -35,6 +46,8 @@ class SchoolProgramSubject extends Model
 
     public static function updateSchoolProgramSubject($id, $schoolProgramSubject)
     {
+        self::find($id)
+            ->update($schoolProgramSubject);
         try{
             self::find($id)
                 ->update($schoolProgramSubject);
@@ -55,12 +68,11 @@ class SchoolProgramSubject extends Model
         }
     }
 
-    public static function getSubjectGroup($subjectId, $schoolProgramId)
+    public static function getSubjectGroup($subjectGroup)
     {
         try{
-            self::where('subject_id',$subjectId)
-                ->where('school_program_id',$schoolProgramId)
-                ->get('subject_group');
+            return self::where('subject_group',$subjectGroup)
+                ->get();
         }catch (\Exception $e){
             return 0;
         }

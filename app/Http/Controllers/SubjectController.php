@@ -15,7 +15,7 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
        $organizationId = $request->header('Organization-Key');
-       return SubjectService::getSubjects($request,$organizationId);
+       return SubjectService::getSubjects($organizationId);
     }
 
     /**
@@ -39,7 +39,7 @@ class SubjectController extends Controller
     public function show($id, Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return SubjectService::getSubjectsById($request,$id,$organizationId);
+        return SubjectService::getSubjectById($id,$organizationId);
     }
 
     /**
@@ -64,6 +64,11 @@ class SubjectController extends Controller
     public function destroy($id,Request $request)
     {
        $organizationId = $request->header('Organization-Key');
-       return SubjectService::deleteSubject($request,$id,$organizationId);
+       return SubjectService::deleteSubject($id,$organizationId);
+    }
+
+    public function getBySchoolProgram($id,Request $request){
+        $organizationId = $request->header('Organization-Key');
+        return SubjectService::getSubjectsBySchoolProgramId($id,$organizationId);
     }
 }
