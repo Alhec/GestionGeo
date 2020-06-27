@@ -26,6 +26,7 @@ class SchoolPeriod extends Model
         return $this->hasMany('App\SchoolPeriodStudent','school_period_id','id')
             ->with('enrolledSubjects');
     }
+
     public static function getSchoolPeriods($organizationId)
     {
         try{
@@ -101,8 +102,8 @@ class SchoolPeriod extends Model
     {
 
         try{
-            return self::insertGetId($schoolPeriod->only('cod_school_period','start_date','end_date',
-                'withdrawal_deadline','inscription_start_date','inscription_visible','organization_id','load_notes'));
+            return self::insertGetId($schoolPeriod->only('organization_id','cod_school_period','start_date','end_date',
+                'withdrawal_deadline','load_notes','inscription_start_date','inscription_visible'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;

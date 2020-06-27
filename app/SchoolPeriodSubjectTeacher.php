@@ -8,7 +8,9 @@ class SchoolPeriodSubjectTeacher extends Model
 {
     protected $fillable = ['teacher_id','subject_id','school_period_id','limit','enrolled_students','duty','modality',
         'start_date','end_date'];
+
     protected $table = 'school_period_subject_teacher';
+
     public $timestamps = false;
 
     public function subject()

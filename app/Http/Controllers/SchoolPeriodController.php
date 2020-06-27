@@ -10,12 +10,13 @@ class SchoolPeriodController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return SchoolPeriodService::getSchoolPeriods($request,$organizationId);
+        return SchoolPeriodService::getSchoolPeriods($organizationId);
     }
 
     /**
@@ -33,13 +34,14 @@ class SchoolPeriodController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function show($id,Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return SchoolPeriodService::getSchoolPeriodById($request,$id,$organizationId);
+        return SchoolPeriodService::getSchoolPeriodById($id,$organizationId);
     }
 
     /**
@@ -58,25 +60,26 @@ class SchoolPeriodController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
     {
         $organizationId = $request->header('Organization-Key');
-        return SchoolPeriodService::deleteSchoolPeriod($request,$id,$organizationId);
+        return SchoolPeriodService::deleteSchoolPeriod($id,$organizationId);
     }
 
     public function current(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return SchoolPeriodService::getCurrentSchoolPeriod($request,$organizationId);
+        return SchoolPeriodService::getCurrentSchoolPeriod($organizationId);
     }
 
     public function subjectTaughtSchoolPeriod(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
         $teacherId=$request->input('teacher_id');
-        return SchoolPeriodService::getSubjectsTaughtSchoolPeriod($teacherId,$request,$organizationId);
+        return SchoolPeriodService::getSubjectsTaughtSchoolPeriod($teacherId,$organizationId);
     }
 }
