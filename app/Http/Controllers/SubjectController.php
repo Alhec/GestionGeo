@@ -58,7 +58,8 @@ class SubjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function destroy($id,Request $request)
@@ -70,5 +71,11 @@ class SubjectController extends Controller
     public function getBySchoolProgram($id,Request $request){
         $organizationId = $request->header('Organization-Key');
         return SubjectService::getSubjectsBySchoolProgramId($id,$organizationId);
+    }
+
+    public function getSubjectsWithoutFinalWorks(Request $request)
+    {
+        $organizationId = $request->header('Organization-Key');
+        return SubjectService::getSubjectsWithoutFinalWorks($organizationId);
     }
 }

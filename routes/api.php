@@ -70,6 +70,7 @@ Route::middleware('jwt.auth','role:A')->get('subjects/{id}','SubjectController@s
 Route::middleware('jwt.auth','role:A')->put('subjects/{id}','SubjectController@update');
 Route::middleware('jwt.auth','role:A')->delete('subjects/{id}','SubjectController@destroy');
 Route::middleware('jwt.auth','role:A')->get('subjectsBySchoolProgram/{id}','SubjectController@getBySchoolProgram');
+Route::middleware('jwt.auth','role:A')->get('subjectsWithoutFinalWorks','SubjectController@getSubjectsWithoutFinalWorks');
 
 //SchoolPeriod
 Route::middleware('jwt.auth','role:A,S,T')->get('schoolPeriods/current','SchoolPeriodController@current');

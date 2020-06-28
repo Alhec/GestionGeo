@@ -182,4 +182,19 @@ class Subject extends Model
         }
     }
 
+    public static function getSubjectsWithoutFinalWorks($organizationId){
+        try{
+            return self::with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId);
+                })
+                ->where('is_final_subject','=',false)
+                ->where('is_project_subject','=',false)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
 }

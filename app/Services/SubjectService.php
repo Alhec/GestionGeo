@@ -440,4 +440,16 @@ class SubjectService
         }
         return response()->json(['message'=>self::emptySubject],206);
     }
+
+    public static function getSubjectsWithoutFinalWorks($organizationId)
+    {
+        $subjects = Subject::getSubjectsWithoutFinalWorks($organizationId);
+        if (is_numeric($subjects)&&$subjects == 0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($subjects)>0){
+            return $subjects;
+        }
+        return response()->json(['message'=>self::emptySubject],206);
+    }
 }
