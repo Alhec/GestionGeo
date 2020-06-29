@@ -29,6 +29,8 @@ class SubjectService
     const logCreateSubject = 'Creo la materia ';
     const logUpdateSubject = 'Actualizo la materia ';
     const whitId = ' con id ';
+    const logDeleteSubject = 'Elimino la materia ';
+
 
     public static function getSubjects($organizationId)
     {
@@ -221,14 +223,14 @@ class SubjectService
                     if ($id === 0){
                         return response()->json(['message'=>self::taskError],206);
                     }
+                    $result= self::addSchoolProgramInSubject($request['school_programs'],$id);
+                    if (is_numeric($result)&& $result == 0){
+                        return response()->json(['message'=>self::taskPartialError],206);
+                    }
                     $log = Log::addLog(auth('api')->user()['id'],self::logCreateSubject.$request['name'].
                         self::whitId.$id);
                     if (is_numeric($log)&&$log==0){
                         return response()->json(['message'=>self::taskPartialError],401);
-                    }
-                    $result= self::addSchoolProgramInSubject($request['school_programs'],$id);
-                    if (is_numeric($result)&& $result == 0){
-                        return response()->json(['message'=>self::taskPartialError],206);
                     }
                     return self::getSubjectById($id,$organizationId);
                 }
@@ -250,7 +252,7 @@ class SubjectService
             if (is_numeric($result)&& $result == 0){
                 return response()->json(['message'=>self::taskError],206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logCreateSubject.$subject[0]['name'].
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSubject.$subject[0]['name'].
                 self::whitId.$subject[0]['id']);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskPartialError],401);
@@ -412,14 +414,14 @@ class SubjectService
                     if (is_numeric($result)&& $result == 0){
                         return response()->json(['message'=>self::taskError],206);
                     }
+                    $result = self::updateSchoolProgramSubjectsInSubject($request['school_programs'],$id);
+                    if (is_numeric($result)&& $result == 0){
+                        return response()->json(['message'=>self::taskPartialError],206);
+                    }
                     $log = Log::addLog(auth('api')->user()['id'],self::logUpdateSubject.$request['name'].
                         self::whitId.$id);
                     if (is_numeric($log)&&$log==0){
                         return response()->json(['message'=>self::taskPartialError],401);
-                    }
-                    $result = self::updateSchoolProgramSubjectsInSubject($request['school_programs'],$id);
-                    if (is_numeric($result)&& $result == 0){
-                        return response()->json(['message'=>self::taskPartialError],206);
                     }
                     return self::getSubjectById($id,$organizationId);
                 }

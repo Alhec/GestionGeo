@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Log;
 use App\User;
 use Illuminate\Http\Request;
 use App\SchoolPeriod;
@@ -18,6 +19,7 @@ use App\Schedule;
 class SchoolPeriodService
 {
     const taskError = 'No se puede proceder con la tarea';
+    const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
     const emptySchoolPeriod = 'No existen periodos escolares';
     const notFoundSchoolPeriod = 'Periodo escolar no encontrado';
     const busyCodSchoolPeriod = 'Periodo escolar ya registrado';
@@ -27,6 +29,12 @@ class SchoolPeriodService
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
     const noTeachSubjects='No impartes materias en el periodo escolar actual';
     const emptyStudent='No hay estudintes con advertencia';
+
+    const logCreateSchoolPeriod = 'Creo el periodo escolar ';
+    const logUpdateSchoolPeriod = 'Actualizo el periodo escolar';
+    const whitId = ' con id ';
+    const logDeleteSchoolPeriod = 'Elimino el periodo escolar ';
+
 
     public static function getSchoolPeriods($organizationId)
     {
@@ -166,7 +174,7 @@ class SchoolPeriodService
                 }
                 $result = self::addSubjectInSchoolPeriod($request['subjects'],$schoolPeriodId);
                 if (is_numeric($result)&&$result===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message' => self::taskPartialError], 206);
                 }
             }else{
                 $schoolPeriodId = SchoolPeriod::addSchoolPeriod($request);
@@ -178,6 +186,11 @@ class SchoolPeriodService
             if (is_numeric($updateStudent)&&$updateStudent===0){
                 return response()->json(['message' => self::taskError], 206);
             }
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateSchoolPeriod.$request['cod_school_period'].
+                self::whitId.$schoolPeriodId);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
+            }
             return self::getSchoolPeriodById($schoolPeriodId,$organizationId);
         };
         return response()->json(['message'=>self::busyCodSchoolPeriod],206);
@@ -185,11 +198,16 @@ class SchoolPeriodService
 
     public static function deleteSchoolPeriod($id,$organizationId)
     {
-        $existSchoolPeriod = SchoolPeriod::existSchoolPeriodById($id,$organizationId);
-        if ($existSchoolPeriod){
+        $schoolPeriod = SchoolPeriod::getSchoolPeriodById($id,$organizationId);
+        if (count($schoolPeriod)>0){
             $result=SchoolPeriod::deleteSchoolPeriod($id);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message' => self::taskError], 206);
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolPeriod.$schoolPeriod[0]['cod_school_period'].
+                self::whitId.$id);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -307,6 +325,11 @@ class SchoolPeriodService
                         return response()->json(['message' => self::taskError], 206);
                     }
                 }
+            }
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateSchoolPeriod.$request['cod_school_period'].
+                self::whitId.$id);
+            if (is_numeric($log)&&$log==0){
+                return response()->json(['message'=>self::taskPartialError],401);
             }
             return self::getSchoolPeriodById($id,$organizationId);
         }
