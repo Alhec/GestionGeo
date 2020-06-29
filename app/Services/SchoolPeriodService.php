@@ -28,7 +28,6 @@ class SchoolPeriodService
     const ok = 'OK';
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
     const noTeachSubjects='No impartes materias en el periodo escolar actual';
-    const emptyStudent='No hay estudintes con advertencia';
 
     const logCreateSchoolPeriod = 'Creo el periodo escolar ';
     const logUpdateSchoolPeriod = 'Actualizo el periodo escolar';
