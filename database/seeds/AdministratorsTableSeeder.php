@@ -33,5 +33,15 @@ class AdministratorsTableSeeder extends Seeder
             'rol'=>'SECRETARY',
             'principal'=>false
         ]);
+        Administrator::create([
+            'id'=>35,
+            'rol'=>'COORDINATOR',
+            'principal'=>true
+        ]);
+        Administrator::create([
+            'id'=>36,
+            'rol'=>'SECRETARY',
+            'principal'=>false
+        ]);
     }
 }

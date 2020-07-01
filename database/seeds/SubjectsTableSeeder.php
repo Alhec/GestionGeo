@@ -86,8 +86,8 @@ class SubjectsTableSeeder extends Seeder
             'laboratory_hours'=>2,
         ]);
         Subject::create([
-            'code'=>'Tesis',
-            'name'=>'Tesis',
+            'code'=>'TEG',
+            'name'=>'Trabajo especial de grado',
             'is_final_subject'=>true,
             'uc'=>0,
         ]);

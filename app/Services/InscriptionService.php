@@ -47,7 +47,7 @@ class InscriptionService
     const expiredDate = 'No se puede realizar retiros la fecha ya ha pasado';
     const notCurrentInscription ='No hay inscripcion actual para usted';
 
-    public static function getInscriptions(Request $request,$organizationId)
+    public static function getInscriptions($organizationId)
     {
         $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudent($organizationId);
         if (is_numeric($inscriptions)&&$inscriptions==0){
@@ -59,7 +59,7 @@ class InscriptionService
         return response()->json(['message'=>self::emptyInscriptions],206);
     }
 
-    public static function getInscriptionById(Request $request, $id,$organizationId)
+    public static function getInscriptionById($id,$organizationId)
     {
         $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($id,$organizationId);
         if (is_numeric($inscription)&&$inscription==0){
@@ -71,7 +71,7 @@ class InscriptionService
         return response()->json(['message'=>self::notFoundInscription],206);
     }
 
-    public static function getInscriptionsBySchoolPeriod(Request $request, $schoolPeriodId,$organizationId)
+    public static function getInscriptionsBySchoolPeriod($schoolPeriodId,$organizationId)
     {
         $inscriptions = SchoolPeriodStudent::getSchoolPeriodStudentBySchoolPeriod($schoolPeriodId,$organizationId);
         if (is_numeric($inscriptions)&&$inscriptions==0){

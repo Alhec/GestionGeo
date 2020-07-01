@@ -217,5 +217,41 @@ class SchoolProgramSubjectTableSeeder extends Seeder
             'type'=>'OB',
             'subject_group'=>33
         ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>2,
+            'subject_id'=>13,
+            'type'=>'OB',
+            'subject_group'=>35
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>2,
+            'subject_id'=>14,
+            'type'=>'OB',
+            'subject_group'=>36
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>2,
+            'subject_id'=>15,
+            'type'=>'OB',
+            'subject_group'=>36
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>3,
+            'subject_id'=>13,
+            'type'=>'OB',
+            'subject_group'=>38
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>3,
+            'subject_id'=>14,
+            'type'=>'OB',
+            'subject_group'=>39
+        ]);
+        SchoolProgramSubject::create([
+            'school_program_id'=>3,
+            'subject_id'=>15,
+            'type'=>'OB',
+            'subject_group'=>39
+        ]);
     }
 }
