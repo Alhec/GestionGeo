@@ -38,6 +38,7 @@ class StudentService
 
     const logCreateStudent = 'Creo la entidad student para ';
     const logUpdateStudent = 'Actualizo la entidad student para ';
+    const logDeleteStudent = 'Elimino la entidad student para ';
 
     public static function validate(Request $request)
     {
@@ -349,7 +350,7 @@ class StudentService
             if (is_numeric($result)&&$result == 0 ){
                 return response()->json(['message'=>self::taskError],206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$user[0]['first_name'].
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteStudent.$user[0]['first_name'].
                 ' '.$user[0]['first_surname']);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskError],401);

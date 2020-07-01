@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Administrator;
+use App\Log;
 use App\Organization;
 use App\SchoolPeriod;
 use App\SchoolPeriodStudent;
@@ -39,6 +41,10 @@ class updateStatusStudentForNotRegistered extends Command
      *
      * @return mixed
      */
+
+    const logUpdateStudent = 'Actualizo la entidad student para el usuario con id ';
+    const statusDESB = ' a un estatus de DES-B';
+
     public function handle()
     {
         $organizations = Organization::getOrganizations();
@@ -72,6 +78,11 @@ class updateStatusStudentForNotRegistered extends Command
                                                     'test_period'=>false
                                                 ]
                                             );
+                                            $admin = Administrator::getPrincipalCoordinator($organization['id']);
+                                            if (!is_numeric($admin) && count($admin)>0){
+                                                Log::addLog($admin[0]['id'],self::logUpdateStudent.
+                                                    $student[0]['user_id'].self::statusDESB);
+                                            }
                                         }
                                     }
                                 }
