@@ -13,10 +13,10 @@ class EquivalencesTableSeeder extends Seeder
     public function run()
     {
         Equivalence::query()->truncate();
-        Equivalence::create([
+        /*Equivalence::create([
             'student_id'=>1,
             'subject_id'=>1,
             'qualification'=>15
-        ]);
+        ]);*/
     }
 }
