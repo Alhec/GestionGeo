@@ -18,19 +18,27 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'subject_id'=>1,
             'school_period_id'=>1,
             'limit'=>30,
-            'enrolled_students'=>0,
+            'enrolled_students'=>1,
             'duty'=>10,
             'modality'=>'REG'
         ]);
         SchoolPeriodSubjectTeacher::create([
             'teacher_id'=>4,
-            'subject_id'=>14,
+            'subject_id'=>2,
             'school_period_id'=>2,
             'limit'=>30,
-            'enrolled_students'=>0,
+            'enrolled_students'=>1,
             'duty'=>10,
             'modality'=>'REG'
         ]);
-
+        SchoolPeriodSubjectTeacher::create([
+            'teacher_id'=>5,
+            'subject_id'=>3,
+            'school_period_id'=>3,
+            'limit'=>30,
+            'enrolled_students'=>1,
+            'duty'=>10,
+            'modality'=>'REG'
+        ]);
     }
 }
