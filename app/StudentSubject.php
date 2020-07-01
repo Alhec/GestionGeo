@@ -10,6 +10,7 @@ class StudentSubject extends Model
     protected $fillable = ['school_period_student_id','school_period_subject_teacher_id','qualification','status'];
 
     protected $table = 'student_subject';
+
     public $timestamps = false;
 
     public function dataStudent()
@@ -57,21 +58,22 @@ class StudentSubject extends Model
             return 0;
         }
     }
+
     public static function cantAllSubjectsEnrolledWithoutRETCUR($studentId)
     {
         try{
             return self::where('status','!=','RET')
                 ->where('status','!=','CUR')
-                ->with('dataSubject')
                 ->whereHas('dataStudent',function (Builder $query) use ($studentId){
                     $query
                         ->where('student_id','=',$studentId);
                 })
                 ->count();
         }catch (\Exception $e){
-            return 'e';//retorna e porque este caso en un caso correcto puede devolver 0
+            return 'e';//retorna e porque esta ocasion en un caso correcto puede devolver 0
         }
     }
+
     public static function getEnrolledSubjectsBySchoolPeriodStudent($studentId,$schoolPeriodId)
     {
         try{
@@ -118,7 +120,7 @@ class StudentSubject extends Model
         }
     }
 
-    public  static function findSchoolPeriodStudentId($schoolPeriodStudentId,$schoolPeriodSubjectTeacherId)
+    public  static function findStudentSubjectId($schoolPeriodStudentId, $schoolPeriodSubjectTeacherId)
     {
         try{
             return self::where('school_period_student_id',$schoolPeriodStudentId)

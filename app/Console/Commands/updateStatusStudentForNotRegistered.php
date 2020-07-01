@@ -8,7 +8,7 @@ use App\SchoolPeriodStudent;
 use App\Student;
 use Illuminate\Console\Command;
 
-class updateStatusStudentNotForNotRegistered extends Command
+class updateStatusStudentForNotRegistered extends Command
 {
     /**
      * The name and signature of the console command.
@@ -22,7 +22,7 @@ class updateStatusStudentNotForNotRegistered extends Command
      *
      * @var string
      */
-    protected $description = 'update student status to des-b for not enrolling in the semester on time';
+    protected $description = 'update student status to des-b for not enrolling in the school period on time';
 
     /**
      * Create a new command instance.

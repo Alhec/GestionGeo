@@ -30,7 +30,7 @@ class SchoolPeriodService
     const noTeachSubjects='No impartes materias en el periodo escolar actual';
 
     const logCreateSchoolPeriod = 'Creo el periodo escolar ';
-    const logUpdateSchoolPeriod = 'Actualizo el periodo escolar';
+    const logUpdateSchoolPeriod = 'Actualizo el periodo escolar ';
     const whitId = ' con id ';
     const logDeleteSchoolPeriod = 'Elimino el periodo escolar ';
 

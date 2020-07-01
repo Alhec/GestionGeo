@@ -169,7 +169,7 @@ class InscriptionService
                 }
                 return response()->json(['message' => self::endProgram], 206);
             }
-            $thereIsUnpaidSchoolPeriod=SchoolPeriodStudent::thereIsUnpaidSchoolPeriod($studentId);
+            $thereIsUnpaidSchoolPeriod=SchoolPeriodStudent::isThereUnpaidSchoolPeriod($studentId);
             if (is_numeric($thereIsUnpaidSchoolPeriod)&&$thereIsUnpaidSchoolPeriod==0){
                 if ($internalCall){
                     return 0;
@@ -268,17 +268,18 @@ class InscriptionService
         if (is_numeric($schoolProgram) && $schoolProgram==0){
             return 0;
         }
-        $cantSchoolPrograms = SchoolPeriodStudent::getCantEnrolledSchoolPeriodByStudent($student['id'],$organizationId);
-        if (is_numeric($cantSchoolPrograms)&&$cantSchoolPrograms==0){
+        $cantSchoolPeriods = SchoolPeriodStudent::getCantEnrolledSchoolPeriodByStudent($student['id'],$organizationId);
+        if (is_string($cantSchoolPeriods)&&$cantSchoolPeriods==='e'){
             return 0;
         }
-        $enrolledSubjects = SchoolPeriodStudent::getEnrolledSubjectsByStudent($student['id'],$organizationId);
+        $enrolledSubjects = SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($student['id'],$organizationId);
         if (is_numeric($enrolledSubjects)&&$enrolledSubjects==0){
             return response()->json(['message'=>self::taskError],206);
         }
         if (count($enrolledSubjects)>0){
-            $dataPorcentualStudent=ConstanceService::stadisticsDataHistorical($enrolledSubjects);
-            if (count($cantSchoolPrograms)>=$schoolProgram[0]['min_duration'] && $dataPorcentualStudent['enrolled_credits']>=$schoolProgram[0]['min_num_cu_final_work'] ){
+            $dataPercentageStudent=ConstanceService::stadisticsDataHistorical($enrolledSubjects);
+            if ($cantSchoolPeriods>=$schoolProgram[0]['min_duration'] &&
+                $dataPercentageStudent['enrolled_credits']>=$schoolProgram[0]['min_num_cu_final_work'] ){
                 return true;
             }
         }
@@ -848,7 +849,7 @@ class InscriptionService
                 if (is_numeric($result)&&$result==0){
                     return 0;
                 }
-                $schoolPeriodStudentIdAdd=StudentSubject::findSchoolPeriodStudentId($schoolPeriodStudentId,$subject['school_period_subject_teacher_id'])[0]['id'];
+                $schoolPeriodStudentIdAdd=StudentSubject::findStudentSubjectId($schoolPeriodStudentId,$subject['school_period_subject_teacher_id'])[0]['id'];
                 if (is_numeric($schoolPeriodStudentIdAdd)&&$schoolPeriodStudentIdAdd){
                     return 0;
                 }

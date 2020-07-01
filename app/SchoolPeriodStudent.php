@@ -103,8 +103,8 @@ class SchoolPeriodStudent extends Model
 
     public static function addSchoolPeriodStudent($schoolPeriodStudent){
         try{
-            return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','status','pay_ref',
-                'financing','financing_description','amount_paid','test_period'));
+            return self::insertGetId($schoolPeriodStudent->only('student_id','school_period_id','status','financing',
+                'financing_description','pay_ref','amount_paid','test_period'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;
@@ -178,7 +178,7 @@ class SchoolPeriodStudent extends Model
         }
     }
 
-    public static function thereIsUnpaidSchoolPeriod($studentId)
+    public static function isThereUnpaidSchoolPeriod($studentId)
     {
         try{
             return self::where('student_id',$studentId)
@@ -189,7 +189,7 @@ class SchoolPeriodStudent extends Model
         }
     }
 
-    public static function getEnrolledSubjectsByStudent($studentId,$organizationId)
+    public static function getEnrolledSchoolPeriodsByStudent($studentId, $organizationId)
     {
         try{
             return self::where('student_id',$studentId)
@@ -222,9 +222,9 @@ class SchoolPeriodStudent extends Model
                     $query
                         ->where('organization_id','=',$organizationId);
                 })
-                ->get('id');
+                ->count();
         }catch (\Exception $e){
-            return 0;
+            return 'e';
         }
     }
 

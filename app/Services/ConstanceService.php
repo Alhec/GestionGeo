@@ -158,7 +158,7 @@ class ConstanceService
                     $data['month']=self::numberToMonth($now->month);
                     $data['year']=$now->year;
                     $data['inscription']=$inscription->toArray()[0];
-                    $studentSubject=SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
+                    $studentSubject=SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($studentId,$organizationId);
                     if (is_numeric($studentSubject)&&$studentSubject==0){
                         return response()->json(['message'=>self::taskError],206);
                     }
@@ -273,7 +273,7 @@ class ConstanceService
         }
         if (count($student)>0){
             $student=$student[0]->toArray();
-            $enrolledSubjects = SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
+            $enrolledSubjects = SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($studentId,$organizationId);
             if (is_numeric($enrolledSubjects)&&$enrolledSubjects==0){
                 return response()->json(['message'=>self::taskError],206);
             }
@@ -326,7 +326,7 @@ class ConstanceService
         }
         if (count($student)>0){
             $student=$student[0]->toArray();
-            $enrolledSubjects = SchoolPeriodStudent::getEnrolledSubjectsByStudent($studentId,$organizationId);
+            $enrolledSubjects = SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($studentId,$organizationId);
             if (is_numeric($enrolledSubjects)&&$enrolledSubjects==0){
                 return response()->json(['message'=>self::taskError],206);
             }

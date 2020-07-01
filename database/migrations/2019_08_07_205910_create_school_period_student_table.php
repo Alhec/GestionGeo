@@ -18,7 +18,7 @@ class CreateSchoolPeriodStudentTable extends Migration
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('school_period_id');
             $table->string('status',5);
-            $table->string('financing',10)
+            $table->string('financing',3)
                 ->nullable();//EXO exonerated, FUN Funded, SFI Self-financing, ScS Scholarship
             $table->text('financing_description')
                 ->nullable();
