@@ -13,7 +13,7 @@ class AdvisorsTableSeeder extends Seeder
     public function run()
     {
         Advisor::query()->truncate();
-        Advisor::create([
+        /*Advisor::create([
             'final_work_id'=>1,
             'teacher_id'=>3
         ]);
@@ -24,6 +24,6 @@ class AdvisorsTableSeeder extends Seeder
         Advisor::create([
             'final_work_id'=>2,
             'teacher_id'=>4
-        ]);
+        ]);*/
     }
 }

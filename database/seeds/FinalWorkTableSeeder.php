@@ -13,7 +13,7 @@ class FinalWorkTableSeeder extends Seeder
     public function run()
     {
         FinalWork::query()->truncate();
-        FinalWork::create([
+        /*FinalWork::create([
             'title'=>'proyecto',
             'student_id'=>1,
             'subject_id'=>15,
@@ -26,6 +26,6 @@ class FinalWorkTableSeeder extends Seeder
             'subject_id'=>13,
             'project_id'=>1,
             'approval_date'=>'2020-01-09'
-        ]);
+        ]);*/
     }
 }

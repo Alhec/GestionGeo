@@ -126,6 +126,17 @@ class Subject extends Model
         }
     }
 
+    public static function updateSubjectLikeArray($id,$subject)
+    {
+        self::find($id)
+            ->update($subject);
+        try{
+
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
     public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId){
         try{
             return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){

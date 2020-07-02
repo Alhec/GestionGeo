@@ -92,6 +92,7 @@ class SubjectService
     }
 
     public static function validateSchoolProgram($schoolPrograms,$organizationId){
+        $schoolProgramsId = [];
         $schoolProgramsInBd= SchoolProgram::getSchoolProgram($organizationId);
         if (is_numeric($schoolProgramsInBd) && $schoolProgramsInBd === 0){
             return 0;
@@ -110,7 +111,41 @@ class SubjectService
         return true;
     }
 
-    public static function addSchoolProgramInSubject($schoolPrograms, $subjectId)
+    public static function updateSubjectToFinalOrProject($subjectId,$organizationId,$subjectAssociatedId)
+    {
+        $subject = Subject::getSimpleSubjectById($subjectId,$organizationId);
+        if (is_numeric($subject)&&$subject===0){
+            return 0;
+        }
+        $subjectAssociated = Subject::getSimpleSubjectById($subjectAssociatedId,$organizationId);
+        if (is_numeric($subjectAssociated)&&$subjectAssociated===0){
+            return 0;
+        }
+        if ($subject[0]['is_final_subject'] || $subject[0]['is_project_subject']){
+            if ($subject[0]['is_final_subject']){
+                $subjectAssociated[0]['is_final_subject']=$subject[0]['is_final_subject'];
+            }else if ($subject[0]['is_project_subject']){
+                $subjectAssociated[0]['is_project_subject']=$subject[0]['is_project_subject'];
+            }
+            $result=Subject::updateSubjectLikeArray($subjectAssociatedId,$subjectAssociated[0]->toArray());
+            if (is_numeric($result) && $result === 0){
+                return 0;
+            }
+        }else if ($subjectAssociated[0]['is_final_subject'] || $subjectAssociated[0]['is_project_subject']){
+
+            if ($subjectAssociated[0]['is_final_subject']){
+                $subject[0]['is_final_subject']=$subjectAssociated[0]['is_final_subject'];
+            }else if($subjectAssociated[0]['is_project_subject']){
+                $subject[0]['is_project_subject']=$subjectAssociated[0]['is_project_subject'];
+            }
+            $result=Subject::updateSubjectLikeArray($subjectId,$subject[0]->toArray());
+            if (is_numeric($result) && $result === 0){
+                return 0;
+            }
+        }
+    }
+
+    public static function addSchoolProgramInSubject($schoolPrograms, $subjectId,$organizationId)
     {
         foreach ($schoolPrograms as $schoolProgram){
             $schoolProgramSubjectId = SchoolProgramSubject::addSchoolProgramSubject([
@@ -128,9 +163,9 @@ class SubjectService
                 }
             }
             if (isset($schoolProgram['with_subjects'])){
-                foreach($schoolProgram['with_subjects'] as $subjectId){
-                    $subject = SchoolProgramSubject::getSchoolProgramSubjectBySubjectAndSchoolProgram($subjectId['subject_id'],
-                        $schoolProgram['school_program_id']);
+                foreach($schoolProgram['with_subjects'] as $withSubjectId){
+                    $subject = SchoolProgramSubject::getSchoolProgramSubjectBySubjectAndSchoolProgram(
+                        $withSubjectId['subject_id'],$schoolProgram['school_program_id']);
                     if (is_numeric($subject) && $subject ===0){
                         return 0;
                     }
@@ -138,7 +173,7 @@ class SubjectService
                         $subject = $subject[0];
                         $result=self::updateSchoolProgramSubject($subject['id'],$subject['school_program_id'],
                             $subject['subject_id'],$subject['type'],$schoolProgramSubjectId);
-                        if (is_numeric($result) && $result == 0){
+                        if (is_numeric($result) && $result === 0){
                             return 0;
                         }
                        if ($subject['subject_group']!==$schoolProgramSubjectId){
@@ -156,6 +191,10 @@ class SubjectService
                                     }
                                 }
                             }
+                        }
+                        $result = self::updateSubjectToFinalOrProject($withSubjectId['subject_id'],$organizationId,$subjectId);
+                        if (is_numeric($result) && $result === 0){
+                            return 0;
                         }
                     }
                 }
@@ -223,7 +262,7 @@ class SubjectService
                     if ($id === 0){
                         return response()->json(['message'=>self::taskError],206);
                     }
-                    $result= self::addSchoolProgramInSubject($request['school_programs'],$id);
+                    $result= self::addSchoolProgramInSubject($request['school_programs'],$id,$organizationId);
                     if (is_numeric($result)&& $result == 0){
                         return response()->json(['message'=>self::taskPartialError],206);
                     }
@@ -286,7 +325,7 @@ class SubjectService
         }
     }
 
-    public static function updateSchoolProgramSubjectsInSubject($schoolPrograms, $subjectId)
+    public static function updateSchoolProgramSubjectsInSubject($schoolPrograms, $subjectId,$organizationId)
     {
         $subjectId = intval($subjectId);
         $schoolProgramSubjectsInBd = SchoolProgramSubject::getSchoolProgramSubjectsBySubjectId($subjectId);
@@ -301,7 +340,8 @@ class SubjectService
                     $schoolProgram['subject_id']=$subjectId;
                     if (isset($schoolProgram['with_subjects'])){
                         $schoolProgram['subject_group']=$schoolProgramSubjectInBd['subject_group'];
-                        $result = SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramSubjectInBd['id'],$schoolProgram);
+                        $result = SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramSubjectInBd['id'],
+                            $schoolProgram);
                         if (is_numeric($result)&& $result == 0){
                             return 0;
                         }
@@ -330,6 +370,10 @@ class SubjectService
                                 }else{
                                     $subjectsJoin[] = $subjectIdJoin['subject_id'];
                                 }
+                                $result = self::updateSubjectToFinalOrProject($subjectIdJoin['subject_id'],$organizationId,$subjectId);
+                                if (is_numeric($result)&& $result == 0){
+                                    return 0;
+                                }
                             }
                             foreach ($subjectGroup as $aSubjectGroup){
                                 if (!in_array($aSubjectGroup['subject_id'],$subjectsJoin)){
@@ -353,7 +397,8 @@ class SubjectService
                             return 0;
                         }
                         $schoolProgram['subject_group']=$schoolProgramSubjectInBd['id'];
-                        $result = SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramSubjectInBd['id'],$schoolProgram);
+                        $result = SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramSubjectInBd['id'],
+                            $schoolProgram);
                         if (is_numeric($result)&& $result == 0){
                             return 0;
                         }
@@ -364,7 +409,7 @@ class SubjectService
                 }
             }
             if ($existSchoolProgram == false) {
-                self::addSchoolProgramInSubject([$schoolProgram],$subjectId);
+                self::addSchoolProgramInSubject([$schoolProgram],$subjectId,$organizationId);
                 $idSchoolProgramSubject = SchoolProgramSubject::getSchoolProgramSubjectBySubjectAndSchoolProgram($subjectId,
                     $schoolProgram['school_program_id']);
                 if (is_numeric($idSchoolProgramSubject)&&$idSchoolProgramSubject==0){
@@ -414,7 +459,7 @@ class SubjectService
                     if (is_numeric($result)&& $result == 0){
                         return response()->json(['message'=>self::taskError],206);
                     }
-                    $result = self::updateSchoolProgramSubjectsInSubject($request['school_programs'],$id);
+                    $result = self::updateSchoolProgramSubjectsInSubject($request['school_programs'],$id,$organizationId);
                     if (is_numeric($result)&& $result == 0){
                         return response()->json(['message'=>self::taskPartialError],206);
                     }
