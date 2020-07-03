@@ -73,5 +73,17 @@ class DegreesTableSeeder extends Seeder
             'degree_name'=>'Licenciado en Geoquimica',
             'university'=>'Universidad Central de Venezuela'
         ]);
+        Degree::create([
+            'student_id'=>11,
+            'degree_obtained'=>'Lic',
+            'degree_name'=>'Licenciado en Geoquimica',
+            'university'=>'Universidad Central de Venezuela'
+        ]);
+        Degree::create([
+            'student_id'=>11,
+            'degree_obtained'=>'Esp',
+            'degree_name'=>'Especialista en Geoquimica',
+            'university'=>'Universidad Central de Venezuela'
+        ]);
     }
 }

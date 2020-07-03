@@ -15,7 +15,7 @@ class InscriptionController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return InscriptionService::getInscriptions($request,$organizationId);
+        return InscriptionService::getInscriptions($organizationId);
     }
 
     /**

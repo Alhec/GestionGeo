@@ -13,13 +13,20 @@ class FinalWorkSchoolPeriodTableSeeder extends Seeder
     public function run()
     {
         FinalWorkSchoolPeriod::query()->truncate();
-        /*FinalWorkSchoolPeriod::create([
+        FinalWorkSchoolPeriod::create([
+            'status'=>'APPROVED',
             'final_work_id'=>1,
-            'school_period_student_id'=>1,
+            'school_period_student_id'=>2,
         ]);
         FinalWorkSchoolPeriod::create([
+            'status'=>'APPROVED',
             'final_work_id'=>2,
             'school_period_student_id'=>2,
-        ]);*/
+        ]);
+        FinalWorkSchoolPeriod::create([
+            'status'=>'APPROVED',
+            'final_work_id'=>3,
+            'school_period_student_id'=>3,
+        ]);
     }
 }

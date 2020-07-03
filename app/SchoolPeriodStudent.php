@@ -33,7 +33,7 @@ class SchoolPeriodStudent extends Model
 
     public function finalWorkData()
     {
-        return $this->hasOne('final_work_school_period')
+        return $this->hasMany('App\FinalWorkSchoolPeriod')
             ->with('finalWork');
     }
 

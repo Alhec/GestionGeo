@@ -120,7 +120,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'thalia@student.com',
             'password' => Hash::make('24698922'),
             'user_type' => 'S',  //S T A
-            'level_instruction'=>'Lic',
+            'level_instruction'=>'Esp',
             'sex' => 'F',
             'active'=>true,
             'nationality'=>'V',

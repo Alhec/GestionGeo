@@ -123,5 +123,16 @@ class StudentsTableSeeder extends Seeder
             'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>7
         ]);
+        Student::create([
+            'school_program_id'=>2,
+            'user_id'=>8,
+            'student_type'=>"REG", // REG EXT AMP
+            'home_university'=>'Universidad Central de Venezuela',
+            'is_ucv_teacher'=>true,
+            'is_available_final_work' => false,
+            'repeat_approved_subject' =>false,
+            'repeat_reprobated_subject'=>false,
+            'guide_teacher_id'=>3
+        ]);
     }
 }

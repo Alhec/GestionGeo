@@ -94,6 +94,7 @@ class SubjectsTableSeeder extends Seeder
         Subject::create([
             'code'=>'Seminario',
             'name'=>'Seminario',
+            'is_project_subject'=>true,
             'uc'=>0,
         ]);
         Subject::create([

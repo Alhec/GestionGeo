@@ -36,7 +36,7 @@ class SchoolPeriodSubjectTeacherTableSeeder extends Seeder
             'subject_id'=>3,
             'school_period_id'=>3,
             'limit'=>30,
-            'enrolled_students'=>1,
+            'enrolled_students'=>0,
             'duty'=>10,
             'modality'=>'REG'
         ]);

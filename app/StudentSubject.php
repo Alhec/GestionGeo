@@ -24,7 +24,6 @@ class StudentSubject extends Model
         return $this->belongsTo('App\SchoolPeriodSubjectTeacher','school_period_subject_teacher_id','id')
             ->with('subject')
             ->with('schedules')
-            ->with('schoolPeriod')
             ->with('teacher');
     }
 
