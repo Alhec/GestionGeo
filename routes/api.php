@@ -63,7 +63,7 @@ Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgram
 Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
 Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
 
-//Subjects
+//Subject
 Route::middleware('jwt.auth','role:A')->get('subjects','SubjectController@index');
 Route::middleware('jwt.auth','role:A')->post('subjects','SubjectController@store');
 Route::middleware('jwt.auth','role:A')->get('subjects/{id}','SubjectController@show');

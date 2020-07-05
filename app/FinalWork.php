@@ -13,9 +13,9 @@ class FinalWork extends Model
 
     public function schoolPeriods()
     {
-        return $this->belongsToMany('App\SchoolPeriod','final_work_school_period')
+        return $this->belongsToMany('App\SchoolPeriodStudent','final_work_school_period')
             ->as('finalWorkSchoolPeriod')
-            ->withPivot('id','status','description_status','final_work_id','school_period_id');
+            ->withPivot('id','status','description_status','final_work_id','school_period_student_id');
     }
 
     public function teachers()
@@ -30,10 +30,7 @@ class FinalWork extends Model
         try{
             return self::where('student_id',$studentId)
                 ->where('is_project',$isProject)
-                ->whereHas('schoolPrograms',function (Builder $query) {
-                    $query
-                        ->where('status','=','APPROVED');
-                })
+                ->where('approval_date','!=',null)
                 ->exists();
         }catch (\Exception $e){
             return 0;

@@ -22,7 +22,8 @@ class StudentsTableSeeder extends Seeder
             'is_available_final_work' => false,
             'repeat_approved_subject' =>false,
             'repeat_reprobated_subject'=>false,
-            'guide_teacher_id'=>3
+            'guide_teacher_id'=>3,
+            'end_program'=>true
         ]);
         Student::create([
             'school_program_id'=>2,
