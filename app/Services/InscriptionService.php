@@ -376,7 +376,7 @@ class InscriptionService
         ]);
     }
 
-    public static function validateSubjectsToInscription(Request $request, $organizationId)
+    public static function validateSubjectsToInscription(Request $request, $organizationId,$availableSubjects)
     {
         $existSchoolPeriodById=SchoolPeriod::existSchoolPeriodById($request['school_period_id'],$organizationId);
         if (is_numeric($existSchoolPeriodById)&&$existSchoolPeriodById===0){
@@ -384,11 +384,6 @@ class InscriptionService
         }
         if (!$existSchoolPeriodById){
             return false;
-        }
-        $availableSubjects = self::getAvailableSubjects($request['student_id'],$request['school_period_id'],
-            $organizationId, true);
-        if (is_numeric($availableSubjects)&&$availableSubjects===0){
-            return 0;
         }
         if (count($availableSubjects)<1){
             return false;
@@ -652,8 +647,16 @@ class InscriptionService
         return false;
     }
 
-    public static function setProjectOrFinalWork($student, $finalWork, $schoolPeriodStudentId, $organizationId)
+    public static function setProjectsOrFinalWorks($student, $finalWorks, $schoolPeriodStudentId, $organizationId,
+                                                   $isProject, $availableFinalWorks)
     {
+        if (count($availableFinalWorks)>0){
+            if ($isProject){//caso proyectos
+
+            }else{//caso trabajos especiales de grado
+
+            }
+        }
         $approvedProject = FinalWork::existNotApprovedFinalWork($student['id'], true);
         if (is_numeric($approvedProject)&&$approvedProject===0){
             return 0;
@@ -741,44 +744,64 @@ class InscriptionService
 
     public static function addInscription(Request $request,$organizationId)
     {
+        if (auth()->payload()['user']->user_type!='A'){
+            $currentSchoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organizationId);
+            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
+                return self::taskError(false,false);
+            }
+            $request['school_period_id'] = $currentSchoolPeriod[0]['id'];
+        }
         self::validate($request);
         $existSchoolPeriod=SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],
             $request['school_period_id']);
         if (is_numeric($existSchoolPeriod)&&$existSchoolPeriod===0){
-            return response()->json(['message' => self::taskError], 206);
+            return self::taskError(false,false);
         }
         if (!$existSchoolPeriod) {
-            $validateSubjectToInscription=self::validateSubjectsToInscription($request,$organizationId);
+            $availableSubjects = self::getAvailableSubjects($request['student_id'],$request['school_period_id'],
+                $organizationId, true);
+            if (is_numeric($availableSubjects)&&$availableSubjects===0){
+                return self::taskError(false,false);
+            }
+            $validateSubjectToInscription=self::validateSubjectsToInscription($request,$organizationId,$availableSubjects);
             if (is_numeric($validateSubjectToInscription)&&$validateSubjectToInscription===0){
-                return response()->json(['message' => self::taskError], 206);
+                return self::taskError(false,false);
             }
             $student=Student::getStudentById($request['student_id'],$organizationId);
             if (is_numeric($student)&&$student===0){
-                return response()->json(['message' => self::taskError], 206);
+                return self::taskError(false,false);
             }
-            if($validateSubjectToInscription && count($student)>0){
-                $request['status']=$student[0]['current_status'];
-                $schoolPeriodStudentId=SchoolPeriodStudent::addSchoolPeriodStudent($request);
-                if (is_numeric($schoolPeriodStudentId)&&$schoolPeriodStudentId===0){
-                    return response()->json(['message' => self::taskError], 206);
-                }
-                if ($request['status']!='RET-A'&&$request['status']!='RET-B'&&$request['status']!='DES-A'&&
-                    $request['status']!='DES-B'){
-                    $result = self::addSubjects($request['subjects'],$schoolPeriodStudentId,false);
-                    if (is_numeric($result)&&$result===0){
-                        return response()->json(['message' => self::taskPartialError], 206);
+            if (count($student)>0){
+                if($validateSubjectToInscription && count($student)>0){
+                    $request['status']=$student[0]['current_status'];
+                    $schoolPeriodStudentId=SchoolPeriodStudent::addSchoolPeriodStudent($request);
+                    if (is_numeric($schoolPeriodStudentId)&&$schoolPeriodStudentId===0){
+                        return self::taskError(false,false);
                     }
-                    if (isset($request['final_works'])){
-                        $result = self::setProjectOrFinalWork($student[0],$request['final_works'],$schoolPeriodStudentId,
-                            $organizationId);
-                        if (is_numeric($result)&&$result==0){
-                            return response()->json(['message' => self::taskPartialError], 206);
+                    if ($request['status']!='RET-A'&&$request['status']!='RET-B'&&$request['status']!='DES-A'&&
+                        $request['status']!='DES-B'){
+                        $result = self::addSubjects($request['subjects'],$schoolPeriodStudentId,false);
+                        if (is_numeric($result)&&$result===0){
+                            return self::taskError(false,true);
                         }
+                        if ($availableSubjects['available_project'] && isset($request['projects'])){
+                            $result =self::setProjectsOrFinalWorks($student[0],$request['projects'],
+                                $schoolPeriodStudentId, $organizationId,true,
+                                $availableSubjects['project_subjects']);
+                        }
+                        if ($availableSubjects['available_final_work'] && $request['final_works']){
+                            $result = self::setProjectsOrFinalWorks($student[0],$request['final_works'],
+                                $schoolPeriodStudentId, $organizationId,true,
+                                $availableSubjects['final_work_subjects']);
+                        }
+                        if (is_numeric($result)&&$result==0){
+                            return self::taskError(false,true);
+                        }
+                    }else{
+                        return response()->json(['message' => self::notAllowedRegister], 206);
                     }
-                }else{
-                    return response()->json(['message' => self::notAllowedRegister], 206);
+                    return self::getInscriptionById($schoolPeriodStudentId,$organizationId);
                 }
-                return self::getInscriptionById($schoolPeriodStudentId,$organizationId);
             }
             return response()->json(['message'=>self::invalidSubjectToInscription],206);
         }
