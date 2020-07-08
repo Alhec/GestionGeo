@@ -150,7 +150,7 @@ class Subject extends Model
         }
     }
 
-    public static function getProjectIdBySchoolProgram($schoolProgramId,$organizationId)
+    public static function getProjectBySchoolProgram($schoolProgramId,$organizationId)
     {
         try{
             return self::where('is_project_subject',true)
@@ -159,13 +159,13 @@ class Subject extends Model
                     ->where('organization_id','=',$organizationId)
                     ->where('school_program_id','=',$schoolProgramId);
                 })
-                ->get('id');
+                ->get();
         }catch (\Exception $e){
             return 0;
         }
     }
 
-    public static function getFinalWorkIdBySchoolProgram($schoolProgramId, $organizationId)
+    public static function getFinalWorkBySchoolProgram($schoolProgramId, $organizationId)
     {
         try{
             return self::where('is_final_subject',true)
@@ -174,7 +174,7 @@ class Subject extends Model
                         ->where('organization_id','=',$organizationId)
                         ->where('school_program_id','=',$schoolProgramId);
                 })
-                ->get('id');
+                ->get();
         }catch (\Exception $e){
             return 0;
         }

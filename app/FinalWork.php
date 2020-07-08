@@ -25,7 +25,7 @@ class FinalWork extends Model
             ->withPivot('teacher_id','final_work_id');
     }
 
-    public static function existApprovedFinalWork($studentId, $isProject)
+    public static function existNotApprovedFinalWork($studentId, $isProject)
     {
         try{
             return self::where('student_id',$studentId)
@@ -37,12 +37,23 @@ class FinalWork extends Model
         }
     }
 
+    public static function getNotApprovedFinalWork($studentId, $isProject)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->where('is_project',$isProject)
+                ->where('approval_date',null)
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
     public static function getFinalWorkByStudentAndStatus($studentId, $isProject, $status)
     {
         try{
             return self::where('student_id',$studentId)
                 ->where('is_project',$isProject)
-                ->whereHas('schoolPrograms',function (Builder $query) use ($status) {
+                ->whereHas('schoolPeriods',function (Builder $query) use ($status) {
                     $query
                         ->where('status','=',$status);
                 })
