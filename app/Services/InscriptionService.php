@@ -376,6 +376,16 @@ class InscriptionService
         ]);
     }
 
+    public static function validateInscriptionFinalWork(Request $request)
+    {
+        $request->validate([
+            'title'=>'required|max:100',
+            'subject_id'=>'required|numeric',
+            'project_id'=>'numeric',
+            'advisors.*.teacher_id'=>'numeric'
+        ]);
+    }
+
     public static function validateSubjectsToInscription(Request $request, $organizationId,$availableSubjects)
     {
         $existSchoolPeriodById=SchoolPeriod::existSchoolPeriodById($request['school_period_id'],$organizationId);
@@ -469,192 +479,143 @@ class InscriptionService
                     'teacher_id'=>$advisor['teacher_id']
                 ]
             );
-            if (is_numeric($result)&&$result==0){
+            if (is_numeric($result)&&$result===0){
                 return 0;
             }
         }
     }
 
-    public static function createProject($subjectId, $finalWork, $student, $schoolPeriodStudentId)
+    public static function createFinalWork($studentId,$finalWork,$schoolPeriodStudentId,$isProject)
     {
-        $projectId=FinalWork::addFinalWork([
-            'title'=>$finalWork['title'],
-            'student_id'=>$student['id'],
-            'subject_id'=>$subjectId,
-            'is_project?'=>true,
-        ]);
-        if (is_numeric($projectId)&&$projectId==0){
+        $existProject = false;
+        if (!$isProject){
+            $project = FinalWork::existFinalWorkByIdAndStatus($finalWork['project_id'],true,'APPROVED');
+            if (is_numeric($project)&&$project===0){
+                return 0;
+            }
+        }
+        if (!$existProject){
+            $finalWork['project_id']=null;
+        }
+        $finalWork['student_id']=$studentId;
+        $finalWork['is_project']=$isProject;
+        $finalWorkId=FinalWork::addFinalWork($finalWork);
+        if (is_numeric($finalWorkId)&&$finalWorkId===0){
             return 0;
         }
-        $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod([
-            'status'=>$finalWork['status'],
-            'description_status'=>$finalWork['description'],
-            'final_work_id'=>$projectId,
-            'school_period_student_id'=>$schoolPeriodStudentId
-        ]);
-        if (is_numeric($result)&&$result==0){
+        $finalWork['final_work_id']=$finalWorkId;
+        $finalWork['school_period_student_id']=$schoolPeriodStudentId;
+        $finalWork['status']='PROGRESS';
+        $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod($finalWork);
+        if (is_numeric($result)&&$result===0){
             return 0;
         }
-        if (isset($finalWork['advisors'])){
-            $result=self::addAdvisors($finalWork['advisors'],$projectId);
-            if (is_numeric($result)&&$result==0){
+        if (!$isProject && isset($finalWork['advisors'])){
+            $result = self::addAdvisors($finalWork['advisors'],$finalWorkId);
+            if (is_numeric($result)&&$result===0){
                 return 0;
             }
         }
     }
 
-    public static function editProject($project, $finalWork, $schoolPeriodStudentId)
-    {
-        $result=FinalWork::updateFinalWork($project['id'],[
-            'title'=>$finalWork['title'],
-            'student_id'=>$project['student_id'],
-            'subject_id'=>$project['subject_id'],
-            'is_project?'=>true,
-        ]);
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        $index =0;
-        foreach ($project['school_periods'] as $schoolPeriod){
-            if ($schoolPeriod['id']==$schoolPeriodStudentId){
-                break;
-            }
-            $index++;
-            if ($index>count($project['school_periods'])){
-                $index=-1;
-                break;
-            }
-        }
-        if ($index==-1){//nuevo status por periodo escolar
-            $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod([
-                'status'=>'progress',
-                'final_work_id'=>$project['id'],
-                'school_period_student_id'=>$schoolPeriodStudentId
-            ]);
-        }else{//editar el status que esta en el semestre
-            $result =FinalWorkSchoolPeriod::updateFinalWorkSchoolPeriod($project['school_periods']['index']['id'],
-            [
-                'status'=>$finalWork['status'],
-                'description_status'=>$finalWork['description_status'],
-                'final_work_id'=>$project['id'],
-                'school_period_student_id'=>$schoolPeriodStudentId
-            ]);
-        }
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        $result = Advisor::deleteAllAdvisor($project['id']);
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        if (isset($finalWork['advisors'])){
-            $result=self::addAdvisors($finalWork['advisors'],$project['id']);
-            if (is_numeric($result)&&$result==0){
-                return 0;
-            }
-        }
-    }
-
-    public static function createTesis($subjectId, $finalWork, $student, $schoolPeriodStudentId, $project)
-    {
-        $tesisId=FinalWork::addFinalWork([
-            'title'=>$finalWork['title'],
-            'student_id'=>$student['id'],
-            'subject_id'=>$subjectId,
-            'is_project?'=>false,
-            'project_id'=>$project['id']
-        ]);
-        if (is_numeric($tesisId)&&$tesisId==0){
-            return 0;
-        }
-        $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod([
-            'status'=>$finalWork['status'],
-            'description_status'=>$finalWork['description'],
-            'final_work_id'=>$tesisId,
-            'school_period_student_id'=>$schoolPeriodStudentId
-        ]);
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        if (isset($finalWork['advisors'])){
-            $result=self::addAdvisors($finalWork['advisors'],$tesisId);
-            if (is_numeric($result)&&$result==0){
-                return 0;
-            }
-        }
-    }
-
-    public static function editTesis($tesis, $finalWork, $schoolPeriodStudentId, $project)
-    {
-        $result=FinalWork::updateFinalWork($tesis['id'],[
-            'title'=>$finalWork['title'],
-            'student_id'=>$tesis['student_id'],
-            'subject_id'=>$tesis['subject_id'],
-            'is_project?'=>false,
-            'project_id'=>$project['id']
-        ]);
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        $index =0;
-        foreach ($tesis['school_periods'] as $schoolPeriod){
-            if ($schoolPeriod['id']==$schoolPeriodStudentId){
-                break;
-            }
-            $index++;
-            if ($index>count($project['school_periods'])){
-                $index=-1;
-                break;
-            }
-        }
-        if ($index==-1){//nuevo status por periodo escolar
-            $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod([
-                'status'=>'progress',
-                'final_work_id'=>$tesis['id'],
-                'school_period_student_id'=>$schoolPeriodStudentId
-            ]);
-        }else{//editar el status que esta en el semestre
-            $result =FinalWorkSchoolPeriod::updateFinalWorkSchoolPeriod($tesis['school_periods']['index']['id'],
-                [
-                    'status'=>$finalWork['status'],
-                    'description_status'=>$finalWork['description_status'],
-                    'final_work_id'=>$tesis['id'],
-                    'school_period_student_id'=>$schoolPeriodStudentId
-                ]);
-        }
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        $result = Advisor::deleteAllAdvisor($tesis['id']);
-        if (is_numeric($result)&&$result==0){
-            return 0;
-        }
-        if (isset($finalWork['advisors'])){
-            $result=self::addAdvisors($finalWork['advisors'],$tesis['id']);
-            if (is_numeric($result)&&$result==0){
-                return 0;
-            }
-        }
-    }
-
-    public static function existStatusREP($schoolPeriods)
+    public static function existStatusREPROBATE($schoolPeriods)
     {
         foreach($schoolPeriods as $schoolPeriod){
-            if ($schoolPeriod[status]=='REP'){
+            if ($schoolPeriod['status']=='REPROBATE'){
                 return true;
             }
         }
         return false;
     }
 
+    public static function updateFinalWork($studentId, $finalWork, $schoolPeriodStudentId, $isProject, $finalWorkInBd)
+    {
+        $existProject = false;
+        if (!$isProject){
+            $project = FinalWork::existFinalWorkByIdAndStatus($finalWork['project_id'],true,'APPROVED');
+            if (is_numeric($project)&&$project===0){
+                return 0;
+            }
+        }
+        if (!$existProject){
+            $finalWork['project_id']=null;
+        }
+        $finalWork['student_id']=$studentId;
+        $finalWork['is_project']=$isProject;
+        $result=FinalWork::updateFinalWork($finalWorkInBd['id'],$finalWork);
+        if (is_numeric($result)&&$result===0){
+            return 0;
+        }
+        $existFinalWorkSchoolPeriod=false;
+        $finalWork['final_work_id']=$finalWorkInBd['id'];
+        $finalWork['school_period_student_id']=$schoolPeriodStudentId;
+        if (auth()->payload()['user']->user_type!='A' && $finalWork['status']!='PROGRESS'){
+            $finalWork['status']='PROGRESS';
+        }
+        foreach ($finalWorkInBd['schoolPeriods'] as $schoolPeriod){ //search for update finalWorkSchoolPeriod
+            if ($schoolPeriod['school_period_student_id']==$schoolPeriodStudentId){
+                $result=FinalWorkSchoolPeriod::updateFinalWorkSchoolPeriod($schoolPeriod['id'],$finalWork);
+                $existFinalWorkSchoolPeriod=true;
+                if (is_numeric($result)&&$result===0){
+                    return 0;
+                }
+                break;
+            }
+        }
+        if (!$existFinalWorkSchoolPeriod){
+            $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod($finalWork);
+            if (is_numeric($result)&&$result===0){
+                return 0;
+            }
+        }
+        if (!$isProject && isset($finalWork['advisors'])){
+            $result = Advisor::deleteAllAdvisor($finalWorkInBd['id']);
+            if (is_numeric($result)&&$result===0){
+                return 0;
+            }
+            $result = self::addAdvisors($finalWork['advisors'],$finalWorkInBd['id']);
+            if (is_numeric($result)&&$result===0){
+                return 0;
+            }
+        }
+    }
+
     public static function setProjectsOrFinalWorks($student, $finalWorks, $schoolPeriodStudentId, $organizationId,
                                                    $isProject, $availableFinalWorks)
     {
         if (count($availableFinalWorks)>0){
-            if ($isProject){//caso proyectos
-
-            }else{//caso trabajos especiales de grado
-
+            $availableFinalWorkIds = array_column($availableFinalWorks,'subject_id');
+            foreach ($finalWorks as $finalWork){
+                if (in_array($finalWork['subject_id'],$availableFinalWorkIds)){
+                    $subjectFinalWork = FinalWork::getFinalWorksByStudentSubject($student['id'],$finalWork['subject_id'],
+                        $isProject);
+                    if (is_numeric($subjectFinalWork)&&$subjectFinalWork===0){
+                        return 0;
+                    }
+                    if (count($subjectFinalWork)==0){ //new project or final work
+                        $result = self::createFinalWork($student['id'],$finalWork,$schoolPeriodStudentId,$isProject);
+                        if ($result===0){
+                            return 0;
+                        }
+                    }else{//exist project or final work
+                        if (count($subjectFinalWork)==1){// exist one project or final work
+                            if (count($subjectFinalWork['schoolPeriods'])==1){ //update first attempt or create second project or final work
+                                if (self::existStatusREPROBATE($subjectFinalWork['schoolPeriods'])){//second project o final work
+                                    $result = self::createFinalWork($student['id'],$finalWork,$schoolPeriodStudentId,
+                                        $isProject);
+                                }else{//update first attempt
+                                    $result = self::updateFinalWork($student['id'],$finalWork,$schoolPeriodStudentId,
+                                        $isProject,$subjectFinalWork[0]);
+                                }
+                                if ($result===0){
+                                    return 0;
+                                }
+                            }
+                        }
+                        if (count($subjectFinalWork)==2) {// update second attempt
+                        }
+                    }
+                }
             }
         }
         $approvedProject = FinalWork::existNotApprovedFinalWork($student['id'], true);
@@ -752,6 +713,9 @@ class InscriptionService
             $request['school_period_id'] = $currentSchoolPeriod[0]['id'];
         }
         self::validate($request);
+        if (isset($request['projects'])||$request['final_works']){
+            self::validateInscriptionFinalWork($request);
+        }
         $existSchoolPeriod=SchoolPeriodStudent::existSchoolPeriodStudent($request['student_id'],
             $request['school_period_id']);
         if (is_numeric($existSchoolPeriod)&&$existSchoolPeriod===0){
@@ -789,7 +753,7 @@ class InscriptionService
                                 $schoolPeriodStudentId, $organizationId,true,
                                 $availableSubjects['project_subjects']);
                         }
-                        if ($availableSubjects['available_final_work'] && $request['final_works']){
+                        if ($availableSubjects['available_final_work'] && isset($request['final_works'])){
                             $result = self::setProjectsOrFinalWorks($student[0],$request['final_works'],
                                 $schoolPeriodStudentId, $organizationId,true,
                                 $availableSubjects['final_work_subjects']);

@@ -96,4 +96,33 @@ class FinalWork extends Model
             return 0;
         }
     }
+
+    public static function getFinalWorksByStudentSubject($studentId,$subjectId, $isProject)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->where('is_project',$isProject)
+                ->where('subject_id',$subjectId)
+                ->with('schoolPeriods')
+                ->with('teachers')
+                ->get('id');
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function existFinalWorkByIdAndStatus($id, $isProject, $status)
+    {
+        try{
+            return self::where('id',$id)
+                ->where('is_project',$isProject)
+                ->whereHas('schoolPeriods',function (Builder $query) use ($status) {
+                    $query
+                        ->where('status','=',$status);
+                })
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 }
