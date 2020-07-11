@@ -360,14 +360,14 @@ class StudentService
         return response()->json(['message'=>self::noAction],206);
     }
 
-    public static function validateStudent(Request $request, $organizationId,$studentId)
+    public static function validateStudent($organizationId,$studentId)
     {
         $existStudentById = Student::existStudentById($studentId,$organizationId);
         if (is_numeric($existStudentById) && $existStudentById == 0) {
             return response()->json(['message' => self::taskError], 206);
         }
         if ($existStudentById) {
-            $student = Student::getStudentById($request['student_id'], $organizationId);
+            $student = Student::getStudentById($studentId, $organizationId);
             if (is_numeric($student) && $student == 0) {
                 return response()->json(['message' => self::taskError], 206);
             }

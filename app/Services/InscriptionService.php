@@ -893,13 +893,13 @@ class InscriptionService
         return response()->json(['message'=>self::notFoundInscription],206);
     }
 
-    public static function studentAvailableSubjects($studentId,Request $request,$organizationId)
+    public static function studentAvailableSubjects($studentId,$organizationId)
     {
-        $isValid=StudentService::validateStudent($request,$organizationId,$studentId);
-        if ($isValid=='valid'){
+        $isValid=StudentService::validateStudent($organizationId,$studentId);
+        if ($isValid==='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-            if(is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
-                return response()->json(['message'=>self::taskError],206);
+            if(is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
+                return self::taskError(false,false);
             }
             if (count($currentSchoolPeriod)>0){
                 if ($currentSchoolPeriod[0]['inscription_visible']==true){
@@ -914,11 +914,11 @@ class InscriptionService
 
     public static function studentAddInscription(Request $request,$organizationId)
     {
-        $isValid=StudentService::validateStudent($request,$organizationId,$request['student_id']);
+        $isValid=StudentService::validateStudent($organizationId,$request['student_id']);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
-                 return response()->json(['message'=>self::taskError],206);
+            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
+                 return self::taskError(false,false);
             }
             if (count($currentSchoolPeriod)>0){
                 if ($currentSchoolPeriod[0]['inscription_visible']==true){
@@ -932,17 +932,17 @@ class InscriptionService
         return $isValid;
     }
 
-    public static function getCurrentEnrolledSubjects($studentId,$organizationId,Request $request){
-        $isValid=StudentService::validateStudent($request,$organizationId,$studentId);
+    public static function getCurrentEnrolledSubjects($studentId,$organizationId){
+        $isValid=StudentService::validateStudent($organizationId,$studentId);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
+            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
                 return response()->json(['message'=>self::taskError],206);
             }
             if (count($currentSchoolPeriod)>0){
                 $inscription = SchoolPeriodStudent::findSchoolPeriodStudent($studentId,$currentSchoolPeriod[0]['id']);
-                if (is_numeric($inscription)&&$inscription==0){
-                    return response()->json(['message'=>self::taskError],206);
+                if (is_numeric($inscription)&&$inscription===0){
+                    return self::taskError(false,false);
                 }
                 if (count($inscription)>0){
                     return $inscription[0];
@@ -956,64 +956,59 @@ class InscriptionService
 
     public static function validateWithdrawSubjects($withdrawSubjects,$enrolledSubjects)
     {
-        foreach ($withdrawSubjects as $withdrawSubject){
-            $found = false;
-            foreach ($enrolledSubjects as $enrolledSubject){
-                if ($withdrawSubject['student_subject_id']==$enrolledSubject['id']){
-                    $found=true;
-                    break;
-                }
-            }
-            if ($found ==false){
-                return false;
+        $withdrawSubjectsId = array_column($withdrawSubjects,'student_subject_id');
+        $found = false;
+        foreach ($enrolledSubjects as $enrolledSubject){
+            if (in_array($enrolledSubject['id'],$withdrawSubjectsId)){
+                $found=true;
+                break;
             }
         }
-        return true;
+        return $found;
     }
 
     public static function changeStatusSubjectsToRET($schoolPeriodStudentId,$organizationId,$withdrawSubjects)
     {
         foreach ($withdrawSubjects as $withdrawSubject){
             $studentSubject = StudentSubject::getStudentSubjectById($withdrawSubject['student_subject_id']);
-            if (is_numeric($studentSubject)&&$studentSubject==0){
+            if (is_numeric($studentSubject)&&$studentSubject===0){
                 return 0;
             }
             $studentSubject = $studentSubject[0];
-            $studentSubject=StudentSubject::updateStudentSubject($withdrawSubject['student_subject_id'],[
-                "school_period_student_id"=>$studentSubject['school_period_student_id'],
-                "school_period_subject_teacher_id"=>$studentSubject['school_period_subject_teacher_id'],
-                "qualification"=>$studentSubject['qualification'],
-                "status"=>'RET'
-            ]);
-            if (is_numeric($studentSubject)&&$studentSubject==0){
+            $studentSubject['status']='RET';
+            $studentSubject=StudentSubject::updateStudentSubject($withdrawSubject['student_subject_id'],
+                $studentSubject->toArray());
+            if (is_numeric($studentSubject)&&$studentSubject===0){
                 return 0;
             }
-            $result=self::updateStatusDESA($schoolPeriodStudentId,$organizationId);
-            if (is_numeric($result)&&$result==0){
-                return 0;
-            }
+        }
+        $result=self::updateStatusDESA($schoolPeriodStudentId,$organizationId);
+        if (is_numeric($result)&&$result==0){
+            return 0;
         }
     }
 
     public static function withdrawSubjects(Request $request,$organizationId)
     {
-        $isValid=StudentService::validateStudent($request,$organizationId,$request['student_id']);
+        $isValid=StudentService::validateStudent($organizationId,$request['student_id']);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
-                return response()->json(['message'=>self::taskError],206);
+                return self::taskError(false,false);
             }
             if (count($currentSchoolPeriod)>0){
                 if (strtotime($currentSchoolPeriod[0]['withdrawal_deadline'])>=strtotime(now()->toDateTimeString())){
                     $inscription = SchoolPeriodStudent::findSchoolPeriodStudent($request['student_id'],$currentSchoolPeriod[0]['id']);
-                    if (is_numeric($inscription)&&$inscription==0){
-                        return response()->json(['message'=>self::taskError],206);
+                    if (is_numeric($inscription)&&$inscription===0){
+                        return self::taskError(false,false);;
                     }
                     if (count($inscription)>0){
-                        if (self::validateWithdrawSubjects($request['withdrawSubjects'],$inscription[0]['enrolledSubjects'])){
-                            $result =self::changeStatusSubjectsToRET($inscription[0]['id'],$organizationId,$request['withdrawSubjects']);
+                        if (self::validateWithdrawSubjects($request['withdrawSubjects'],
+                            $inscription[0]['enrolledSubjects'])){
+                            $result =self::changeStatusSubjectsToRET($inscription[0]['id'],$organizationId,
+                                $request['withdrawSubjects']);
                             if (is_numeric($result)&&$result==0){
-                                return 0;
+                                return self::taskError(false,false);
                             }
                             return response()->json(['message'=>self::OK],200);
                         }
@@ -1028,34 +1023,31 @@ class InscriptionService
         return $isValid;
     }
 
-    public static function getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$organizationId,Request $request)
+    public static function getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$organizationId)
     {
-        $isValid=TeacherService::validateTeacher($request,$teacherId,$organizationId);
+        $isValid=TeacherService::validateTeacher($teacherId,$organizationId);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
-                return response()->json(['message' => self::taskError], 206);
+                return self::taskError(false,false);
             }
             if (count($currentSchoolPeriod)>0){
-                $existSchoolPeriodSubjectTeacherById=SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId);
-                if (is_numeric($existSchoolPeriodSubjectTeacherById)&&$existSchoolPeriodSubjectTeacherById==0){
-                    return response()->json(['message' => self::taskError], 206);
+                $schoolPeriodSubjectTeacher= SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById(
+                    $schoolPeriodSubjectTeacherId);
+                if (is_numeric($schoolPeriodSubjectTeacher)&&$schoolPeriodSubjectTeacher===0){
+                    return self::taskError(false,false);
                 }
-                if ($existSchoolPeriodSubjectTeacherById){
-                    $schoolPeriodSubjectTeacher= SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId);
-                    if (is_numeric($schoolPeriodSubjectTeacher)&&$schoolPeriodSubjectTeacher==0){
-                        return response()->json(['message' => self::taskError], 206);
+                if ($schoolPeriodSubjectTeacher[0]['teacher_id']==$teacherId &&
+                    $schoolPeriodSubjectTeacher[0]['school_period_id']==$currentSchoolPeriod[0]['id'] ){
+                    $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId(
+                        $schoolPeriodSubjectTeacherId);
+                    if (is_numeric($enrolledStudents)&&$enrolledStudents===0){
+                        return self::taskError(false,false);
                     }
-                    if ($schoolPeriodSubjectTeacher[0]['teacher_id']==$teacherId && $schoolPeriodSubjectTeacher[0]['school_period_id']==$currentSchoolPeriod[0]['id'] ){
-                        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId);
-                        if (is_numeric($enrolledStudents)&&$enrolledStudents==0){
-                            return response()->json(['message' => self::taskError], 206);
-                        }
-                        if (count($enrolledStudents)>0){
-                            return $enrolledStudents;
-                        }
-                        return response()->json(['message'=>self::emptyInscriptions],206);
+                    if (count($enrolledStudents)>0){
+                        return $enrolledStudents;
                     }
+                    return response()->json(['message'=>self::emptyInscriptions],206);
                 }
                 return response()->json(['message'=>self::invalidSubject],206);
             }
@@ -1064,7 +1056,7 @@ class InscriptionService
         return $isValid;
     }
 
-    public static function validateLoadNotesRequest(Request $request)
+    public static function validateLoadNotes(Request $request)
     {
         $request->validate([
             'teacher_id'=>'required|numeric',
@@ -1074,34 +1066,35 @@ class InscriptionService
         ]);
     }
 
-    public static function validateLoadNotes(Request $request,$schoolPeriodId)
+    public static function validateNotes(Request $request, $schoolPeriodId)
     {
         $teacherId=$request['teacher_id'];
         $schoolPeriodSubjectTeacherId=$request['school_period_subject_teacher_id'];
         $studentNotes=$request['student_notes'];
-        $existSchoolPeriodSubjectTeacher =SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId);
-        if(is_numeric($existSchoolPeriodSubjectTeacher)&&$existSchoolPeriodSubjectTeacher==0){
-            return 0;
-        }
-        if (!$existSchoolPeriodSubjectTeacher){
-            return false;
-        }
         $schoolPeriodSubjectTeacher = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherById($schoolPeriodSubjectTeacherId);
         if(is_numeric($schoolPeriodSubjectTeacher)&&$schoolPeriodSubjectTeacher==0){
             return 0;
         }
-        if ($schoolPeriodSubjectTeacher[0]['teacher_id']!=$teacherId ||$schoolPeriodSubjectTeacher[0]['school_period_id']!=$schoolPeriodId){
+        if (count($schoolPeriodSubjectTeacher)<1){
             return false;
         }
-        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId)->toArray();
+        if ($schoolPeriodSubjectTeacher[0]['teacher_id']!=$teacherId ||
+            $schoolPeriodSubjectTeacher[0]['school_period_id']!=$schoolPeriodId){
+            return false;
+        }
+        $enrolledStudents=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId);
+        if (is_numeric($enrolledStudents)&&$enrolledStudents===0){
+            return 0;
+        }
         if (count($enrolledStudents)<=0){
             return false;
         }
         foreach ($studentNotes as $studentNote){
             $found = false;
             foreach ($enrolledStudents as $enrolledStudent){
-                if($enrolledStudent['id']==$studentNote['student_subject_id'] && $enrolledStudent['status']!='RET'){
-                    $found =true;
+                if($enrolledStudent['id']==$studentNote['student_subject_id'] && $enrolledStudent['status']!='RET' &&
+                    $studentNote['qualification']>=0 && $studentNote['qualification']<=20){
+                    $found = true;
                 }
             }
             if ($found == false){
@@ -1133,27 +1126,27 @@ class InscriptionService
 
     public static function loadNotes(Request $request,$organizationId)
     {
-        self::validateLoadNotesRequest($request);
-        $isValid=TeacherService::validateTeacher($request,$request['teacher_id'],$organizationId);
+        self::validateLoadNotes($request);
+        $isValid=TeacherService::validateTeacher($request['teacher_id'],$organizationId);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-            if(is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod==0){
-                return response()->json(['message' => self::taskError], 206);
+            if(is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
+                return self::taskError(false,false);
             }
             if (count($currentSchoolPeriod)>0){
-                $validNotes = self::validateLoadNotes($request,$currentSchoolPeriod[0]['id']);
-                if (is_numeric($validNotes)&&$validNotes==0){
-                    return response()->json(['message' => self::taskError], 206);
+                $validNotes = self::validateNotes($request,$currentSchoolPeriod[0]['id']);
+                if (is_numeric($validNotes)&&$validNotes===0){
+                    return self::taskError(false,false);
                 }
                 if ($validNotes && $currentSchoolPeriod[0]['load_notes']==true){
                     $schoolPeriodsStudentForUpdate=self::changeNotes($request['student_notes']);
-                    if (is_numeric($schoolPeriodsStudentForUpdate)&&$schoolPeriodsStudentForUpdate==0){
-                        return response()->json(['message' => self::taskError], 206);
+                    if (is_numeric($schoolPeriodsStudentForUpdate)&&$schoolPeriodsStudentForUpdate===0){
+                        return self::taskError(false,false);
                     }
                     foreach ($schoolPeriodsStudentForUpdate as $schoolPeriodStudentForUpdate){
                         $result = self::updateStatusDESA($schoolPeriodStudentForUpdate,$organizationId);
-                        if (is_numeric($result)&&$result==0){
-                            return response()->json(['message' => self::taskPartialError], 206);
+                        if (is_numeric($result)&&$result===0){
+                            return self::taskError(false,true);
                         }
                     }
                     return response()->json(['message'=>self::OK],200);
