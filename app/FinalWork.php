@@ -126,4 +126,25 @@ class FinalWork extends Model
         }
     }
 
+    public static function deleteFinalWork($id)
+    {
+        try{
+            self::find($id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
+
+    public static function existFinalWorkById($id)
+    {
+        try{
+            return self::where('id',$id)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
 }

@@ -1105,23 +1105,20 @@ class InscriptionService
     }
 
     public static function changeNotes($studentNotes){
-        $schoolPeriodStudentForUpdate= [];
         foreach($studentNotes as $studentNote){
             $studentSubject= StudentSubject::getStudentSubjectById($studentNote['student_subject_id']);
-            if (is_numeric($studentSubject)&&$studentSubject==0){
+            if (is_numeric($studentSubject)&&$studentSubject===0){
                 return 0;
             }
             $studentSubject[0]['qualification']=$studentNote['qualification'];
-            $studentSubjectPrepare = self::buildStudentSubject($studentSubject[0],$studentSubject[0]['school_period_student_id'],false);
+            $studentSubjectPrepare = self::buildStudentSubject($studentSubject[0],
+                $studentSubject[0]['school_period_student_id'],false);
             $result=StudentSubject::updateStudentSubject($studentSubject[0]['id'],$studentSubjectPrepare);
-            if (is_numeric($result)&&$result==0){
+            if (is_numeric($result)&&$result===0){
                 return 0;
             }
-            if (!in_array($studentSubject[0]['school_period_student_id'],$schoolPeriodStudentForUpdate)){
-                $schoolPeriodStudentsForUpdate[]=$studentSubject[0]['school_period_student_id'];
-            }
+
         }
-        return $schoolPeriodStudentsForUpdate;
     }
 
     public static function loadNotes(Request $request,$organizationId)
@@ -1143,12 +1140,6 @@ class InscriptionService
                     if (is_numeric($schoolPeriodsStudentForUpdate)&&$schoolPeriodsStudentForUpdate===0){
                         return self::taskError(false,false);
                     }
-                    foreach ($schoolPeriodsStudentForUpdate as $schoolPeriodStudentForUpdate){
-                        $result = self::updateStatusDESA($schoolPeriodStudentForUpdate,$organizationId);
-                        if (is_numeric($result)&&$result===0){
-                            return self::taskError(false,true);
-                        }
-                    }
                     return response()->json(['message'=>self::OK],200);
                 }
                 return response()->json(['message'=>self::invalidData],206);
@@ -1156,6 +1147,20 @@ class InscriptionService
             return response()->json(['message'=>self::noCurrentSchoolPeriod],206);
         }
         return $isValid;
+    }
+
+    public static function deleteFinalWork($id){
+        $existFinalWork = FinalWork::existFinalWorkById($id);
+        if (is_numeric($existFinalWork)&&$existFinalWork===0){
+            return self::taskError(false,false);
+        }
+        if ($existFinalWork){
+            $result = FinalWork::deleteFinalWork($id);
+            if (is_numeric($result)&&$result===0){
+                return self::taskError;
+            }
+            return response()->json(['message'=>self::OK]);
+        }
     }
 
 }
