@@ -35,4 +35,22 @@ class FinalWorkSchoolPeriod extends Model
             return 0;
         }
     }
+
+    public static function existFinalWorkSchoolPeriodBySchoolPeriodStudent($schoolPeriodStudentId){
+        try{
+            return self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function deleteFinalWorkSchoolPeriodBySchoolPeriodStudentId($schoolPeriodStudentId){
+        try{
+            return self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->delete();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 }
