@@ -33,11 +33,6 @@ class SchoolPeriodSubjectTeacher extends Model
         return $this->belongsTo('App\SchoolPeriod');
     }
 
-    public function studentSubject()
-    {
-        return $this->hasMany('App\StudentSubject');
-    }
-
     public static function addSchoolPeriodSubjectTeacher($schoolPeriodSubjectTeacher)
     {
         try{
@@ -148,7 +143,6 @@ class SchoolPeriodSubjectTeacher extends Model
             return self::where('school_period_id',$schoolPeriodId)
                 ->where('teacher_id',$teacherId)
                 ->with('subject')
-                ->with('studentSubject')
                 ->get();
         }catch (\Exception $e){
             DB::rollback();
