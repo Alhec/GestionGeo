@@ -10,6 +10,7 @@ class InscriptionController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -39,7 +40,7 @@ class InscriptionController extends Controller
     public function show(Request $request, $id)
     {
         $organizationId = $request->header('Organization-Key');
-        return InscriptionService::getInscriptionById($request,$id,$organizationId);
+        return InscriptionService::getInscriptionById($id,$organizationId);
     }
 
     /**
@@ -58,13 +59,14 @@ class InscriptionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function destroy($id, Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return InscriptionService::deleteInscription($request, $id,$organizationId);
+        return InscriptionService::deleteInscription($id,$organizationId);
     }
 
     public function availableSubjects(Request $request)
@@ -78,14 +80,14 @@ class InscriptionController extends Controller
     public function inscriptionBySchoolPeriod(Request $request,$schoolPeriodId)
     {
         $organizationId = $request->header('Organization-Key');
-        return InscriptionService::getInscriptionsBySchoolPeriod($request,$schoolPeriodId,$organizationId);
+        return InscriptionService::getInscriptionsBySchoolPeriod($schoolPeriodId,$organizationId);
     }
 
     public function studentAvailableSubjects(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
         $studentId = $request->input('student_id');
-        return InscriptionService::studentAvailableSubjects($studentId,$request,$organizationId);
+        return InscriptionService::studentAvailableSubjects($studentId,$organizationId);
     }
 
     public  function addStudentInscription(Request $request)
@@ -98,7 +100,7 @@ class InscriptionController extends Controller
     {
         $organizationId = $request->header('Organization-Key');
         $studentId = $request->input('student_id');
-        return InscriptionService::getCurrentEnrolledSubjects($studentId,$organizationId,$request);
+        return InscriptionService::getCurrentEnrolledSubjects($studentId,$organizationId);
     }
 
     public function withdrawSubjects(Request $request)
@@ -112,12 +114,17 @@ class InscriptionController extends Controller
         $organizationId = $request->header('Organization-Key');
         $teacherId = $request->input('teacher_id');
         $schoolPeriodSubjectTeacherId = $request->input('school_period_subject_teacher_id');
-        return InscriptionService::getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,$organizationId,$request);
+        return InscriptionService::getEnrolledStudentsInSchoolPeriod($teacherId,$schoolPeriodSubjectTeacherId,
+            $organizationId);
     }
 
     public static function loadNotes(Request $request){
         $organizationId = $request->header('Organization-Key');
         return InscriptionService::loadNotes($request,$organizationId);
+    }
+
+    public static function deleteFinalWork($id){
+        return InscriptionService::deleteFinalWork($id);
     }
 
 }
