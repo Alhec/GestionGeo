@@ -62,7 +62,6 @@ class SchoolPeriodSubjectTeacher extends Model
             return self::where('school_period_id',$schoolPeriodId)
                 ->with('subject')
                 ->with('teacher')
-                ->with('schoolPeriod')
                 ->with('schedules')
                 ->get();
         }catch (\Exception $e){

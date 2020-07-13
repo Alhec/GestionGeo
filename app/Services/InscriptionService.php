@@ -94,26 +94,32 @@ class InscriptionService
         return response()->json(['message'=>self::emptyInscriptionInCurrentSchoolPeriod],206);
     }
 
-    public static function getUnregisteredSubjects($studentId,$subjectsInSchoolPeriod)
+    public static function getUnregisteredSubjects($student,$subjectsInSchoolPeriod)
     {
-        $allSubjectsEnrolled = StudentSubject::getAllSubjectsEnrolledWithoutRET($studentId);
+        $allSubjectsEnrolled = StudentSubject::getAllSubjectsEnrolledWithoutRET($student['id']);
         if (is_numeric($allSubjectsEnrolled) && $allSubjectsEnrolled===0){
             return 0;
         }
-        $allSubjectsEnrolledId = array_column( $allSubjectsEnrolled->toArray(),'id');
+        $allSubjectsEnrolledId = [];
+        foreach ($allSubjectsEnrolled as $subjectEnrolled){
+            $allSubjectsEnrolledId[]=$subjectEnrolled['dataSubject']['subject_id'];
+        }
+        $equivalencesSubjectsId = array_column($student['equivalence']->toArray(),'subject_id');
         $availableSubjects=[];
         foreach ($subjectsInSchoolPeriod as $subjectInSchoolPeriod){
             if ($subjectInSchoolPeriod['enrolled_students']<$subjectInSchoolPeriod['limit']){
                 if (count($allSubjectsEnrolledId)>0){
-                    if (!in_array($subjectInSchoolPeriod['subject_id'],$allSubjectsEnrolledId)){
+                    if (!in_array($subjectInSchoolPeriod['subject_id'],$allSubjectsEnrolledId) &&
+                        !in_array($subjectInSchoolPeriod['subject_id'],$equivalencesSubjectsId)){
                         $availableSubjects[]=$subjectInSchoolPeriod;
                     }
                 }else{
-                    $availableSubjects[]=$subjectInSchoolPeriod;
+                    if (!in_array($subjectInSchoolPeriod['subject_id'],$equivalencesSubjectsId)){
+                        $availableSubjects[]=$subjectInSchoolPeriod;
+                    }
                 }
             }
         }
-
         return $availableSubjects;
     }
 
@@ -221,30 +227,12 @@ class InscriptionService
 
     public static function getAvailableSubjects($studentId,$schoolPeriodId,$organizationId,$internalCall)
     {
-        if (auth()->payload()['user']->user_type!='A'){
-            $currentSchoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organizationId);
-            if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
-                return self::taskError($internalCall,false);
-            }
-            if (count($currentSchoolPeriod)<1){
-                if ($internalCall){
-                    return [];
-                }
-                return response()->json(['message'=>self::noCurrentSchoolPeriod],206);
-            }
-            $schoolPeriodId = $currentSchoolPeriod[0]['id'];
-        }
         $student = Student::getStudentById($studentId,$organizationId);
         if (is_numeric($student)&&$student===0){
             return self::taskError($internalCall,false);
         }
-        $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
-        if (is_numeric($schoolProgram) && $schoolProgram===0){
-            return self::taskError($internalCall,false);
-        }
-        if (count($student)>0 && count($schoolProgram)>0){
+        if (count($student)>0){
             $student=$student[0];
-            $schoolProgram=$schoolProgram[0];
             if ($student['current_status']!='REG' && $student['current_status']!='REI-A'
                 && $student['current_status']!='REI-B' && $student['current_status']!='RIN-A'
                 && $student['current_status']!='RIN-B'){
@@ -259,102 +247,109 @@ class InscriptionService
                 }
                 return response()->json(['message' => self::endProgram], 206);
             }
-            $thereIsUnpaidSchoolPeriod=SchoolPeriodStudent::isThereUnpaidSchoolPeriod($studentId);
-            if (is_numeric($thereIsUnpaidSchoolPeriod)&&$thereIsUnpaidSchoolPeriod===0){
+            $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+            if (is_numeric($schoolProgram) && $schoolProgram===0){
                 return self::taskError($internalCall,false);
             }
-            if (!$thereIsUnpaidSchoolPeriod){
-                $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod(
-                    $schoolPeriodId);
-                if (is_numeric($subjectsInSchoolPeriod)&&$subjectsInSchoolPeriod===0){
+            if (count($schoolProgram)>0){
+                $schoolProgram=$schoolProgram[0];
+                $thereIsUnpaidSchoolPeriod=SchoolPeriodStudent::isThereUnpaidSchoolPeriod($studentId);
+                if (is_numeric($thereIsUnpaidSchoolPeriod)&&$thereIsUnpaidSchoolPeriod===0){
                     return self::taskError($internalCall,false);
                 }
-                if (count($subjectsInSchoolPeriod)>0){
-                    $unregisteredSubjects = self::getUnregisteredSubjects($studentId,$subjectsInSchoolPeriod);
-                    if (is_numeric($unregisteredSubjects)&&$unregisteredSubjects===0){
+                if (!$thereIsUnpaidSchoolPeriod){
+                    $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod(
+                        $schoolPeriodId);
+                    if (is_numeric($subjectsInSchoolPeriod)&&$subjectsInSchoolPeriod===0){
                         return self::taskError($internalCall,false);
                     }
-                    if (count($unregisteredSubjects)>0){
-                        $filterSubjectsBySchoolProgram = self::filterSubjectsBySchoolProgram(
-                            $student['school_program_id'], $organizationId,$unregisteredSubjects);
-                        if(is_numeric($filterSubjectsBySchoolProgram)&&$filterSubjectsBySchoolProgram===0){
+                    if (count($subjectsInSchoolPeriod)>0){
+                        $unregisteredSubjects = self::getUnregisteredSubjects($student,$subjectsInSchoolPeriod);
+                        if (is_numeric($unregisteredSubjects)&&$unregisteredSubjects===0){
                             return self::taskError($internalCall,false);
                         }
-                        if (count($filterSubjectsBySchoolProgram)>0){
-                            $availableSubjects= self::filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,
-                                $filterSubjectsBySchoolProgram);
-                            if (is_numeric($availableSubjects)&&$availableSubjects===0){
+                        if (count($unregisteredSubjects)>0){
+                            $filterSubjectsBySchoolProgram = self::filterSubjectsBySchoolProgram(
+                                $student['school_program_id'], $organizationId,$unregisteredSubjects);
+                            if(is_numeric($filterSubjectsBySchoolProgram)&&$filterSubjectsBySchoolProgram===0){
                                 return self::taskError($internalCall,false);
                             }
-                            if (count($availableSubjects)>0){
-                                $totalQualification = self::getTotalQualification($studentId);
-                                if (is_string($totalQualification)&&$totalQualification==='e'){
+                            if (count($filterSubjectsBySchoolProgram)>0){
+                                $availableSubjects= self::filterSubjectsEnrolledInSchoolPeriod($studentId,$schoolPeriodId,
+                                    $filterSubjectsBySchoolProgram);
+                                if (is_numeric($availableSubjects)&&$availableSubjects===0){
                                     return self::taskError($internalCall,false);
                                 }
-                                $cantSubjectsEnrolled=StudentSubject::cantAllSubjectsEnrolledWithoutRETCUR($studentId);
-                                if (is_string($cantSubjectsEnrolled)&&$cantSubjectsEnrolled==='e'){
-                                    return self::taskError($internalCall,false);
-                                }
-                                if($cantSubjectsEnrolled>0 && ($totalQualification/$cantSubjectsEnrolled)<14){
-                                    $response['message']=self::warningAverage;
-                                }
-                                $response['available_subjects']=$availableSubjects;
-                                if ($schoolProgram['conducive_to_degree']){ // a partir de aqui disponibilidad de trabajo final o proyecto
-                                    $project = FinalWork::getFinalWorksByStudent($studentId, true);
-                                    if (is_numeric($project)&&$project===0){
+                                if (count($availableSubjects)>0){
+                                    $totalQualification = self::getTotalQualification($studentId);
+                                    if (is_string($totalQualification)&&$totalQualification==='e'){
                                         return self::taskError($internalCall,false);
                                     }
-                                    $notApprovedProject = FinalWork::existNotApprovedFinalWork($studentId, true);
-                                    if(is_numeric($notApprovedProject)&&$notApprovedProject===0){
+                                    $cantSubjectsEnrolled=StudentSubject::cantAllSubjectsEnrolledWithoutRETCUR($studentId);
+                                    if (is_string($cantSubjectsEnrolled)&&$cantSubjectsEnrolled==='e'){
                                         return self::taskError($internalCall,false);
                                     }
-                                    if ((!$notApprovedProject && count($project)>0)||$student['is_available_final_work']){
-                                        $availableProjectSubjects = self::getAvailableFinalSubjects($student,
-                                            $schoolProgram,$organizationId,false);
-                                        if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
-                                            return self::taskError($internalCall,false);
-                                        }
-                                        $approvedProjects= FinalWork::getFinalWorksByStudent($studentId,true);
-                                        if (is_numeric($approvedProjects)&& $approvedProjects===0){
-                                            return self::taskError($internalCall,false);
-                                        }
-                                        if (count($availableProjectSubjects)>0){
-                                            $response['available_final_work']=true;
-                                            $response['final_work_subjects']=$availableProjectSubjects;
-                                        }
-                                        if (count($approvedProjects)>0){
-                                            $response['approved_projects']=$approvedProjects;
-                                        }
+                                    if($cantSubjectsEnrolled>0 && ($totalQualification/$cantSubjectsEnrolled)<14){
+                                        $response['message']=self::warningAverage;
                                     }
-                                    if($notApprovedProject){
-                                        $availableProject = self::availableProject($student,$schoolProgram,
-                                            $organizationId);
-                                        if (is_numeric($availableProject)&&$availableProject===0){
+                                    $response['available_subjects']=$availableSubjects;
+                                    if ($schoolProgram['conducive_to_degree']){ // a partir de aqui disponibilidad de trabajo final o proyecto
+                                        $project = FinalWork::getFinalWorksByStudent($studentId, true);
+                                        if (is_numeric($project)&&$project===0){
                                             return self::taskError($internalCall,false);
                                         }
-                                        if ($availableProject==true){
+                                        $notApprovedProject = FinalWork::existNotApprovedFinalWork($studentId, true);
+                                        if(is_numeric($notApprovedProject)&&$notApprovedProject===0){
+                                            return self::taskError($internalCall,false);
+                                        }
+                                        if ((!$notApprovedProject && count($project)>0)||$student['is_available_final_work']){
                                             $availableProjectSubjects = self::getAvailableFinalSubjects($student,
-                                                $schoolProgram,$organizationId,true);
+                                                $schoolProgram,$organizationId,false);
                                             if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
                                                 return self::taskError($internalCall,false);
                                             }
+                                            $approvedProjects= FinalWork::getFinalWorksByStudent($studentId,true);
+                                            if (is_numeric($approvedProjects)&& $approvedProjects===0){
+                                                return self::taskError($internalCall,false);
+                                            }
                                             if (count($availableProjectSubjects)>0){
-                                                $response['available_project']=true;
-                                                $response['project_subjects']=$availableProjectSubjects;
+                                                $response['available_final_work']=true;
+                                                $response['final_work_subjects']=$availableProjectSubjects;
+                                            }
+                                            if (count($approvedProjects)>0){
+                                                $response['approved_projects']=$approvedProjects;
+                                            }
+                                        }
+                                        if($notApprovedProject){
+                                            $availableProject = self::availableProject($student,$schoolProgram,
+                                                $organizationId);
+                                            if (is_numeric($availableProject)&&$availableProject===0){
+                                                return self::taskError($internalCall,false);
+                                            }
+                                            if ($availableProject==true){
+                                                $availableProjectSubjects = self::getAvailableFinalSubjects($student,
+                                                    $schoolProgram,$organizationId,true);
+                                                if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
+                                                    return self::taskError($internalCall,false);
+                                                }
+                                                if (count($availableProjectSubjects)>0){
+                                                    $response['available_project']=true;
+                                                    $response['project_subjects']=$availableProjectSubjects;
+                                                }
                                             }
                                         }
                                     }
+                                    return $response;
                                 }
-                                return $response;
                             }
                         }
                     }
+                    if ($internalCall){return [];}
+                    return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
                 }
                 if ($internalCall){return [];}
-                return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
+                return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
             }
-            if ($internalCall){return [];}
-            return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
         }
         if ($internalCall){return [];}
         return response()->json(['message'=>self::notFoundStudentGivenId],206);

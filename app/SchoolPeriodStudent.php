@@ -42,8 +42,8 @@ class SchoolPeriodStudent extends Model
         try{
             return self::with('schoolPeriod')
                 ->with('student')
-                ->with('enrolledSubjects')
-                ->with('finalWorkData')
+               /* ->with('enrolledSubjects')
+                ->with('finalWorkData')*/
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);

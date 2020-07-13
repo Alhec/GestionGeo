@@ -83,7 +83,7 @@ Route::middleware('jwt.auth','role:A')->delete('schoolPeriods/{id}','SchoolPerio
 
 //Inscription
 Route::middleware('jwt.auth','role:A,T')->get('teacherInscription/enrolledStudent','InscriptionController@enrolledStudentsInSchoolPeriod');
-Route::middleware('jwt.auth','role:T')->post('teacherInscription/loadNotes','InscriptionController@loadNotes');
+Route::middleware('jwt.auth','role:A,T')->post('teacherInscription/loadNotes','InscriptionController@loadNotes');
 
 Route::middleware('jwt.auth','role:S')->get('studentInscription/availableSubjects','InscriptionController@studentAvailableSubjects');
 Route::middleware('jwt.auth','role:S')->get('studentInscription/currentEnrolledSubjects','InscriptionController@currentEnrolledSubjects');
@@ -97,6 +97,7 @@ Route::middleware('jwt.auth','role:A')->post('inscriptions','InscriptionControll
 Route::middleware('jwt.auth','role:A')->get('inscriptions/{id}','InscriptionController@show');
 Route::middleware('jwt.auth','role:A')->put('inscriptions/{id}','InscriptionController@update');
 Route::middleware('jwt.auth','role:A')->delete('inscriptions/{id}','InscriptionController@destroy');
+Route::middleware('jwt.auth','role:A')->delete('inscriptions/deleteFinalWork/{id}','InscriptionController@deleteFinalWork');
 
 //Constance
 Route::middleware('jwt.auth','role:A,S')->get('constance/study','ConstanceController@constanceOfStudy');
