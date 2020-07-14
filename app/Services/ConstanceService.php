@@ -104,7 +104,7 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
-    public static function stadisticsDataHistorical($historical)
+    public static function statisticsDataHistorical($historical)
     {
         $enrolledCredits=0;
         $cumulativeNotes=0;
@@ -164,7 +164,7 @@ class ConstanceService
                     }
                     if (count($studentSubject)>0){
                         $data['historical_data']=$studentSubject;
-                        $data['porcentual_data']=self::stadisticsDataHistorical($studentSubject);
+                        $data['porcentual_data']=self::statisticsDataHistorical($studentSubject);
                     } else {
                         $data['historical_data']=[];
                         $dataHistorical['enrolled_credits']=0;
@@ -297,7 +297,7 @@ class ConstanceService
                 $data['year']=$now->year;
                 $data['day']=$now->day;
                 $data['enrolled_subjects']=$enrolledSubjects->toArray();
-                $data['porcentual_data']=self::stadisticsDataHistorical($enrolledSubjects);
+                $data['porcentual_data']=self::statisticsDataHistorical($enrolledSubjects);
                 if ($organizationId =='G'){
                     \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                     $pdf = \PDF::loadView('constance/Geoquimica/constancia_notas',compact('data'));
@@ -346,7 +346,7 @@ class ConstanceService
                 }
                 $data['school_program_data']=$schoolProgram->toArray()[0];
                 $data['enrolled_subjects']=$enrolledSubjects->toArray();
-                $data['porcentual_data']=self::stadisticsDataHistorical($enrolledSubjects);
+                $data['porcentual_data']=self::statisticsDataHistorical($enrolledSubjects);
                 return $data;
             }
             return response()->json(['message'=>self::notYetHaveHistorical],206);

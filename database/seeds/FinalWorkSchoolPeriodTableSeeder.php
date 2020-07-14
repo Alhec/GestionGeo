@@ -26,7 +26,17 @@ class FinalWorkSchoolPeriodTableSeeder extends Seeder
         FinalWorkSchoolPeriod::create([
             'status'=>'APPROVED',
             'final_work_id'=>3,
-            'school_period_student_id'=>3,
+            'school_period_student_id'=>4,
+        ]);
+        FinalWorkSchoolPeriod::create([
+            'status'=>'APPROVED',
+            'final_work_id'=>4,
+            'school_period_student_id'=>7,
+        ]);
+        FinalWorkSchoolPeriod::create([
+            'status'=>'APPROVED',
+            'final_work_id'=>5,
+            'school_period_student_id'=>7,
         ]);
     }
 }

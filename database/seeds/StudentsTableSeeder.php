@@ -19,7 +19,7 @@ class StudentsTableSeeder extends Seeder
             'student_type'=>"REG", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>true,
-            'is_available_final_work' => false,
+            'is_available_final_work' => true,
             'repeat_approved_subject' =>false,
             'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>3,
@@ -108,7 +108,7 @@ class StudentsTableSeeder extends Seeder
             'student_type'=>"REG", // REG EXT AMP
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
-            'is_available_final_work' => false,
+            'is_available_final_work' => true,
             'repeat_approved_subject' =>false,
             'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>6

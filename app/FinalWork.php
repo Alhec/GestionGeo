@@ -55,7 +55,7 @@ class FinalWork extends Model
                 ->where('is_project',$isProject)
                 ->whereHas('schoolPeriods',function (Builder $query) use ($status) {
                     $query
-                        ->where('status','=',$status);
+                        ->where('final_work_school_period.status','=',$status);
                 })
                 ->with('schoolPeriods')
                 ->with('teachers')
@@ -118,7 +118,7 @@ class FinalWork extends Model
                 ->where('is_project',$isProject)
                 ->whereHas('schoolPeriods',function (Builder $query) use ($status) {
                     $query
-                        ->where('status','=',$status);
+                        ->where('final_work_school_period.status','=',$status);
                 })
                 ->exists();
         }catch (\Exception $e){
