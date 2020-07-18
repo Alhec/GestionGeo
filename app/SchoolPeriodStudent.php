@@ -37,6 +37,11 @@ class SchoolPeriodStudent extends Model
             ->with('finalWork');
     }
 
+    public function doctoralExam()
+    {
+        return $this->hasOne('App\DoctoralExam','school_period_student_id','id');
+    }
+
     public static function getSchoolPeriodStudent($organizationId)
     {
         try{
@@ -62,6 +67,7 @@ class SchoolPeriodStudent extends Model
                 ->with('enrolledSubjects')
                 ->with('schoolPeriod')
                 ->with('finalWorkData')
+                ->with('doctoralExam')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);

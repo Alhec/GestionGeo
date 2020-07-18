@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class SchoolPeriod extends Model
 {
     protected $fillable = ['organization_id','cod_school_period','start_date','end_date','withdrawal_deadline',
-        'load_notes','inscription_start_date','inscription_visible'];
+        'load_notes','inscription_start_date','inscription_visible','project_duty','final_work_duty'];
     protected $hidden = ['organization_id'];
     public $timestamps = false;
 
@@ -103,7 +103,8 @@ class SchoolPeriod extends Model
 
         try{
             return self::insertGetId($schoolPeriod->only('organization_id','cod_school_period','start_date','end_date',
-                'withdrawal_deadline','load_notes','inscription_start_date','inscription_visible'));
+                'withdrawal_deadline','load_notes','inscription_start_date','inscription_visible','project_duty',
+                'final_work_duty'));
         }catch (\Exception $e){
             DB::rollback();
             return 0;

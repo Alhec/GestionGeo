@@ -33,6 +33,8 @@ class CreateSchoolProgramTable extends Migration
                 ->default(true);
             $table->boolean('doctoral_exam')
                 ->default(false);
+            $table->integer('min_cu_to_doctoral_exam')
+                ->nullable();
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')

@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Degree;
 use App\Equivalence;
+use App\FinalWork;
 use App\Log;
 use App\SchoolProgram;
 use App\Student;
@@ -103,8 +104,6 @@ class StudentService
             'type_income'=>$request['type_income'],
             'is_ucv_teacher'=>$request['is_ucv_teacher'],
             'is_available_final_work'=>false,
-            'repeat_approved_subject'=>false,
-            'repeat_reprobated_subject'=>false,
             'credits_granted'=>$request['credits_granted'],
             'with_work'=>$request['with_work'],
             'end_program'=>false,
@@ -249,10 +248,8 @@ class StudentService
         $request->validate([
             'student_id'=>'numeric|required',
             'is_available_final_work'=>'boolean|required',
-            'repeat_approved_subject'=>'boolean|required',
-            'repeat_reprobated_subject'=>'boolean|required',
             'test_period'=>'boolean|required',
-            'current_status'=>'max:5|required|ends_with:RET-A,RET-B,DES-A,DES-B,RIN-A,RIN-B,REI-A,REI-B,REG',//REI REINCORPORADO RIN REINGRESO
+            'current_status'=>'max:5|required|ends_with:RET-A,RET-B,DES-A,DES-B,RIN-A,RIN-B,REI-A,REI-B,REG,ENDED',//REI REINCORPORADO RIN REINGRESO
         ]);
     }
 
@@ -292,7 +289,7 @@ class StudentService
         }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
-            if ($request['current_status']=='RET-B'){
+            if ($request['current_status']=='RET-B'||$request['current_status']=='ENDED'){
                 $request['end_program']=true;
             }else{
                 $request['end_program']=false;
@@ -307,8 +304,6 @@ class StudentService
                 'type_income'=>$request['type_income'],
                 'is_ucv_teacher'=>$request['is_ucv_teacher'],
                 'is_available_final_work'=>$request['is_available_final_work'],
-                'repeat_approved_subject'=>$request['repeat_approved_subject'],
-                'repeat_reprobated_subject'=>$request['repeat_reprobated_subject'],
                 'credits_granted'=>$request['credits_granted'],
                 'with_work'=>$request['with_work'],
                 'end_program'=>$request['end_program'],
@@ -399,7 +394,7 @@ class StudentService
         return response()->json(['message' => self::notWarningStudent], 200);
     }
 
-    public static function warningUpdateStudent($organizationId)
+    public static function warningOrAvailableWorkToStudent($organizationId)
     {
         $students=Student::getStudentActive($organizationId);
         if (is_numeric($students)&&$students==0){
@@ -407,6 +402,7 @@ class StudentService
         }
         if (count($students)>0){
             foreach ($students as $student){
+                $update =false;
                 $totalQualification = InscriptionService::getTotalQualification($student['id']);
                 if (is_string($totalQualification)&&$totalQualification=='e'){
                     return 0;
@@ -417,6 +413,29 @@ class StudentService
                 }
                 if($cantSubjectsEnrolled>0 && ($totalQualification/$cantSubjectsEnrolled)<14){
                     $student['testPeriod']=true;
+                    $update = true;
+                }
+                $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
+                if (is_numeric($schoolProgram) && $schoolProgram===0){
+                    return 0;
+                }
+                if (count($schoolProgram)>0){
+                    if ($schoolProgram[0]['conducive_to_degree']){
+                        $project = FinalWork::getFinalWorksByStudent($student['id'], true);
+                        if (is_numeric($project)&&$project===0){
+                            return 0;
+                        }
+                        $notApprovedProject = FinalWork::existNotApprovedFinalWork($student['id'], true);
+                        if(is_numeric($notApprovedProject)&&$notApprovedProject===0){
+                            return 0;
+                        }
+                        if (!$notApprovedProject && count($project)>0){
+                            $student['is_available_final_work']=true;
+                            $update = true;
+                        }
+                    }
+                }
+                if ($update){
                     $student = Student::updateStudent($student['id'],$student->toArray());
                     if (is_numeric($student)&& $student==0){
                         return 0;

@@ -20,8 +20,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>true,
             'is_available_final_work' => true,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>3,
             'end_program'=>true
         ]);
@@ -32,8 +30,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>4
         ]);
         Student::create([
@@ -43,9 +39,8 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>true,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
-            'guide_teacher_id'=>5
+            'guide_teacher_id'=>5,
+            'credits_granted'=>3
         ]);
         Student::create([
             'school_program_id'=>4,
@@ -54,8 +49,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>6
         ]);
         Student::create([
@@ -65,8 +58,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>7
         ]);
         Student::create([
@@ -76,8 +67,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>true,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>3
         ]);
         Student::create([
@@ -87,8 +76,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>4
         ]);
         Student::create([
@@ -98,8 +85,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>true,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>5
         ]);
         Student::create([
@@ -109,8 +94,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => true,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>6
         ]);
         Student::create([
@@ -120,8 +103,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>7
         ]);
         Student::create([
@@ -131,8 +112,6 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>true,
             'is_available_final_work' => false,
-            'repeat_approved_subject' =>false,
-            'repeat_reprobated_subject'=>false,
             'guide_teacher_id'=>3
         ]);
     }

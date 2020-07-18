@@ -21,6 +21,8 @@ class SchoolPeriodsTableSeeder extends Seeder
             'inscription_visible'=>false,
             'organization_id'=>'ICT',
             'load_notes'=>false,
+            'project_duty'=>3.4,
+            'final_work_duty'=>3.5,
         ]);
         SchoolPeriod::create([
             'cod_school_period'=>'I-2020',
@@ -31,6 +33,8 @@ class SchoolPeriodsTableSeeder extends Seeder
             'inscription_visible'=>false,
             'organization_id'=>'ICT',
             'load_notes'=>false,
+            'project_duty'=>3.4,
+            'final_work_duty'=>3.5,
         ]);
         SchoolPeriod::create([
             'cod_school_period'=>'II-2020',
@@ -41,6 +45,8 @@ class SchoolPeriodsTableSeeder extends Seeder
             'inscription_visible'=>false,
             'organization_id'=>'ICT',
             'load_notes'=>false,
+            'project_duty'=>3.4,
+            'final_work_duty'=>3.5,
         ]);
         SchoolPeriod::create([
             'cod_school_period'=>'III-2020',
@@ -51,6 +57,8 @@ class SchoolPeriodsTableSeeder extends Seeder
             'inscription_visible'=>false,
             'organization_id'=>'ICT',
             'load_notes'=>false,
+            'project_duty'=>3.4,
+            'final_work_duty'=>3.5,
         ]);
     }
 }

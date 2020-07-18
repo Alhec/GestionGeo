@@ -69,6 +69,8 @@ class SchoolPeriodService
             'load_notes'=>'boolean',
             'inscription_start_date'=>'required|size:10',
             'inscription_visible'=>'boolean',
+            'project_duty'=>'required|numeric',
+            'final_work_duty'=>'required|numeric',
             'subjects.*.teacher_id'=>'required|numeric',
             'subjects.*.subject_id'=>'required|numeric',
             'subjects.*.limit'=>'required|numeric',
@@ -181,7 +183,7 @@ class SchoolPeriodService
                     return response()->json(['message' => self::taskError], 206);
                 }
             }
-            $updateStudent=StudentService::warningUpdateStudent($organizationId);
+            $updateStudent=StudentService::warningOrAvailableWorkToStudent($organizationId);
             if (is_numeric($updateStudent)&&$updateStudent===0){
                 return response()->json(['message' => self::taskError], 206);
             }

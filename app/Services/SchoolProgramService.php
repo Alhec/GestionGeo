@@ -49,7 +49,8 @@ class SchoolProgramService
             'school_program_name'=>'required|max:100',
             "conducive_to_degree"=>"required|boolean",
             'grant_certificate'=>'boolean',
-            'doctoral_exam'=>'boolean'
+            'doctoral_exam'=>'boolean',
+            'min_cu_to_doctoral_exam'=>'numeric'
         ]);
     }
 

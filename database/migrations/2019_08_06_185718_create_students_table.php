@@ -29,10 +29,6 @@ class CreateStudentsTable extends Migration
                 ->default(false);
             $table->boolean('is_available_final_work')
                 ->default(false);
-            $table->boolean('repeat_approved_subject')
-                ->default(false);
-            $table->boolean('repeat_reprobated_subject')
-                ->default(false);
             $table->integer('credits_granted')
                 ->default(0)
                 ->nullable();

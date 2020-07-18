@@ -39,7 +39,8 @@ class SchoolProgramsTableSeeder extends Seeder
             'conducive_to_degree'=>true,
             'min_duration'=>2,
             'min_num_cu_final_work'=>3,
-            'doctoral_exam'=>true
+            'doctoral_exam'=>true,
+            'min_cu_to_doctoral_exam'=>3
         ]);
         SchoolProgram::create([
             'school_program_name' => 'Ampliacion',
@@ -73,7 +74,8 @@ class SchoolProgramsTableSeeder extends Seeder
             'conducive_to_degree'=>true,
             'min_duration'=>2,
             'min_num_cu_final_work'=>3,
-            'doctoral_exam'=>true
+            'doctoral_exam'=>true,
+            'min_cu_to_doctoral_exam'=>3
         ]);
         SchoolProgram::create([
             'school_program_name' => 'Perfeccionamiento',

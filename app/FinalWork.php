@@ -22,7 +22,8 @@ class FinalWork extends Model
     {
         return $this->belongsToMany('App\Teacher','advisors')
             ->as('advisors')
-            ->withPivot('teacher_id','final_work_id');
+            ->withPivot('teacher_id','final_work_id')
+            ->with('user');
     }
 
     public static function existNotApprovedFinalWork($studentId, $isProject)
@@ -72,7 +73,7 @@ class FinalWork extends Model
                 ->where('is_project',$isProject)
                 ->with('schoolPeriods')
                 ->with('teachers')
-                ->get('id');
+                ->get();
         }catch (\Exception $e){
             return 0;
         }

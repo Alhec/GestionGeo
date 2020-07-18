@@ -25,6 +25,8 @@ class CreateSchoolPeriodsTable extends Migration
             $table->date('inscription_start_date');
             $table->boolean('inscription_visible')
                 ->default(false);
+            $table->float('project_duty');
+            $table->float('final_work_duty');
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')
