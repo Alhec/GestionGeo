@@ -37,6 +37,7 @@ class StudentService
     const notWarningStudent="Todos los estudiantes estan en un estatus regular";
     const ok = "OK";
 
+
     const logCreateStudent = 'Creo la entidad student para ';
     const logUpdateStudent = 'Actualizo la entidad student para ';
     const logDeleteStudent = 'Elimino la entidad student para ';
