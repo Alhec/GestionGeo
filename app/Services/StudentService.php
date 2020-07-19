@@ -44,7 +44,7 @@ class StudentService
     public static function validate(Request $request)
     {
         $request->validate([
-            'guide_teacher_id'=>'numeric',
+            'guide_teacher_id'=>'numeric|nullable',
             'student_type'=>'required|max:3|ends_with:REG,EXT,AMP,PER,PDO,ACT',
             'home_university'=>'required|max:100',
             'current_postgraduate'=>'max:100',
