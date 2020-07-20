@@ -37,7 +37,6 @@ class StudentService
     const notWarningStudent="Todos los estudiantes estan en un estatus regular";
     const ok = "OK";
 
-
     const logCreateStudent = 'Creo la entidad student para ';
     const logUpdateStudent = 'Actualizo la entidad student para ';
     const logDeleteStudent = 'Elimino la entidad student para ';
@@ -45,7 +44,7 @@ class StudentService
     public static function validate(Request $request)
     {
         $request->validate([
-            'guide_teacher_id'=>'numeric|nullable',
+            'guide_teacher_id'=>'numeric',
             'student_type'=>'required|max:3|ends_with:REG,EXT,AMP,PER,PDO,ACT',
             'home_university'=>'required|max:100',
             'current_postgraduate'=>'max:100',
