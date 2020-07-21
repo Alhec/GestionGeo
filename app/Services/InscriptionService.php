@@ -54,6 +54,8 @@ class InscriptionService
     const logAddInscription = 'Inscripcion al estudiante con id ';
     const logUpdateInscription = 'Inscripcion al estudiante con id ';
     const logDeleteInscription = 'Inscripcion al estudiante con id ';
+    const logWithdrawSubject = 'Ha retirado materias el estudiante con id ';
+    const logLoadNotes = 'Realizo carga de notas';
 
     public static function taskError($internalCall,$isPartial)
     {
@@ -1131,6 +1133,7 @@ class InscriptionService
                         }
                         $request['final_works']=$finalWorks;
                     }
+                    unset($request['doctoral_exam']);
                     return self::addInscription($request,$organizationId);
                 }
                 return response()->json(['message'=>self::notAvailableInscriptions],206);
@@ -1231,6 +1234,11 @@ class InscriptionService
                                 $request['withdraw_subjects']);
                             if (is_numeric($result)&&$result==0){
                                 return self::taskError(false,false);
+                            }
+                            $log = Log::addLog(auth('api')->user()['id'],
+                                self::logWithdrawSubject.$request['student_id']);
+                            if (is_numeric($log)&&$log==0){
+                                return self::taskError(false,true);
                             }
                             return response()->json(['message'=>self::OK],200);
                         }

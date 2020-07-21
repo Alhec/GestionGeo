@@ -10,7 +10,6 @@
             margin: 1cm 2cm 1cm 2cm;
             font-size: 12pt;
         }
-
         .header{
             position: relative;
             width: 100%;
@@ -20,20 +19,16 @@
             position: absolute;
             left: 0;
         }
-
         .image-ucv{
             position: absolute;
             right: 0;
         }
-
         .image-geoquimica img{
             width: 7.61cm;
             height: 3.61cm;
         }
-
         .image-ucv img{
             width: 3.49cm;
-            width: 3.19cm;
         }
         .section{
             margin-top: 3cm;
@@ -82,15 +77,19 @@
         </div>
         <div class="content">
             <div class="article">
-                Quien  suscribe,  Coordinadora  del  Postgrado  en  Geoquímica,  Facultad  de  Ciencias de  la  
-                Universidad   Central  de Venezuela, por  medio  de   la   presente   hace  constar  que el
-                <strong>{{$data['user_data']['user']['level_instruction']}}. {{strtoupper($data['user_data']['user']['first_name'])}} {{strtoupper($data['user_data']['user']['second_name'])}}
-                    {{strtoupper($data['user_data']['user']['first_surname'])}} {{strtoupper($data['user_data']['user']['second_surname'])}}</strong>,
-                titular  de  la  cédula de identidad  N° {{$data['user_data']['user']['identification'] }}, es
-                estudiante  regular  del  programa  de <strong>{{strtoupper($data['school_program_data']['school_program_name'])}}</strong>.
+                Quien suscribe, Coordinador(a) del Postgrado en Geoquímica, Facultad de Ciencias de la Universidad
+                Central de Venezuela, por medio de la presente hace constar que el
+                <strong>{{$data['user_data']['user']['level_instruction']}}.
+                    {{strtoupper($data['user_data']['user']['first_name'])}}
+                    {{strtoupper($data['user_data']['user']['second_name'])}}
+                    {{strtoupper($data['user_data']['user']['first_surname'])}}
+                    {{strtoupper($data['user_data']['user']['second_surname'])}}</strong>, titular de la cédula de
+                identidad N° {{$data['user_data']['user']['identification'] }}, es estudiante regular del programa de
+                <strong>{{strtoupper($data['school_program_data']['school_program_name'])}}</strong>.
             </div>
             <div class="article">
-                Constancia que se expide a petición de la parte interesada, en Caracas, en el mes  de  {{$data['month']}}  de  {{$data['year']}}.
+                Constancia que se expide a petición de la parte interesada, en Caracas, en el mes de
+                {{$data['month']}} de {{$data['year']}}.
             </div>
         </div>
     </div>
@@ -104,7 +103,7 @@
     </div>
     <div class="footer">
             Instituto de Ciencias de la Tierra. Fac. Ciencias UCV. Av. Los Ilustres, Los Chaguaramos. <br/>
-            Apartado: 3895. Caracas-1010A. Telf: 58-0212-6051082. 
+            Apartado: 3895. Caracas-1010A. Telf: 58-0212-6051082.
     </div>
 </body>
 </html>

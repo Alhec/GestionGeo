@@ -10,7 +10,6 @@
             margin: 1cm 2cm 2cm 2cm;
             font-size: 12pt;
         }
-
         .header{
             position: fixed;
             width: 100%;
@@ -23,20 +22,16 @@
             position: absolute;
             left: 0;
         }
-
         .image-ucv{
             position: absolute;
             right: 0;
         }
-
         .image-geoquimica img{
             width: 7.61cm;
             height: 3.61cm;
         }
-
         .image-ucv img{
             width: 3.49cm;
-            width: 3.19cm;
         }
         .section{
             margin-top: 1cm;
@@ -75,7 +70,6 @@
             margin: 0 auto;
             width: 100%;
         }
-
         table, th, td {
             border: 1px solid black;
             padding: 0 0.1cm 0 0.1cm;
@@ -104,10 +98,9 @@
                 {{strtoupper($data['user_data']['user']['first_name'])}} {{strtoupper($data['user_data']['user']['second_name'])}}
                 {{strtoupper($data['user_data']['user']['first_surname'])}} {{strtoupper($data['user_data']['user']['second_surname'])}}
             </strong>, titular de la cédula de identidad <strong>N° {{$data['user_data']['user']['identification']}} </strong>,
-            cursó y aprobó las siguientes asignaturas, obteniendo un promedio general de {{$data['porcentual_data']['porcentual']}}
-            puntos y un total de {{$data['porcentual_data']['porcentual']}} créditos
+            cursó y aprobó las siguientes asignaturas, obteniendo un promedio general de {{$data['percentage_data']['percentage']}}
+            puntos y un total de {{$data['percentage_data']['enrolled_credits']}} créditos
             en el programa de {{strtoupper($data['school_program_data']['school_program_name'])}}, de este Postgrado.
-
         </div>
         <div class="content">
             <div class="article">

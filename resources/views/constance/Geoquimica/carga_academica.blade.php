@@ -23,20 +23,16 @@
             position: absolute;
             left: 0;
         }
-
         .image-ucv{
             position: absolute;
             right: 0;
         }
-
         .image-geoquimica img{
             width: 7.61cm;
             height: 3.61cm;
         }
-
         .image-ucv img{
             width: 3.49cm;
-            width: 3.19cm;
         }
         .section{
             margin-top: 1cm;
@@ -75,7 +71,6 @@
             margin: 0 auto;
             width: 100%;
         }
-
         table, th, td {
             border: 1px solid black;
             padding: 0 0.1cm 0 0.1cm;

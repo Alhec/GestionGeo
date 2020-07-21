@@ -10,7 +10,6 @@
             margin: 0cm 0cm 0cm 0cm;
             font-size: 12pt;
         }
-
         .header{
             position: relative;
             width: 100%;
@@ -20,20 +19,16 @@
             position: absolute;
             left: 0;
         }
-
         .image-ucv{
             position: absolute;
             right: 0;
         }
-
         .image-geoquimica img{
             width: 7.61cm;
             height: 3.61cm;
         }
-
         .image-ucv img{
             width: 3.49cm;
-            width: 3.19cm;
         }
         .section{
             margin-top: 3cm;
@@ -77,7 +72,6 @@
             border-collapse: collapse;
             width: 100%;
         }
-
         table, th, td {
             border: 1px solid black;
             padding: 0 0 0 0;
@@ -150,7 +144,7 @@
                         <th colspan="4">UNIDADES POR CONVALIDACION</th>
                         <td colspan="3">{{$data['user_data']['credits_granted']}}</td>
                         <th colspan="3">UNIDADES CURSADAS HASTA LA FECHA</th>
-                        <td colspan="4">{{$data['porcentual_data']['enrolled_credits']}}</td>
+                        <td colspan="4">{{$data['percentage_data']['enrolled_credits']}}</td>
                     </tr>
                     @if(count($data['user_data']['degrees'])>0)
                         <tr>
