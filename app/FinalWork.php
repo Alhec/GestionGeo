@@ -58,7 +58,6 @@ class FinalWork extends Model
                     $query
                         ->where('final_work_school_period.status','=',$status);
                 })
-                ->with('schoolPeriods')
                 ->with('teachers')
                 ->get();
         }catch (\Exception $e){

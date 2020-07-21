@@ -45,7 +45,7 @@ class InscriptionService
     const notAvailableInscriptions = 'No estan disponibles las inscripciones';
     const inscriptionReady = 'Inscripcion ya realizada';
     const invalidSubjectToInscription = 'Las materias a inscribir no estan disponibles';
-    const invalidData = 'Datos invalidos';
+    const invalidData = 'Datos invalidos o no esta disponible la carga de notas';
     const busySchoolPeriodStudent ='El estudiante ya esta inscrito en el periodo escolar y se encuentra en otro registro';
     const expiredDate = 'No se puede realizar retiros la fecha ya ha pasado';
     const notCurrentInscription ='No hay inscripcion actual para usted';
@@ -414,6 +414,7 @@ class InscriptionService
             'projects.*.status'=>'max:10|ends_with:PROGRESS,APPROVED,REPROBATE'
         ]);
     }
+
     public static function validateInscriptionFinalWork(Request $request)
     {
         $request->validate([
@@ -428,7 +429,7 @@ class InscriptionService
     public static function validateDoctoralExam(Request $request)
     {
         $request->validate([
-            'doctoral_exam.status'=>'max:10|ends_with:APPROVED,REPROBATE'
+            'doctoral_exam.status'=>'required|max:10|ends_with:APPROVED,REPROBATE'
         ]);
     }
 
@@ -546,6 +547,11 @@ class InscriptionService
         $finalWork['student_id']=$studentId;
         $finalWork['is_project']=$isProject;
         $existAdvisors= false;
+        $status = 'PROGRESS';
+        if (isset($finalWork['status'])){
+            $status=$finalWork['status'];
+            unset($finalWork['status']);
+        }
         $advisors = [];
         if (isset($finalWork['advisors'])){
             $advisors=$finalWork['advisors'];
@@ -561,7 +567,7 @@ class InscriptionService
         }
         $finalWork['final_work_id']=$finalWorkId;
         $finalWork['school_period_student_id']=$schoolPeriodStudentId;
-        $finalWork['status']='PROGRESS';
+        $finalWork['status']=$status;
         $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod($finalWork);
         if (is_numeric($result)&&$result===0){
             return 0;
@@ -637,7 +643,7 @@ class InscriptionService
     }
 
     public static function setProjectsOrFinalWorks($studentId, $finalWorks, $schoolPeriodStudentId, $isProject,
-                                                   $availableFinalWorks)
+                                                   $availableFinalWorks,$organizationId)
     {
         if (count($availableFinalWorks)>0){
             $availableFinalWorkIds = array_column($availableFinalWorks->toArray(),'id');
@@ -674,6 +680,18 @@ class InscriptionService
                     }
                     if ($result===0){
                         return 0;
+                    }
+                    if (!$isProject && isset($finalWork['status']) && $finalWork['status']==='APPROVED'){
+                        $student = Student::getStudentById($studentId,$organizationId);
+                        if (is_numeric($student)&&$student===0){
+                            return 0;
+                        }
+                        $student[0]['status']='ENDED';
+                        $student[0]['end_program']=true;
+                        $result=Student::updateStudent($studentId,$student[0]->toArray());
+                        if (is_numeric($result)&&$result==0){
+                            return 0;
+                        }
                     }
                 }
             }
@@ -816,12 +834,14 @@ class InscriptionService
                         if ((isset($availableSubjects['available_project'])&&$availableSubjects['available_project'])
                             && isset($request['projects'])){
                             $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
-                                $schoolPeriodStudentId, true, $availableSubjects['project_subjects']);
+                                $schoolPeriodStudentId, true, $availableSubjects['project_subjects'],
+                                $organizationId);
                         }
                         if ((isset($availableSubjects['available_final_work'])&&$availableSubjects['available_final_work'])
                             && isset($request['final_works'])){
                             $result = self::setProjectsOrFinalWorks($student[0]['id'],$request['final_works'],
-                                $schoolPeriodStudentId,false, $availableSubjects['final_work_subjects']);
+                                $schoolPeriodStudentId,false, $availableSubjects['final_work_subjects'],
+                                $organizationId);
                         }
                         if (is_numeric($result)&&$result===0){
                             return self::taskError(false,true);
@@ -1081,6 +1101,36 @@ class InscriptionService
             if (count($currentSchoolPeriod)>0){
                 if ($currentSchoolPeriod[0]['inscription_visible']==true){
                     $request['school_period_id']=$currentSchoolPeriod[0]['id'];
+                    unset($request['pay_ref']);
+                    unset($request['amount_paid']);
+                    if (isset($request['subjects'])){
+                        $subjects = $request['subjects'];
+                        for ($i=0;count($request['subjects'])>$i;$i++){
+                            $subject = $subjects[$i];
+                            unset($subject['qualification']);
+                            unset($subject['status']);
+                            $subjects[$i]=$subject;
+                        }
+                        $request['subjects']=$subjects;
+                    }
+                    if (isset($request['projects'])){
+                        $projects =$request['projects'];
+                        for ($i=0;$i<count($projects);$i++){
+                            $project = $projects[$i];
+                            unset($project['status']);
+                            $projects[$i]=$project;
+                        }
+                        $request['projects']=$projects;
+                    }
+                    if (isset($request['final_works'])){
+                        $finalWorks= $request['final_works'];
+                        for ($i=0;$i<count($finalWorks);$i++){
+                            $finalWork = $finalWorks[$i];
+                            unset($finalWork['status']);
+                            $finalWorks[$i] = $finalWork;
+                        }
+                        $request['final_works']=$finalWorks;
+                    }
                     return self::addInscription($request,$organizationId);
                 }
                 return response()->json(['message'=>self::notAvailableInscriptions],206);
@@ -1099,10 +1149,18 @@ class InscriptionService
             }
             if (count($currentSchoolPeriod)>0){
                 $inscription = SchoolPeriodStudent::findSchoolPeriodStudent($studentId,$currentSchoolPeriod[0]['id']);
+                $finalWork = FinalWork::getFinalWorkByStudentAndStatus($studentId,false,'PROGRESS');
+                $project = FinalWork::getFinalWorkByStudentAndStatus($studentId,true,'PROGRESS');
                 if (is_numeric($inscription)&&$inscription===0){
                     return self::taskError(false,false);
                 }
                 if (count($inscription)>0){
+                    if (count($finalWork)>0){
+                        $inscription[0]['final_work']=$finalWork;
+                    }
+                    if (count($project)>0){
+                        $inscription[0]['project']=$project;
+                    }
                     return $inscription[0];
                 }
                 return response()->json(['message'=>self::emptyInscriptions],206);
@@ -1112,17 +1170,22 @@ class InscriptionService
         return $isValid;
     }
 
+    public static function validateWithdrawSubjectsBody(Request $request)
+    {
+        $request->validate([
+            'student_id'=>'required|numeric',
+            'withdraw_subjects.*.student_subject_id'=>'required|numeric'
+        ]);
+    }
     public static function validateWithdrawSubjects($withdrawSubjects,$enrolledSubjects)
     {
-        $withdrawSubjectsId = array_column($withdrawSubjects,'student_subject_id');
-        $found = false;
-        foreach ($enrolledSubjects as $enrolledSubject){
-            if (in_array($enrolledSubject['id'],$withdrawSubjectsId)){
-                $found=true;
-                break;
+        $enrolledSubjectsId = array_column($enrolledSubjects->toArray(),'id');
+        foreach ($withdrawSubjects as $withdrawSubject){
+            if (!in_array($withdrawSubject['student_subject_id'],$enrolledSubjectsId)){
+                return false;
             }
+            return true;
         }
-        return $found;
     }
 
     public static function changeStatusSubjectsToRET($schoolPeriodStudentId,$organizationId,$withdrawSubjects)
@@ -1148,6 +1211,7 @@ class InscriptionService
 
     public static function withdrawSubjects(Request $request,$organizationId)
     {
+        self::validateWithdrawSubjectsBody($request);
         $isValid=StudentService::validateStudent($organizationId,$request['student_id']);
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
@@ -1161,10 +1225,10 @@ class InscriptionService
                         return self::taskError(false,false);;
                     }
                     if (count($inscription)>0){
-                        if (self::validateWithdrawSubjects($request['withdrawSubjects'],
+                        if (self::validateWithdrawSubjects($request['withdraw_subjects'],
                             $inscription[0]['enrolledSubjects'])){
                             $result =self::changeStatusSubjectsToRET($inscription[0]['id'],$organizationId,
-                                $request['withdrawSubjects']);
+                                $request['withdraw_subjects']);
                             if (is_numeric($result)&&$result==0){
                                 return self::taskError(false,false);
                             }
@@ -1244,7 +1308,7 @@ class InscriptionService
         if (is_numeric($enrolledStudents)&&$enrolledStudents===0){
             return 0;
         }
-        if (count($enrolledStudents)<=0){
+        if (count($enrolledStudents)<1){
             return false;
         }
         foreach ($studentNotes as $studentNote){
@@ -1253,6 +1317,7 @@ class InscriptionService
                 if($enrolledStudent['id']==$studentNote['student_subject_id'] && $enrolledStudent['status']!='RET' &&
                     $studentNote['qualification']>=0 && $studentNote['qualification']<=20){
                     $found = true;
+                    break;
                 }
             }
             if ($found == false){
