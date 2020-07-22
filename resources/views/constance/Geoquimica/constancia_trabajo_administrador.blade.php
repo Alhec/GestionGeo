@@ -10,7 +10,6 @@
             margin: 1cm 2cm 1cm 2cm;
             font-size: 12pt;
         }
-
         .header{
             position: relative;
             width: 100%;
@@ -20,20 +19,16 @@
             position: absolute;
             left: 0;
         }
-
         .image-ucv{
             position: absolute;
             right: 0;
         }
-
         .image-geoquimica img{
             width: 7.61cm;
             height: 3.61cm;
         }
-
         .image-ucv img{
             width: 3.49cm;
-            width: 3.19cm;
         }
         .section{
             margin-top: 3cm;
@@ -91,20 +86,25 @@
                         Secretario/a
                     @endif
                     {{strtoupper($data['user_data']['first_name'])}} {{strtoupper($data['user_data']['second_name'])}}
-                    {{strtoupper($data['user_data']['first_surname'])}} {{strtoupper($data['user_data']['second_surname'])}}</strong>,
-                titular  de  la  cédula de identidad  N° {{$data['user_data']['identification'] }}, ejerce sus funciones
-                laborales en <strong>{{strtoupper($data['organization_data']['name'])}}</strong>.
+                    {{strtoupper($data['user_data']['first_surname'])}}
+                    {{strtoupper($data['user_data']['second_surname'])}}</strong>, titular de la cédula de identidad
+                    N° {{$data['user_data']['identification'] }}, ejerce sus funciones laborales en <strong>
+                    {{strtoupper($data['organization_data']['name'])}}</strong>.
             </div>
             <div class="article">
-                Constancia que se expide a petición de la parte interesada, en Caracas, en el mes  de  {{$data['month']}}  de  {{$data['year']}}.
+                Constancia que se expide a petición de la parte interesada, en Caracas, en el mes  de {{$data['month']}}
+                de {{$data['year']}}.
             </div>
         </div>
     </div>
     <div class="section">
         <div class="coordinador">
-            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}} {{$data['coordinator_data']['second_name']}}
-            {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}} <br>
-            Coordinador del Postgrado <br>
+            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
+            {{$data['coordinator_data']['second_name']}} {{$data['coordinator_data']['first_surname']}}
+            {{$data['coordinator_data']['second_surname']}}
+            <br>
+            Coordinador del Postgrado
+            <br>
             En Geoquímica
         </div>
     </div>

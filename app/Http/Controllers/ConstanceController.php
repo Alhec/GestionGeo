@@ -13,14 +13,7 @@ class ConstanceController extends Controller
         $studentId = $request->input('student_id');
         $organizationId = $request->header('Organization-Key');
         $data = $request->input('data');
-        return ConstanceService::constanceOfStudy($request,$studentId,$organizationId,$data);
-    }
-
-    public function academicLoad(Request $request)
-    {
-        $studentId = $request->input('student_id');
-        $organizationId = $request->header('Organization-Key');
-        return ConstanceService::academicLoad($request,$studentId,$organizationId);
+        return ConstanceService::constanceOfStudy($studentId,$organizationId,$data);
     }
 
     public function inscriptionConstance(Request $request)
@@ -28,34 +21,40 @@ class ConstanceController extends Controller
         $studentId = $request->input('student_id');
         $inscriptionId = $request->input('inscription_id');
         $organizationId = $request->header('Organization-Key');
-        return ConstanceService::inscriptionConstance($request,$studentId,$inscriptionId,$organizationId);
-    }
-
-    public function studentHistorical(Request $request)
-    {
-        $studentId = $request->input('student_id');
-        $organizationId = $request->header('Organization-Key');
-        return ConstanceService::studentHistorical($request,$studentId,$organizationId);
-    }
-
-    public function studentHistoricalData(Request $request)
-    {
-        $studentId = $request->input('student_id');
-        $organizationId = $request->header('Organization-Key');
-        return ConstanceService::studentHistoricalData($request,$studentId,$organizationId);
+        $data = $request->input('data');
+        return ConstanceService::inscriptionConstance($studentId,$inscriptionId,$organizationId,$data);
     }
 
     public function constanceOfWorkTeacher(Request $request)
     {
         $teacherId = $request->input('teacher_id');
         $organizationId = $request->header('Organization-Key');
-        return ConstanceService::constanceOfWorkTeacher($request,$teacherId,$organizationId);
+        $data = $request->input('data');
+        return ConstanceService::constanceOfWorkTeacher($teacherId,$organizationId,$data);
     }
 
     public function constanceOfWorkAdministrator(Request $request)
     {
         $administratorId = $request->input('administrator_id');
         $organizationId = $request->header('Organization-Key');
-        return ConstanceService::constanceOfWorkAdministrator($request,$administratorId,$organizationId);
+        $data = $request->input('data');
+        return ConstanceService::constanceOfWorkAdministrator($administratorId,$organizationId,$data);
     }
+
+    public function academicLoad(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        $organizationId = $request->header('Organization-Key');
+        $data = $request->input('data');
+        return ConstanceService::academicLoad($studentId,$organizationId,$data);
+    }
+
+    public function studentHistorical(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        $organizationId = $request->header('Organization-Key');
+        $data = $request->input('data');
+        return ConstanceService::studentHistorical($studentId,$organizationId,$data);
+    }
+
 }

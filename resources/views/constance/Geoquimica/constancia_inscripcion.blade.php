@@ -136,9 +136,14 @@
                     </tr>
                      <tr>
                         <th colspan="4">FECHA INICIO DEL PROGRAMA</th>
-                        <td colspan="3"> {{substr($data['historical_data'][0]['inscription_date'],8)}} {{substr($data['historical_data'][0]['inscription_date'],5,-3)}}  {{substr($data['historical_data'][0]['inscription_date'],0,-6)}}</td>
+                        <td colspan="3"> {{substr($data['historical_data'][0]['inscription_date'],8)}}
+                            {{substr($data['historical_data'][0]['inscription_date'],5,-3)}}
+                            {{substr($data['historical_data'][0]['inscription_date'],0,-6)}}</td>
                         <th colspan="3">FECHA PROBABLE CULMINACION</th>
-                        <td colspan="4">{{substr($data['historical_data'][0]['inscription_date'],8)}} {{substr($data['historical_data'][0]['inscription_date'],5,-3)}}  {{intval(substr($data['historical_data'][0]['inscription_date'],0,-6)) + $data['school_program_data']['duration']}}</td>
+                        <td colspan="4">{{substr($data['historical_data'][0]['inscription_date'],8)}}
+                            {{substr($data['historical_data'][0]['inscription_date'],5,-3)}}
+                            {{intval(substr($data['historical_data'][0]['inscription_date'],0,-6)) +
+                            $data['school_program_data']['duration']}}</td>
                     </tr>
                     <tr>
                         <th colspan="4">UNIDADES POR CONVALIDACION</th>
@@ -154,8 +159,8 @@
 
                     @foreach($data['user_data']['degrees'] as $degree)
                         <tr>
-                            <td colspan="14">{{$degree['degree_obtained']}} {{$degree['degree_name']}} - {{$degree['university']}}</td>
-                            {{--<td colspan="14">Ing. Procesos Industriales - UNIVERSIDAD</td>    --}}
+                            <td colspan="14">{{$degree['degree_obtained']}} {{$degree['degree_name']}} -
+                                {{$degree['university']}}</td>
                         </tr>
                     @endforeach
 
@@ -208,7 +213,7 @@
                         </tr>
                         @foreach($data['inscription']['enrolled_subjects'] as $subject)
                         <tr>
-                            <td> {{$subject['data_subject']['subject']['subject_name']}} </td>
+                            <td> {{$subject['data_subject']['subject']['name']}} </td>
                             <td> {{$subject['data_subject']['subject']['uc']}} </td>
                             <td> {{$subject['data_subject']['teacher']['user']['first_name']}}
                                 {{$subject['data_subject']['teacher']['user']['first_surname']}}</td>
@@ -235,14 +240,18 @@
             <div class="article">
                 <table>
                     <tr>
-                        {{substr($data['inscription']['school_period']['start_date'],8)}} {{substr($data['inscription']['school_period']['start_date'],5,-3)}}  {{substr($data['inscription']['school_period']['start_date'],0,-6)}}
+                        {{substr($data['inscription']['school_period']['start_date'],8)}}
+                        {{substr($data['inscription']['school_period']['start_date'],5,-3)}}
+                        {{substr($data['inscription']['school_period']['start_date'],0,-6)}}
                         <th>Período Académico:</th>
                         <td>{{\App\Services\ConstanceService::numberToMonth(intval(substr($data['inscription']['school_period']['start_date'],5,-3)))}}
-                            {{substr($data['inscription']['school_period']['start_date'],0,-6)}} – {{\App\Services\ConstanceService::numberToMonth(intval(substr($data['inscription']['school_period']['end_date'],5,-3)))}}
+                            {{substr($data['inscription']['school_period']['start_date'],0,-6)}} –
+                            {{\App\Services\ConstanceService::numberToMonth(intval(substr($data['inscription']['school_period']['end_date'],5,-3)))}}
                             {{substr($data['inscription']['school_period']['end_date'],0,-6)}}
                         </td>
                         <th>Fecha de Inscripción</th>
-                        <td> {{substr($data['inscription']['inscription_date'],8)}} - {{substr($data['inscription']['inscription_date'],5,-3)}} - {{substr($data['inscription']['inscription_date'],0,-6)}}</td>
+                        <td> {{substr($data['inscription']['inscription_date'],8)}} -
+                            {{substr($data['inscription']['inscription_date'],5,-3)}} - {{substr($data['inscription']['inscription_date'],0,-6)}}</td>
                     </tr>
                 </table>
             </div>

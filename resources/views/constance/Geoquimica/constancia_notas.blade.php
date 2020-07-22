@@ -94,13 +94,17 @@
         </div>
         <div class="article" style="padding-top: 1.5cm">
             Quien suscribe, Coordinador del Postgrado en Geoquímica de la Facultad de Ciencias, Universidad Central de
-            Venezuela, hace constar por medio de la presente que el <strong>{{$data['user_data']['user']['level_instruction']}}.
-                {{strtoupper($data['user_data']['user']['first_name'])}} {{strtoupper($data['user_data']['user']['second_name'])}}
-                {{strtoupper($data['user_data']['user']['first_surname'])}} {{strtoupper($data['user_data']['user']['second_surname'])}}
-            </strong>, titular de la cédula de identidad <strong>N° {{$data['user_data']['user']['identification']}} </strong>,
-            cursó y aprobó las siguientes asignaturas, obteniendo un promedio general de {{$data['percentage_data']['percentage']}}
-            puntos y un total de {{$data['percentage_data']['enrolled_credits']}} créditos
-            en el programa de {{strtoupper($data['school_program_data']['school_program_name'])}}, de este Postgrado.
+            Venezuela, hace constar por medio de la presente que el <strong>
+                {{$data['user_data']['user']['level_instruction']}}.
+                {{strtoupper($data['user_data']['user']['first_name'])}}
+                {{strtoupper($data['user_data']['user']['second_name'])}}
+                {{strtoupper($data['user_data']['user']['first_surname'])}}
+                {{strtoupper($data['user_data']['user']['second_surname'])}}
+            </strong>, titular de la cédula de identidad <strong>N°
+                {{$data['user_data']['user']['identification']}} </strong>, cursó y aprobó las siguientes asignaturas,
+            obteniendo un promedio general de {{$data['percentage_data']['percentage']}} puntos y un total de
+            {{$data['percentage_data']['enrolled_credits']}} créditos en el programa de
+            {{strtoupper($data['school_program_data']['school_program_name'])}}, de este Postgrado.
         </div>
         <div class="content">
             <div class="article">
@@ -113,9 +117,10 @@
                     </tr>
                     @foreach($data['enrolled_subjects'] as $schoolPeriod)
                         <tr>
-                            <td colspan="4" rowspan="{{count($schoolPeriod['enrolled_subjects'])}}">{{$schoolPeriod['school_period']['cod_school_period']}}</td>
+                            <td colspan="4" rowspan="{{count($schoolPeriod['enrolled_subjects'])}}">
+                                {{$schoolPeriod['school_period']['cod_school_period']}}</td>
                             @foreach($schoolPeriod['enrolled_subjects'] as $subject)
-                               <td colspan="8">{{$subject['data_subject']['subject']['subject_name']}}</td>
+                               <td colspan="8">{{$subject['data_subject']['subject']['name']}}</td>
                                 @if($subject['status']=='APR')
                                     <td colspan="4">{{$subject['qualification']}}</td>
                                     <td colspan="2">{{$subject['data_subject']['subject']['uc']}}</td>
@@ -132,15 +137,19 @@
                 </table>
             </div>
             <div class="article">
-                Constancia que se expide a petición de la parte interesada, en Caracas, el {{$data['day']}} de  {{$data['month']}}  de  {{$data['year']}}.
+                Constancia que se expide a petición de la parte interesada, en Caracas, el {{$data['day']}} de
+                {{$data['month']}} de {{$data['year']}}.
             </div>
         </div>
     </div>
     <div class="section">
         <div class="coordinador">
-            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}} {{$data['coordinator_data']['second_name']}}
-            {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}} <br>
-            Coordinador del Postgrado <br>
+            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
+            {{$data['coordinator_data']['second_name']}}
+            {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}}
+            <br>
+            Coordinador del Postgrado
+            <br>
             En Geoquímica
         </div>
     </div>

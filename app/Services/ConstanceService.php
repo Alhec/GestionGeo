@@ -57,10 +57,9 @@ class ConstanceService
         }
     }
 
-    public static function constanceOfStudy(Request $request, $studentId,$organizationId,$getData)
+    public static function constanceOfStudy($studentId,$organizationId,$getData)
     {
         if ((auth()->payload()['user']->user_type)!='A'){
-            $request['student_id']=$studentId;
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -125,10 +124,9 @@ class ConstanceService
         return $dataHistorical;
     }
 
-    public static function inscriptionConstance(Request $request, $studentId,$inscriptionId,$organizationId, $getData)
+    public static function inscriptionConstance($studentId,$inscriptionId,$organizationId, $getData)
     {
         if ((auth()->payload()['user']->user_type)!='A'){
-            $request['student_id']=$studentId;
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -188,9 +186,109 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    public static function constanceOfWorkTeacher($teacherId,$organizationId,$getData)
+    {
+        if ((auth()->payload()['user']->user_type)!='A'){
+            $isValid = TeacherService::validateTeacher($teacherId,$organizationId);
+            if ($isValid!='valid'){
+                return $isValid;
+            }
+        }
+        $data=[];
+        $teacher = User::getUserById($teacherId,'T',$organizationId);
+        if (is_numeric($teacher)&&$teacher==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($teacher)>0){
+            $schoolPeriods = SchoolPeriod::getSubjectsByTeacher($teacherId);
+            if (is_numeric($schoolPeriods)&&$schoolPeriods==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            if (count($schoolPeriods)>0){
+                foreach ($schoolPeriods as $schoolPeriod ){
+                    $subjects=$schoolPeriod['subjects'];
+                    $cantSubjects = 0;
+                    for($i=0; $i<count($subjects);$i++){
+                        if ($subjects[$i]['teacher_id']==$teacherId){
+                            $cantSubjects++;
+                        }
+                    }
+                    $schoolPeriod['cant_subjects']=$cantSubjects;
+                }
+                $data['user_data']=$teacher[0]->toArray();
+                $data['historical_data']=$schoolPeriods->toArray();
+                $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
+                if (is_numeric($coordinator)&&$coordinator==0){
+                    return response()->json(['message'=>self::taskError],206);
+                }
+                if ($coordinator=='noExist'){
+                    return response()->json(['message'=>self::hasNotPrincipal],206);
+                }
+                $data['coordinator_data']=$coordinator->toArray();
+                $now = Carbon::now();
+                $data['month']=self::numberToMonth($now->month);
+                $data['year']=$now->year;
+                $data['day']=$now->day;
+                if ($getData==="1"){
+                    return $data;
+                }
+                if ($organizationId =='ICT'){
+                    \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                    $pdf = \PDF::loadView('constance/Geoquimica/constancia_trabajo_profesor',compact('data'));
+                    return $pdf->download('constancia_trabajo.pdf');
+                }
+                return $data;
+            }
+            return response()->json(['message'=>self::notYetHaveHistorical],206);
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
+    }
+
+    public static function constanceOfWorkAdministrator($administratorId,$organizationId,$getData)
+    {
+        if ((auth()->payload()['user']->user_type)!='A'){
+            return response()->json(['message'=>'Unauthorized'],401);
+        }
+        $data=[];
+        $administrator =User::getUserById($administratorId,'A',$organizationId);
+        if (is_numeric($administrator)&&$administrator==0){
+            return response()->json(['message'=>self::taskError],206);
+        }
+        if (count($administrator)>0){
+            $data['user_data']=$administrator[0]->toArray();
+            $organization=Organization::getOrganizationById($organizationId);
+            if (is_numeric($organization)&&$organization==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            $data['organization_data']=$organization[0]->toArray();
+            $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
+            if (is_numeric($coordinator)&&$coordinator==0){
+                return response()->json(['message'=>self::taskError],206);
+            }
+            if ($coordinator=='noExist'){
+                return response()->json(['message'=>self::hasNotPrincipal],206);
+            }
+            $data['coordinator_data']=$coordinator->toArray();
+            $now = Carbon::now();
+            $data['month']=self::numberToMonth($now->month);
+            $data['year']=$now->year;
+            $data['day']=$now->day;
+            if ($getData==="1"){
+                return $data;
+            }
+            if ($organizationId =='ICT'){
+                \PDF::setOptions(['isHtml5ParserEnabled' => true]);
+                $pdf = \PDF::loadView('constance/Geoquimica/constancia_trabajo_administrador',compact('data'));
+                return $pdf->download('constancia_trabajo.pdf');
+            }
+            return $data;
+        }
+        return response()->json(['message'=>self::notFoundUser],206);
+    }
+
     public static function cmpSubjectCode($a, $b)
     {
-        return strcmp($a["subject_code"], $b["subject_code"]);
+        return strcmp($a["code"], $b["code"]);
     }
 
     public static function countCreditsOfSubjects($subjects){
@@ -201,10 +299,9 @@ class ConstanceService
         return $total;
     }
 
-    public static function academicLoad(Request $request, $studentId,$organizationId)
+    public static function academicLoad( $studentId,$organizationId,$getData)
     {
         if ((auth()->payload()['user']->user_type)!='A'){
-            $request['student_id']=$studentId;
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -244,24 +341,24 @@ class ConstanceService
                 $data['day']=$now->day;
                 $data['subjects_data']=$subjects;
                 $data['total_credits']=self::countCreditsOfSubjects($subjects);
+                if ($getData==="1"){
+                    return $data;
+                }
                 if ($organizationId =='ICT'){
                     \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                     $pdf = \PDF::loadView('constance/Geoquimica/carga_academica',compact('data'));
                     return $pdf->download('carga_academica.pdf');
                 }
                 return $data;
-
-
-
-            }return response()->json(['message'=>self::notFoundInscription],206);
+            }
+            return response()->json(['message'=>self::notFoundInscription],206);
         }
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
-    public static function studentHistorical(Request $request, $studentId,$organizationId)
+    public static function studentHistorical( $studentId,$organizationId,$getData)
     {
         if ((auth()->payload()['user']->user_type)!='A'){
-            $request['student_id']=$studentId;
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -298,7 +395,10 @@ class ConstanceService
                 $data['year']=$now->year;
                 $data['day']=$now->day;
                 $data['enrolled_subjects']=$enrolledSubjects->toArray();
-                $data['porcentual_data']=self::statisticsDataHistorical($enrolledSubjects);
+                $data['percentage_data']=self::statisticsDataHistorical($enrolledSubjects);
+                if ($getData==="1"){
+                    return $data;
+                }
                 if ($organizationId =='ICT'){
                     \PDF::setOptions(['isHtml5ParserEnabled' => true]);
                     $pdf = \PDF::loadView('constance/Geoquimica/constancia_notas',compact('data'));
@@ -311,132 +411,4 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
-    public static function studentHistoricalData(Request $request, $studentId,$organizationId)
-    {
-        if ((auth()->payload()['user']->user_type)!='A'){
-            $request['student_id']=$studentId;
-            $isValid = StudentService::validateStudent($organizationId,$studentId);
-            if ($isValid!='valid'){
-                return $isValid;
-            }
-        }
-        $data=[];
-        $student = Student::getStudentById($studentId,$organizationId);
-        if (is_numeric($student)&&$student==0){
-            return response()->json(['message'=>self::taskError],206);
-        }
-        if (count($student)>0){
-            $student=$student[0]->toArray();
-            $enrolledSubjects = SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($studentId,$organizationId);
-            if (is_numeric($enrolledSubjects)&&$enrolledSubjects==0){
-                return response()->json(['message'=>self::taskError],206);
-            }
-            if (count($enrolledSubjects)>0){
-                $data['user_data']=$student;
-                $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
-                if (is_numeric($coordinator)&&$coordinator==0){
-                    return response()->json(['message'=>self::taskError],206);
-                }
-                if ($coordinator=='noExist'){
-                    return response()->json(['message'=>self::hasNotPrincipal],206);
-                }
-                $data['coordinator_data']=$coordinator->toArray();
-                $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
-                if (is_numeric($schoolProgram)&&$schoolProgram==0){
-                    return response()->json(['message'=>self::taskError],206);
-                }
-                $data['school_program_data']=$schoolProgram->toArray()[0];
-                $data['enrolled_subjects']=$enrolledSubjects->toArray();
-                $data['porcentual_data']=self::statisticsDataHistorical($enrolledSubjects);
-                return $data;
-            }
-            return response()->json(['message'=>self::notYetHaveHistorical],206);
-        }
-        return response()->json(['message'=>self::notFoundUser],206);
-    }
-
-    public static function constanceOfWorkTeacher(Request $request, $teacherId,$organizationId)
-    {
-        if ((auth()->payload()['user']->user_type)!='A'){
-            $request['teacher_id']=$teacherId;
-            $isValid = TeacherService::validateTeacher($teacherId,$organizationId);
-            if ($isValid!='valid'){
-                return $isValid;
-            }
-        }
-        $data=[];
-        $teacher = User::getUserById($teacherId,'T',$organizationId);
-        if (is_numeric($teacher)&&$teacher==0){
-            return response()->json(['message'=>self::taskError],206);
-        }
-        if (count($teacher)>0){
-            $schoolPeriod = SchoolPeriod::getSubjectsByTeacher($teacherId);
-            if (is_numeric($schoolPeriod)&&$schoolPeriod==0){
-                return response()->json(['message'=>self::taskError],206);
-            }
-            if (count($schoolPeriod)>0){
-                $data['user_data']=$teacher[0]->toArray();
-                $data['historical_data']=$schoolPeriod->toArray();
-                $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
-                if (is_numeric($coordinator)&&$coordinator==0){
-                    return response()->json(['message'=>self::taskError],206);
-                }
-                if ($coordinator=='noExist'){
-                    return response()->json(['message'=>self::hasNotPrincipal],206);
-                }
-                $data['coordinator_data']=$coordinator->toArray();
-                $now = Carbon::now();
-                $data['month']=self::numberToMonth($now->month);
-                $data['year']=$now->year;
-                $data['day']=$now->day;
-                if ($organizationId =='ICT'){
-                    \PDF::setOptions(['isHtml5ParserEnabled' => true]);
-                    $pdf = \PDF::loadView('constance/Geoquimica/constancia_trabajo_profesor',compact('data'));
-                    return $pdf->download('constancia_trabajo.pdf');
-                }
-                return $data;
-            }
-            return response()->json(['message'=>self::notYetHaveHistorical],206);
-        }
-        return response()->json(['message'=>self::notFoundUser],206);
-    }
-
-    public static function constanceOfWorkAdministrator(Request $request, $administratorId,$organizationId)
-    {
-        if ((auth()->payload()['user']->user_type)!='A'){
-            return response()->json(['message'=>'Unauthorized'],401);
-        }
-        $data=[];
-        $administrator =User::getUserById($administratorId,'A',$organizationId);
-        if (is_numeric($administrator)&&$administrator==0){
-            return response()->json(['message'=>self::taskError],206);
-        }
-        if (count($administrator)>0){
-            $data['user_data']=$administrator[0]->toArray();
-            $organization=Organization::getOrganizationById($organizationId);
-            if (is_numeric($organization)&&$organization==0){
-                return response()->json(['message'=>self::taskError],206);
-            }
-            $data['organization_data']=$organization[0]->toArray();
-            $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
-            if (is_numeric($coordinator)&&$coordinator==0){
-                return response()->json(['message'=>self::taskError],206);
-            }
-            if ($coordinator=='noExist'){
-                return response()->json(['message'=>self::hasNotPrincipal],206);
-            }
-            $data['coordinator_data']=$coordinator->toArray();
-            $now = Carbon::now();
-            $data['month']=self::numberToMonth($now->month);
-            $data['year']=$now->year;
-            $data['day']=$now->day;
-            if ($organizationId =='ICT'){
-                \PDF::setOptions(['isHtml5ParserEnabled' => true]);
-                $pdf = \PDF::loadView('constance/Geoquimica/constancia_trabajo_administrador',compact('data'));
-                return $pdf->download('constancia_trabajo.pdf');
-            }
-            return $data;
-        }
-        return response()->json(['message'=>'Usuario no encontrado'],206);
-    }
 }

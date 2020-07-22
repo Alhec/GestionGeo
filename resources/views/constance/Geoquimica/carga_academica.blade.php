@@ -10,7 +10,6 @@
             margin: 1cm 2cm 2cm 2cm;
             font-size: 12pt;
         }
-
         .header{
             position: fixed;
             width: 100%;
@@ -94,12 +93,15 @@
             El Coordinador del Postgrado en Geoquímica adscrito a la Dirección de Postgrado de la Facultad de Ciencias
             – Facultad de Ingeniería de la Universidad Central de Venezuela, certifica que el
             <strong>{{$data['user_data']['user']['level_instruction']}}.
-                {{strtoupper($data['user_data']['user']['first_surname'])}} {{strtoupper($data['user_data']['user']['second_surname'])}}
-                {{strtoupper($data['user_data']['user']['first_name'])}} {{strtoupper($data['user_data']['user']['second_name'])}}
-            </strong>, titular de la Cédula de Identidad N° <strong>{{$data['user_data']['user']['identification']}} </strong>
-            cursó y aprobó las asignaturas del Programa de Estudios de {{strtoupper($data['school_program_data']['school_program_name'])}}.
-            A continuación se dá una descripción de las asignaturas cursadas indicando el número de horas por semana y las
-            unidades de la misma T: Teoría, P: Práctica L: Laboratorio y U: Unidades de Créditos.
+                {{strtoupper($data['user_data']['user']['first_surname'])}}
+                {{strtoupper($data['user_data']['user']['second_surname'])}}
+                {{strtoupper($data['user_data']['user']['first_name'])}}
+                {{strtoupper($data['user_data']['user']['second_name'])}}
+            </strong>, titular de la Cédula de Identidad N° <strong>{{$data['user_data']['user']['identification']}}
+            </strong> cursó y aprobó las asignaturas del Programa de Estudios de
+            {{strtoupper($data['school_program_data']['school_program_name'])}}. A continuación se dá una descripción de
+            las asignaturas cursadas indicando el número de horas por semana y las unidades de la misma T: Teoría, P:
+            Práctica L: Laboratorio y U: Unidades de Créditos.
         </div>
         <div class="title">
             CARGA HORARIA
@@ -117,8 +119,8 @@
                     </tr>
                     @foreach($data['subjects_data'] as $subject)
                         <tr>
-                            <th colspan="4">{{$subject['subject_code']}}</th>
-                            <th colspan="8">{{$subject['subject_name']}}</th>
+                            <th colspan="4">{{$subject['code']}}</th>
+                            <th colspan="8">{{$subject['name']}}</th>
                             <th colspan="2">{{$subject['theoretical_hours']}}</th>
                             <th colspan="2">{{$subject['practical_hours']}}</th>
                             <th colspan="2">{{$subject['laboratory_hours']}}</th>
@@ -126,7 +128,7 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <th colspan="18">Total de creditos aprobados</th>
+                        <th colspan="18">Total de creditos </th>
                         <th colspan="2">{{$data['total_credits']}}</th>
                     </tr>
                 </table>
@@ -135,19 +137,22 @@
     </div>
     <div class="section">
         <div class="coordinador">
-            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}} {{$data['coordinator_data']['second_name']}}
-            {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}} <br>
+            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
+            {{$data['coordinator_data']['second_name']}} {{$data['coordinator_data']['first_surname']}}
+            {{$data['coordinator_data']['second_surname']}}
+            <br>
             Coordinador del Postgrado en Geoquímica
         </div>
     </div>
     <div class="section">
         <div class="article">
             UNIVERSIDAD CENTRAL DE VENEZUELA. FACULTAD DE CIENCIAS. Caracas, {{$data['day']}} de {{$data['month']}} de
-            {{$data['year']}}. Años 197° Y 149°. Dr. Ventura Echandía L., Decano de la Facultad de Ciencias de la Universidad
-            Central de Venezuela, certifica que la firma que antecede es auténtica de puño y letra del/la Ciudadano/a
-            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}  {{$data['coordinator_data']['first_surname']}},
-            quien en la actualidad es como se titula Coordinador del Postgrado en Geoquímica adscrito a la Dirección de Postgrado
-            de la Facultad de Ciencias – Facultad de Ingeniería de la Universidad Central de Venezuela.
+            {{$data['year']}}. Años 197° Y 149°. Dr. Ventura Echandía L., Decano de la Facultad de Ciencias de la
+            Universidad Central de Venezuela, certifica que la firma que antecede es auténtica de puño y letra del/la
+            Ciudadano/a {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
+            {{$data['coordinator_data']['first_surname']}}, quien en la actualidad es como se titula Coordinador del
+            Postgrado en Geoquímica adscrito a la Dirección de Postgrado de la Facultad de Ciencias – Facultad de
+            Ingeniería de la Universidad Central de Venezuela.
         </div>
     </div>
     <div class="section">

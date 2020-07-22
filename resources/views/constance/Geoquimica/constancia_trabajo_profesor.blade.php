@@ -10,7 +10,6 @@
             margin: 1cm 2cm 2cm 2cm;
             font-size: 12pt;
         }
-
         .header{
             position: fixed;
             width: 100%;
@@ -23,20 +22,16 @@
             position: absolute;
             left: 0;
         }
-
         .image-ucv{
             position: absolute;
             right: 0;
         }
-
         .image-geoquimica img{
             width: 7.61cm;
             height: 3.61cm;
         }
-
         .image-ucv img{
             width: 3.49cm;
-            width: 3.19cm;
         }
         .section{
             margin-top: 1cm;
@@ -136,22 +131,22 @@
                     </tr>
                     @foreach($data['historical_data'] as $schoolPeriod)
                         @foreach($schoolPeriod['subjects'] as $subject)
+                            @if($subject['teacher_id']==$data['user_data']['id'])
                             <tr>
                                 @if ($loop->first)
-                                    <td colspan="3" rowspan="{{count($schoolPeriod['subjects'])}}">{{$schoolPeriod['cod_school_period']}}</td>
+                                    <td colspan="3" rowspan="{{($schoolPeriod['cant_subjects'])}}">
+                                        {{$schoolPeriod['cod_school_period']}}</td>
                                 @endif
-                                @if($subject['teacher_id']==$data['user_data']['id'])
-                                    <td colspan="7">{{$subject['subject']['subject_name']}}</td>
-                                @else
-                                    <td colspan="7"> - </td>
-                                @endif
+                                <td colspan="7">{{$subject['subject']['name']}}</td>
                             </tr>
+                            @endif
                         @endforeach
                     @endforeach
                 </table>
             </div>
             <div class="article">
-                Constancia que se expide a petición de la parte interesada, en Caracas, el {{$data['day']}} de  {{$data['month']}}  de  {{$data['year']}}.
+                Constancia que se expide a petición de la parte interesada, en Caracas, el {{$data['day']}} de
+                {{$data['month']}} de {{$data['year']}}.
             </div>
         </div>
     </div>
@@ -159,8 +154,9 @@
         <br>
         <br>
         <div class="coordinador">
-            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}} {{$data['coordinator_data']['second_name']}}
-            {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}} <br>
+            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
+            {{$data['coordinator_data']['second_name']}} {{$data['coordinator_data']['first_surname']}}
+            {{$data['coordinator_data']['second_surname']}} <br>
             Coordinador del Postgrado <br>
             En Geoquímica
         </div>
