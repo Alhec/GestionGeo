@@ -394,27 +394,26 @@
 								"key": "Accept",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Organization-Key",
+								"value": "{{organization}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\",\n\t\"password\":\"12345678\", \n\t\"password_confirmation\":\"12345678\", \n\t\"token\":\"507f9180486781f32c8228a93d886e0b16f112e80e7e82338bfc067cde09fe82\"\n}\n",
+							"raw": "{\n\t\"email\":\"hector080896@gmail.com\",\n\t\"user_type\":\"A\",\n\t\"password\":\"12345678\", \n\t\"password_confirmation\":\"12345678\", \n\t\"token\":\"2072f2bc4113a380aea974c1175d6051ed8cc4667ab6ae8217982e072cf513da\"\n}\n",
 							"options": {
 								"raw": {}
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/password/reset",
-							"protocol": "http",
+							"raw": "{{url}}api/password/reset",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"password",
 								"reset"
 							]
@@ -533,17 +532,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/principalCoordinator",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators/principalCoordinator",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators",
 								"principalCoordinator"
 							]
@@ -623,17 +616,11 @@
 							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Jesus\",\n    \"second_name\":\"Ramon\",\n    \"first_surname\":\"Vega\",\n    \"second_surname\":\"Gonzales\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"rol\":\"COORDINATOR\",\n    \"principal\":false\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators"
 							]
 						}
@@ -672,17 +659,11 @@
 							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Jesus\",\n    \"second_name\":\"Ramon\",\n    \"first_surname\":\"Vezga\",\n    \"second_surname\":\"Gonzales\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Dr\",\n    \"active\":true,\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"rol\":\"COORDINATOR\",\n    \"principal\":false\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/35",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators/35",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators",
 								"35"
 							]
@@ -717,17 +698,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/administrators/35",
-							"protocol": "http",
+							"raw": "{{url}}api/administrators/35",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"administrators",
 								"35"
 							]
@@ -790,17 +765,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers",
-							"protocol": "http",
+							"raw": "{{url}}api/teachers",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"teachers"
 							]
 						}
@@ -834,17 +803,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers/active",
-							"protocol": "http",
+							"raw": "{{url}}api/teachers/active",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"teachers",
 								"active"
 							]
@@ -879,17 +842,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers/3",
-							"protocol": "http",
+							"raw": "{{url}}api/teachers/3",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"teachers",
 								"3"
 							]
@@ -929,17 +886,11 @@
 							"raw": "{\n\t\"identification\": \"24698948\",\n    \"first_name\": \"Abraham\",\n    \"second_name\":\"Leonardo\",\n    \"first_surname\":\"Navarro\",\n    \"second_surname\":\"Jimenez\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Dr\",\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"teacher_type\":\"TIT\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"Universidad Central de Venezuela\",\n    \"country\":\"Venezuela\"\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers",
-							"protocol": "http",
+							"raw": "{{url}}api/teachers",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"teachers"
 							]
 						}
@@ -978,17 +929,11 @@
 							"raw": "{\n\t\"identification\": \"24698948\",\n    \"first_name\": \"Abraham\",\n    \"second_name\":\"Leonardo\",\n    \"first_surname\":\"Navarro\",\n    \"second_surname\":\"Jimenez\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"active\":true,\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"teacher_type\":\"TIT\",\n    \"dedication\":\"EXC\",\n    \"home_institute\":\"Universidad Central de Venezuela\",\n    \"country\":\"Venezuela\"\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers/37",
-							"protocol": "http",
+							"raw": "{{url}}api/teachers/37",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"teachers",
 								"37"
 							]
@@ -1023,17 +968,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/teachers/37",
-							"protocol": "http",
+							"raw": "{{url}}api/teachers/37",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"teachers",
 								"37"
 							]
@@ -1060,7 +999,7 @@
 							{
 								"key": "Organization-Key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -1074,17 +1013,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPrograms",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPrograms",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPrograms"
 							],
 							"query": [
@@ -1111,7 +1044,7 @@
 							{
 								"key": "Organization-Key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -1125,17 +1058,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPrograms/1",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPrograms/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPrograms",
 								"1"
 							],
@@ -1179,7 +1106,57 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"duration\":1,\n    \"conducive_to_degree\": false,\n    \"min_num_cu_final_work\":0,\n    \"min_duration\":1,\n    \"grant_certificate\":true\n}\n"
+							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"min_num_cu_final_work\":0,\n    \"duration\":1,\n    \"min_duration\":1,\n\t\"grant_certificate\":true,\n    \"conducive_to_degree\": false,\n    \"doctoral_exam\":false\n}\n"
+						},
+						"url": {
+							"raw": "{{url}}api/schoolPrograms",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"schoolPrograms"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "schoolProgramPostDoctoralExam",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Organization-Key",
+								"type": "text",
+								"value": "ICT"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"min_num_cu_final_work\":0,\n    \"duration\":1,\n    \"min_duration\":1,\n\t\"grant_certificate\":true,\n    \"conducive_to_degree\": false,\n    \"doctoral_exam\":true,\n    \"num_cu_to_doctoral_exam\":3\n}\n"
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/schoolPrograms",
@@ -1230,27 +1207,21 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "ICT"
+								"value": "{{organization}}"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"duration\":1,\n    \"conducive_to_degree\": false,\n    \"min_num_cu_final_work\":0,\n    \"min_duration\":2,\n    \"grant_certificate\":true\n}"
+							"raw": "{\n    \"school_program_name\": \"Post-Doctoral\",\n    \"num_cu\":10,\n    \"min_num_cu_final_work\":0,\n    \"duration\":1,\n    \"min_duration\":1,\n\t\"grant_certificate\":true,\n    \"conducive_to_degree\": false,\n    \"doctoral_exam\":false\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPrograms/10",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPrograms/9",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPrograms",
-								"10"
+								"9"
 							],
 							"query": [
 								{
@@ -1275,7 +1246,7 @@
 							},
 							{
 								"key": "Organization-Key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -1290,19 +1261,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPrograms/10",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPrograms/9",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPrograms",
-								"10"
+								"9"
 							],
 							"query": [
 								{
@@ -1328,19 +1293,18 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "Content-Type",
@@ -1349,17 +1313,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students",
-							"protocol": "http",
+							"raw": "{{url}}api/students",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students"
 							],
 							"query": [
@@ -1401,19 +1359,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/35",
-							"protocol": "http",
+							"raw": "{{url}}api/students/9",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students",
-								"35"
+								"9"
 							]
 						}
 					},
@@ -1427,12 +1379,12 @@
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{token}}"
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -1447,17 +1399,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/active",
-							"protocol": "http",
+							"raw": "{{url}}api/students/active",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students",
 								"active"
 							]
@@ -1478,7 +1424,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -1492,17 +1438,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/warningStudents",
-							"protocol": "http",
+							"raw": "{{url}}api/warningStudents",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"warningStudents"
 							],
 							"query": [
@@ -1524,15 +1464,6 @@
 							"script": {
 								"id": "17fa0e41-b96c-4bbd-bde8-ff3f455b1077",
 								"exec": [
-									"pm.test(\"Payload must be valid and have a body\", function () { ",
-									"     pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
-									"     pm.response.to.be.withBody; // body tiene que exitir",
-									"     pm.response.to.be.json; // además que sea un JSON válido",
-									"});",
-									"// Pedimos a nuestro response payload que tengo Content-Type en el header",
-									"pm.test(\"Content-Type is present\", function () {",
-									"    pm.response.to.have.header(\"Content-Type\");",
-									"});",
 									""
 								],
 								"type": "text/javascript"
@@ -1550,13 +1481,14 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "ICT",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Authorization",
@@ -1566,20 +1498,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"identification\":\"43452777\",\"first_name\":\"dddd\",\"second_name\":\"gggg\",\"first_surname\":\"gggg\",\"second_surname\":\"aaaa\",\"mobile\":\"(443) 454-3445\",\"telephone\":\"(643) 454-3543\",\"work_phone\":\"(567) 657-5675\",\"email\":\"jdf@email.com\",\"school_program_id\":1,\"with_disabilities\":false,\"level_instruction\":\"TCM\",\"equivalences\":[{\"subject_id\":2,\"qualification\":\"20\"}],\"student_type\":\"REG\",\"home_university\":\"ucv\",\"sex\":\"M\",\"nationality\":\"V\",\"is_ucv_teacher\":false,\"is_available_final_work\":false,\"repeat_approved_subject\":false,\"repeat_reprobated_subject\":false}"
+							"raw": "{\n\t\"identification\": \"24698947\",\n    \"first_name\": \"Abraham\",\n    \"second_name\":\"Leonardo\",\n    \"first_surname\":\"Navarro\",\n    \"second_surname\":\"Jimenez\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"school_program_id\":1,\n    \"guide_teacher_id\":3,\n    \"student_type\":\"REG\",\n    \"home_university\":\"Universidad Simon Bolivar\",\n\t\"current_postgraduate\":\"Postgrado de metalurgica\",\n\t\"type_income\":\"OPSU\",\n    \"is_ucv_teacher\":false,\n\t\"credits_granted\":2,\n\t\"with_work\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"degree_description\":\"Licenciado en la ucv\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students",
-							"protocol": "http",
+							"raw": "{{url}}api/students",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students"
 							]
 						}
@@ -1600,8 +1526,7 @@
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "Authorization",
@@ -1616,22 +1541,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"9d76z3\",\n    \"first_name\": \"Kenyy\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@idvd.zom\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ],\n    \"active\":true,\n    \"is_available_final_work\": true,\n    \"repeat_approved_subject\": false,\n    \"repeat_reprobated_subject\": false,\n    \"student_id\":12,\n    \"end_program\":true,\n    \"current_status\":\"REG\",\n    \"test_period\": false\n}"
+							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Abraham\",\n    \"second_name\":\"Leonardo\",\n    \"first_surname\":\"Navarro\",\n    \"second_surname\":\"Jimenez\",\n    \"telephone\":\"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\":\"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"active\":true,\n    \"with_disabilities\":false,\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"student_id\":12,\n    \"guide_teacher_id\":3,\n    \"student_type\":\"REG\",\n    \"home_university\":\"Universidad Simon Bolivar\",\n\t\"current_postgraduate\":\"Postgrado de metalurgica\",\n\t\"type_income\":\"OPSU\",\n    \"is_ucv_teacher\":false,\n    \"is_available_final_work\": true,\n\t\"credits_granted\":2,\n\t\"with_work\":false,\n\t\"test_period\":false,\n\t\"current_status\":\"RET-B\",\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"degree_description\":\"Licenciado en la ucv\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/35",
-							"protocol": "http",
+							"raw": "{{url}}api/students/37",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students",
-								"35"
+								"37"
 							]
 						}
 					},
@@ -1651,39 +1570,32 @@
 							{
 								"key": "Accept",
 								"type": "text",
-								"value": "application/json",
-								"disabled": true
+								"value": "application/json"
 							},
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{token}}"
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identification\": \"9d76z3\",\n    \"first_name\": \"Keny\",\n    \"first_surname\":\"Jimenez\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"email\": \"keny@idvd.zom\",\n    \"level_instruction\":\"Lic\",\n    \"sex\":\"M\",\n    \"nationality\": \"V\",\n    \"school_program_id\":3,\n    \"student_type\":\"REG\",\n    \"home_university\":\"USB\",\n    \"is_ucv_teacher\":false,\n    \"degrees\":[\n    \t{\n    \t\t\"degree_obtained\":\"Lic\",\n    \t\t\"degree_name\":\"Licenciado\",\n    \t\t\"university\":\"UCV\"\n    \t}\n    ],\n    \"equivalences\":[\n    \t{\n    \t\t\"subject_id\":2,\n    \t\t\"qualification\":15\n    \t}\t\n    ],\n    \n    \"active\":true,\n    \"is_available_final_work\": true,\n    \"repeat_approved_subject\": false,\n    \"repeat_reprobated_subject\": false,\n    \"end_program\":false\n}"
+							"raw": "{\n    \"identification\": \"24698947\",\n    \"first_name\": \"Abraham\",\n    \"second_name\": \"Leonardo\",\n    \"first_surname\": \"Navarro\",\n    \"second_surname\": \"Jimenez\",\n    \"telephone\": \"(1234) 567-8902\",\n    \"mobile\": \"(1234) 567-8902\",\n    \"work_phone\": \"(1234) 567-8902\",\n    \"email\": \"hector080896@gmail.com\",\n    \"level_instruction\": \"Lic\",\n    \"active\": true,\n    \"with_disabilities\": false,\n    \"sex\": \"M\",\n    \"nationality\": \"V\",\n    \"school_program_id\": 3,\n    \"guide_teacher_id\": 3,\n    \"student_type\": \"REG\",\n    \"home_university\": \"Universidad Simon Bolivar\",\n    \"current_postgraduate\": \"Postgrado de metalurgica\",\n    \"type_income\": \"OPSU\",\n    \"is_ucv_teacher\": false,\n    \"credits_granted\": 2,\n    \"with_work\": false,\n    \"degrees\": [\n        {\n            \"degree_obtained\": \"Lic\",\n            \"degree_name\": \"Licenciado\",\n            \"degree_description\": \"Licenciado en la ucv\",\n            \"university\": \"UCV\"\n        }\n    ],\n    \"equivalences\": [\n        {\n            \"subject_id\": 2,\n            \"qualification\": 15\n        }\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/continue/13",
-							"protocol": "http",
+							"raw": "{{url}}api/students/continue/37",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students",
 								"continue",
-								"13"
+								"37"
 							]
 						}
 					},
@@ -1716,17 +1628,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/13",
-							"protocol": "http",
+							"raw": "{{url}}api/students/13",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students",
 								"13"
 							]
@@ -1741,12 +1647,12 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -1762,25 +1668,19 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/students/delete/13?student_id=8",
-							"protocol": "http",
+							"raw": "{{url}}api/students/delete/37?student_id=12",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"students",
 								"delete",
-								"13"
+								"37"
 							],
 							"query": [
 								{
 									"key": "student_id",
-									"value": "8"
+									"value": "12"
 								}
 							]
 						}
@@ -1805,7 +1705,7 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -1821,17 +1721,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subjects",
-							"protocol": "http",
+							"raw": "{{url}}api/subjects",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"subjects"
 							]
 						}
@@ -1845,18 +1739,19 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Content-Type",
@@ -1865,19 +1760,92 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subjects/1",
-							"protocol": "http",
+							"raw": "{{url}}api/subjects/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"subjects",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsGetBySchoolProgram",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/subjectsBySchoolProgram/3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"subjectsBySchoolProgram",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsWithoutFinalWorkGet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/subjectsWithoutFinalWorks",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"subjectsWithoutFinalWorks"
 							]
 						}
 					},
@@ -1891,41 +1859,86 @@
 							{
 								"key": "organization_key",
 								"name": "Content-Type",
-								"value": "G",
-								"type": "text"
+								"type": "text",
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
 								"key": "Accept",
+								"type": "text",
 								"value": "application/json",
-								"type": "text"
+								"disabled": true
 							},
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"subject_code\":22350,\n\t\"subject_name\":\"BD2\",\n\t\"uc\":4,\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject?\":false,\n\t\"school_programs\":[\n\t\t{\n            \"id\":1,\n            \"type\": \"EL\",\n        \t\"with_subject\":\"\"\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"code\":\"GC1\",\n\t\"name\":\"GC1\",\n\t\"uc\":4,\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject\":false,\n\t\"is_project_subject\":false,\n\t\"theoretical_hours\":1,\n\t\"practical_hours\":0,\n\t\"laboratory_hours\":0,\n\t\"school_programs\":[\n\t\t{\n            \"school_program_id\":1,\n            \"type\": \"EL\"\n\t\t},\n\t\t{\n\t\t\t\"school_program_id\":2,\n            \"type\": \"EL\"\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subjects",
-							"protocol": "http",
+							"raw": "{{url}}api/subjects",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
+								"subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsPostWithSubject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "organization_key",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\":\"GC2\",\n\t\"name\":\"GC2\",\n\t\"uc\":4,\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject\":false,\n\t\"is_project_subject\":false,\n\t\"theoretical_hours\":1,\n\t\"practical_hours\":0,\n\t\"laboratory_hours\":0,\n\t\"school_programs\":[\n\t\t{\n            \"school_program_id\":1,\n            \"type\": \"EL\",\n        \t\"with_subjects\":[\n        \t\t{\n        \t\t\t\"subject_id\":1\n        \t\t}\n        \t]\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/subjects",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
 								"subjects"
 							]
 						}
@@ -1945,7 +1958,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
@@ -1956,28 +1969,73 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"subject_code\":22350,\n\t\"subject_name\":\"BD2\",\n\t\"uc\":\"4\",\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject?\":false,\n\t\"school_programs\":[\n\t\t{\n            \"id\":1,\n            \"type\": \"OB\"\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"code\":\"GC1\",\n\t\"name\":\"GC1\",\n\t\"uc\":4,\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject\":false,\n\t\"is_project_subject\":false,\n\t\"theoretical_hours\":1,\n\t\"practical_hours\":1,\n\t\"laboratory_hours\":0,\n\t\"school_programs\":[\n\t\t{\n            \"school_program_id\":1,\n            \"type\": \"OP\"\n\t\t},\n\t\t{\n\t\t\t\"school_program_id\":3,\n            \"type\": \"EL\"\n\t\t}\n\t]\n}\n",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subjects/9",
-							"protocol": "http",
+							"raw": "{{url}}api/subjects/16",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"subjects",
-								"9"
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subjectsPutWithSubject",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\":\"GC2\",\n\t\"name\":\"GC2\",\n\t\"uc\":4,\n\t\"subject_type\":\"REG\",\n\t\"is_final_subject\":false,\n\t\"is_project_subject\":false,\n\t\"theoretical_hours\":1,\n\t\"practical_hours\":1,\n\t\"laboratory_hours\":0,\n\t\"school_programs\":[\n\t\t{\n            \"school_program_id\":1,\n            \"type\": \"OP\",\n\t\t\t\"with_subjects\":[\n        \t\t{\n        \t\t\t\"subject_id\":1\n        \t\t},\n\t\t\t\t{\n        \t\t\t\"subject_id\":2\n        \t\t}\n        \t]\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/subjects/16",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"subjects",
+								"16"
 							]
 						}
 					},
@@ -1990,12 +2048,12 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -2011,19 +2069,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subjects/9",
-							"protocol": "http",
+							"raw": "{{url}}api/subjects/16",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"subjects",
-								"9"
+								"16"
 							]
 						}
 					},
@@ -2042,12 +2094,12 @@
 						"header": [
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
@@ -2068,17 +2120,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods"
 							]
 						}
@@ -2086,13 +2132,13 @@
 					"response": []
 				},
 				{
-					"name": "SchoolPeriodsCurrent",
+					"name": "SchoolPeriodsGetByID",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -2113,37 +2159,31 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/current",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods",
-								"current"
+								"1"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "SchoolPeriodsGetByID",
+					"name": "SchoolPeriodsCurrent",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
@@ -2159,19 +2199,58 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/1",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods/current",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods",
-								"1"
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsGetSubjectsTaught",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/schoolPeriods/subjectsTaught?teacher_id=3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"schoolPeriods",
+								"subjectsTaught"
+							],
+							"query": [
+								{
+									"key": "teacher_id",
+									"value": "3"
+								}
 							]
 						}
 					},
@@ -2207,20 +2286,57 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"4-2020\",\n    \"start_date\": \"2020-01-01\",\n    \"end_date\": \"2020-06-30\",\n    \"withdrawal_deadline\":\"2020-03-01\",\n    \"inscription_start_date\":\"2020-01-01\"\n}"
+							"raw": "{\n    \"cod_school_period\": \"2-2020\",\n    \"start_date\": \"2020-04-01\",\n    \"end_date\": \"2020-08-30\",\n    \"withdrawal_deadline\":\"2020-05-01\",\n    \"inscription_start_date\":\"2020-03-15\",\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
+								"schoolPeriods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SchoolPeriodsPostPeriodTeacherSubject SUF or INT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "organization_key",
+								"value": "{{organization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cod_school_period\": \"3-2020\",\n    \"start_date\": \"2020-04-01\",\n    \"end_date\": \"2020-08-30\",\n    \"withdrawal_deadline\":\"2020-05-01\",\n    \"inscription_start_date\":\"2020-03-15\",\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\":40,\n            \"duty\":10,\n            \"modality\": \"INT\",\n            \"start_date\": \"2020-04-01\",\n            \"end_date\": \"2020-08-30\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/schoolPeriods",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
 								"schoolPeriods"
 							]
 						}
@@ -2256,20 +2372,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \t\"cod_school_period\": \"8-2021\",\n        \"start_date\": \"2020-07-01\",\n        \"end_date\": \"2020-12-31\",\n        \"withdrawal_deadline\":\"2020-09-01\",\n        \"inscription_start_date\":\"2020-01-01\",\n        \"subjects\": [\n            {\n                \"teacher_id\": 3,\n                \"subject_id\": 2,\n                \"limit\":40,\n                \"duty\":10,\n                 \"modality\": \"REG\"\n            }\n        ]\n    \n}"
+							"raw": "{\n    \"cod_school_period\": \"5-2020\",\n    \"start_date\": \"2020-04-01\",\n    \"end_date\": \"2020-08-30\",\n    \"withdrawal_deadline\":\"2020-05-01\",\n    \"inscription_start_date\":\"2020-03-15\",\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\":40,\n            \"duty\":10,\n            \"modality\": \"REG\"\n        }\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods"
 							]
 						}
@@ -2284,15 +2394,6 @@
 							"script": {
 								"id": "e5163e80-04f7-45d1-b528-7f5fa673b5e3",
 								"exec": [
-									"pm.test(\"Payload must be valid and have a body\", function () { ",
-									"     pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
-									"     pm.response.to.be.withBody; // body tiene que exitir",
-									"     pm.response.to.be.json; // además que sea un JSON válido",
-									"});",
-									"// Pedimos a nuestro response payload que tengo Content-Type en el header",
-									"pm.test(\"Content-Type is present\", function () {",
-									"    pm.response.to.have.header(\"Content-Type\");",
-									"});",
 									""
 								],
 								"type": "text/javascript"
@@ -2327,20 +2428,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"6-2022\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-06-30\",\n    \"inscription_start_date\":\"2022-04-01\",\n    \"withdrawal_deadline\":\"2022-03-01\",\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\":30,\n            \"duty\":10,\n            \"modality\": \"REG\",\n            \"schedules\": [\n              \t{\n                    \"day\": \"1\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                },\n                {\n                    \"day\": \"2\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                }\n            ]\n        }\n    ]\n}"
+							"raw": "{\n    \"cod_school_period\": \"4-2020\",\n    \"start_date\": \"2020-04-01\",\n    \"end_date\": \"2020-08-30\",\n    \"withdrawal_deadline\":\"2020-05-01\",\n    \"inscription_start_date\":\"2020-03-15\",\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\":40,\n            \"duty\":10,\n            \"modality\": \"REG\",\n            \"schedules\": [\n              \t{\n                    \"day\": \"1\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                },\n                {\n                    \"day\": \"2\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n                }\n            ]\n        }\n    ]\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods"
 							]
 						}
@@ -2366,33 +2461,27 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"Q-2019\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": false,\n    \"inscription_visible\": true\n}"
+							"raw": "{\n    \"cod_school_period\": \"8-2019\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": false,\n    \"inscription_start_date\":\"2020-03-15\",\n    \"inscription_visible\": true,\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods/7",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods",
-								"4"
+								"7"
 							]
 						}
 					},
@@ -2411,7 +2500,7 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -2421,28 +2510,22 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"1-2021\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": true,\n    \"inscription_visible\": false,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\": 40,\n            \"modality\":\"REG\",\n            \"duty\": 10\n        },\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\": 50,\n            \"modality\":\"REG\",\n            \"duty\": 10\n        }\n    ]\n}"
+							"raw": "{\n    \"cod_school_period\": \"8-2019\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": false,\n    \"inscription_start_date\":\"2020-03-15\",\n    \"inscription_visible\": true,\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\": 40,\n            \"modality\":\"INT\",\n            \"duty\": 10,\n            \"start_date\": \"2021-01-01\",\n            \"end_date\": \"2021-06-30\"\n        },\n        {\n            \"teacher_id\": 4,\n            \"subject_id\": 3,\n            \"limit\": 40,\n            \"modality\":\"SUF\",\n            \"duty\": 10,\n            \"start_date\": \"2021-01-01\",\n            \"end_date\": \"2021-06-30\"\n        },\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\": 50,\n            \"modality\":\"REG\",\n            \"duty\": 10\n        }\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods/7",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods",
-								"4"
+								"7"
 							]
 						}
 					},
@@ -2461,39 +2544,32 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cod_school_period\": \"1-2021\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": true,\n    \"inscription_visible\": false,\n    \"subjects\": [\n        {\n            \"teacher_id\": 4,\n            \"subject_id\": 1,\n            \"limit\": 40,\n            \"modality\":\"REG\",\n            \"duty\": 10,\n            \"schedules\": [\n               \t{\n                    \"day\": \"Lunes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n              \t},\n              \t{\n                   \"day\": \"Miercoles\",\n                   \"classroom\": \"2\",\n                   \"start_hour\": \"13:39:20\",\n                   \"end_hour\": \"13:39:20\"\t\t\t\n              \t}\n            ]\n        },\n         {\n            \"teacher_id\": 3,\n            \"subject_id\": 2,\n            \"limit\": 40,\n            \"modality\":\"REG\",\n            \"duty\": 10,\n            \"schedules\": [\n               \t{\n                    \"day\": \"Lunes\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n              \t},\n              \t{\n                   \"day\": \"Miercoles\",\n                   \"classroom\": \"2\",\n                   \"start_hour\": \"13:39:20\",\n                   \"end_hour\": \"13:39:20\"\t\t\t\n              \t}\n            ]\n        }\n    ]\n}"
+							"raw": "{\n    \"cod_school_period\": \"8-2019\",\n    \"start_date\": \"2021-01-01\",\n    \"end_date\": \"2021-06-30\",\n    \"withdrawal_deadline\": \"2021-03-01\",\n    \"load_notes\": false,\n    \"inscription_start_date\":\"2020-03-15\",\n    \"inscription_visible\": true,\n    \"project_duty\":34.5,\n    \"final_work_duty\":3.3,\n    \"subjects\": [\n        {\n            \"teacher_id\": 3,\n            \"subject_id\": 1,\n            \"limit\": 40,\n            \"modality\":\"INT\",\n            \"duty\": 10,\n            \"schedules\": [\n               \t{\n                    \"day\": \"1\",\n                    \"classroom\": \"2\",\n                    \"start_hour\": \"13:39:20\",\n                    \"end_hour\": \"13:39:20\"\t\t\t\n              \t},\n              \t{\n                   \"day\": \"3\",\n                   \"classroom\": \"2\",\n                   \"start_hour\": \"13:39:20\",\n                   \"end_hour\": \"13:39:20\"\t\t\t\n              \t}\n            ]\n        }\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
-							"protocol": "http",
+							"raw": "{{url}}api/schoolPeriods/7",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"schoolPeriods",
-								"4"
+								"7"
 							]
 						}
 					},
@@ -2516,17 +2592,17 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{tokenAdmin}}",
 								"type": "text"
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/5",
+							"raw": "http://127.0.0.1:8000/api/schoolPeriods/4",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -2538,7 +2614,7 @@
 							"path": [
 								"api",
 								"schoolPeriods",
-								"5"
+								"4"
 							]
 						}
 					},
@@ -2557,7 +2633,7 @@
 						"header": [
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							},
 							{
@@ -2568,8 +2644,7 @@
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "Content-Type",
@@ -2578,24 +2653,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions",
-							"protocol": "http",
+							"raw": "{{url}}api/inscriptions",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"inscriptions"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": ""
-								}
 							]
 						}
 					},
@@ -2609,7 +2672,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Authorization",
@@ -2628,19 +2691,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions/10",
-							"protocol": "http",
+							"raw": "{{url}}api/inscriptions/1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"inscriptions",
-								"10"
+								"1"
 							]
 						}
 					},
@@ -2654,18 +2711,17 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer {{token}}"
+								"value": "Bearer {{tokenAdmin}}"
 							},
 							{
 								"key": "Accept",
 								"type": "text",
-								"value": "application/json",
-								"disabled": true
+								"value": "application/json"
 							},
 							{
 								"key": "Content-Type",
@@ -2674,20 +2730,14 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions/schoolPeriod/2",
-							"protocol": "http",
+							"raw": "{{url}}api/inscriptions/schoolPeriod/4",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"inscriptions",
 								"schoolPeriod",
-								"2"
+								"4"
 							]
 						}
 					},
@@ -2701,7 +2751,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Authorization",
@@ -2721,29 +2771,208 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions/availableSubjects?student_id=3&school_period_id=2",
-							"protocol": "http",
+							"raw": "{{url}}api/inscriptions/availableSubjects?student_id=11&school_period_id=4",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"inscriptions",
 								"availableSubjects"
 							],
 							"query": [
 								{
 									"key": "student_id",
-									"value": "3"
+									"value": "11"
 								},
 								{
 									"key": "school_period_id",
-									"value": "2"
+									"value": "4"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentAvailableSubjects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/studentInscription/availableSubjects?student_id=11",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"studentInscription",
+								"availableSubjects"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentCurrentEnrolledSubjects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/studentInscription/currentEnrolledSubjects?student_id=9",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"studentInscription",
+								"currentEnrolledSubjects"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionEnrolledStudentsInSubject",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/teacherInscription/enrolledStudent?teacher_id=3&school_period_subject_teacher_id=4",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"teacherInscription",
+								"enrolledStudent"
+							],
+							"query": [
+								{
+									"key": "teacher_id",
+									"value": "3"
+								},
+								{
+									"key": "school_period_subject_teacher_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPostAloneRequired",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 11,\n    \"school_period_id\": 4,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4\n        }\n    ]\n}\n"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions"
 							]
 						}
 					},
@@ -2773,27 +3002,414 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"student_id\": 2,\n    \"school_period_id\": 2,\n    \"status\":\"REG\",\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 3\n        }\n    ],\n    \"final_work\":{\n    \t\"title\":\"test\",\n    \t\"advisors\":[\n    \t\t{\n    \t\t\"teacher_id\":4\n    \t\t}\n    \t\t]\n    }\n   \n}"
+							"raw": "{\n    \"student_id\": 11,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4,\n            \"qualification\":12,\n            \"status\":\"APR\"\n        }\n    ]\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions",
-							"protocol": "http",
+							"raw": "{{url}}api/inscriptions",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"inscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPostProject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 5,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4,\n            \"qualification\":12,\n            \"status\":\"APR\"\n        }\n    ],\n    \"projects\":[\n        {\n            \"title\":\"proyecto 5\",\n            \"subject_id\":15,\n            \"status\":\"PROGRESS\"\n        },\n        {\n            \"title\":\"seminario 5\",\n            \"subject_id\":14,\n            \"status\":\"PROGRESS\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPostFinalWork",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 9,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"final_works\":[\n        {\n            \"title\":\"trabajo final 5\",\n            \"subject_id\":13,\n            \"project_id\":4,\n            \"status\":\"PROGRESS\",\n            \"advisors\":[\n                {\n                    \"teacher_id\":3\n                }\n            ]\n        }\n    ]\n}\n"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPostDoctoralExam",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 3,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4,\n            \"qualification\":12,\n            \"status\":\"APR\"\n        }\n    ],\n    \"doctoral_exam\":{\n        \"status\":\"APPROVED\"        \n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 11,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4        \n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/studentInscription",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"studentInscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentPostProject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 5,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4\n        }\n    ],\n    \"projects\":[\n        {\n            \"title\":\"proyecto 5\",\n            \"subject_id\":15\n        },\n        {\n            \"title\":\"seminario 5\",\n            \"subject_id\":14\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/studentInscription",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"studentInscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentPostFinalWork",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 9,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"final_works\":[\n        {\n            \"title\":\"trabajo final 5\",\n            \"subject_id\":13,\n            \"project_id\":4,\n            \"advisors\":[\n                {\n                    \"teacher_id\":3\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/studentInscription",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"studentInscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionStudentWithdrawSubjects",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenStudent}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 2,\n    \"withdraw_subjects\": [\n        {\n            \"student_subject_id\": 7\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/studentInscription/withdrawSubjects",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"studentInscription",
+								"withdrawSubjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoadNotes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenTeacher}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"teacher_id\":3,\n\t\"school_period_subject_teacher_id\":4,\n\t\"student_notes\":[\n\t\t{\n\t\t\t\"student_subject_id\":7,\n\t\t\t\"qualification\":12\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/teacherInscription/loadNotes",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"teacherInscription",
+								"loadNotes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "organization_key",
+								"value": "{{organization}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/inscriptions/4",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions",
+								"4"
 							]
 						}
 					},
@@ -2848,421 +3464,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "InscriptionDelete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "organization_key",
-								"value": "G",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{tokenAdmin}}",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions/4",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"inscriptions",
-								"4"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "SchoolPeriodsGetSubjectsTaught",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenTeacher}}"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/schoolPeriods/subjectsTaught?teacher_id=3",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"schoolPeriods",
-								"subjectsTaught"
-							],
-							"query": [
-								{
-									"key": "teacher_id",
-									"value": "3"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "LoadNotes",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenTeacher}}"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"teacher_id\":3,\n\t\"school_period_subject_teacher_id\":4,\n\t\"student_notes\":[\n\t\t{\n\t\t\t\"student_subject_id\":5,\n\t\t\t\"qualification\":9\n\t\t}\n\t]\n}"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/teacherInscription/loadNotes",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"teacherInscription",
-								"loadNotes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "InscriptionEnrolledStudentsInSubject",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenTeacher}}"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/teacherInscription/enrolledStudent?teacher_id=3&school_period_subject_teacher_id=4",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"teacherInscription",
-								"enrolledStudent"
-							],
-							"query": [
-								{
-									"key": "teacher_id",
-									"value": "3"
-								},
-								{
-									"key": "school_period_subject_teacher_id",
-									"value": "4"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "InscriptionStudentAvailableSubjects",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenStudent}}"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/studentInscription/availableSubjects?student_id=1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"studentInscription",
-								"availableSubjects"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "InscriptionStudentCurrentEnrolledSubjects",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenStudent}}"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/studentInscription/currentEnrolledSubjects?student_id=2",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"studentInscription",
-								"currentEnrolledSubjects"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "InscriptionStudentPost",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTU2OTk2MTM0MywiZXhwIjoxNTY5OTY0OTQzLCJuYmYiOjE1Njk5NjEzNDMsImp0aSI6IjZqUmtnVDRiSEtJMWk4WEwiLCJzdWIiOjksInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEiLCJ1c2VyX3R5cGUiOiJTIn0.YC4w97FCP0Eua1nnGss8cssymN5BgVqnbuXefCdY19Q"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							},
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"student_id\": 3,\n    \"status\":\"REG\",\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 3\n        }\n    ]\n}"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/studentInscription",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"studentInscription"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "InscriptionStudentWithdrawSubjects",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{tokenStudent}}"
-							},
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							},
-							{
-								"key": "organization_key",
-								"type": "text",
-								"value": "G"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"student_id\": 2,\n    \"withdrawSubjects\": [\n        {\n            \"student_subject_id\": 11\n        }\n    ]\n}"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/studentInscription/withdrawSubjects",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"studentInscription",
-								"withdrawSubjects"
-							]
-						}
-					},
-					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -3278,7 +3479,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -3297,23 +3498,66 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/constance/study?student_id=1",
-							"protocol": "http",
+							"raw": "{{url}}api/constance/study?student_id=2",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"constance",
 								"study"
 							],
 							"query": [
 								{
 									"key": "student_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceStudyData",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/constance/study?student_id=20&data=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"constance",
+								"study"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "20"
+								},
+								{
+									"key": "data",
 									"value": "1"
 								}
 							]
@@ -3329,7 +3573,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -3349,28 +3593,76 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/constance/inscription?student_id=3&inscription_id=3",
-							"protocol": "http",
+							"raw": "{{url}}api/constance/inscription?student_id=5&inscription_id=8",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"constance",
 								"inscription"
 							],
 							"query": [
 								{
 									"key": "student_id",
-									"value": "3"
+									"value": "5"
 								},
 								{
 									"key": "inscription_id",
-									"value": "3"
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceInscriptionData",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/constance/inscription?student_id=5&inscription_id=8&data=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"constance",
+								"inscription"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "5"
+								},
+								{
+									"key": "inscription_id",
+									"value": "8"
+								},
+								{
+									"key": "data",
+									"value": "1"
 								}
 							]
 						}
@@ -3390,7 +3682,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -3405,17 +3697,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/constance/workTeacher?teacher_id=3",
-							"protocol": "http",
+							"raw": "{{url}}api/constance/workTeacher?teacher_id=3",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"constance",
 								"workTeacher"
 							],
@@ -3423,6 +3709,56 @@
 								{
 									"key": "teacher_id",
 									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceWorkTeacherData",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/constance/workTeacher?teacher_id=5&data=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"constance",
+								"workTeacher"
+							],
+							"query": [
+								{
+									"key": "teacher_id",
+									"value": "5"
+								},
+								{
+									"key": "data",
+									"value": "1"
 								}
 							]
 						}
@@ -3442,7 +3778,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -3457,23 +3793,67 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/constance/workAdministrator?administrator_id=1",
-							"protocol": "http",
+							"raw": "{{url}}api/constance/workAdministrator?administrator_id=2",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"constance",
 								"workAdministrator"
 							],
 							"query": [
 								{
 									"key": "administrator_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConstanceWorkAdministrator Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/constance/workAdministrator?administrator_id=2&data=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"constance",
+								"workAdministrator"
+							],
+							"query": [
+								{
+									"key": "administrator_id",
+									"value": "2"
+								},
+								{
+									"key": "data",
 									"value": "1"
 								}
 							]
@@ -3494,7 +3874,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -3509,17 +3889,57 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/constance/academicLoad?student_id=3",
-							"protocol": "http",
+							"raw": "{{url}}api/constance/academicLoad?student_id=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
+								"constance",
+								"academicLoad"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AcademicLoadData",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/constance/academicLoad?student_id=3&data=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
 								"constance",
 								"academicLoad"
 							],
@@ -3527,6 +3947,10 @@
 								{
 									"key": "student_id",
 									"value": "3"
+								},
+								{
+									"key": "data",
+									"value": "1"
 								}
 							]
 						}
@@ -3546,7 +3970,7 @@
 							{
 								"key": "organization_key",
 								"type": "text",
-								"value": "G"
+								"value": "{{organization}}"
 							},
 							{
 								"key": "Accept",
@@ -3561,17 +3985,57 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/constance/studentHistorical?student_id=3",
-							"protocol": "http",
+							"raw": "{{url}}api/constance/studentHistorical?student_id=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
+								"constance",
+								"studentHistorical"
+							],
+							"query": [
+								{
+									"key": "student_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StudentHistoricalData",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/constance/studentHistorical?student_id=3&data=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
 								"constance",
 								"studentHistorical"
 							],
@@ -3579,6 +4043,10 @@
 								{
 									"key": "student_id",
 									"value": "3"
+								},
+								{
+									"key": "data",
+									"value": "1"
 								}
 							]
 						}
@@ -3609,10 +4077,10 @@
 				"id": "8c71fc0c-4e7e-432b-bd04-5e12055fd3b7",
 				"type": "text/javascript",
 				"exec": [
-					"pm.test(\"Payload must be valid and have a body\", function () { ",
-					"     pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
-					"     pm.response.to.be.withBody; // body tiene que exitir",
-					"     pm.response.to.be.json; // además que sea un JSON válido",
+					"pm.test(\"Payload must be valid and have a body\", function () {",
+					"    pm.response.to.be.ok; // equivalente a decir que valide que sea 200",
+					"    pm.response.to.be.withBody; // body tiene que exitir",
+					"    pm.response.to.be.json; // además que sea un JSON válido",
 					"});",
 					"// Pedimos a nuestro response payload que tengo Content-Type en el header",
 					"pm.test(\"Content-Type is present\", function () {",
