@@ -41,13 +41,14 @@ class DoctoralExam extends Model
         }
     }
 
-    public static function existDoctoralExamApprovedByStudent($studentId)
+    public static function existDoctoralExamApprovedByStudentInNotSchoolPeriod($studentId, $schoolPeriodId)
     {
          try{
             return self::where('status','APPROVED')
-                ->whereHas('inscription',function (Builder $query) use ($studentId){
+                ->whereHas('inscription',function (Builder $query) use ($studentId,$schoolPeriodId){
                 $query
-                    ->where('student_id','=',$studentId);
+                    ->where('student_id','=',$studentId)
+                    ->where('school_period_id','!=',$schoolPeriodId);
                 })
                 ->exists();
         }catch (\Exception $e){

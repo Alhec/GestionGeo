@@ -46,11 +46,32 @@ class FinalWorkSchoolPeriod extends Model
         }
     }
 
-    public static function deleteFinalWorkSchoolPeriodBySchoolPeriodStudentId($schoolPeriodStudentId){
+    public static function getFinalWorkSchoolPeriodBySchoolPeriodStudentId($schoolPeriodStudentId){
         try{
             return self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->with('finalWork')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function deleteFinalWorkSchoolPeriod($id){
+        try{
+            self::find($id)
                 ->delete();
         }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
+
+    public static function deleteFinalWorkSchoolPeriodBySchoolPeriodStudentId($schoolPeriodStudentId){
+        try{
+            self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
             return 0;
         }
     }

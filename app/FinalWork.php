@@ -31,7 +31,7 @@ class FinalWork extends Model
         try{
             return self::where('student_id',$studentId)
                 ->where('is_project',$isProject)
-                ->where('approval_date','!=',null)
+                ->where('approval_date','=',null)
                 ->exists();
         }catch (\Exception $e){
             return 0;
@@ -105,7 +105,7 @@ class FinalWork extends Model
                 ->where('subject_id',$subjectId)
                 ->with('schoolPeriods')
                 ->with('teachers')
-                ->get('id');
+                ->get();
         }catch (\Exception $e){
             return 0;
         }
@@ -133,6 +133,18 @@ class FinalWork extends Model
                 ->delete();
         }catch (\Exception $e){
             DB::rollback();
+            return 0;
+        }
+    }
+
+    public static function getFinalWork($id)
+    {
+        try{
+            return self::where('id',$id)
+                ->with('schoolPeriods')
+                ->with('teachers')
+                ->get();
+        }catch (\Exception $e){
             return 0;
         }
     }

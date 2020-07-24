@@ -152,6 +152,17 @@ class StudentSubject extends Model
         }
     }
 
+    public static function deleteStudentSubjectBySchoolPeriodStudentId($schoolPeriodStudentId)
+    {
+        try{
+            self::where('school_period_student_id',$schoolPeriodStudentId)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
+
     public static function getStudentSubjectById($id)
     {
         try{
