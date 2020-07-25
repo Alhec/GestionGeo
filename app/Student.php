@@ -93,6 +93,7 @@ class Student extends Model
                 })
                 ->with('user')
                 ->with('degrees')
+                ->with('equivalence')
                 ->with('guideTeacher')
                 ->get();
         }catch (\Exception $e){

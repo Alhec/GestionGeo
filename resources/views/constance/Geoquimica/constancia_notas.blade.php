@@ -7,13 +7,13 @@
     <title>Document</title>
     <style>
         body {
-            margin: 1cm 2cm 2cm 2cm;
-            font-size: 12pt;
+            margin: 3.5cm 1cm 1cm 1cm;
+            font-size: 11pt;
         }
         .header{
             position: fixed;
             width: 100%;
-            height: 1.5cm;
+            height: 3cm;
             top: 0cm;
             left: 0cm;
             right: 0cm;
@@ -27,11 +27,11 @@
             right: 0;
         }
         .image-geoquimica img{
-            width: 7.61cm;
-            height: 3.61cm;
+            width: 7.5cm;
+            height: 3cm;
         }
         .image-ucv img{
-            width: 3.49cm;
+            width: 3cm;
         }
         .section{
             margin-top: 1cm;
@@ -58,42 +58,51 @@
             bottom: 0;
             color: #1A3E86;
             font-weight: bold;
-            font-size: 10pt;
+            font-size: 9pt;
         }
-        .coordinador{
+        .coordinator{
             text-align: center;
             font-weight: bold;
             font-style: italic;
         }
         table {
             border-collapse: collapse;
-            margin: 0 auto;
             width: 100%;
         }
         table, th, td {
             border: 1px solid black;
-            padding: 0 0.1cm 0 0.1cm;
+            padding: 1px 1px 1px 1px;
         }
-        table tr td{
+        table tr td, table tr th{
             text-align: center;
+            font-size: 6pt;
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <header class="header">
         <div class="image-geoquimica">
             <img src="{{ public_path() ."/images/icon-banner.png" }}">
         </div>
         <div class="image-ucv">
             <img src="{{ public_path() ."/images/logo-ucv.png" }}">
         </div>
-    </div>
+    </header>
+    <footer class="footer">
+        Instituto de Ciencias de la Tierra. Fac. Ciencias UCV. Av. Los Ilustres, Los Chaguaramos. <br/>
+        Apartado: 3895. Caracas-1010A. Telf: 58-0212-6051082.
+    </footer>
     <div  class="section">
         <div class="title">
             CONSTANCIA DE NOTAS
         </div>
-        <div class="article" style="padding-top: 1.5cm">
-            Quien suscribe, Coordinador del Postgrado en Geoquímica de la Facultad de Ciencias, Universidad Central de
+        <div class="article">
+            Quien suscribe,
+            @if($data['coordinator_data']['sex']=='M')
+                Coordinador
+            @else
+                Coordinadora
+            @endif del Postgrado en Geoquímica de la Facultad de Ciencias, Universidad Central de
             Venezuela, hace constar por medio de la presente que el <strong>
                 {{$data['user_data']['user']['level_instruction']}}.
                 {{strtoupper($data['user_data']['user']['first_name'])}}
@@ -106,7 +115,7 @@
             {{$data['percentage_data']['enrolled_credits']}} créditos en el programa de
             {{strtoupper($data['school_program_data']['school_program_name'])}}, de este Postgrado.
         </div>
-        <div class="content">
+        <div>
             <div class="article">
                 <table>
                     <tr>
@@ -116,23 +125,58 @@
                         <th colspan="2">U.C.</th>
                     </tr>
                     @foreach($data['enrolled_subjects'] as $schoolPeriod)
-                        <tr>
-                            <td colspan="4" rowspan="{{count($schoolPeriod['enrolled_subjects'])}}">
-                                {{$schoolPeriod['school_period']['cod_school_period']}}</td>
-                            @foreach($schoolPeriod['enrolled_subjects'] as $subject)
-                               <td colspan="8">{{$subject['data_subject']['subject']['name']}}</td>
-                                @if($subject['status']=='APR')
-                                    <td colspan="4">{{$subject['qualification']}}</td>
-                                    <td colspan="2">{{$subject['data_subject']['subject']['uc']}}</td>
-                                @elseif($subject['status']=='RET')
-                                    <td colspan="4">RET</td>
-                                    <td colspan="2"> - </td>
+                        @foreach($schoolPeriod['enrolled_subjects'] as $subject)
+                            @if($loop->first)
+                                <tr>
+                                    <td colspan="4" rowspan="{{$schoolPeriod['cant_subjects']}}">
+                                        {{$schoolPeriod['school_period']['cod_school_period']}}</td>
+                                    <td colspan="8">{{$subject['data_subject']['subject']['name']}}</td>
+                                    @if($subject['status']=='APR')
+                                        <td colspan="4">{{$subject['qualification']}}</td>
+                                        <td colspan="2">{{$subject['data_subject']['subject']['uc']}}</td>
+                                    @elseif($subject['status']=='RET')
+                                        <td colspan="4">RET</td>
+                                        <td colspan="2"> - </td>
+                                    @else
+                                        <td colspan="4">CUR</td>
+                                        <td colspan="2"> - </td>
+                                    @endif
+                                </tr>
+                            @else
+                                <tr>
+                                    <td colspan="8">{{$subject['data_subject']['subject']['name']}}</td>
+                                    @if($subject['status']=='APR')
+                                        <td colspan="4">{{$subject['qualification']}}</td>
+                                        <td colspan="2">{{$subject['data_subject']['subject']['uc']}}</td>
+                                    @elseif($subject['status']=='RET')
+                                        <td colspan="4">RET</td>
+                                        <td colspan="2"> - </td>
+                                    @else
+                                        <td colspan="4">CUR</td>
+                                        <td colspan="2"> - </td>
+                                    @endif
+                                </tr>
+                            @endif
+                        @endforeach
+                        @foreach($schoolPeriod['final_work_data'] as $finalWork)
+                            @if($finalWork['status']==='APPROVED')
+                                @if(count($schoolPeriod['enrolled_subjects'])<1)
+                                    <tr>
+                                        <td colspan="4" rowspan="{{$schoolPeriod['cant_subjects']}}">
+                                            {{$schoolPeriod['school_period']['cod_school_period']}}</td>
+                                        <td colspan="8">{{$finalWork['final_work']['title']}}</td>
+                                        <td colspan="4">Aprobado</td>
+                                        <td colspan="2">-</td>
+                                    </tr>
                                 @else
-                                    <td colspan="4">CUR</td>
-                                    <td colspan="2"> - </td>
+                                    <tr>
+                                        <td colspan="8">{{$finalWork['final_work']['title']}}</td>
+                                        <td colspan="4">Aprobado</td>
+                                        <td colspan="2">-</td>
+                                    </tr>
                                 @endif
-                            @endforeach
-                        </tr>
+                            @endif
+                        @endforeach
                     @endforeach
                 </table>
             </div>
@@ -143,20 +187,19 @@
         </div>
     </div>
     <div class="section">
-        <div class="coordinador">
+        <div class="coordinator">
             {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
             {{$data['coordinator_data']['second_name']}}
             {{$data['coordinator_data']['first_surname']}} {{$data['coordinator_data']['second_surname']}}
             <br>
-            Coordinador del Postgrado
+            @if($data['coordinator_data']['sex']=='M')
+                Coordinador
+            @else
+                Coordinadora
+            @endif del Postgrado
             <br>
             En Geoquímica
         </div>
-    </div>
-    <div class="footer">
-        Instituto de Ciencias de la Tierra. Fac. Ciencias UCV. Av. Los Ilustres, Los Chaguaramos. <br/>
-        Apartado: 3895. Caracas-1010A. Telf: 58-0212-6051082.
-    </div>
     </div>
 </body>
 </html>

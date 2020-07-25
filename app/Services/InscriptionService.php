@@ -232,6 +232,18 @@ class InscriptionService
         return $availableFinalWorks;
     }
 
+    public static function filterEquivalenceToStudent($equivalence,$subjectsInSchoolPeriod)
+    {
+        $filter = [];
+        $subjectInEquivalenceId=array_column($equivalence->toArray(),'subject_id');
+        foreach($subjectsInSchoolPeriod as $subject){
+            if (!in_array($subject['subject_id'],$subjectInEquivalenceId)){
+                $filter[]=$subject;
+            }
+        }
+        return $filter;
+    }
+
     public static function getAvailableSubjects($studentId,$schoolPeriodId,$organizationId,$internalCall)
     {
         $student = Student::getStudentById($studentId,$organizationId);
@@ -272,6 +284,9 @@ class InscriptionService
                         return self::taskError($internalCall,false);
                     }
                     if (count($subjectsInSchoolPeriod)>0){
+                        if (count($student['equivalence'])>0){
+                            $subjectsInSchoolPeriod = self::filterEquivalenceToStudent($student['equivalence'],$subjectsInSchoolPeriod);
+                        }
                         $unregisteredSubjects = self::getUnregisteredSubjects($student,$subjectsInSchoolPeriod);
                         if (is_numeric($unregisteredSubjects)&&$unregisteredSubjects===0){
                             return self::taskError($internalCall,false);

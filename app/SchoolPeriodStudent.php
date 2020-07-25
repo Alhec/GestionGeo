@@ -202,6 +202,7 @@ class SchoolPeriodStudent extends Model
                 ->with('student')
                 ->with('enrolledSubjects')
                 ->with('schoolPeriod')
+                ->with('finalWorkData')
                 ->whereHas('schoolPeriod',function (Builder $query) use ($organizationId){
                     $query
                         ->where('organization_id','=',$organizationId);

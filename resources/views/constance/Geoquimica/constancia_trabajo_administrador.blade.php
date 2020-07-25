@@ -7,7 +7,7 @@
     <title>Document</title>
     <style>
         body {
-            margin: 1cm 2cm 1cm 2cm;
+            margin: 0.5cm 1cm 0.5cm 1cm;
             font-size: 12pt;
         }
         .header{
@@ -24,11 +24,11 @@
             right: 0;
         }
         .image-geoquimica img{
-            width: 7.61cm;
-            height: 3.61cm;
+            width: 7.5cm;
+            height: 3cm;
         }
         .image-ucv img{
-            width: 3.49cm;
+            width: 3cm;
         }
         .section{
             margin-top: 3cm;
@@ -55,7 +55,7 @@
             font-weight: bold;
             font-size: 10pt;
         }
-        .coordinador{
+        .coordinator{
             text-align: center;
             font-weight: bold;
             font-style: italic;
@@ -63,54 +63,70 @@
     </style>
 </head>
 <body>
-    <div class="header">
+    <header class="header">
         <div class="image-geoquimica">
             <img src="{{ public_path() ."/images/icon-banner.png" }}">
         </div>
         <div class="image-ucv">
             <img src="{{ public_path() ."/images/logo-ucv.png" }}" >
         </div>
-    </div>
-    <div  class="section">
-        <div class="title">
-            constancia
-        </div>
-        <div class="content">
-            <div class="article">
-                Quien  suscribe,  Coordinador  del  Postgrado  en  Geoquímica,  Facultad  de  Ciencias de  la
-                Universidad   Central  de Venezuela, por  medio  de   la   presente   hace  constar  que el
-                <strong>
-                    @if($data['user_data']['administrator']['rol']=='COORDINATOR')
-                        Coordinador/a
+    </header>
+    <footer class="footer">
+        Instituto de Ciencias de la Tierra. Fac. Ciencias UCV. Av. Los Ilustres, Los Chaguaramos. <br/>
+        Apartado: 3895. Caracas-1010A. Telf: 58-0212-6051082.
+    </footer>
+    <main>
+        <div  class="section">
+            <div class="title">
+                constancia
+            </div>
+            <div>
+                <div class="article">
+                    Quien  suscribe,
+                    @if($data['coordinator_data']['sex']=='M')
+                        Coordinador
                     @else
-                        Secretario/a
+                        Coordinadora
                     @endif
-                    {{strtoupper($data['user_data']['first_name'])}} {{strtoupper($data['user_data']['second_name'])}}
-                    {{strtoupper($data['user_data']['first_surname'])}}
-                    {{strtoupper($data['user_data']['second_surname'])}}</strong>, titular de la cédula de identidad
+                    del  Postgrado  en  Geoquímica,  Facultad  de  Ciencias de  la Universidad   Central  de Venezuela,
+                    por  medio  de   la   presente   hace  constar  que el
+                    <strong>
+                        @if($data['user_data']['administrator']['rol']=='COORDINATOR')
+                            @if($data['user_data']['sex']=='M')
+                                Coordinador
+                            @else
+                                Coordinadora
+                            @endif
+                        @else
+                            @if($data['user_data']['sex']=='M')
+                                Secretario
+                            @else
+                                Secretaria
+                            @endif
+                        @endif
+                        {{strtoupper($data['user_data']['first_name'])}} {{strtoupper($data['user_data']['second_name'])}}
+                        {{strtoupper($data['user_data']['first_surname'])}}
+                        {{strtoupper($data['user_data']['second_surname'])}}</strong>, titular de la cédula de identidad
                     N° {{$data['user_data']['identification'] }}, ejerce sus funciones laborales en <strong>
-                    {{strtoupper($data['organization_data']['name'])}}</strong>.
-            </div>
-            <div class="article">
-                Constancia que se expide a petición de la parte interesada, en Caracas, en el mes  de {{$data['month']}}
-                de {{$data['year']}}.
+                        {{strtoupper($data['organization_data']['name'])}}</strong>.
+                </div>
+                <div class="article">
+                    Constancia que se expide a petición de la parte interesada, en Caracas, {{$data['day']}} del mes de
+                    {{$data['month']}} de {{$data['year']}}.
+                </div>
             </div>
         </div>
-    </div>
-    <div class="section">
-        <div class="coordinador">
-            {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
-            {{$data['coordinator_data']['second_name']}} {{$data['coordinator_data']['first_surname']}}
-            {{$data['coordinator_data']['second_surname']}}
-            <br>
-            Coordinador del Postgrado
-            <br>
-            En Geoquímica
+        <div class="section">
+            <div class="coordinator">
+                {{$data['coordinator_data']['level_instruction']}}. {{$data['coordinator_data']['first_name']}}
+                {{$data['coordinator_data']['second_name']}} {{$data['coordinator_data']['first_surname']}}
+                {{$data['coordinator_data']['second_surname']}}
+                <br>
+                Coordinador del Postgrado
+                <br>
+                En Geoquímica
+            </div>
         </div>
-    </div>
-    <div class="footer">
-            Instituto de Ciencias de la Tierra. Fac. Ciencias UCV. Av. Los Ilustres, Los Chaguaramos. <br/>
-            Apartado: 3895. Caracas-1010A. Telf: 58-0212-6051082. 
-    </div>
+    </main>
 </body>
 </html>
