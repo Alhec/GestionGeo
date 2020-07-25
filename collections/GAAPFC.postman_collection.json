@@ -3416,7 +3416,138 @@
 					"response": []
 				},
 				{
+					"name": "InscriptionDeleteFinalWork",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "organization_key",
+								"type": "text",
+								"value": "{{organization}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{tokenAdmin}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/inscriptions/deleteFinalWork/88",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions",
+								"deleteFinalWork",
+								"88"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "InscriptionPut",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"value": "{{organization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 11,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4,\n            \"qualification\":10,\n            \"status\":\"APR\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions/8",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPutProject",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"value": "{{organization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 5,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4,\n            \"qualification\":10,\n            \"status\":\"APR\"\n        },\n        {\n            \"school_period_subject_teacher_id\":6,\n            \"qualification\":10,\n            \"status\":\"APR\"\n        }\n    ],\n    \"projects\":[\n        {\n            \"title\":\"proyecto 5\",\n            \"subject_id\":15,\n            \"status\":\"APPROVED\",\n            \"approval_date\":\"2020-04-01\"\n        },\n        {\n            \"title\":\"seminario 5\",\n            \"subject_id\":14,\n            \"status\":\"PROGRESS\",\n            \"description_status\":\"En espera de jurado\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions/9",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPutFinalWork",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -3438,28 +3569,67 @@
 							},
 							{
 								"key": "organization_key",
-								"value": "G",
+								"value": "{{organization}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"student_id\": 2,\n    \"school_period_id\": 2,\n    \"pay_ref\": \"1234567811\",\n    \"financing\":\"EXO\",\n    \"amount_paid\":30.3,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 3,\n            \"status\": \"REP\"\n        }\n    ]\n}"
+							"raw": "{\n    \"student_id\": 9,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"final_works\":[\n        {\n            \"title\":\"trabajo final 5\",\n            \"subject_id\":13,\n            \"project_id\":4,\n            \"status\":\"PROGRESS\",\n            \"description_status\":\"En espera de jurado\",\n            \"advisors\":[\n                {\n                    \"teacher_id\":3\n                }\n            ]\n        }\n    ]\n}\n"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/inscriptions/10",
-							"protocol": "http",
+							"raw": "{{url}}api/inscriptions/10",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{url}}api"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"inscriptions",
 								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InscriptionPutDoctoralExam",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "organization_key",
+								"value": "{{organization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_id\": 3,\n    \"school_period_id\": 4,\n    \"financing\":\"SFI\",\n    \"financing_description\":\"description\",\n    \"pay_ref\":\"1222222\",\n    \"amount_paid\":45.5,\n    \"subjects\": [\n        {\n            \"school_period_subject_teacher_id\": 4,\n            \"qualification\":16,\n            \"status\":\"APR\"\n        }\n    ],\n    \"doctoral_exam\":{\n        \"status\":\"APPROVED\"        \n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}api/inscriptions/11",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"inscriptions",
+								"11"
 							]
 						}
 					},
@@ -3593,7 +3763,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/constance/inscription?student_id=5&inscription_id=8",
+							"raw": "{{url}}api/constance/inscription?student_id=5&inscription_id=9",
 							"host": [
 								"{{url}}api"
 							],
@@ -3608,7 +3778,7 @@
 								},
 								{
 									"key": "inscription_id",
-									"value": "8"
+									"value": "9"
 								}
 							]
 						}
@@ -3697,7 +3867,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/constance/workTeacher?teacher_id=3",
+							"raw": "{{url}}api/constance/workTeacher?teacher_id=4",
 							"host": [
 								"{{url}}api"
 							],
@@ -3708,7 +3878,7 @@
 							"query": [
 								{
 									"key": "teacher_id",
-									"value": "3"
+									"value": "4"
 								}
 							]
 						}
@@ -3889,7 +4059,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/constance/academicLoad?student_id=1",
+							"raw": "{{url}}api/constance/academicLoad?student_id=5",
 							"host": [
 								"{{url}}api"
 							],
@@ -3900,7 +4070,7 @@
 							"query": [
 								{
 									"key": "student_id",
-									"value": "1"
+									"value": "5"
 								}
 							]
 						}
