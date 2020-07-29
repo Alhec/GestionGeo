@@ -44,7 +44,10 @@ class Student extends Model
 
     public function schoolPeriod()
     {
-        return $this->belongsTo('App\SchoolPeriodStudent');
+        return $this->hasMany('App\SchoolPeriodStudent')
+            ->with('schoolPeriod')
+            ->with('enrolledSubjects')
+            ->with('finalWorkData');
     }
 
     public static function addStudent($student)
@@ -167,13 +170,16 @@ class Student extends Model
         }
     }
 
-    public static function getStudentActive($organizationId)
+    public static function getAllStudentToDegree($organizationId)
     {
         try{
             return self::whereHas('user',function (Builder $query) use ($organizationId){
                 $query
-                    ->where('organization_id','=',$organizationId)
-                    ->where('active','=',true);
+                    ->where('organization_id','=',$organizationId);
+                })
+                ->whereHas('schoolProgram',function (Builder $query) {
+                    $query
+                        ->where('conducive_to_degree','=',true);
                 })
                 ->where('end_program',false)
                 ->get();
@@ -181,4 +187,40 @@ class Student extends Model
             return 0;
         }
     }
+
+    public static function getAllStudent($organizationId)
+    {
+        try{
+            return self::whereHas('user',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+                })
+                ->with('user')
+                ->with('equivalence')
+                ->with('schoolPeriod')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
+    public static function getAllStudentToNotDegree($organizationId)
+    {
+        try{
+            return self::whereHas('user',function (Builder $query) use ($organizationId){
+                $query
+                    ->where('organization_id','=',$organizationId);
+                })
+                ->whereHas('schoolProgram',function (Builder $query) {
+                    $query
+                        ->where('conducive_to_degree','=',false);
+                })
+                ->with('user')
+                ->with('schoolPeriod')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
 }

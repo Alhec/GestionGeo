@@ -30,8 +30,9 @@ class TeacherService
     public static function validate(Request $request)
     {
         $request->validate([
-            'teacher_type'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT,JUB,INV',
-            'dedication'=>'required|max:3|ends_with:MT,CON,TC,EXC',
+            'teacher_type'=>'required|max:3|ends_with:CON,JUB,REG,OTH',
+            'dedication'=>'required|max:3|ends_with:MT,TC,EXC,TCO',
+            'category'=>'required|max:3|ends_with:INS,ASI,AGR,ASO,TIT,INV',
             'home_institute'=>'max:100',
             'country'=>'max:20'
         ]);
@@ -50,6 +51,7 @@ class TeacherService
                 'id'=>$user,
                 'teacher_type'=>$request['teacher_type'],
                 'dedication'=>$request['dedication'],
+                'category'=>$request['category'],
                 'home_institute'=>$request['home_institute'],
                 'country'=>$request['country'],
             ]);
@@ -84,6 +86,7 @@ class TeacherService
                 'id' => $id,
                 'teacher_type' => $request['teacher_type'],
                 'dedication'=>$request['dedication'],
+                'category'=>$request['category'],
                 'home_institute'=>$request['home_institute'],
                 'country'=>$request['country'],
             ]);

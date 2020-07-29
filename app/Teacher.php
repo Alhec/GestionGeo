@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Teacher extends Model
 {
-    protected $fillable = ['id','teacher_type','dedication','home_institute','country'];
+    protected $fillable = ['id','teacher_type','dedication','category','home_institute','country'];
     public $timestamps = false;
 
     public function user() {

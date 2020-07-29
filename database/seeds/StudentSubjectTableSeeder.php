@@ -49,5 +49,11 @@ class StudentSubjectTableSeeder extends Seeder
             'qualification'=>18,
             'status'=>'APR' //CUR RET APR REP
         ]);
+        StudentSubject::create([
+            'school_period_student_id'=>8,
+            'school_period_subject_teacher_id'=>1,
+            'qualification'=>18,
+            'status'=>'APR' //CUR RET APR REP
+        ]);
     }
 }

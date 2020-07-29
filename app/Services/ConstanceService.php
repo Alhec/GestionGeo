@@ -15,7 +15,6 @@ use App\Student;
 use App\SchoolPeriod;
 use App\StudentSubject;
 use App\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class ConstanceService

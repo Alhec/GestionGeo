@@ -208,4 +208,17 @@ class Subject extends Model
         }
     }
 
+    public static function getSubjectsInProgramsNotDegree($organizationId){
+        try{
+            return self::with('schoolPrograms')
+                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId)
+                        ->where('conducive_to_degree','=',false);
+                })
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
 }

@@ -396,7 +396,7 @@ class StudentService
 
     public static function warningOrAvailableWorkToStudent($organizationId)
     {
-        $students=Student::getStudentActive($organizationId);
+        $students=Student::getAllStudentToDegree($organizationId);
         if (is_numeric($students)&&$students==0){
             return 0;
         }

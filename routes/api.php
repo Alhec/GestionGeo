@@ -107,5 +107,8 @@ Route::middleware('jwt.auth','role:A,T')->get('constance/workTeacher','Constance
 Route::middleware('jwt.auth','role:A')->get('constance/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
 Route::middleware('jwt.auth','role:A,S')->get('constance/inscription','ConstanceController@inscriptionConstance');
 
+//Annual Report
+Route::middleware('jwt.auth','role:A')->get('annualReport','AnnualReportController@exportAnnualReport');
+
 
 
