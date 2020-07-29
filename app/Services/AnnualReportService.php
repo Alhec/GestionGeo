@@ -1040,7 +1040,7 @@ class AnnualReportService
                     $teacher['identification'],
                     $teacher['sex'],
                     $teacher['teacher']['home_institute']==null?'':$teacher['teacher']['home_institute'],
-                    'VENEZUELA',
+                    $teacher['teacher']['country'],
                     substr($subjectsTeaching,0,-2),
                     substr($datesTeaching,0,-2)
                 ];
