@@ -629,7 +629,7 @@ class AnnualReportService
 
     public static function counterCreditsInStudent($student,$schoolPeriods)
     {
-        $schoolPeriodsId=array_column($schoolPeriods,'id');
+        $schoolPeriodEnd=end($schoolPeriods);
         $equivalences = 0;
         if (count($student['equivalence'])){
             foreach ($student['equivalence'] as $equivalence){
@@ -639,8 +639,8 @@ class AnnualReportService
         $creditsInSchoolPeriods=0;
         if (count($student['school_period'])>0){
             foreach ($student['school_period'] as $schoolPeriod){
-                if (count($schoolPeriod['enrolled_subjects'])>0 && in_array($schoolPeriod['school_period_id'],
-                        $schoolPeriodsId)){
+                if (count($schoolPeriod['enrolled_subjects'])>0 &&
+                    $schoolPeriod['school_period']['start_date']<=$schoolPeriodEnd['start_date']){
                     foreach ($schoolPeriod['enrolled_subjects'] as $subject){
                         if ($subject['status']=='APR'){
                             $creditsInSchoolPeriods=$creditsInSchoolPeriods + $subject['data_subject']['subject']['uc'];
