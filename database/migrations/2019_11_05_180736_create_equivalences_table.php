@@ -14,6 +14,7 @@ class CreateEquivalencesTable extends Migration
     public function up()
     {
         Schema::create('equivalences', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('subject_id');
             $table->integer('qualification');

@@ -14,6 +14,8 @@ class Degree extends Model
 
     public $timestamps = false;
 
+    protected $primaryKey = 'student_id';
+
     public static function addDegree($degree)
     {
         try{
