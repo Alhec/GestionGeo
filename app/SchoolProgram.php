@@ -26,11 +26,11 @@ class SchoolProgram extends Model
 
     public static function getSchoolProgramById($id, $organizationId)
     {
-        try{
+
             return self::where('id',$id)
                 ->where('organization_id',$organizationId)
                 ->get();
-        }catch (\Exception $e){
+            try{}catch (\Exception $e){
             return 0;
         }
     }
