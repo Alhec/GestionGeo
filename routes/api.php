@@ -110,5 +110,9 @@ Route::middleware('jwt.auth','role:A,S')->get('constance/inscription','Constance
 //Annual Report
 Route::middleware('jwt.auth','role:A')->get('annualReport','AnnualReportController@exportAnnualReport');
 
-
+//Test
+Route::get('foo', function () {
+    return 'Hello GAAPFC';
+});
+Route::get('foo/{id}','SchoolProgramController@show');
 
