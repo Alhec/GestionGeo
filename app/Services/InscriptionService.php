@@ -256,13 +256,13 @@ class InscriptionService
                 && $student['current_status']!='REI-B' && $student['current_status']!='RIN-A'
                 && $student['current_status']!='RIN-B' &&  $student['current_status']!='ENDED'){
                 if ($internalCall){
-                    return [];
+                    return 1;
                 }
                 return response()->json(['message' => self::notAllowedRegister], 206);
             }
             if ($student['end_program']==true){
                 if ($internalCall){
-                    return [];
+                    return 2;
                 }
                 return response()->json(['message' => self::endProgram], 206);
             }
@@ -393,15 +393,16 @@ class InscriptionService
                     }
                     if (count($response['available_subjects'])<1&&(!isset($response['available_project'])&&
                             !isset($response['available_final_work']))){
+                        if ($internalCall){return 3;}
                         return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
                     }
                     return $response;
                 }
-                if ($internalCall){return [];}
+                if ($internalCall){return 4;}
                 return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
             }
         }
-        if ($internalCall){return [];}
+        if ($internalCall){return 5;}
         return response()->json(['message'=>self::notFoundStudentGivenId],206);
     }
 
@@ -896,8 +897,25 @@ class InscriptionService
                         $request['status']!='DES-B'&&$request['status']!='ENDED'){
                         $availableSubjects = self::getAvailableSubjects($request['student_id'],
                             $request['school_period_id'], $organizationId, true);
-                        if (is_numeric($availableSubjects)&&$availableSubjects===0){
-                            return self::taskError(false,false);
+                        if (is_numeric($availableSubjects)){
+                            if ($availableSubjects===0){
+                                return self::taskError(false,false);
+                            }
+                            if ($availableSubjects===1){
+                                return response()->json(['message' => self::notAllowedRegister], 206);
+                            }
+                            if ($availableSubjects===2){
+                                return response()->json(['message' => self::endProgram], 206);
+                            }
+                            if ($availableSubjects===3){
+                                return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
+                            }
+                            if ($availableSubjects===4){
+                                return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
+                            }
+                            if ($availableSubjects===5){
+                                return response()->json(['message'=>self::notFoundStudentGivenId],206);
+                            }
                         }
                         $schoolPeriodStudentId=SchoolPeriodStudent::addSchoolPeriodStudent($request);
                         if (is_numeric($schoolPeriodStudentId)&&$schoolPeriodStudentId===0){
@@ -995,10 +1013,14 @@ class InscriptionService
             return 0;
         }
         $subjectsEnrolledInSchoolPeriod=$subjectsEnrolledInSchoolPeriod[0]['enrolledSubjects'];
-        if (count($availableSubjects)<1 && count($subjectsEnrolledInSchoolPeriod)<1){
+        if (is_array($availableSubjects)&&(count($availableSubjects)<1 && count($subjectsEnrolledInSchoolPeriod)<1 )){
             return false;
         }
-        $availableSubjectsId=array_column($availableSubjects['available_subjects'],'id');
+        if (is_array($availableSubjects)){
+            $availableSubjectsId=array_column($availableSubjects['available_subjects'],'id');
+        }else{
+            $availableSubjectsId=[];
+        }
         foreach ($subjectsEnrolledInSchoolPeriod as $subjectEnrolledInSchoolPeriod){
             if (!in_array($subjectEnrolledInSchoolPeriod['school_period_subject_teacher_id'],$availableSubjectsId)){
                 $availableSubjectsId[]=$subjectEnrolledInSchoolPeriod['school_period_subject_teacher_id'];
@@ -1129,8 +1151,22 @@ class InscriptionService
                         $request['status']!='DES-B'&&$request['status']!='ENDED'){
                         $availableSubjects = self::getAvailableSubjects($request['student_id'],$request['school_period_id'],
                             $organizationId, true);
-                        if (is_numeric($availableSubjects)&&$availableSubjects===0){
-                            return self::taskError(false,false);
+                        if (is_numeric($availableSubjects)){
+                            if ($availableSubjects===0){
+                                return self::taskError(false,false);
+                            }
+                            if ($availableSubjects===1){
+                                return response()->json(['message' => self::notAllowedRegister], 206);
+                            }
+                            if ($availableSubjects===2){
+                                return response()->json(['message' => self::endProgram], 206);
+                            }
+                            if ($availableSubjects===4){
+                                return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
+                            }
+                            if ($availableSubjects===5){
+                                return response()->json(['message'=>self::notFoundStudentGivenId],206);
+                            }
                         }
                         $result = SchoolPeriodStudent::updateSchoolPeriodStudent($id,$request);
                         if (is_numeric($result)&&$result===0){

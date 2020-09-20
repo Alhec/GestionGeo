@@ -49,7 +49,7 @@ class StudentService
             'home_university'=>'required|max:100',
             'current_postgraduate'=>'max:100',
             'type_income'=>'max:30',
-            'is_ucv_teacher'=>'boolean',
+            'is_ucv_teacher'=>'boolean|required',
             'credits_granted'=>'numeric|required',
             'with_work'=>'boolean',
             'degrees.*.degree_obtained'=>'required|max:3|ends_with:TSU,TCM,Dr,Esp,Ing,MSc,Lic',
