@@ -21,7 +21,8 @@ class StudentsTableSeeder extends Seeder
             'is_ucv_teacher'=>true,
             'is_available_final_work' => true,
             'guide_teacher_id'=>3,
-            'end_program'=>true
+            'end_program'=>true,
+            'current_status'=>'ENDED'
         ]);
         Student::create([
             'school_program_id'=>2,

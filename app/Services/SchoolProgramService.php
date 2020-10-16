@@ -67,10 +67,7 @@ class SchoolProgramService
     public static function validateWithoutDegree(Request $request)
     {
         $request->validate([
-            'num_cu'=>'numeric',
             'duration'=>'numeric',
-            'min_duration'=>'numeric',
-            'min_num_cu_final_work'=>'numeric',
         ]);
     }
 
@@ -88,6 +85,19 @@ class SchoolProgramService
         }
         if (!$existSchoolProgramByName){
             $request['organization_id']=$organizationId;
+            if ($request['conducive_to_degree']){
+                $request['grant_certificate']=false;
+            }
+            if ($request['grant_certificate']){
+                $request['conducive_to_degree']=false;
+                $request['min_duration']=0;
+                $request['num_cu']=0;
+                $request['min_num_cu_final_work']=0;
+                $request['doctoral_exam']=false;
+            }
+            if (!$request['doctoral_exam']){
+                $request['min_cu_to_doctoral_exam']=0;
+            }
             $id = SchoolProgram::addSchoolProgram($request);
             if (is_numeric($id) && $id == 0){
                 return response()->json(['message'=>self::taskError],206);
@@ -144,6 +154,19 @@ class SchoolProgramService
                 if ($schoolProgramName[0]['id']!=$id){
                     return response()->json(['message'=>self::busyName],206);
                 }
+            }
+            if ($request['conducive_to_degree']){
+                $request['grant_certificate']=false;
+            }
+            if ($request['grant_certificate']){
+                $request['conducive_to_degree']=false;
+                $request['min_duration']=0;
+                $request['num_cu']=0;
+                $request['min_num_cu_final_work']=0;
+                $request['doctoral_exam']=false;
+            }
+            if (!$request['doctoral_exam']){
+                $request['min_cu_to_doctoral_exam']=0;
             }
             $result = SchoolProgram::updateSchoolProgram($id,$request);
             if (is_numeric($result) && $result == 0){

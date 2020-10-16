@@ -163,6 +163,7 @@ class Student extends Model
                 ->orWhere('test_period',true)
                 ->with('user')
                 ->with('degrees')
+                ->with('equivalence')
                 ->with('guideTeacher')
                 ->get();
         }catch (\Exception $e){
