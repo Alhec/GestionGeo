@@ -50,14 +50,14 @@ class ForgotPasswordController extends Controller
     {
         $this->validate($request, ['email' => 'required|email','user_type' => 'required|max:1|ends_with:A,S,T']);
         $request['organization_id'] = $request->header('Organization-Key');
+        $user = User::getUserByEmail($request['email'],$request['user_type'],$request['organization_id']);
+        if (is_numeric($user) && $user==0){
+            return response()->json(['message'=>self::taskError],401);
+        }
         try{
             $response = $this->broker()->sendResetLink(
                 $request->only('email','user_type','organization_id')
             );
-            $user = User::getUserByEmail($request['email'],$request['user_type'],$request['organization_id']);
-            if (is_numeric($user) && $user==0){
-                return response()->json(['message'=>self::taskError],401);
-            }
             if (count($user)>0){
                 $log = Log::addLog($user[0]['id'],self::logUserRequestRecoverPass);
                 if (is_numeric($log) && $log==0){
@@ -67,9 +67,6 @@ class ForgotPasswordController extends Controller
             switch ($response) {
                 case \Password::INVALID_USER:
                     return response()->json(['message'=>self::invalidUser], 422);
-                    break;
-                case \Password::INVALID_PASSWORD:
-                    return response()->json(['message'=>self::invalidPass], 422);
                     break;
                 case \Password::INVALID_TOKEN:
                     return response()->json(['message'=> self::invalidToken], 422);

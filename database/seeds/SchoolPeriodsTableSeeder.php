@@ -50,11 +50,11 @@ class SchoolPeriodsTableSeeder extends Seeder
         ]);
         SchoolPeriod::create([
             'cod_school_period'=>'III-2020',
-            'start_date'=>'2020-07-01',
-            'end_date'=>'2020-09-30',
+            'start_date'=>'2020-10-01',
+            'end_date'=>'2020-12-30',
             'withdrawal_deadline'=>'2020-07-30',
             'inscription_start_date'=>'2020-06-30',
-            'inscription_visible'=>false,
+            'inscription_visible'=>true,
             'organization_id'=>'ICT',
             'load_notes'=>false,
             'project_duty'=>3.4,

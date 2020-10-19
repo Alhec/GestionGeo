@@ -418,7 +418,8 @@ class InscriptionService
         ]);
     }
 
-    public static function validateSubjects(Request $request)
+    public static function
+    validateSubjects(Request $request)
     {
         $request->validate([
             'subjects.*.school_period_subject_teacher_id'=>'required|numeric',
