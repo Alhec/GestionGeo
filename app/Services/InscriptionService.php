@@ -561,9 +561,9 @@ class InscriptionService
     public static function createFinalWork($studentId,$finalWork,$schoolPeriodStudentId,$isProject)
     {
         $existProject = false;
-        if (!$isProject){
-            $project = FinalWork::existFinalWorkByIdAndStatus($finalWork['project_id'],true,'APPROVED');
-            if (is_numeric($project)&&$project===0){
+        if (!$isProject && isset($finalWork['project_id'])){
+            $existProject = FinalWork::existFinalWorkByIdAndStatus($finalWork['project_id'],true,'APPROVED');
+            if (is_numeric($existProject)&&$existProject===0){
                 return 0;
             }
         }
