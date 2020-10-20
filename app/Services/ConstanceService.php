@@ -188,7 +188,7 @@ class ConstanceService
         $dataHistorical['enrolled_credits']=$enrolledCredits;
         $dataHistorical['cumulative_notes']=$cumulativeNotes;
         $dataHistorical['cant_subjects']=$cantSubjects;
-        $dataHistorical['percentage']=$cumulativeNotes/$cantSubjects;
+        $dataHistorical['percentage']=$cantSubjects==0?0:$cumulativeNotes/$cantSubjects;
         return $dataHistorical;
     }
 
