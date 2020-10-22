@@ -198,7 +198,7 @@ class InscriptionService
         }
         if ($cantSchoolPeriods>=$schoolProgram['min_duration'] &&
             $dataPercentageStudent['enrolled_credits']+$student['credits_granted']>=
-            $schoolProgram[0]['min_num_cu_final_work'] ){
+            $schoolProgram['min_num_cu_final_work'] ){
             return true;
         }
         return false;
@@ -418,8 +418,7 @@ class InscriptionService
         ]);
     }
 
-    public static function
-    validateSubjects(Request $request)
+    public static function validateSubjects(Request $request)
     {
         $request->validate([
             'subjects.*.school_period_subject_teacher_id'=>'required|numeric',
@@ -1197,6 +1196,11 @@ class InscriptionService
                             isset($request['projects'])){
                             $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
                                 $id, true, $availableSubjects['project_subjects'],$organizationId);
+                        }
+                        if ((isset($availableSubjects['approved_projects'])&&$availableSubjects['approved_projects']) &&
+                            isset($request['projects'])){
+                            $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
+                                $id, true, $availableSubjects['approved_projects']->toArray(),$organizationId);
                         }
                         if ((isset($availableSubjects['available_final_work'])&&
                             $availableSubjects['available_final_work']) && isset($request['final_works'])){

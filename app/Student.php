@@ -108,6 +108,10 @@ class Student extends Model
     {
         try{
            return self::where('user_id',$userId)
+               ->whereHas('schoolProgram',function (Builder $query){
+                   $query
+                       ->where('conducive_to_degree','=',true);
+               })
                ->where('end_program',false)
                ->exists();
         }catch (\Exception $e){
