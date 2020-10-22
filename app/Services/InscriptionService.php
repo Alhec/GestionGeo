@@ -353,6 +353,7 @@ class InscriptionService
                         if(count($project)<1){
                             $notApprovedProject=true;
                         }
+
                         if($notApprovedProject){
                             $enrolledSubjects = SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($student['id'],
                                 $organizationId);
@@ -450,6 +451,8 @@ class InscriptionService
             'final_works.*.advisors.*.teacher_id'=>'numeric'
         ]);
     }
+
+
 
     public static function validateDoctoralExam(Request $request)
     {
@@ -573,9 +576,14 @@ class InscriptionService
         $finalWork['is_project']=$isProject;
         $existAdvisors= false;
         $status = 'PROGRESS';
+        $descriptionStatus = '';
         if (isset($finalWork['status'])){
             $status=$finalWork['status'];
             unset($finalWork['status']);
+        }
+        if (isset($finalWork['description_status'])){
+            $descriptionStatus=$finalWork['description_status'];
+            unset($finalWork['description_status']);
         }
         $advisors = [];
         if (isset($finalWork['advisors'])){
@@ -593,6 +601,7 @@ class InscriptionService
         $finalWork['final_work_id']=$finalWorkId;
         $finalWork['school_period_student_id']=$schoolPeriodStudentId;
         $finalWork['status']=$status;
+        $finalWork['description_status']=$descriptionStatus;
         $result = FinalWorkSchoolPeriod::addFinalWorkSchoolPeriod($finalWork);
         if (is_numeric($result)&&$result===0){
             return 0;
@@ -1192,6 +1201,7 @@ class InscriptionService
                                 return self::taskError(false,true);
                             }
                         }
+                        //dd($availableSubjects);
                         if ((isset($availableSubjects['available_project'])&&$availableSubjects['available_project']) &&
                             isset($request['projects'])){
                             $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
