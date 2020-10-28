@@ -250,7 +250,11 @@ class InscriptionService
         if (is_numeric($student)&&$student===0){
             return self::taskError($internalCall,false);
         }
-        if (count($student)>0){
+        $schoolPeriod = SchoolPeriod::getSchoolPeriodById($schoolPeriodId,$organizationId);
+        if (is_numeric($schoolPeriodId)&&$schoolPeriodId===0){
+            return self::taskError($internalCall,false);
+        }
+        if (count($student)>0 && count($schoolPeriod)>0){
             $student=$student[0];
             if ($student['current_status']!='REG' && $student['current_status']!='REI-A'
                 && $student['current_status']!='REI-B' && $student['current_status']!='RIN-A'
@@ -338,16 +342,17 @@ class InscriptionService
                             if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
                                 return self::taskError($internalCall,false);
                             }
-                            $approvedProjects= FinalWork::getFinalWorksByStudent($studentId,true);
-                            if (is_numeric($approvedProjects)&& $approvedProjects===0){
-                                return self::taskError($internalCall,false);
+                            $majorDateApproved = $project->toArray()[0]['approval_date'];
+                            foreach ($project->toArray() as $date){
+                                if ($date['approval_date']>$majorDateApproved){
+                                    $majorDateApproved=$date['approval_date'];
+                                }
                             }
-                            if (count($availableProjectSubjects)>0){
+                            if (($majorDateApproved<$schoolPeriod->toArray()[0]['start_date'] && count($availableProjectSubjects)>0)||
+                                ($student['is_available_final_work'] && count($availableProjectSubjects)>0)){
                                 $response['available_final_work']=true;
                                 $response['final_work_subjects']=$availableProjectSubjects;
-                            }
-                            if (count($approvedProjects)>0){
-                                $response['approved_projects']=$approvedProjects;
+                                $response['approved_projects']=$project;
                             }
                         }
                         if(count($project)<1){
@@ -361,32 +366,40 @@ class InscriptionService
                                 return self::taskError($internalCall,false);
                             }
                             if (count($enrolledSubjects)>0){
-                                $dataPercentageStudent=ConstanceService::statisticsDataHistorical($enrolledSubjects);
-                                $approvedDoctoralExam = DoctoralExam::existDoctoralExamApprovedByStudentInNotSchoolPeriod(
-                                    $student['id'],$schoolPeriodId);
-                                if (($schoolProgram['doctoral_exam']&&$approvedDoctoralExam)||
-                                    !$schoolProgram['doctoral_exam']){
-                                    $availableProject = self::availableProject($student,$schoolProgram,
-                                        $organizationId,$dataPercentageStudent);
-                                    if (is_numeric($availableProject)&&$availableProject===0){
-                                        return self::taskError($internalCall,false);
-                                    }
-                                    if ($availableProject){
-                                        $availableProjectSubjects = self::getAvailableFinalSubjects($student,
-                                            $schoolProgram,$organizationId,true);
-                                        if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
-                                            return self::taskError($internalCall,false);
-                                        }
-                                        if (count($availableProjectSubjects)>0){
-                                            $response['available_project']=true;
-                                            $response['project_subjects']=$availableProjectSubjects;
-                                        }
+                                $enrolledSubjectsUntilThis = []; //Toma las materias hasta el semestre antes del que estoy operando
+                                foreach($enrolledSubjects->toArray() as $schoolPeriodSubject) {
+                                    if ($schoolPeriodSubject['school_period']['start_date']<$schoolPeriod->toArray()[0]['start_date']){
+                                        $enrolledSubjectsUntilThis[] = $schoolPeriodSubject;
                                     }
                                 }
-                                if ($schoolProgram['doctoral_exam']&&!$approvedDoctoralExam&&
-                                    ($dataPercentageStudent['enrolled_credits']+$student['credits_granted']>=
-                                        $schoolProgram['num_cu_to_doctoral_exam'])){
-                                    $response['available_doctoral_exam']=true;
+                                if (count($enrolledSubjectsUntilThis)>0){
+                                    $dataPercentageStudent=ConstanceService::statisticsDataHistorical($enrolledSubjectsUntilThis);
+                                    $approvedDoctoralExam = DoctoralExam::existDoctoralExamApprovedByStudentInNotSchoolPeriod(
+                                        $student['id'],$schoolPeriodId);
+                                    if (($schoolProgram['doctoral_exam']&&$approvedDoctoralExam)||
+                                        !$schoolProgram['doctoral_exam']){
+                                        $availableProject = self::availableProject($student,$schoolProgram,
+                                            $organizationId,$dataPercentageStudent);
+                                        if (is_numeric($availableProject)&&$availableProject===0){
+                                            return self::taskError($internalCall,false);
+                                        }
+                                        if ($availableProject){
+                                            $availableProjectSubjects = self::getAvailableFinalSubjects($student,
+                                                $schoolProgram,$organizationId,true);
+                                            if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
+                                                return self::taskError($internalCall,false);
+                                            }
+                                            if (count($availableProjectSubjects)>0){
+                                                $response['available_project']=true;
+                                                $response['project_subjects']=$availableProjectSubjects;
+                                            }
+                                        }
+                                    }
+                                    if ($schoolProgram['doctoral_exam']&&!$approvedDoctoralExam&&
+                                        ($dataPercentageStudent['enrolled_credits']+$student['credits_granted']>=
+                                            $schoolProgram['num_cu_to_doctoral_exam'])){
+                                        $response['available_doctoral_exam']=true;
+                                    }
                                 }
                             }
 
