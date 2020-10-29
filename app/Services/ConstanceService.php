@@ -175,7 +175,7 @@ class ConstanceService
         $enrolledCredits=0;
         $cumulativeNotes=0;
         $cantSubjects=0;
-        foreach ($historical->toArray() as $schoolPeriod){
+        foreach ($historical as $schoolPeriod){
             foreach ($schoolPeriod['enrolled_subjects'] as $inscription){
                 if ($inscription['qualification']){
                     $enrolledCredits+=$inscription['data_subject']['subject']['uc'];
@@ -240,7 +240,7 @@ class ConstanceService
                     }
                     if (count($studentSubject)>0){
                         $data['historical_data']=$studentSubject;
-                        $data['percentage_data']=self::statisticsDataHistorical($studentSubject);
+                        $data['percentage_data']=self::statisticsDataHistorical($studentSubject->toArray());
                     } else {
                         $data['historical_data']=[];
                         $dataHistorical['enrolled_credits']=0;
@@ -486,7 +486,7 @@ class ConstanceService
                     }
                 }
                 $data['enrolled_subjects']=$enrolledSubjects->toArray();
-                $data['percentage_data']=self::statisticsDataHistorical($enrolledSubjects);
+                $data['percentage_data']=self::statisticsDataHistorical($enrolledSubjects->toArray());
                 if ($getData==="1"){
                     return $data;
                 }

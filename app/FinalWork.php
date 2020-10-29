@@ -26,6 +26,11 @@ class FinalWork extends Model
             ->with('user');
     }
 
+    public function subject()
+    {
+        return $this->belongsTo('App\Subject');
+    }
+
     public static function existNotApprovedFinalWork($studentId, $isProject)
     {
         try{

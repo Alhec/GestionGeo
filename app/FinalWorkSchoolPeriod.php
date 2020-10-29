@@ -15,7 +15,8 @@ class FinalWorkSchoolPeriod extends Model
     public function finalWork()
     {
         return $this->belongsTo('App\FinalWork')
-            ->with('teachers');
+            ->with('teachers')
+            ->with('subject');
     }
 
     public static function addFinalWorkSchoolPeriod($finalWorkSchoolPeriod)

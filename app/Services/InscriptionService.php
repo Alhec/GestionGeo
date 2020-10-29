@@ -1214,7 +1214,6 @@ class InscriptionService
                                 return self::taskError(false,true);
                             }
                         }
-                        //dd($availableSubjects);
                         if ((isset($availableSubjects['available_project'])&&$availableSubjects['available_project']) &&
                             isset($request['projects'])){
                             $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
