@@ -640,7 +640,7 @@ class InscriptionService
     public static function updateFinalWork($studentId, $finalWork, $schoolPeriodStudentId, $isProject, $finalWorkInBd)
     {
         $existProject = false;
-        if (!$isProject){
+        if (!$isProject && isset($finalWork['project_id'])){
             $project = FinalWork::existFinalWorkByIdAndStatus($finalWork['project_id'],true,'APPROVED');
             if (is_numeric($project)&&$project===0){
                 return 0;
@@ -1214,20 +1214,57 @@ class InscriptionService
                                 return self::taskError(false,true);
                             }
                         }
-                        if ((isset($availableSubjects['available_project'])&&$availableSubjects['available_project']) &&
-                            isset($request['projects'])){
-                            $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
-                                $id, true, $availableSubjects['project_subjects'],$organizationId);
+                        if (isset($request['projects'])){
+                            $projectSubjects = [];
+                            if (!is_numeric($availableSubjects) && isset($availableSubjects['project_subjects'])){
+                                if (!is_array($availableSubjects['project_subjects'])){
+                                    $projectSubjects = $availableSubjects['project_subjects']->toArray();
+                                }else{
+                                    $projectSubjects = $availableSubjects['project_subjects'];
+                                }
+                            }
+                            $enrolledProjects = FinalWork::getFinalWorksByStudent($request['student_id'],true);
+                            if (is_numeric($enrolledProjects)&&$enrolledProjects===0){
+                                return self::taskError(false,true);
+                            }
+                            foreach ($enrolledProjects->toArray() as $project){
+                                if ($project['approval_date']!=null){
+                                    $aux = new \stdClass();
+                                    $aux->id = $project['subject_id'];
+                                    $projectSubjects[]=[$aux];
+                                }
+                            }
+                            if((isset($availableSubjects['available_project'])&&$availableSubjects['available_project'])
+                                || count($projectSubjects)>0 ){
+                                $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
+                                    $id, true, $projectSubjects,$organizationId);
+                            }
                         }
-                        if ((isset($availableSubjects['approved_projects'])&&$availableSubjects['approved_projects']) &&
-                            isset($request['projects'])){
-                            $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
-                                $id, true, $availableSubjects['approved_projects']->toArray(),$organizationId);
-                        }
-                        if ((isset($availableSubjects['available_final_work'])&&
-                            $availableSubjects['available_final_work']) && isset($request['final_works'])){
-                            $result = self::setProjectsOrFinalWorks($student[0]['id'],$request['final_works'],
-                                $id,false, $availableSubjects['final_work_subjects'],$organizationId);
+                        if (isset($request['final_works'])){
+                            $finalWorkSubjects = [];
+                            if (!is_numeric($availableSubjects) && isset($availableSubjects['final_work_subjects'])){
+                                if (!is_array($availableSubjects['final_work_subjects'])){
+                                    $finalWorkSubjects = $availableSubjects['final_work_subjects']->toArray();
+                                }else{
+                                    $finalWorkSubjects = $availableSubjects['final_work_subjects'];
+                                }
+                            }
+                            $enrolledFinalWorks = FinalWork::getFinalWorksByStudent($request['student_id'],false);
+                            if (is_numeric($finalWorkSubjects)&&$finalWorkSubjects===0){
+                                return self::taskError(false,true);
+                            }
+                            foreach ($enrolledFinalWorks->toArray() as $finalWork){
+                                if ($finalWork['approval_date']!=null){
+                                    $aux = new \stdClass();
+                                    $aux->id = $finalWork['subject_id'];
+                                    $finalWorkSubjects[]=[$aux];
+                                }
+                            }
+                            if ((isset($availableSubjects['available_final_work'])&&
+                                $availableSubjects['available_final_work']) || count($finalWorkSubjects)>0){
+                                $result = self::setProjectsOrFinalWorks($student[0]['id'],$request['final_works'],
+                                    $id,false, $finalWorkSubjects,$organizationId);
+                            }
                         }
                         if ((isset($availableSubjects['available_project']) && ($availableSubjects['available_project'])
                                 && !isset($request['projects']) && (isset($availableSubjects['available_final_work']) &&
