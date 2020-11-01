@@ -328,15 +328,16 @@ class InscriptionService
                         $response['available_subjects']=[];
                     }
                     if ($schoolProgram['conducive_to_degree']){ // a partir de aqui disponibilidad de trabajo final o proyecto
+                        $projectsInSchoolProgram = Subject::getProjectBySchoolProgram($schoolProgram['id'],$organizationId); //obtener todas las materias de tipo proyecto que estan disponibles en el programa
                         $project = FinalWork::getFinalWorksByStudent($studentId, true);
-                        if (is_numeric($project)&&$project===0){
+                        if ((is_numeric($project)&&$project===0)||(is_numeric($projectsInSchoolProgram)&&$projectsInSchoolProgram===0)){
                             return self::taskError($internalCall,false);
                         }
                         $notApprovedProject = FinalWork::existNotApprovedFinalWork($studentId, true);
                         if(is_numeric($notApprovedProject)&&$notApprovedProject===0){
                             return self::taskError($internalCall,false);
                         }
-                        if ((!$notApprovedProject && count($project)>0)||$student['is_available_final_work']){
+                        if ((!$notApprovedProject && count($project)===count($projectsInSchoolProgram))||$student['is_available_final_work']){
                             $availableProjectSubjects = self::getAvailableFinalSubjects($student,
                                 $schoolProgram,$organizationId,false);
                             if (is_numeric($availableProjectSubjects)&& $availableProjectSubjects===0){
@@ -355,7 +356,7 @@ class InscriptionService
                                 $response['approved_projects']=$project;
                             }
                         }
-                        if(count($project)<1){
+                        if(count($project)!==count($projectsInSchoolProgram)){
                             $notApprovedProject=true;
                         }
 
@@ -464,8 +465,6 @@ class InscriptionService
             'final_works.*.advisors.*.teacher_id'=>'numeric'
         ]);
     }
-
-
 
     public static function validateDoctoralExam(Request $request)
     {
@@ -761,7 +760,7 @@ class InscriptionService
                         if (is_numeric($student)&&$student===0){
                             return 0;
                         }
-                        $student[0]['status']='ENDED';
+                        $student[0]['current_status']='ENDED';
                         $student[0]['end_program']=true;
                         $result=Student::updateStudent($studentId,$student[0]->toArray());
                         if (is_numeric($result)&&$result==0){
@@ -1238,6 +1237,11 @@ class InscriptionService
                                 || count($projectSubjects)>0 ){
                                 $result =self::setProjectsOrFinalWorks($student[0]['id'],$request['projects'],
                                     $id, true, $projectSubjects,$organizationId);
+                            }
+                        }else{
+                            $result = self::deleteFinalWorkSchoolPeriodNotUpdate([],$id);
+                            if (is_numeric($result)&&$result===0){
+                                return self::taskError(false,true);
                             }
                         }
                         if (isset($request['final_works'])){
