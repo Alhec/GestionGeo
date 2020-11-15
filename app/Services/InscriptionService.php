@@ -280,7 +280,7 @@ class InscriptionService
                 if (is_numeric($thereIsUnpaidSchoolPeriod)&&$thereIsUnpaidSchoolPeriod===0){
                     return self::taskError($internalCall,false);
                 }
-                if (!$thereIsUnpaidSchoolPeriod){
+                if (!$thereIsUnpaidSchoolPeriod || auth()->payload()['user']->user_type=='A'){
                     $response = [];
                     $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod(
                         $schoolPeriodId);
@@ -931,7 +931,7 @@ class InscriptionService
                             if ($availableSubjects===3){
                                 return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
                             }
-                            if ($availableSubjects===4){
+                            if ($availableSubjects===4 && auth()->payload()['user']->user_type!=='A'){
                                 return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
                             }
                             if ($availableSubjects===5){
@@ -1182,7 +1182,7 @@ class InscriptionService
                             if ($availableSubjects===2){
                                 return response()->json(['message' => self::endProgram], 206);
                             }
-                            if ($availableSubjects===4){
+                            if ($availableSubjects===4 && auth()->payload()['user']->user_type!=='A'){
                                 return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
                             }
                             if ($availableSubjects===5){
