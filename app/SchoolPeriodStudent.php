@@ -155,6 +155,7 @@ class SchoolPeriodStudent extends Model
         try{
             return self::where('student_id',$studentId)
                 ->where('school_period_id',$schoolPeriodId)
+                ->with('schoolPeriod')
                 ->with('enrolledSubjects')
                 ->get();
         }catch (\Exception $e){
