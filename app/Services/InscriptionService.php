@@ -1391,8 +1391,8 @@ class InscriptionService
             }
             if (count($currentSchoolPeriod)>0){
                 $inscription = SchoolPeriodStudent::findSchoolPeriodStudent($studentId,$currentSchoolPeriod[0]['id']);
-                $finalWork = FinalWork::getFinalWorkByStudent($studentId,false);
-                $project = FinalWork::getFinalWorkByStudent($studentId,true);
+                $finalWork = FinalWork::getFinalWorksByStudent($studentId,false);
+                $project = FinalWork::getFinalWorksByStudent($studentId,true);
                 if (is_numeric($inscription)&&$inscription===0 || is_numeric($finalWork)&&$finalWork===0 ||
                     is_numeric($project)&&$project===0 ){
                     return self::taskError(false,false);
