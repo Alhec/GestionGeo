@@ -39,7 +39,7 @@ Route::middleware('jwt.auth','role:A')->delete('administrators/{id}','Administra
 
 //Teacher
 Route::middleware('jwt.auth','role:A')->get('teachers/active','TeacherController@active');
-Route::middleware('jwt.auth','role:A')->get('teachers','TeacherController@index');
+Route::middleware('jwt.auth','role:A,S')->get('teachers','TeacherController@index');
 Route::middleware('jwt.auth','role:A')->post('teachers','TeacherController@store');
 Route::middleware('jwt.auth','role:A')->get('teachers/{id}','TeacherController@show');
 Route::middleware('jwt.auth','role:A')->put('teachers/{id}','TeacherController@update');

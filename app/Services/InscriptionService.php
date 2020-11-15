@@ -1354,7 +1354,7 @@ class InscriptionService
                         $projects =$request['projects'];
                         for ($i=0;$i<count($projects);$i++){
                             $project = $projects[$i];
-                            unset($project['status']);
+                            $project['status']='PROGRESS';
                             unset($project['description_status']);
                             unset($project['approval_date']);
                             $projects[$i]=$project;
@@ -1365,7 +1365,7 @@ class InscriptionService
                         $finalWorks= $request['final_works'];
                         for ($i=0;$i<count($finalWorks);$i++){
                             $finalWork = $finalWorks[$i];
-                            unset($finalWork['status']);
+                            $finalWork['status']='PROGRESS';
                             unset($finalWork['description_status']);
                             unset($finalWork['approval_date']);
                             $finalWorks[$i] = $finalWork;
