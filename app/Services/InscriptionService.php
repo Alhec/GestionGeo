@@ -377,6 +377,9 @@ class InscriptionService
                                     $dataPercentageStudent=ConstanceService::statisticsDataHistorical($enrolledSubjectsUntilThis);
                                     $approvedDoctoralExam = DoctoralExam::existDoctoralExamApprovedByStudentInNotSchoolPeriod(
                                         $student['id'],$schoolPeriodId);
+                                    if (is_numeric($approvedDoctoralExam)&&$approvedDoctoralExam===0){
+                                        return self::taskError($internalCall,false);
+                                    }
                                     if (($schoolProgram['doctoral_exam']&&$approvedDoctoralExam)||
                                         !$schoolProgram['doctoral_exam']){
                                         $availableProject = self::availableProject($student,$schoolProgram,
