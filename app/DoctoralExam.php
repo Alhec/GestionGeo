@@ -11,6 +11,7 @@ class DoctoralExam extends Model
     protected $fillable = ['school_period_student_id','status'];
     public $timestamps = ["created_at"]; //only want to used created_at column
     const UPDATED_AT = null; //and updated by default null set
+    protected $primaryKey = 'school_period_student_id';
 
     public function inscription()
     {
