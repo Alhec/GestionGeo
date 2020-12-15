@@ -22,8 +22,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'identification','first_name','second_name','first_surname','second_surname','telephone', 'mobile','work_phone',
-        'email','password','user_type','level_instruction','active','with_disabilities','sex','nationality',
-        'organization_id'
+        'email','password','level_instruction','active','with_disabilities','sex','nationality', 'organization_id'
     ];
 
     /**
@@ -81,6 +80,11 @@ class User extends Authenticatable implements JWTSubject
             ->with('schoolProgram');
     }
 
+    public function roles()
+    {
+        return $this->hasMany('App\Roles','id','id');
+    }
+
     public function administrator()
     {
         return $this->hasOne('App\Administrator','id','id');
@@ -88,9 +92,25 @@ class User extends Authenticatable implements JWTSubject
 
     public static function getUsers($userType,$organizationId)
     {
+        $users = self::where('organization_id',$organizationId)
+            ->whereHas('roles',function (Builder $query) use ($userType){
+                $query
+                    ->where('user_type','=',$userType);
+            });
+        return $users->with('administrator')
+            ->with('teacher')
+            ->with('student')
+            ->get();
         try{
-            $users = self::where('user_type',$userType)
-                ->where('organization_id',$organizationId);
+            $users = self::where('organization_id',$organizationId)
+                ->whereHas('roles',function (Builder $query) use ($userType){
+                    $query
+                        ->where('user_type','=',$userType);
+                });
+            return $users->with('administrator')
+                ->with('teacher')
+                ->with('student')
+                ->get();
             if ($userType == 'A'){
                 return $users->with('administrator')
                     ->get();

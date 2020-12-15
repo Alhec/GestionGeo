@@ -35,14 +35,13 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'jose@admin.com',
             'password' => Hash::make('24698917'),
-            'user_type' => 'A',  //S T A,
             'level_instruction'=>'Dr',
             'active'=>true,
             'sex' => 'M',
             'nationality'=>'V',
             'organization_id'=>'ICT'
         ]);
-        User::create([
+        /*User::create([
             'identification' => '24698916',
             'first_name' => 'Hector',
             'first_surname' => 'Alayon',
@@ -517,6 +516,6 @@ class UsersTableSeeder extends Seeder
             'active'=>true,
             'nationality'=>'V',
             'organization_id'=>'B',
-        ]);
+        ]);*/
     }
 }

@@ -31,7 +31,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')
                 ->nullable();
             $table->string('password',250);
-            $table->string('user_type',1);
             $table->string('level_instruction',3);
             $table->boolean('active')
                 ->default(true);
