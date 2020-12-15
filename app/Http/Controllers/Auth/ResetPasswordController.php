@@ -53,7 +53,6 @@ class ResetPasswordController extends Controller
     {
         return [
             'token' => 'required',
-            'user_type'=>'required|max:1|ends_with:A,S,T',
             'email' => 'required|max:30|email',
             'password' => 'required|confirmed',
         ];
@@ -62,7 +61,7 @@ class ResetPasswordController extends Controller
     protected function credentials(Request $request)
     {
         return $request->only(
-            'email','user_type', 'password', 'password_confirmation', 'token'
+            'email', 'password', 'password_confirmation', 'token'
         );
     }
 
@@ -70,7 +69,6 @@ class ResetPasswordController extends Controller
     {
         $request->validate( [
             'token' => 'required',
-            'user_type'=>'required|max:1|ends_with:A,S,T',
             'email' => 'required|max:30|email',
             'password' => 'required|confirmed',
         ]);
@@ -80,7 +78,7 @@ class ResetPasswordController extends Controller
                 $this->resetPassword($user, $password);
             }
         );
-        $user = User::getUserByEmail($request['email'],$request['user_type'],$request['organization_id']);
+        $user = User::getUserByEmail($request['email'],$request['organization_id']);
         if (is_numeric($user) && $user==0){
             return response()->json(['message'=>self::taskError],206);
         }

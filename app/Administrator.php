@@ -41,14 +41,19 @@ class Administrator extends Model
     public static function getPrincipalCoordinator($organizationId)
     {
         try{
-            return User::where('user_type','A')
-                ->where('organization_id',$organizationId)
+            return User::where('organization_id',$organizationId)
+                ->whereHas('roles',function (Builder $query){
+                    $query
+                        ->where('user_type','=','A');
+                })
                 ->whereHas('administrator',function (Builder $query){
                     $query
                         ->where('rol','=','COORDINATOR')
                         ->where('principal','=',1);
                 })
                 ->with('administrator')
+                ->with('teacher')
+                ->with('student')
                 ->get();
         }catch (\Exception $e){
             return 0;

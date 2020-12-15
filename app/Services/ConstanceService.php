@@ -124,9 +124,13 @@ class ConstanceService
         }
     }
 
+    public function isAdmin(){
+
+    }
     public static function constanceOfStudy($studentId,$organizationId,$getData)
     {
-        if ((auth()->payload()['user']->user_type)!='A'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol)){
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -203,7 +207,8 @@ class ConstanceService
 
     public static function inscriptionConstance($studentId,$inscriptionId,$organizationId, $getData)
     {
-        if ((auth()->payload()['user']->user_type)!='A'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol)){
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -267,7 +272,8 @@ class ConstanceService
 
     public static function constanceOfWorkTeacher($teacherId,$organizationId,$getData)
     {
-        if ((auth()->payload()['user']->user_type)!='A'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol)){
             $isValid = TeacherService::validateTeacher($teacherId,$organizationId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -324,7 +330,8 @@ class ConstanceService
 
     public static function constanceOfWorkAdministrator($administratorId,$organizationId,$getData)
     {
-        if ((auth()->payload()['user']->user_type)!='A'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol)){
             return response()->json(['message'=>'Unauthorized'],401);
         }
         $data=[];
@@ -379,7 +386,8 @@ class ConstanceService
 
     public static function academicLoad( $studentId,$organizationId,$getData)
     {
-        if ((auth()->payload()['user']->user_type)!='A'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol)){
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;
@@ -436,7 +444,8 @@ class ConstanceService
 
     public static function studentHistorical( $studentId,$organizationId,$getData)
     {
-        if ((auth()->payload()['user']->user_type)!='A'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol)){
             $isValid = StudentService::validateStudent($organizationId,$studentId);
             if ($isValid!='valid'){
                 return $isValid;

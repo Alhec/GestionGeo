@@ -21,7 +21,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'hector@admin.com',
             'password' => Hash::make('24698916'),
-            'user_type' => 'A',  //S T A,
             'level_instruction'=>'Dr',
             'active'=>true,
             'sex' => 'M',
@@ -41,20 +40,6 @@ class UsersTableSeeder extends Seeder
             'nationality'=>'V',
             'organization_id'=>'ICT'
         ]);
-        /*User::create([
-            'identification' => '24698916',
-            'first_name' => 'Hector',
-            'first_surname' => 'Alayon',
-            'mobile' => '(1234) 567-8901',
-            'email' => 'hector@admin.com',
-            'password' => Hash::make('24698916'),
-            'user_type' => 'T',  //S T A
-            'level_instruction'=>'Dr',
-            'sex' => 'M',
-            'active'=>true,
-            'nationality'=>'V',
-            'organization_id'=>'ICT',
-        ]);
         User::create([
             'identification' => '24698918',
             'first_name' => 'Felix',
@@ -62,7 +47,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'felix@teacher.com',
             'password' => Hash::make('24698918'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -76,7 +60,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'jonatan@teacher.com',
             'password' => Hash::make('24698919'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -90,7 +73,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'jean@teacher.com',
             'password' => Hash::make('24698920'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -104,7 +86,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'jeanp@teacher.com',
             'password' => Hash::make('24698921'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -118,7 +99,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'thalia@student.com',
             'password' => Hash::make('24698922'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Esp',
             'sex' => 'F',
             'active'=>true,
@@ -132,7 +112,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'adrian@student.com',
             'password' => Hash::make('24698923'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'M',
             'active'=>true,
@@ -146,7 +125,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'maria@student.com',
             'password' => Hash::make('24698924'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'F',
             'active'=>true,
@@ -160,7 +138,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'yenny@student.com',
             'password' => Hash::make('24698925'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'F',
             'active'=>true,
@@ -174,7 +151,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'erika@student.com',
             'password' => Hash::make('24698926'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'F',
             'active'=>true,
@@ -188,7 +164,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'Carolina@student.com',
             'password' => Hash::make('24698927'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'F',
             'active'=>true,
@@ -202,7 +177,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'mayra@student.com',
             'password' => Hash::make('24698928'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'F',
             'active'=>true,
@@ -216,7 +190,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'macgiver@student.com',
             'password' => Hash::make('24698929'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'M',
             'active'=>true,
@@ -230,7 +203,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'luzmar@student.com',
             'password' => Hash::make('24698930'),
-            'user_type' => 'S',  //S T A
             'level_instruction'=>'Lic',
             'sex' => 'F',
             'active'=>true,
@@ -244,7 +216,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'luis@student.com',
             'password' => Hash::make('24698931'),
-            'user_type' => 'S',
             'level_instruction'=>'Lic',
             'sex' => 'M',
             'active'=>true,
@@ -258,7 +229,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'hector@admin.com',
             'password' => Hash::make('24698916'),
-            'user_type' => 'A',  //S T A,
             'level_instruction'=>'Dr',
             'active'=>true,
             'sex' => 'M',
@@ -272,7 +242,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'jose@admin.com',
             'password' => Hash::make('24698916'),
-            'user_type' => 'A',  //S T A,
             'level_instruction'=>'Dr',
             'active'=>true,
             'sex' => 'M',
@@ -286,7 +255,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'ilich@teacher.com',
             'password' => Hash::make('24698932'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -300,7 +268,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'glory@teacher.com',
             'password' => Hash::make('24698933'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'F',
             'active'=>true,
@@ -314,7 +281,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'robert@teacher.com',
             'password' => Hash::make('24698934'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -328,7 +294,6 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'willman@teacher.com',
             'password' => Hash::make('24698935'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
@@ -342,14 +307,13 @@ class UsersTableSeeder extends Seeder
             'mobile' => '(1234) 567-8901',
             'email' => 'steven@teacher.com',
             'password' => Hash::make('24698936'),
-            'user_type' => 'T',  //S T A
             'level_instruction'=>'Dr',
             'sex' => 'M',
             'active'=>true,
             'nationality'=>'V',
             'organization_id'=>'C',
         ]);
-        User::create([
+        /*User::create([
             'identification' => '24698937',
             'first_name' => 'Samuel',
             'first_surname' => 'Bolivar',

@@ -280,7 +280,8 @@ class InscriptionService
                 if (is_numeric($thereIsUnpaidSchoolPeriod)&&$thereIsUnpaidSchoolPeriod===0){
                     return self::taskError($internalCall,false);
                 }
-                if (!$thereIsUnpaidSchoolPeriod || auth()->payload()['user']->user_type=='A'){
+                $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+                if (!$thereIsUnpaidSchoolPeriod || in_array('A',$usersRol)){
                     $response = [];
                     $subjectsInSchoolPeriod = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod(
                         $schoolPeriodId);
@@ -544,7 +545,8 @@ class InscriptionService
     public static function addSubjects($subjects,$schoolPeriodStudentId,$isWithdrawn)
     {
         foreach ($subjects as $subject){
-            if (auth()->payload()['user']->user_type!='A'){
+            $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+            if (!in_array('A',$usersRol)){
                 unset($subject['qualification']);
                 unset($subject['status']);
             }
@@ -660,7 +662,8 @@ class InscriptionService
         $existFinalWorkSchoolPeriod=false;
         $finalWork['final_work_id']=$finalWorkInBd['id'];
         $finalWork['school_period_student_id']=$schoolPeriodStudentId;
-        if (auth()->payload()['user']->user_type!='A' && $finalWork['status']!='PROGRESS'){
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        if (!in_array('A',$usersRol) && $finalWork['status']!='PROGRESS'){
             $finalWork['status']='PROGRESS';
         }
         if (!isset($finalWork['description_status'])){
@@ -934,7 +937,8 @@ class InscriptionService
                             if ($availableSubjects===3){
                                 return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
                             }
-                            if ($availableSubjects===4 && auth()->payload()['user']->user_type!=='A'){
+                            $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+                            if ($availableSubjects===4 && !in_array('A',$usersRol)){
                                 return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
                             }
                             if ($availableSubjects===5){
@@ -1185,7 +1189,8 @@ class InscriptionService
                             if ($availableSubjects===2){
                                 return response()->json(['message' => self::endProgram], 206);
                             }
-                            if ($availableSubjects===4 && auth()->payload()['user']->user_type!=='A'){
+                            $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+                            if ($availableSubjects===4 && !in_array('A',$usersRol)){
                                 return response()->json(['message'=>self::thereAreSchoolPeriodWithoutPaying],206);
                             }
                             if ($availableSubjects===5){

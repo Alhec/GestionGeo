@@ -28,7 +28,7 @@ class EmailService
         $organization=$organization[0];
         $data['name']=$user['first_name'];
         $data['organization']=$organizationId;
-        switch ($user['user_type']){
+        switch ($userType){
             case 'S':
                 $data['profile']='Estudiante';
                 break;

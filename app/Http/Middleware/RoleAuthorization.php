@@ -15,11 +15,19 @@ class RoleAuthorization
      */
     public function handle($request, Closure $next,...$roles)
     {
-        if(!in_array(auth()->payload()['user']->user_type,$roles)){
-            return response()->json(['error' => 'Unauthorized'],401);
-        }
         $organizationId = $request->header('Organization-Key');
         if (auth()->payload()['user']->organization_id!=$organizationId){
+            return response()->json(['error' => 'Unauthorized'],401);
+        }
+        $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
+        $authorized = false;
+        foreach ($usersRol as $rol){
+            if(in_array($rol,$roles)){
+                $authorized = true;
+                break;
+            }
+        }
+        if(!$authorized){
             return response()->json(['error' => 'Unauthorized'],401);
         }
         return $next($request);

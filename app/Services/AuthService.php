@@ -25,14 +25,13 @@ class AuthService
             [
                 'identification'=>$credentials['identification'],
                 'password'=>$credentials['password'],
-                'user_type'=>$credentials['user_type'],
                 'organization_id'=>$organizationId,
                 'active'=>1
             ]);
         if (!$token) {
             return response()->json(['error' => self::invalidUser], 401);
         }
-        $user=User::getUserById(auth('api')->user()['id'],$request['user_type'],$organizationId);
+        $user=User::getUserByIdWithoutFilterRol(auth('api')->user()['id'],$organizationId);
         if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],401);
         }
