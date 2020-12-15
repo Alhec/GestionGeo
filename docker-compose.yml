@@ -33,7 +33,7 @@ services:
       - gaapfc
 
   nginx:
-    image: nginx:alpine
+    image: nginx:1.15.2-alpine
     container_name: gaapfc-nginx
     restart: unless-stopped
     ports:

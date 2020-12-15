@@ -19,7 +19,7 @@ class CreateDoctoralExamsTable extends Migration
             $table->timestamps();
             $table->foreign('school_period_student_id')
                 ->references('id')
-                ->on('users')
+                ->on('school_period_student')
                 ->onDelete('cascade');
         });
     }

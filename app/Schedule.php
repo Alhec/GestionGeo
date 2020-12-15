@@ -10,6 +10,7 @@ class Schedule extends Model
     protected $fillable = ['school_period_subject_teacher_id','day','classroom','start_hour','end_hour'];
     protected $table = 'schedules';
     public $timestamps = false;
+    protected $primaryKey = 'school_period_subject_teacher_id';
 
     public static function addSchedule($schedule)
     {

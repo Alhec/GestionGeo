@@ -121,12 +121,13 @@ class SchoolPeriodSubjectTeacher extends Model
             if (is_numeric($schoolPeriodSubjectTeacher)&&$schoolPeriodSubjectTeacher==0){
                 return 0;
             }
+            $schoolPeriodSubjectTeacher = $schoolPeriodSubjectTeacher->toArray();
             $studentInSubject=StudentSubject::studentSubjectBySchoolPeriodSubjectTeacherId($id);
             if (is_numeric($studentInSubject)&&$studentInSubject==0){
                 return 0;
             }
-            $schoolPeriodSubjectTeacher->toArray()[0]['enrolled_students']= count($studentInSubject);
-            $result = self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher->toArray()[0]);
+            $schoolPeriodSubjectTeacher[0]['enrolled_students']= count($studentInSubject);
+            $result = self::updateSchoolPeriodSubjectTeacher($id,$schoolPeriodSubjectTeacher[0]);
             if (is_numeric($result)&& $result==0){
                 return 0;
             }
