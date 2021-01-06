@@ -35,4 +35,15 @@ class Teacher extends Model
             return 0;
         }
     }
+
+    public static function deleteTeacher($id)
+    {
+        try{
+            self::where('id',$id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
 }

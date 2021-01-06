@@ -9,7 +9,11 @@
 namespace App\Services;
 
 
+use App\Administrator;
 use App\Log;
+use App\Roles;
+use App\Student;
+use App\Teacher;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
@@ -79,15 +83,14 @@ class UserService
     public static function addUser(Request $request,$userType,$organizationId)
     {
         self::validate($request);
-        $existUserByIdentification=User::existUserByIdentification($request['identification'],$userType,$organizationId);
-        $existUserByEmail=User::existUserByEmail($request['email'],$userType,$organizationId);
+        $existUserByIdentification=User::existUserByIdentification($request['identification'],$organizationId);
+        $existUserByEmail=User::existUserByEmail($request['email'],$organizationId);
         if ((is_numeric($existUserByIdentification) && $existUserByIdentification==0) ||
             (is_numeric($existUserByEmail) && $existUserByEmail==0)){
             return 0;
         }
         if (!($existUserByIdentification)AND!($existUserByEmail)){
             $request['password']=Hash::make($request['identification']);
-            $request['user_type']=$userType;
             $request['active']=true;
             $request['organization_id']=$organizationId;
             $userId= User::addUser($request);
@@ -95,7 +98,7 @@ class UserService
                 return 0;
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logCreateUser.$request['first_name'].
-                ' '.$request['first_surname'].self::logRol.$request['user_type']);
+                ' '.$request['first_surname'].self::logRol.$userType);
             if (is_numeric($log)&&$log==0){
                 return 0;
             }
@@ -110,29 +113,71 @@ class UserService
         if (is_numeric($user) && $user == 0){
             return response()->json(['message'=>self::taskError],206);
         }
+        $user=$user->toArray();
         if (count($user)>0){
-            $result=User::deleteUser($userId);
-            if (is_numeric($result) && $result == 0){
-                return response()->json(['message'=>self::taskError],206);
-            }
-            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteUser.$user[0]['first_name']
-                .$user[0]['first_surname'].self::logRol.$user[0]['user_type']);
-            if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+            $usersRol = array_column($user[0]['roles'],'user_type');
+            if (count($usersRol)==1){
+                $result=User::deleteUser($userId);
+                if (is_numeric($result) && $result == 0){
+                    return response()->json(['message'=>self::taskError],206);
+                }
+                $log = Log::addLog(auth('api')->user()['id'],self::logDeleteUser.$user[0]['first_name']
+                    .$user[0]['first_surname'].self::logRol.$userType);
+                if (is_numeric($log)&&$log==0){
+                    return response()->json(['message'=>self::taskError],401);
+                }
+            }else{
+                switch ($userType){
+                    case 'A':
+                        if ($user[0]['administrator']['rol'] == 'COORDINATOR' &&
+                            $user[0]['administrator']['principal'] == false){
+                            $result = Administrator::deleteAdministrator($userId);
+                            if (is_numeric($result) && $result == 0){
+                                return response()->json(['message'=>self::taskError],206);
+                            }
+                            $result = Roles::deleteRol($userId,$userType);
+                            if (is_numeric($result) && $result == 0){
+                                return response()->json(['message'=>self::taskError],206);
+                            }
+                            break;
+                        }
+                    case 'T':
+                        $result = Teacher::deleteTeacher($userId);
+                        if (is_numeric($result) && $result == 0){
+                            return response()->json(['message'=>self::taskError],206);
+                        }
+                        $result = Roles::deleteRol($userId,$userType);
+                        if (is_numeric($result) && $result == 0){
+                            return response()->json(['message'=>self::taskError],206);
+                        }
+                        break;
+                    case 'S':
+                        $result = Student::deleteStudentsByUserId($userId);
+                        if (is_numeric($result) && $result == 0){
+                            return response()->json(['message'=>self::taskError],206);
+                        }
+                        $result = Roles::deleteRol($userId,$userType);
+                        if (is_numeric($result) && $result == 0){
+                            return response()->json(['message'=>self::taskError],206);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
             return response()->json(['message'=>self::ok]);
         }
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
-    public static function availableUser(Request $request, $userId, $userType,$organizationId)
+    public static function availableUser(Request $request, $userId,$organizationId)
     {
-        $existUserByIdentification=User::existUserByIdentification($request['identification'],$userType,$organizationId);
+        $existUserByIdentification=User::existUserByIdentification($request['identification'],$organizationId);
         if (is_numeric($existUserByIdentification) && $existUserByIdentification == 0){
             return 0;
         }
         if ($existUserByIdentification){
-            $user =User::getUserByIdentification($request['identification'],$userType,$organizationId);
+            $user =User::getUserByIdentification($request['identification'],$organizationId);
             if (is_numeric($user) && $user ==0){
                 return 0;
             }
@@ -140,12 +185,12 @@ class UserService
                 return false;
             }
         }
-        $existUserByEmail=User::existUserByEmail($request['email'],$userType,$organizationId);
+        $existUserByEmail=User::existUserByEmail($request['email'],$organizationId);
         if (is_numeric($existUserByEmail) && $existUserByEmail == 0){
             return 0;
         }
         if ($existUserByEmail){
-            $user =User::getUserByEmail($request['email'],$userType,$organizationId);
+            $user =User::getUserByEmail($request['email'],$organizationId);
             if (is_numeric($user) && $user ==0){
                 return 0;
             }
@@ -166,33 +211,32 @@ class UserService
     {
         self::validate($request);
         self::validateUpdate($request);
-        $existUserById = User::existUserById($userId,$userType,$organizationId);
+        $existUserById = User::existUserByIdWithoutFilterRol($userId,$organizationId);
         if (is_numeric($existUserById) && $existUserById == 0 ){
             return 0;
         }
         if ($existUserById){
-            $availableUser = self::availableUser($request,$userId,$userType,$organizationId);
+            $availableUser = self::availableUser($request,$userId,$organizationId);
             if (is_numeric($availableUser) && $availableUser == 0){
                 return 0;
             }
             if (!$availableUser){
                 return "busy_credential";
             }
-            $user=User::getUserById($userId,$userType,$organizationId);
+            $user=User::getUserByIdWithoutFilterRol($userId,$organizationId);
             if (is_numeric($user)&&$user == 0){
                 return 0;
             }
             if(isset($user['administrator']) && $user['administrator']['principal']){
-                $request['status']=true;
+                $request['active']=true;
             }
             $request['password']=$user[0]['password'];
-            $request['user_type']=$userType;
             $result = User::updateUser($userId,$request);
             if (is_numeric($result) && $result == 0){
                 return 0;
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateUser.$request['first_name'].
-                ' '.$request['first_surname'].self::logRol.$request['user_type']);
+                ' '.$request['first_surname'].self::logRol.$userType);
             if (is_numeric($log)&&$log==0){
                 return 0;
             }
@@ -221,7 +265,7 @@ class UserService
             return response()->json(['message'=>self::taskError],206);
         }
         $user=$user[0];
-        $availableUser = self::availableUser($request,$user['id'],$user['user_type'],$organizationId);
+        $availableUser = self::availableUser($request,$user['id'],$organizationId);
         if (is_numeric($availableUser) && $availableUser == 0){
             return response()->json(['message'=>self::taskError],206);
         }
@@ -230,7 +274,6 @@ class UserService
         }
         $request['organization_id']=$organizationId;
         $request['password']=$user['password'];
-        $request['user_type']=$user['user_type'];
         $request['activate']=$user['activate'];
         $result = User::updateUser(auth()->payload()['user']->id,$request);
         if (is_numeric($result) && $result ==0){
@@ -267,13 +310,9 @@ class UserService
         $user=$user->toArray();
         $user=$user[0];
         $user['password']=Hash::make($request['password']);
-        if ($user['user_type']=='A'){
-            unset($user['administrator']);
-        } else if ($user['user_type']=='T'){
-            unset($user['teacher']);
-        } else {
-            unset($user['student']);
-        }
+        unset($user['administrator']);
+        unset($user['teacher']);
+        unset($user['student']);
         $result = User::updateUserLikeArray(auth()->payload()['user']->id,$user);
         if (is_numeric($result) && $result ==0){
             return response()->json(['message'=>self::taskError],206);

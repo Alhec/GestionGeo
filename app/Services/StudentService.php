@@ -12,6 +12,7 @@ use App\Degree;
 use App\Equivalence;
 use App\FinalWork;
 use App\Log;
+use App\Roles;
 use App\SchoolProgram;
 use App\Student;
 use App\StudentSubject;
@@ -168,6 +169,10 @@ class StudentService
             if (is_numeric($studentId)&&$studentId==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
+            $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'S']);
+            if (is_numeric($rol)&&$rol==0){
+                return response()->json(['message'=>self::taskPartialError],401);
+            }
             $result = self::addEquivalencesAndDegrees($request,$studentId);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
@@ -250,6 +255,7 @@ class StudentService
             'is_available_final_work'=>'boolean|required',
             'test_period'=>'boolean|required',
             'current_status'=>'max:5|required|ends_with:RET-A,RET-B,DES-A,DES-B,RIN-A,RIN-B,REI-A,REI-B,REG,ENDED',//REI REINCORPORADO RIN REINGRESO
+            'allow_post_inscription'=>'boolean|required',
         ]);
     }
 
@@ -309,6 +315,7 @@ class StudentService
                 'end_program'=>$request['end_program'],
                 'test_period'=>$request['test_period'],
                 'current_status'=>$request['current_status'],
+                'allow_post_inscription'=>$request['allow_post_inscription'],
             ]);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);

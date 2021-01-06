@@ -10,6 +10,7 @@ namespace App\Services;
 
 
 use App\Log;
+use App\Roles;
 use Illuminate\Http\Request;
 use App\User;
 use App\Teacher;
@@ -38,36 +39,62 @@ class TeacherService
         ]);
     }
 
+    public static function createTeacher(Request $request,$organizationId,$user)
+    {
+        $result = Teacher::addTeacher([
+            'id'=>$user,
+            'teacher_type'=>$request['teacher_type'],
+            'dedication'=>$request['dedication'],
+            'category'=>$request['category'],
+            'home_institute'=>$request['home_institute'],
+            'country'=>$request['country'],
+        ]);
+        if (is_numeric($result)&&$result==0){
+            return response()->json(['message'=>self::taskPartialError],206);
+        }
+        $rol = Roles::addRol(['user_id'=>$user,'user_type'=>'T']);
+        if (is_numeric($rol)&&$rol==0){
+            return response()->json(['message'=>self::taskPartialError],401);
+        }
+        $log = Log::addLog(auth('api')->user()['id'],self::logCreateTeacher.$request['first_name'].
+            ' '.$request['first_surname']);
+        if (is_numeric($log)&&$log==0){
+            return response()->json(['message'=>self::taskPartialError],401);
+        }
+        $result = EmailService::userCreate($user,$organizationId,'T');
+        if ($result==0){
+            return response()->json(['message'=>self::notSendEmail],206);
+        }
+        return UserService::getUserById($user,'T',$organizationId);
+    }
+
     public static function addTeacher(Request $request,$organizationId)
     {
         self::validate($request);
         $user =UserService::addUser($request,'T',$organizationId);
         if ($user==="busy_credential"){
-            return response()->json(['message'=>self::busyCredential],206);
+            $userByCredentials = User::getUserByIdentification($request['identification'],$organizationId);
+            $userByEmail = User::getUserByEmail($request['email'],$organizationId);
+            if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
+                return response()->json(['message' => self::taskError], 206);
+            }else{
+                if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
+                    $userByCredentials[0]['identification']==$request['identification'] &&
+                    !isset($userByCredentials[0]['teacher'])){
+                    $request['active'] = $userByCredentials[0]['active'];
+                    $result = UserService::updateUser($request,$userByCredentials[0]['id'],'T',$organizationId);
+                    if(is_numeric($result)&&$result==0){
+                        return response()->json(['message' => self::taskError], 206);
+                    }
+                    return self::createTeacher($request,$organizationId,$userByCredentials[0]['id']);
+                }else{
+                    return response()->json(['message' => self::busyCredential], 206);
+                }
+            }
         }else if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],206);
         }else{
-            $result = Teacher::addTeacher([
-                'id'=>$user,
-                'teacher_type'=>$request['teacher_type'],
-                'dedication'=>$request['dedication'],
-                'category'=>$request['category'],
-                'home_institute'=>$request['home_institute'],
-                'country'=>$request['country'],
-            ]);
-            if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
-            }
-            $log = Log::addLog(auth('api')->user()['id'],self::logCreateTeacher.$request['first_name'].
-                ' '.$request['first_surname']);
-            if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
-            }
-            $result = EmailService::userCreate($user,$organizationId,'T');
-            if ($result==0){
-                return response()->json(['message'=>self::notSendEmail],206);
-            }
-            return UserService::getUserById($user,'T',$organizationId);
+            return self::createTeacher($request,$organizationId,$user);
         }
     }
 

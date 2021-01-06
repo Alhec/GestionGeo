@@ -121,6 +121,7 @@ class User extends Authenticatable implements JWTSubject
                 ->with('administrator')
                 ->with('teacher')
                 ->with('student')
+                ->with('roles')
                 ->get();
         }catch (\Exception $e){
             return 0;
@@ -158,30 +159,32 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public static function existUserByIdentification($identification,$userType,$organizationId)
+    public static function existUserByIdWithoutFilterRol($id,$organizationId)
+    {
+        try{
+            return self::where('id',$id)
+                ->where('organization_id',$organizationId)
+                ->exists();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+    public static function existUserByIdentification($identification,$organizationId)
     {
         try{
             return self::where('identification',$identification)
                 ->where('organization_id',$organizationId)
-                ->whereHas('roles',function (Builder $query) use ($userType){
-                    $query
-                        ->where('user_type','=',$userType);
-                })
                 ->exists();
         }catch (\Exception $e){
             return 0;
         }
     }
 
-    public static function existUserByEmail($email,$userType,$organizationId)
+    public static function existUserByEmail($email,$organizationId)
     {
         try{
             return self::where('email',$email)
                 ->where('organization_id',$organizationId)
-                ->whereHas('roles',function (Builder $query) use ($userType){
-                    $query
-                        ->where('user_type','=',$userType);
-                })
                 ->exists();
         }catch (\Exception $e){
             return 0;
@@ -211,15 +214,11 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public static function getUserByIdentification($identification,$userType,$organizationId)
+    public static function getUserByIdentification($identification,$organizationId)
     {
         try{
             return self::where('identification',$identification)
                 ->where('organization_id',$organizationId)
-                ->whereHas('roles',function (Builder $query) use ($userType){
-                    $query
-                        ->where('user_type','=',$userType);
-                })
                 ->get();
         }catch (\Exception $e){
             return 0;

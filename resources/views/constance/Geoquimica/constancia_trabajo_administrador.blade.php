@@ -122,9 +122,13 @@
                 {{$data['coordinator_data']['second_name']}} {{$data['coordinator_data']['first_surname']}}
                 {{$data['coordinator_data']['second_surname']}}
                 <br>
-                Coordinador del Postgrado
+                @if($data['coordinator_data']['sex']=='M')
+                    Coordinador
+                @else
+                    Coordinadora
+                @endif
                 <br>
-                En Geoquímica
+                Postgrado en Geoquímica
             </div>
         </div>
     </main>

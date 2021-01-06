@@ -7,7 +7,7 @@
     <title>Document</title>
     <style>
         body {
-            margin: 3.5cm 1cm 0.5cm 1cm;
+            margin: 0.5cm 1cm 0.5cm 1cm;
             font-size: 12pt;
         }
         .header{
@@ -117,8 +117,8 @@
                     Coordinador
                 @else
                     Coordinadora
-                @endif del Postgrado <br>
-                En Geoquímica
+                @endif  <br>
+                Postgrado en Geoquímica
             </div>
         </div>
     </main>

@@ -994,6 +994,11 @@ class InscriptionService
                         if (is_numeric($log)&&$log==0){
                             return self::taskError(false,true);
                         }
+                        $student[0]['allow_post_inscription']=false;
+                        $result = Student::updateStudent($student[0]['id'],$student[0]->toArray());
+                        if (is_numeric($result)&&$result==0){
+                            return self::taskError(false,true);
+                        }
                         return self::getInscriptionById($schoolPeriodStudentId,$organizationId);
                     }
                     return response()->json(['message' => self::notAllowedRegister], 206);
@@ -1320,12 +1325,16 @@ class InscriptionService
     {
         $isValid=StudentService::validateStudent($organizationId,$studentId);
         if ($isValid==='valid'){
+            $student = Student::getStudentById($studentId,$organizationId);
+            if (is_numeric($student)&&$student===0){
+                return self::taskError(false,false);
+            }
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if(is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
                 return self::taskError(false,false);
             }
-            if (count($currentSchoolPeriod)>0){
-                if ($currentSchoolPeriod[0]['inscription_visible']==true){
+            if (count($currentSchoolPeriod)>0 && count($student)>0){
+                if ($currentSchoolPeriod[0]['inscription_visible'] || $student[0]['allow_post_inscription']){
                     return self::getAvailableSubjects($studentId,$currentSchoolPeriod[0]['id'],$organizationId,false);
                 }
                 return response()->json(['message'=>self::notAvailableInscriptions],206);
@@ -1343,8 +1352,12 @@ class InscriptionService
             if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
                  return self::taskError(false,false);
             }
-            if (count($currentSchoolPeriod)>0){
-                if ($currentSchoolPeriod[0]['inscription_visible']==true){
+            $student = Student::getStudentById($request['student_id'],$organizationId);
+            if (is_numeric($student)&&$student===0){
+                return self::taskError(false,false);
+            }
+            if (count($currentSchoolPeriod)>0 && count($student)>0){
+                if ($currentSchoolPeriod[0]['inscription_visible'] || $student[0]['allow_post_inscription']){
                     $request['school_period_id']=$currentSchoolPeriod[0]['id'];
                     unset($request['pay_ref']);
                     unset($request['amount_paid']);

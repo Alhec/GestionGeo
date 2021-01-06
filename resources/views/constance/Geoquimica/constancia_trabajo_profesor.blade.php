@@ -170,8 +170,8 @@
                     Coordinador
                 @else
                     Coordinadora
-                @endif del Postgrado <br>
-                En Geoquímica
+                @endif   <br>
+                Postgrado en Geoquímica
             </div>
         </div>
         </div>

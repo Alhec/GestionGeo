@@ -41,6 +41,8 @@ class CreateStudentsTable extends Migration
                 ->default(false);
             $table->string('current_status',5)
                 ->default('REG');
+            $table->boolean('allow_post_inscription')
+                ->default(false);
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

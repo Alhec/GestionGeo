@@ -59,4 +59,15 @@ class Administrator extends Model
             return 0;
         }
     }
+
+    public static function deleteAdministrator($id)
+    {
+        try{
+            self::where('id',$id)
+                ->delete();
+        }catch (\Exception $e){
+            DB::rollback();
+            return 0;
+        }
+    }
 }

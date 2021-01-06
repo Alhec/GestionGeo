@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Log;
+use App\Roles;
 use Illuminate\Http\Request;
 use App\Administrator;
 use App\User;
@@ -35,6 +36,53 @@ class AdministratorService
         ]);
     }
 
+    public static function createAdmin(Request $request,$organizationId,$user)
+    {
+        if (!isset($request['principal'])){
+            $request['principal']=false;
+        }
+        if ($request['principal']&& $request['rol']=='COORDINATOR'){
+            $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
+                'id'=>auth()->payload()['user']->id,
+                'rol'=>auth()->payload()['user']->administrator->rol,
+                'principal'=>false
+            ]);
+            if(is_numeric($result) && $result==0){
+                return response()->json(['message' => self::taskError], 206);
+            }
+        }
+        if ($request['rol']=='COORDINATOR'){
+            $result = Administrator::addAdministrator([
+                'id'=>$user,
+                'rol'=>$request['rol'],
+                'principal'=>$request['principal']
+            ]);
+        }else{
+            $result = Administrator::addAdministrator([
+                'id'=>$user,
+                'rol'=>$request['rol'],
+                'principal'=>false
+            ]);
+        }
+        if(is_numeric($result) && $result==0){
+            return response()->json(['message' => self::taskPartialError], 206);
+        }
+        $rol = Roles::addRol(['user_id'=>$user,'user_type'=>'A']);
+        if (is_numeric($rol)&&$rol==0){
+            return response()->json(['message'=>self::taskPartialError],401);
+        }
+        $log = Log::addLog(auth('api')->user()['id'],self::logCreateAdmin.$request['first_name'].
+            ' '.$request['first_surname']);
+        if (is_numeric($log)&&$log==0){
+            return response()->json(['message'=>self::taskPartialError],401);
+        }
+        $result = EmailService::userCreate($user,$organizationId,'A');
+        if ($result==0){
+            return response()->json(['message'=>self::notSendEmail],206);
+        }
+        return UserService::getUserById($user,'A',$organizationId);
+    }
+
     public static function addAdministrator(Request $request,$organizationId)
     {
         self::validate($request);
@@ -47,49 +95,28 @@ class AdministratorService
         }
         $user = UserService::addUser($request,'A',$organizationId);
         if ($user==="busy_credential") {
-            return response()->json(['message' => self::busyCredential], 206);
+            $userByCredentials = User::getUserByIdentification($request['identification'],$organizationId);
+            $userByEmail = User::getUserByEmail($request['email'],$organizationId);
+            if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
+                return response()->json(['message' => self::taskError], 206);
+            }else{
+                if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
+                    $userByCredentials[0]['identification']==$request['identification'] &&
+                    !isset($userByCredentials[0]['administrator'])){
+                    $request['active'] = $userByCredentials[0]['active'];
+                    $result = UserService::updateUser($request,$userByCredentials[0]['id'],'A',$organizationId);
+                    if(is_numeric($result)&&$result==0){
+                        return response()->json(['message' => self::taskError], 206);
+                    }
+                    return self::createAdmin($request,$organizationId,$userByCredentials[0]['id']);
+                }else{
+                    return response()->json(['message' => self::busyCredential], 206);
+                }
+            }
         }else if(is_numeric($user) && $user==0){
             return response()->json(['message' => self::taskError], 206);
         }else{
-            if (!isset($request['principal'])){
-                $request['principal']=false;
-            }
-            if ($request['principal']&& $request['rol']=='COORDINATOR'){
-                $result = Administrator::updateAdministrator(auth()->payload()['user']->id, [
-                    'id'=>auth()->payload()['user']->id,
-                    'rol'=>auth()->payload()['user']->administrator->rol,
-                    'principal'=>false
-                ]);
-                if(is_numeric($result) && $result==0){
-                    return response()->json(['message' => self::taskError], 206);
-                }
-            }
-            if ($request['rol']=='COORDINATOR'){
-                $result = Administrator::addAdministrator([
-                    'id'=>$user,
-                    'rol'=>$request['rol'],
-                    'principal'=>$request['principal']
-                ]);
-            }else{
-                $result = Administrator::addAdministrator([
-                    'id'=>$user,
-                    'rol'=>$request['rol'],
-                    'principal'=>false
-                ]);
-            }
-            if(is_numeric($result) && $result==0){
-                return response()->json(['message' => self::taskPartialError], 206);
-            }
-            $log = Log::addLog(auth('api')->user()['id'],self::logCreateAdmin.$request['first_name'].
-                ' '.$request['first_surname']);
-            if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
-            }
-            $result = EmailService::userCreate($user,$organizationId,'A');
-            if ($result==0){
-                return response()->json(['message'=>self::notSendEmail],206);
-            }
-            return UserService::getUserById($user,'A',$organizationId);
+            return self::createAdmin($request,$organizationId,$user);
         }
     }
 
