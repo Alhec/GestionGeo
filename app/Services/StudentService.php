@@ -134,6 +134,32 @@ class StudentService
         return true;
     }
 
+    public static function createStudent(Request $request, $organizationId, $userId)
+    {
+        $studentId=self::addStudent($userId,$request);
+        if (is_numeric($studentId)&&$studentId==0){
+            return response()->json(['message'=>self::taskPartialError],206);
+        }
+        $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'S']);
+        if (is_numeric($rol)&&$rol==0){
+            return response()->json(['message'=>self::taskPartialError],401);
+        }
+        $result = self::addEquivalencesAndDegrees($request,$studentId);
+        if (is_numeric($result)&&$result==0){
+            return response()->json(['message'=>self::taskPartialError],206);
+        }
+        $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
+            ' '.$request['first_surname']);
+        if (is_numeric($log)&&$log==0){
+            return response()->json(['message'=>self::taskPartialError],401);
+        }
+        $result = EmailService::userCreate($userId,$organizationId,'S');
+        if ($result==0){
+            return response()->json(['message'=>self::notSendEmail],206);
+        }
+        return UserService::getUserById($userId,'S',$organizationId);
+    }
+
     public static function addNewStudent(Request $request,$organizationId)
     {
         self::validateSchoolProgramId($request);
@@ -161,32 +187,28 @@ class StudentService
         }
         $userId = UserService::addUser($request,'S',$organizationId);
         if (is_string($userId)&&$userId =='busy_credential'){
-            return response()->json(['message'=>self::busyCredential],206);
+            $userByCredentials = User::getUserByIdentification($request['identification'],$organizationId);
+            $userByEmail = User::getUserByEmail($request['email'],$organizationId);
+            if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
+                return response()->json(['message' => self::taskError], 206);
+            }else{
+                if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
+                    $userByCredentials[0]['identification']==$request['identification'] &&
+                    !isset($userByCredentials[0]['student'])){
+                    $request['active'] = $userByCredentials[0]['active'];
+                    $result = UserService::updateUser($request,$userByCredentials[0]['id'],'S',$organizationId);
+                    if(is_numeric($result)&&$result==0){
+                        return response()->json(['message' => self::taskError], 206);
+                    }
+                    return self::createStudent($request,$organizationId,$userByCredentials[0]['id']);
+                }else{
+                    return response()->json(['message' => self::busyCredential], 206);
+                }
+            }
         }else if (is_numeric($userId)&&$userId==0){
             return response()->json(['message'=>self::taskError],206);
         }else{
-            $studentId=self::addStudent($userId,$request);
-            if (is_numeric($studentId)&&$studentId==0){
-                return response()->json(['message'=>self::taskPartialError],206);
-            }
-            $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'S']);
-            if (is_numeric($rol)&&$rol==0){
-                return response()->json(['message'=>self::taskPartialError],401);
-            }
-            $result = self::addEquivalencesAndDegrees($request,$studentId);
-            if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
-            }
-            $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
-                ' '.$request['first_surname']);
-            if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
-            }
-            $result = EmailService::userCreate($userId,$organizationId,'S');
-            if ($result==0){
-                return response()->json(['message'=>self::notSendEmail],206);
-            }
-            return UserService::getUserById($userId,'S',$organizationId);
+            return self::createStudent($request,$organizationId,$userId);
         }
     }
 

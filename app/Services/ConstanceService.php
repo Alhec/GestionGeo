@@ -124,9 +124,6 @@ class ConstanceService
         }
     }
 
-    public function isAdmin(){
-
-    }
     public static function constanceOfStudy($studentId,$organizationId,$getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
