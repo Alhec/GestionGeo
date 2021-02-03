@@ -6,13 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @package : Model
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class Subject extends Model
 {
+    /**
+     * Omite los campos de fecha de creado y modificado en las tablas
+     *
+     */
+    public $timestamps = false;
+
+    /**
+     * Los atributos que se pueden asignar en masa.
+     *
+     * @var array
+     */
     protected $fillable = ['code','name','uc','is_final_subject','is_project_subject','theoretical_hours',
         'practical_hours','laboratory_hours'];
 
-    public $timestamps = false;
-
+    /**
+     *Asociación de la relación schoolPrograms con subject
+     */
     public function schoolPrograms()
     {
         return $this->belongsToMany('App\SchoolProgram','school_program_subject')
@@ -20,6 +37,12 @@ class Subject extends Model
             ->withPivot('type','subject_group');
     }
 
+    /**
+     *Obtiene las materias presentes en una organización
+     * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
+     * @return integer|array|object Lista las materias de todos los programas escolares asociadas a una organización.
+     */
     public static function getSubjects($organizationId, $perPage=0){
         try{
             if ($perPage == 0){
@@ -43,6 +66,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene una materia dado su id en una organización
+     * @param string $id Id de la materia
+     * @param string $organizationId Id de la organiación
+     * @return Subject|integer Devuelve una materia dado su id en una organización.
+     */
     public static function getSubjectById($id,$organizationId){
         try{
             return self::where('id',$id)
@@ -57,6 +86,13 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Valida si existe una materia dado su codigo en una organización
+     * @param string $code Código de la materia
+     * @param string $organizationId Id de la organiación
+     * @return bool|integer Devuelve true si el código de la materia está presente en la organización de lo contrario
+     * será false.
+     */
     public static function existSubjectByCode($code,$organizationId){
         try{
             return self::where('code',$code)
@@ -72,6 +108,11 @@ class Subject extends Model
 
     }
 
+    /**
+     *Crea una materia en el sistema
+     * @param mixed $subject Objeto de tipo subject (contiene los atributos del modelo)
+     * @return integer Crea una materia de ser exitosa devolverá su id, si falla devolverá 0.
+     */
     public static function addSubject($subject)
     {
         try{
@@ -83,6 +124,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene una materia dado su code en una organización
+     * @param string $code Código de la materia
+     * @param string $organizationId Id de la organiación
+     * @return Subject|integer Obtiene la materia asociada al código en la organización.
+     */
     public static function getSubjectByCode($code,$organizationId)
     {
         try{
@@ -99,6 +146,13 @@ class Subject extends Model
 
     }
 
+    /**
+     *Valida si existe una materia dado su id en una organización
+     * @param string $id Id de la materia
+     * @param string $organizationId Id de la organiación
+     * @return bool|integer Devuelve true si el id de la materia está presente en la organización de lo contrario
+     * será false.
+     */
     public static function existSubjectById($id,$organizationId)
     {
         try{
@@ -114,6 +168,11 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Elimina una materia en el sistema
+     * @param integer $id Id de la materia
+     * @return integer Elimina una materia dado su id, si falla devolverá 0.
+     */
     public static function deleteSubject($id)
     {
         try{
@@ -125,6 +184,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Actualiza una materia dado su id en el sistema
+     * @param integer $id Id del usuario
+     * @param mixed $subject Objeto de tipo subject (contiene los atributos del modelo)
+     * @return integer Actualiza los datos de una materia dado su id.
+     */
     public static function updateSubject($id,$subject)
     {
         try{
@@ -136,6 +201,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Actualiza una materia dado su id en el sistema
+     * @param integer $id Id del usuario
+     * @param mixed $subject Array con los atributos del objeto subject
+     * @return integer Actualiza los datos de una materia dado su id.
+     */
     public static function updateSubjectLikeArray($id,$subject)
     {
         self::find($id)
@@ -147,6 +218,13 @@ class Subject extends Model
             return 0;
         }
     }
+
+    /**
+     *Obtiene las materias presentes en un programa escolar de una organización
+     * @param string $schoolProgramId Id del programa escolar
+     * @param string $organizationId Id de la organiación
+     * @return integer|Subject Devuelve las materias asociadas a un programa escolar en una organización.
+     */
     public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId){
         try{
             return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
@@ -160,6 +238,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene las materias de tipo proyecto en un programa escolar de una organización
+     * @param string $schoolProgramId Id del programa escolar
+     * @param string $organizationId Id de la organiación
+     * @return integer|Subject Devuelve la(s) materia proyecto de acuerdo al programa escolar en la organización.
+     */
     public static function getProjectBySchoolProgram($schoolProgramId,$organizationId)
     {
         try{
@@ -175,6 +259,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene las materias de tipo finalWork en un programa escolar de una organización
+     * @param string $schoolProgramId Id del programa escolar
+     * @param string $organizationId Id de la organiación
+     * @return integer|Subject Devuelve la materia de trabajo final de acuerdo al programa escolar en la organización
+     */
     public static function getFinalWorkBySchoolProgram($schoolProgramId, $organizationId)
     {
         try{
@@ -190,6 +280,13 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene una materia dado su id en una organización
+     * @param string $id Id de la materia
+     * @param string $organizationId Id de la organiación
+     * @return Subject|integer Devuelve una materia dado su id en una organización sin relación con algun programa
+     * escolar.
+     */
     public static function getSimpleSubjectById($id,$organizationId){
         try{
             return self::where('id',$id)
@@ -203,6 +300,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene las materias que no son de proyecto o de trabajo de grado presentes en una organización
+     * @param string $organizationId Id de la organiación
+     * @return integer|object Lista las materias de todos los programas escolares asociadas a una organización sin los
+     * programas escolares y proyectos.
+     */
     public static function getSubjectsWithoutFinalWorks($organizationId){
         try{
             return self::with('schoolPrograms')
@@ -218,6 +321,12 @@ class Subject extends Model
         }
     }
 
+    /**
+     *Obtiene las materias que que estan en programas no conducente a grado presentes en una organización
+     * @param string $organizationId Id de la organiación
+     * @return integer|object Lista las materias de todos los programas escolares que no son conducentes a grado
+     * asociadas a una organización
+     */
     public static function getSubjectsInProgramsNotDegree($organizationId){
         try{
             return self::with('schoolPrograms')

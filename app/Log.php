@@ -30,7 +30,7 @@ class Log extends Model
     const UPDATED_AT = null; //and updated by default null set
 
     /**
-     *Crea un log asociaod a una actividad de un usuario
+     *Crea un log asociado a una actividad de un usuario
      * @param integer $userId id del usuario
      * @param string $logDescription Descripcion de la actividad
      * @return integer Crea un log de actividad asociado a un usuario, si falla devolverá 0

@@ -40,7 +40,7 @@ class Degree extends Model
     protected $primaryKey = 'student_id';
 
     /**
-     *Crea una asociacion teacher a un usuario
+     *Crea una asociacion degree a un estudiante
      * @param mixed $degree Objeto de tipo degree (contiene los atributos del modelo)
      * @return integer Crea un grado con un estudiante asociado, si falla devolverá 0.
      */
@@ -55,7 +55,7 @@ class Degree extends Model
     }
 
     /**
-     *Elimina un administrador asociado a un usuario
+     *Elimina todos los degree asociado a un estudiante
      * @param integer $studentId: Id del estudiante
      * @return integer Elimina todos los grados asociados al id del estudiante, si falla devolverá 0.
      */

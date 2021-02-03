@@ -48,7 +48,7 @@ class Teacher extends Model
     }
 
     /**
-     *Actualiza una entidad administrator dado su id
+     *Actualiza una entidad teacher dado su id
      * @param integer $userId Id del usuario
      * @param mixed $teacher Objeto de tipo profesor (contiene los atributos del modelo)
      * @return integer Actualiza los datos de un profesor dado su id, si falla devolverá 0
@@ -66,7 +66,7 @@ class Teacher extends Model
     }
 
     /**
-     *Elimina un administrador asociado a un usuario
+     *Elimina un teacher asociado a un usuario
      * @param integer $id Id del usuario
      * @return integer Elimina la entidad teacher asociada a un usuario, si falla devolverá 0
      */
