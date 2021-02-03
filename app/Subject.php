@@ -20,14 +20,24 @@ class Subject extends Model
             ->withPivot('type','subject_group');
     }
 
-    public static function getSubjects($organizationId){
+    public static function getSubjects($organizationId, $perPage=0){
         try{
-            return self::with('schoolPrograms')
-                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                    $query
-                        ->where('organization_id','=',$organizationId);
-                })
-                ->get();
+            if ($perPage == 0){
+                return self::with('schoolPrograms')
+                    ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                        $query
+                            ->where('organization_id','=',$organizationId);
+                    })
+                    ->get();
+            }else{
+                return self::with('schoolPrograms')
+                    ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                        $query
+                            ->where('organization_id','=',$organizationId);
+                    })
+                    ->paginate($perPage);
+            }
+
         }catch (\Exception $e){
             return 0;
         }

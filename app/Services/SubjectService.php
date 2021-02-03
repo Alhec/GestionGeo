@@ -32,16 +32,22 @@ class SubjectService
     const logDeleteSubject = 'Elimino la materia ';
 
 
-    public static function getSubjects($organizationId)
+    public static function getSubjects($organizationId,$perPage=0)
     {
-        $subjects = Subject::getSubjects($organizationId);
+        $perPage == 0 ? $subjects = Subject::getSubjects($organizationId) :
+            $subjects = Subject::getSubjects($organizationId,$perPage);
         if (is_numeric($subjects)&&$subjects == 0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if (count($subjects)>0){
+        if ($perPage == 0){
+            if (count($subjects)>0){
+                return $subjects;
+            }
+            return response()->json(['message'=>self::emptySubject],206);
+        }else{
             return $subjects;
         }
-        return response()->json(['message'=>self::emptySubject],206);
+
     }
 
     public static function getSubjectById($id, $organizationId)

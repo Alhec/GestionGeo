@@ -27,12 +27,19 @@ class SchoolPeriod extends Model
             ->with('enrolledSubjects');
     }
 
-    public static function getSchoolPeriods($organizationId)
+    public static function getSchoolPeriods($organizationId, $perPage=0)
     {
         try{
-            return self::where('organization_id',$organizationId)
-                ->with('subjects')
-                ->get();
+            if ($perPage == 0){
+                return self::where('organization_id',$organizationId)
+                    ->with('subjects')
+                    ->get();
+            }else{
+                return self::where('organization_id',$organizationId)
+                    ->with('subjects')
+                    ->paginate($perPage);
+            }
+
         }catch (\Exception $e){
             return 0;
         }

@@ -14,8 +14,10 @@ class SubjectController extends Controller
      */
     public function index(Request $request)
     {
-       $organizationId = $request->header('Organization-Key');
-       return SubjectService::getSubjects($organizationId);
+        $organizationId = $request->header('Organization-Key');
+        $perPage = $request->input('per_page');
+        return $perPage ? SubjectService::getSubjects($organizationId,$perPage) :
+            SubjectService::getSubjects($organizationId);
     }
 
     /**

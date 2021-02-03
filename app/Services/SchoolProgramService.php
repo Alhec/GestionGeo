@@ -19,16 +19,21 @@ class SchoolProgramService
     const logUpdateSchoolProgram = 'Actualizo el programa escolar ';
     const logDeleteSchoolProgram = 'Elimino el programa escolar ';
 
-    public static function getSchoolProgram($organizationId)
+    public static function getSchoolProgram($organizationId,$perPage=0)
     {
-        $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId);
+        $perPage == 0 ? $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId):
+            $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId,$perPage);
         if (is_numeric($schoolPrograms)&&$schoolPrograms == 0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if (count($schoolPrograms)>0){
+        if ($perPage == 0) {
+            if (count($schoolPrograms)>0){
+                return $schoolPrograms;
+            }
+            return response()->json(['message'=>self::emptyProgram],206);
+        }else{
             return $schoolPrograms;
         }
-        return response()->json(['message'=>self::emptyProgram],206);
     }
 
     public static function getSchoolProgramById($id,$organizationId)

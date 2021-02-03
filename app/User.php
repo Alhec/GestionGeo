@@ -9,14 +9,28 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
 use App\Notifications\CustomResetPassword;
-use Illuminate\Support\Facades\Password;
 
+/**
+ * @package : Model
+ * @author : Hector Alayon
+ * @version : 1.0
+*/
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
-    public $timestamps = false;
+
     /**
-     * The attributes that are mass assignable.
+     * Usa notificable.
+     */
+    use Notifiable;
+
+    /**
+     * Omite los campos de fecha de creado y modificado en las tablas
+     *
+     */
+    public $timestamps = false;
+
+    /**
+     * Los atributos que se pueden asignar en masa.
      *
      * @var array
      */
@@ -26,7 +40,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * Los atributos que deben ocultarse para los Array.
      *
      * @var array
      */
@@ -35,7 +49,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * Los atributos que se deben convertir en tipos nativos.
      *
      * @var array
      */
@@ -44,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
+     * Obtiene el identificador que se almacenará en la declaración de asunto del JWT.
      *
      * @return mixed
      */
@@ -55,7 +69,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
+     * Devuelve un array de valores clave, que contiene cualquier reclamación personalizada que se añada al JWT.
      *
      * @return array
      */
@@ -66,11 +80,17 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    /**
+     *Asociación de la relación teacher con user
+    */
     public function teacher()
     {
         return $this->hasOne('App\Teacher','id','id');
     }
 
+    /**
+     *Asociación de la relación student con user
+     */
     public function student()
     {
         return $this->hasMany('App\Student')
@@ -80,17 +100,31 @@ class User extends Authenticatable implements JWTSubject
             ->with('schoolProgram');
     }
 
+    /**
+     *Asociación de la relación roles con user
+     */
     public function roles()
     {
         return $this->hasMany('App\Roles','user_id','id');
     }
 
+    /**
+     *Asociación de la relación administrator con user
+     */
     public function administrator()
     {
         return $this->hasOne('App\Administrator','id','id');
     }
 
-    public static function getUsers($userType,$organizationId)
+    /**
+     *Obtiene los usuarios de una organización
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
+     * @return User|integer De acuerdo al tipo de usuario, devuelve todos los usuarios con su relación asociada,
+     * si falla devolverá 0
+     */
+    public static function getUsers($userType,$organizationId,$perPage=0)
     {
         try{
             $users = self::where('organization_id',$organizationId)
@@ -98,16 +132,32 @@ class User extends Authenticatable implements JWTSubject
                     $query
                         ->where('user_type','=',$userType);
                 });
-            return $users
-                ->with('administrator')
-                ->with('teacher')
-                ->with('student')
-                ->get();
+            if ($perPage == 0){
+                return $users
+                    ->with('administrator')
+                    ->with('teacher')
+                    ->with('student')
+                    ->get();
+            }else{
+                return $users
+                    ->with('administrator')
+                    ->with('teacher')
+                    ->with('student')
+                    ->paginate($perPage);
+            }
         }catch (\Exception $e){
             return 0;
         }
     }
 
+    /**
+     *Obtiene un usuario dado su id en una organización
+     * @param string $id Id del usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @return User|integer De acuerdo al tipo de usuario, devuelve al usuario con su relación asociada,
+     * si falla devolverá 0
+     */
     public static function getUserById($id,$userType,$organizationId)
     {
         try{
@@ -128,6 +178,13 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Obtiene un usuario dado su id en una organización
+     * @param string $id Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return User|integer De acuerdo al id del usuario, devuelve al usuario con su relación asociada,
+     * si falla devolverá 0
+     */
     public static function getUserByIdWithoutFilterRol($id, $organizationId)
     {
         try{
@@ -144,6 +201,13 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Valida si existe un usuario dado su id en una organización
+     * @param string $id Id del usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @return bool|integer Devuelve true si el usuario existe, false en caso contrario, si falla devolverá 0
+     */
     public static function existUserById($id,$userType,$organizationId)
     {
         try{
@@ -159,6 +223,12 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Valida si existe un usuario dado su id en una organización
+     * @param string $id Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return bool|integer Devuelve true si el usuario existe, false en caso contrario, si falla devolverá 0
+     */
     public static function existUserByIdWithoutFilterRol($id,$organizationId)
     {
         try{
@@ -169,6 +239,14 @@ class User extends Authenticatable implements JWTSubject
             return 0;
         }
     }
+
+    /**
+     *Valida si existe un usuario dado su identicación en una organización
+     * @param string $identification identificación del usuario
+     * @param string $organizationId Id de la organiación
+     * @return bool|integer Dado una identificación y organización devuelve true si el usuario existe de lo contrario
+     * será false, si falla devolverá 0
+     */
     public static function existUserByIdentification($identification,$organizationId)
     {
         try{
@@ -180,6 +258,13 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Valida si existe un usuario dado su email en una organización
+     * @param string $email correo electrónico del usuario
+     * @param string $organizationId Id de la organiación
+     * @return bool|integer Dado un correo electrónico, tipo de usuario y organización devuelve true si el usuario
+     * existe de lo contrario será false, si falla devolverá 0
+     */
     public static function existUserByEmail($email,$organizationId)
     {
         try{
@@ -191,6 +276,11 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Crea un usuario en el sistema
+     * @param mixed $user Objeto de tipo usuario (contiene los atributos del modelo)
+     * @return integer Agrega un usuario con la data del objeto $user y devuelve el id, si falla devolverá 0
+     */
     public static function addUser($user)
     {
         try{
@@ -203,6 +293,11 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Elimina un usuario en el sistema
+     * @param integer $id Id del usuario
+     * @return integer Elimina un usuario dado un id, si falla devolverá 0
+     */
     public static function deleteUser($id)
     {
         try{
@@ -214,6 +309,13 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Obtiene un usuario dado su identificación en una organización
+     * @param string $identification identificación del usuario
+     * @param string $organizationId Id de la organiación
+     * @return User|integer Obtiene un usuario dado una identificación y organización a la que pertenece,
+     * si falla devolverá 0
+     */
     public static function getUserByIdentification($identification,$organizationId)
     {
         try{
@@ -225,6 +327,13 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Obtiene un usuario dado su identificación en una organización
+     * @param string $email correo electrónico del usuario
+     * @param string $organizationId Id de la organiación
+     * @return User|integer Obtiene un usuario dado un correo electrónico y organización a la que pertenece,
+     * si falla devolverá 0
+     */
     public static function getUserByEmail($email,$organizationId)
     {
         try{
@@ -236,6 +345,12 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Actualiza un usuario dado su id en el sistema
+     * @param integer $id Id del usuario
+     * @param mixed $user Objeto de tipo usuario (contiene los atributos del modelo)
+     * @return integer Actualiza los datos del id de usuario dado con la data del objeto $user, si falla devolverá 0
+     */
     public static function updateUser($id,$user)
     {
         try{
@@ -247,6 +362,12 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     *Actualiza un usuario dado su id en el sistema
+     * @param integer $id Id del usuario
+     * @param mixed $user Objeto de tipo usuario (contiene los atributos del modelo)
+     * @return integer Actualiza los datos del id de usuario dado con la data del array $user, si falla devolverá 0
+     */
     public static function updateUserLikeArray($id,$user)
     {
         try{
@@ -259,7 +380,15 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
-    public static function getUsersActive($userType,$organizationId)
+    /**
+     *Obtiene los usuarios activos de una organización
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
+     * @return User|integer De acuerdo al tipo de usuario, devuelve todos los usuarios activos con su relación asociada,
+     * si falla devolverá 0
+     */
+    public static function getUsersActive($userType,$organizationId,$perPage=0)
     {
         try{
             $users = self::where('active',true)
@@ -268,16 +397,28 @@ class User extends Authenticatable implements JWTSubject
                     $query
                         ->where('user_type','=',$userType);
                 });
-            return $users
-                ->with('administrator')
-                ->with('teacher')
-                ->with('student')
-                ->get();
+            if ($perPage == 0){
+                return $users
+                    ->with('administrator')
+                    ->with('teacher')
+                    ->with('student')
+                    ->get();
+            }else{
+                return $users
+                    ->with('administrator')
+                    ->with('teacher')
+                    ->with('student')
+                    ->paginate($perPage);
+            }
         }catch (\Exception $e){
             return 0;
         }
     }
 
+    /**
+     *Disparador para generar la recuperación de contraseña.
+     * @param string $token Token para resetear clave
+     */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPassword($token));

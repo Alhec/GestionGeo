@@ -22,6 +22,26 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Autenticacion"},
+     *     summary="Autenticar usuario",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mostrar Autenticacion"
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error."
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $organizationId = $request->header('Organization-Key');

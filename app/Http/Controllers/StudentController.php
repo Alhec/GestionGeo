@@ -16,7 +16,9 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUsers('S',$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? UserService::getUsers('S',$organizationId,$perPage) :
+            UserService::getUsers('S',$organizationId);
     }
 
 
@@ -73,7 +75,9 @@ class StudentController extends Controller
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::activeUsers('S',$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? UserService::activeUsers('S',$organizationId,$perPage) :
+            UserService::activeUsers('S',$organizationId);
     }
 
     public function addStudentToUser($id,Request $request)

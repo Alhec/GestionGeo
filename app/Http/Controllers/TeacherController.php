@@ -16,7 +16,9 @@ class TeacherController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUsers('T',$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? UserService::getUsers('T',$organizationId,$perPage) :
+            UserService::getUsers('T',$organizationId);
     }
 
     /**
@@ -71,6 +73,8 @@ class TeacherController extends Controller
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::activeUsers('T',$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? UserService::activeUsers('T',$organizationId,$perPage) :
+            UserService::activeUsers('T',$organizationId);
     }
 }

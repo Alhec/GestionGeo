@@ -36,7 +36,9 @@ class AdministratorController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::getUsers('A',$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? UserService::getUsers('A',$organizationId,$perPage) :
+            UserService::getUsers('A',$organizationId);
     }
 
     /**
@@ -91,7 +93,9 @@ class AdministratorController extends Controller
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return UserService::activeUsers('A',$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? UserService::activeUsers('A',$organizationId,$perPage) :
+            UserService::activeUsers('A',$organizationId);
     }
 
     public function principal(Request $request)

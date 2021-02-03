@@ -35,16 +35,21 @@ class SchoolPeriodService
     const logDeleteSchoolPeriod = 'Elimino el periodo escolar ';
 
 
-    public static function getSchoolPeriods($organizationId)
+    public static function getSchoolPeriods($organizationId,$perPage=0)
     {
-        $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId);
+        $perPage == 0 ? $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId) :
+            $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId,$perPage);
         if (is_numeric($schoolPeriods)&&$schoolPeriods===0){
             return response()->json(['message' => self::taskError], 206);
         }
-        if (count($schoolPeriods)>0){
+        if ($perPage == 0){
+            if (count($schoolPeriods)>0){
+                return $schoolPeriods;
+            }
+            return response()->json(['message'=>self::emptySchoolPeriod],206);
+        }else{
             return $schoolPeriods;
         }
-        return response()->json(['message'=>self::emptySchoolPeriod],206);
     }
 
     public static function getSchoolPeriodById($id,$organizationId)

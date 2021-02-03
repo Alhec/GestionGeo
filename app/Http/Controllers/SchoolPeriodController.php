@@ -16,7 +16,10 @@ class SchoolPeriodController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return SchoolPeriodService::getSchoolPeriods($organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? SchoolPeriodService::getSchoolPeriods($organizationId,$perPage) :
+            SchoolPeriodService::getSchoolPeriods($organizationId);
+
     }
 
     /**

@@ -37,16 +37,22 @@ class UserService
     const logUpdateUser = 'Actualizo al usuario ';
     const logRol = ' con rol ';
 
-    public static function getUsers($userType,$organizationId)
+    public static function getUsers($userType,$organizationId,$perPage=0)
     {
-        $users= User::getUsers($userType,$organizationId);
+        $perPage == 0 ? $users= User::getUsers($userType,$organizationId) :
+            $users= User::getUsers($userType,$organizationId,$perPage);
         if (is_numeric($users) && $users == 0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if (count($users)>0){
+        if ($perPage == 0){
+            if (count($users)>0){
+                return $users;
+            }
+            return response()->json(['message'=>self::emptyUser],206);
+        }else{
             return $users;
         }
-        return response()->json(['message'=>self::emptyUser],206);
+
     }
 
     public static function getUserById($userId, $userType,$organizationId)
@@ -207,6 +213,7 @@ class UserService
             'active'=>'required|boolean',
         ]);
     }
+
     public static function updateUser(Request $request, $userId, $userType,$organizationId)
     {
         self::validate($request);
@@ -245,16 +252,21 @@ class UserService
         return "not_found";
     }
 
-    public static function activeUsers($userType,$organizationId)
+    public static function activeUsers($userType,$organizationId,$perPage=0)
     {
-        $users = User::getUsersActive($userType,$organizationId);
+        $perPage == 0 ? $users = User::getUsersActive($userType,$organizationId) :
+            $users = User::getUsersActive($userType,$organizationId,$perPage);
         if (is_numeric($users) && $users == 0){
             return response()->json(['message'=>self::taskError],206);
         }
-        if (count($users)>0){
+        if ($perPage == 0){
+            if (count($users)>0){
+                return $users;
+            }
+            return response()->json(['message'=>self::notFoundActiveUser],206);
+        }else{
             return $users;
         }
-        return response()->json(['message'=>self::notFoundActiveUser],206);
     }
 
     public static function changeUserData(Request $request,$organizationId)

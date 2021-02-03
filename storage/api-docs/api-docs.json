@@ -23,6 +23,23 @@
                     }
                 }
             }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autenticacion"
+                ],
+                "summary": "Autenticar usuario",
+                "operationId": "App\\Http\\Controllers\\AuthController::login",
+                "responses": {
+                    "200": {
+                        "description": "Mostrar Autenticacion"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
         }
     }
 }

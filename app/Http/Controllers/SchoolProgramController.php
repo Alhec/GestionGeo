@@ -15,7 +15,9 @@ class SchoolProgramController extends Controller
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return  SchoolProgramService::getSchoolProgram($organizationId);
+        $perPage = $request->input('per_page');
+        return  $perPage ? SchoolProgramService::getSchoolProgram($organizationId,$perPage) :
+            SchoolProgramService::getSchoolProgram($organizationId);
     }
 
     /**
