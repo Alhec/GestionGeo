@@ -4,10 +4,27 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * @package : Migration
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class CreateEquivalencesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Ejecutar migración Equivalences.
+     *
+     * Descripción: Equivalencias de materias a estudiante.
+     *
+     * Atributos:
+     *
+     * id: Id de la equivalencia (auxiliar para soportar postgres) | bigint(20) unsigned | Clave Primaria
+     *
+     * student_id: Id del estudiante asociado a la equivalencia | bigint(20) unsigned | Clave foránea(students)(id)
+     *
+     * subject_id: Id de la materia que se le asigna equivalencia | bigint(20) unsigned | Clave foránea(subjects)(id)
+     *
+     * qualification: Nota de la materia con equivalencia | int(11) - integer
      *
      * @return void
      */
@@ -30,7 +47,7 @@ class CreateEquivalencesTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revertir migración.
      *
      * @return void
      */

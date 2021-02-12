@@ -18,7 +18,7 @@ class CreateStudentsTable extends Migration
      *
      * Atributos:
      *
-     * id: Id del usuario | bigint(20) unsigned | Clave Primaria
+     * id: Id del estudiante | bigint(20) unsigned | Clave Primaria
      *
      * school_program_id: Id del programa escolar al que pertenezco | bigint(20) unsigned | Clave foránea
      * (school_programs)(id)
