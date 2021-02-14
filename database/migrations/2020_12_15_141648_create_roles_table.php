@@ -4,10 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * @package : Migration
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class CreateRolesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Ejecutar migración Logs.
+     *
+     * Descripción: Logs para documentar actividad del usuario.
+     *
+     * Atributos:
+     *
+     * id: Id de la asociación | bigint(20) unsigned | Clave Primaria
+     *
+     * user_id: Id del usuario | bigint(20) unsigned | Clave foránea(users)(id)
+     *
+     * user_type: Tipo de usuario: S: estudiante, A: administrador, T: profesor | varchar(1) - String | Longitud 1
      *
      * @return void
      */
@@ -25,7 +40,7 @@ class CreateRolesTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revertir migración.
      *
      * @return void
      */

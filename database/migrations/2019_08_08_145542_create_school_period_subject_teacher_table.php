@@ -25,7 +25,7 @@ class CreateSchoolPeriodSubjectTeacherTable extends Migration
      *
      * subject_id: Id de la materia | bigint(20) unsigned | Clave foránea(subjects)(id)
      *
-     * school_period_id: Id del periodo escolar | bigint(20) unsigned | Clave foránea(school_periods)(id)
+     * school_period_id: Id del periodo escolar | bigint(20) unsigned | Clave foránear(school_periods)(id)
      *
      * limit: Límite de estudiantes | int(11) - integer
      *

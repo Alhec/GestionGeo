@@ -20,11 +20,11 @@ class CreateLogsTable extends Migration
      *
      * id: Id del log | bigint(20) unsigned | Clave Primaria
      *
-     * user_id: Id del usuario | varchar(191) - String | Clave foránea(users)(id)
+     * user_id: Id del usuario | bigint(20) unsigned | Clave foránea(users)(id)
      *
-     * log_description: Descripción de la actividad | timestamp
+     * log_description: Descripción de la actividad | varchar(200) - String | Longitud 200
      *
-     * created_at: fecha de creación | varchar(200) - String | Longitud 200
+     * created_at: fecha de creación | timestamp
      *
      * update_at: fecha de actualización | timestamp
      *
