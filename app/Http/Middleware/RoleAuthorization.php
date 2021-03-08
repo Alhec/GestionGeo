@@ -4,13 +4,20 @@ namespace App\Http\Middleware;
 
 use Closure;
 
+/**
+ * @package : Middleware
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class RoleAuthorization
 {
     /**
-     * Handle an incoming request.
+     * Valida que el usuario realice una petición solo a su organización y permite la autorización mediante los roles
+     * que se les pase por parámetro.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     * @param  \array  $roles
      * @return mixed
      */
     public function handle($request, Closure $next,...$roles)
