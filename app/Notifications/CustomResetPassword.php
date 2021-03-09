@@ -9,6 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\ResetPassword;
 
+/**
+ * @package : Notifications
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class CustomResetPassword extends ResetPassword
 {
     use Queueable;
