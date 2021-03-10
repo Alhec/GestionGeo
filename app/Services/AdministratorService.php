@@ -13,10 +13,15 @@ use App\Roles;
 use Illuminate\Http\Request;
 use App\Administrator;
 use App\User;
+use Illuminate\Http\Response;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class AdministratorService
 {
-
     const taskError = 'No se puede proceder con la tarea';
     const busyCredential = 'Identificacion o Correo ya registrados';
     const notFoundUser = 'Usuario no encontrado';
@@ -25,9 +30,15 @@ class AdministratorService
     const unauthorized = 'Unauthorized';
     const notDeletePrincipal = 'Debe designar otro coordinador principal para poder eliminar este usuario, solo el coordinador principal puede realizar esta accion';
     const hasNotPrincipal = 'No hay coordinador principal';
-
     const logCreateAdmin = 'Creo la entidad administrator para ';
     const logUpdateAdmin = 'Actualizo la entidad administrator para ';
+
+    /**
+     *Valida que se cumpla las restricciones:
+     * *rol: requerido, máximo 11 y finaliza en COORDINATOR o SECRETARY
+     * *principal: booleano
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validate(Request $request)
     {
         $request->validate([
@@ -36,7 +47,22 @@ class AdministratorService
         ]);
     }
 
-    public static function createAdmin(Request $request,$organizationId,$user)
+    /**
+     * Agrega un usuario administrador ya sea con el sub-rol de secretario o coordinador y  se envía un correo al
+     * usuario, en caso de que el campo principal esté seteado esta acción solo la puede realizar el actual coordinador
+     * principal, y este dejara de ser coordinador principal con el método
+     * Administrator::addAdministrator([
+     * 'id'=>$user,
+     * 'rol'=>$request['rol'],
+     * 'principal'=>$request['principal']
+     * ]).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @param string $userId Id del usuario
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
+     * devolvera el objeto usuario.
+     */
+    public static function createAdmin(Request $request,$organizationId,$userId)
     {
         if (!isset($request['principal'])){
             $request['principal']=false;
@@ -53,13 +79,13 @@ class AdministratorService
         }
         if ($request['rol']=='COORDINATOR'){
             $result = Administrator::addAdministrator([
-                'id'=>$user,
+                'id'=>$userId,
                 'rol'=>$request['rol'],
                 'principal'=>$request['principal']
             ]);
         }else{
             $result = Administrator::addAdministrator([
-                'id'=>$user,
+                'id'=>$userId,
                 'rol'=>$request['rol'],
                 'principal'=>false
             ]);
@@ -67,7 +93,7 @@ class AdministratorService
         if(is_numeric($result) && $result==0){
             return response()->json(['message' => self::taskPartialError], 206);
         }
-        $rol = Roles::addRol(['user_id'=>$user,'user_type'=>'A']);
+        $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'A']);
         if (is_numeric($rol)&&$rol==0){
             return response()->json(['message'=>self::taskPartialError],401);
         }
@@ -76,13 +102,24 @@ class AdministratorService
         if (is_numeric($log)&&$log==0){
             return response()->json(['message'=>self::taskPartialError],401);
         }
-        $result = EmailService::userCreate($user,$organizationId,'A');
+        $result = EmailService::userCreate($userId,$organizationId,'A');
         if ($result==0){
             return response()->json(['message'=>self::notSendEmail],206);
         }
-        return UserService::getUserById($user,'A',$organizationId);
+        return UserService::getUserById($userId,'A',$organizationId);
     }
 
+    /**
+     * Agrega un usuario administrador ya sea con el sub-rol de secretario o coordinador y  se envía un correo al
+     * usuario, en caso de que el campo principal esté seteado esta acción solo la puede realizar el actual coordinador
+     * principal, y este dejara de ser coordinador principal con el método
+     * UserService::addUser($request,'A',$organizationId) y el método
+     * self::createAdmin($request,$organizationId,$userByCredentials[0]['id']).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response|Administrator, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto user.
+     */
     public static function addAdministrator(Request $request,$organizationId)
     {
         self::validate($request);
@@ -120,6 +157,20 @@ class AdministratorService
         }
     }
 
+    /**
+     * Edita un usuario administrador ya sea con el sub-rol de secretario o coordinador, en caso de que el campo
+     * principal esté seteado esta acción solo la puede realizar el actual coordinador principal, y este dejara de ser
+     * coordinador principal con el método UserService::updateUser($request,$id,'A',$organizationId) y el método
+     * Administrator::updateAdministrator($id, [
+     * 'id'=>$id,
+     * 'rol'=>$request['rol'],
+     * 'principal'=>$request['principal']).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $id Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return Response|Administrator, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto user.
+     */
     public static function updateAdministrator(Request $request, $id,$organizationId)
     {
         self::validate($request);
@@ -179,6 +230,14 @@ class AdministratorService
         }
     }
 
+    /**
+     * Elimina un usuario administrador con excepción del coordinador principal con el método
+     * UserService::deleteUser($id,'A',$organizationId).
+     * @param string $id Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return Response, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta devolvera
+     * Ok.
+     */
     public static function deleteAdministrator($id,$organizationId)
     {
         $administrator = User::getUserById($id,'A',$organizationId);
@@ -194,6 +253,14 @@ class AdministratorService
         return UserService::deleteUser($id,'A',$organizationId);
     }
 
+    /**
+     * Obtiene el coordinador principal de la organización usando el método
+     * Administrator::getPrincipalCoordinator($organizationId)
+     * @param string $organizationId Id de la organiación
+     * @param string $internalCall bandera para identificar si la llamada va a un controlador(0)  o un servicio(1)
+     * @return Response|string|integer, de ocurrir un error devolvera 0, si no existe un administrador principal arroja
+     * un mensaje asociado, y si se realiza de manera correcta devolvera el objeto user.
+     */
     public static function getPrincipalCoordinator($organizationId,$internalCall)
     {
         $administrator = Administrator::getPrincipalCoordinator($organizationId);
