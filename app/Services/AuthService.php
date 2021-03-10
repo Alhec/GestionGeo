@@ -8,17 +8,30 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\User;
 use App\Log;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class AuthService
 {
     const taskError = 'No se puede proceder con la tarea';
     const invalidUser='Usuario o clave errados';
-
     const logUserLogin= 'El usuario se ha autenticado';
 
+    /**
+     * Realiza la autenticacion del usuario.
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response Valida si el usuario existe y pertenece a la organización donde intenta autenticarse, si el
+     * usuario no existe devuelve un mensaje de error, de fallar consultas en base de datos no procederá con la tarea,
+     * en caso de ser exitoso genera un token y crea una sesión para el usuario autenticado.
+     */
     public static function login(Request $request,$organizationId){
         $credentials= json_decode($request->getContent(),true);
         $token = auth('api')->attempt(

@@ -16,9 +16,15 @@ use App\Student;
 use App\Teacher;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use phpDocumentor\Reflection\Types\Integer;
 
-
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class UserService
 {
     const taskError = 'No se puede proceder con la tarea';
@@ -29,7 +35,6 @@ class UserService
     const invalidPassword = 'La clave no puede ser igual a su clave anterior';
     const invalidCurrentPassword = 'Su clave actual esta errada';
     const busyCredential = 'Identificacion o Correo ya registrados';
-
     const logChangePassword = 'Realizo un cambio de contraseña';
     const logChangeUserData = 'Realizo cambios en sus datos de usuario';
     const logDeleteUser = 'Elimino al usuario ';
@@ -37,6 +42,14 @@ class UserService
     const logUpdateUser = 'Actualizo al usuario ';
     const logRol = ' con rol ';
 
+    /**
+     *Obtiene los usuarios de una organización dado su tipo de usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
+     * @return User|Response Obtiene todos los usuarios dado un tipo de usuario y una organización usando el metodo
+     * User::getUsers($userType,$organizationId).
+     */
     public static function getUsers($userType,$organizationId,$perPage=0)
     {
         $perPage == 0 ? $users= User::getUsers($userType,$organizationId) :
@@ -55,6 +68,14 @@ class UserService
 
     }
 
+    /**
+     *Obtiene el usuario dado su id, tipo de usuario y organizacion.
+     * @param string $userId Id del usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @return User|Response Obtiene el usuario dado su id, tipo de usuario y una organización usando el metodo
+     * User::getUserById($userId,$userType,$organizationId).
+     */
     public static function getUserById($userId, $userType,$organizationId)
     {
         $user = User::getUserById($userId,$userType,$organizationId);
@@ -67,6 +88,23 @@ class UserService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     *Valida que se cumpla las restricciones:
+     * *identification: requerido, máximo 20
+     * *first_name: requerido, máximo 20
+     * *second_name: máximo 20
+     * *first_surname: requerido, máximo 20
+     * *second_surname: máximo 20
+     * *telephone: máximo 15
+     * *mobile: requerido, máximo 15
+     * *work_phone: máximo 15
+     * *email: válida que sea un correo correcto, es requerido y máximo 3
+     * *level_instruction: máximo 3, es requerido y termina en TSU, TCM, Dr, Esp, Ing, MSc o Lic
+     * *with_disabilities: boolean
+     * *sex: requerido, máximo 1 y termina en M o F
+     * *nationality: requerido, máximo 1  y termina en V o E
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validate(Request $request)
     {
         $request->validate([
@@ -86,6 +124,15 @@ class UserService
         ]);
     }
 
+    /**
+     *Verifica que el correo electrónico y la identificación no estén en el sistema, de ser así crea un usuario dado el
+     * tipo de usuario y una organización usando el método User::addUser($request).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @return integer|string Agrega un usuario con la data del objeto $user y devuelve el id, si falla devolverá 0, si
+     * estan ocupadas las credenciales devolvera un string
+     */
     public static function addUser(Request $request,$userType,$organizationId)
     {
         self::validate($request);
@@ -113,6 +160,16 @@ class UserService
         return "busy_credential";
     }
 
+    /**
+     * Si el usuario tiene un solo rol en el sistema elimina un usuario dado su id, tipo de usuario y  organización
+     * usando el método User::deleteUser($userId), en caso de tener más de un rol se elimina el rol correspondiente
+     * asociado al usuario con la función de acuerdo con el rol.
+     * @param string $userId Id del usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @return Response, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta devolvera
+     * ok.
+     */
     public static function deleteUser($userId,$userType,$organizationId)
     {
         $user = User::getUserById($userId,$userType,$organizationId);
@@ -176,6 +233,14 @@ class UserService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     * Válida si la identificación y correo de un usuario están disponibles usando el id y  organización devuelve un
+     * booleano.
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $userId Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return integer|bool De estar valido devolvera true, de lo contrario sera false, de haber un error devolvera 0.
+     */
     public static function availableUser(Request $request, $userId,$organizationId)
     {
         $existUserByIdentification=User::existUserByIdentification($request['identification'],$organizationId);
@@ -207,6 +272,11 @@ class UserService
         return true;
     }
 
+    /**
+     *Valida que se cumpla las restricciones:
+     * *active: requerido, booleano
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validateUpdate(Request $request)
     {
         $request->validate([
@@ -214,6 +284,15 @@ class UserService
         ]);
     }
 
+    /**
+     * Actualiza los datos de un usuario usando el método User::updateUser($userId,$request).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $userId Id del usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @return integer|string Edita un usuario con la data del objeto $user y devuelve el id, si falla devolverá 0, si
+     * estan ocupadas las credenciales devolvera un string
+     */
     public static function updateUser(Request $request, $userId, $userType,$organizationId)
     {
         self::validate($request);
@@ -252,6 +331,14 @@ class UserService
         return "not_found";
     }
 
+    /**
+     *Obtiene los usuarios activos de una organización dado su tipo de usuario
+     * @param string $userType Tipos de usuario A,T,S
+     * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
+     * @return User|Response Obtiene todos los usuarios activos dado un tipo de usuario y una organización usando el
+    método User::getUsersActive($userType,$organizationId).
+     */
     public static function activeUsers($userType,$organizationId,$perPage=0)
     {
         $perPage == 0 ? $users = User::getUsersActive($userType,$organizationId) :
@@ -269,6 +356,14 @@ class UserService
         }
     }
 
+    /**
+     * Actualiza los datos del usuario que lo solicite con el método
+     * User::updateUser(auth()->payload()['user']->id,$request)
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta devolvera
+     * ok.
+     */
     public static function changeUserData(Request $request,$organizationId)
     {
         self::validate($request);
@@ -298,6 +393,12 @@ class UserService
         return response()->json(['message'=>self::ok],200);
     }
 
+    /**
+     *Valida que se cumpla las restricciones:
+     * *old_password: requerido
+     * *password: requerido, verificado
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validateChangePassword(Request $request)
     {
         $request->validate([
@@ -306,6 +407,14 @@ class UserService
         ]);
     }
 
+    /**
+     * Actualiza la clave del usuario que lo solicite y verifique que la clave no sea igual a la clave anterior con el
+     * método User::updateUserLikeArray(auth()->payload()['user']->id,$user)
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta devolvera
+     * ok.
+     */
     public static function changePassword(Request $request,$organizationId)
     {
         self::validateChangePassword($request);
