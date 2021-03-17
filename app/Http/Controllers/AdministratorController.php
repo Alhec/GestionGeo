@@ -6,11 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\AdministratorService;
 
-/**
- * @OA\Info(title="API Usuarios", version="1.0")
- *
- * @OA\Server(url="http://localhost:8000")
- */
+
 
 class AdministratorController extends Controller
 {

@@ -117,7 +117,7 @@ class AdministratorService
      * self::createAdmin($request,$organizationId,$userByCredentials[0]['id']).
      * @param Request $request Objeto con los datos de la petición
      * @param string $organizationId Id de la organiación
-     * @return Response|Administrator, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
      * correcta devolvera el objeto user.
      */
     public static function addAdministrator(Request $request,$organizationId)
@@ -168,7 +168,7 @@ class AdministratorService
      * @param Request $request Objeto con los datos de la petición
      * @param string $id Id del usuario
      * @param string $organizationId Id de la organiación
-     * @return Response|Administrator, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
      * correcta devolvera el objeto user.
      */
     public static function updateAdministrator(Request $request, $id,$organizationId)

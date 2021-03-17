@@ -14,7 +14,13 @@ use App\Roles;
 use Illuminate\Http\Request;
 use App\User;
 use App\Teacher;
+use Illuminate\Http\Response;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class TeacherService
 {
     const taskError = 'No se puede proceder con la tarea';
@@ -24,10 +30,18 @@ class TeacherService
     const notSendEmail = 'No se pudo enviar el correo electronico';
     const noAction = "No esta permitido realizar esta accion";
     const unauthorized = "Unauthorized";
-
     const logCreateTeacher = 'Creo la entidad teacher para ';
     const logUpdateTeacher = 'Actualizo la entidad teacher para ';
 
+    /**
+     * Valida que se cumpla las restricciones:
+     * *teacher_type: requerido, máximo 3 y finaliza en CON, JUB, REG, OTH
+     * *dedication requerido, máximo 3 y finaliza en MT, TC, EXC y TCO
+     * *category: requerido, máximo 3 y finaliza en INS, ASI, AGR, ASO, TIT, INV
+     * *home_institute:  máximo 100
+     * *country:  máximo 20
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validate(Request $request)
     {
         $request->validate([
@@ -39,10 +53,26 @@ class TeacherService
         ]);
     }
 
-    public static function createTeacher(Request $request,$organizationId,$user)
+    /**
+     * Agrega un usuario profesor y se envía un correo al usuario, con el método
+     * Teacher::addTeacher([
+     * 'id'=>$userId,
+     * 'teacher_type'=>$request['teacher_type'],
+     * 'dedication'=>$request['dedication'],
+     * 'category'=>$request['category'],
+     * 'home_institute'=>$request['home_institute'],
+     * 'country'=>$request['country']
+     * ]).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @param string $userId Id del usuario
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
+     * devolvera el objeto usuario.
+     */
+    public static function createTeacher(Request $request,$organizationId,$userId)
     {
         $result = Teacher::addTeacher([
-            'id'=>$user,
+            'id'=>$userId,
             'teacher_type'=>$request['teacher_type'],
             'dedication'=>$request['dedication'],
             'category'=>$request['category'],
@@ -52,7 +82,7 @@ class TeacherService
         if (is_numeric($result)&&$result==0){
             return response()->json(['message'=>self::taskPartialError],206);
         }
-        $rol = Roles::addRol(['user_id'=>$user,'user_type'=>'T']);
+        $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'T']);
         if (is_numeric($rol)&&$rol==0){
             return response()->json(['message'=>self::taskPartialError],401);
         }
@@ -61,13 +91,22 @@ class TeacherService
         if (is_numeric($log)&&$log==0){
             return response()->json(['message'=>self::taskPartialError],401);
         }
-        $result = EmailService::userCreate($user,$organizationId,'T');
+        $result = EmailService::userCreate($userId,$organizationId,'T');
         if ($result==0){
             return response()->json(['message'=>self::notSendEmail],206);
         }
-        return UserService::getUserById($user,'T',$organizationId);
+        return UserService::getUserById($userId,'T',$organizationId);
     }
 
+    /**
+     * Agrega un usuario profesor y se envía un correo al usuario, con el método
+     * UserService::addUser($request,'T',$organizationId) y el método
+     * self::createTeacher($request,$organizationId,$userByCredentials[0]['id']).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto user.
+     */
     public static function addTeacher(Request $request,$organizationId)
     {
         self::validate($request);
@@ -98,6 +137,22 @@ class TeacherService
         }
     }
 
+    /**
+     * Edita un usuario profesor, con el método UserService::updateUser($request,$id,'T',$organizationId) y el método
+     * Teacher::updateTeacher($id, [
+     * 'id' => $id,
+     * 'teacher_type' => $request['teacher_type'],
+     * 'dedication'=>$request['dedication'],
+     * 'category'=>$request['category'],
+     * 'home_institute'=>$request['home_institute'],
+     * 'country'=>$request['country']
+     * ]).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $id Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto user.
+     */
     public static function updateTeacher(Request $request, $id,$organizationId)
     {
         self::validate($request);
@@ -129,6 +184,14 @@ class TeacherService
         }
     }
 
+    /**
+     * Válida si los datos enviados por parámetros son del profesor que realiza la petición o son de un usuario
+     * administrador de lo contrario no estará autorizado.
+     * @param string $teacherId Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return Response|string, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el string valid.
+     */
     public static function validateTeacher($teacherId,$organizationId)
     {
         $existTeacherId=User::existUserById($teacherId,'T',$organizationId);

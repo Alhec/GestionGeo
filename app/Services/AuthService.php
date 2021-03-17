@@ -52,11 +52,15 @@ class AuthService
         if (is_numeric($log)&&$log==0){
             return response()->json(['message'=>self::taskError],401);
         }
+        $user=$user->toArray()[0];
+        if (!$user['administrator']['principal']){
+            unset($user['administrator']);
+        }
         return response()->json([
             'token' => $token,
             'type' => 'bearer',
             'expires' => auth('api')->factory()->getTTL(),
-            'user' => $user[0],
+            'user' => $user,
         ]);
     }
 }

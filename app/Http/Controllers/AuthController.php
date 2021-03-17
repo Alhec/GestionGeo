@@ -6,9 +6,14 @@ use App\Log;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 
+/**
+ * @OA\Tag(
+ *     name="Autenticacion",
+ *     description="Gestion de autenticacion de usuarios"
+ * )
+ */
 class AuthController extends Controller
 {
-    //
     /**
      * Get a JWT via given credentials.
      *
@@ -32,6 +37,20 @@ class AuthController extends Controller
      *     path="/api/login",
      *     tags={"Autenticacion"},
      *     summary="Autenticar usuario",
+     *     description="Retorna un token de autenticacion",
+     *     @OA\Parameter(
+     *          name="id",
+     *          description="Project id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/Login")
+     *      ),
      *     @OA\Response(
      *         response=200,
      *         description="Mostrar Autenticacion"
