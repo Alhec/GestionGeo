@@ -15,20 +15,6 @@ class AdministratorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    /**
-     * @OA\Get(
-     *     path="/api/users",
-     *     summary="Mostrar usuarios",
-     *     @OA\Response(
-     *         response=200,
-     *         description="Mostrar todos los usuarios."
-     *     ),
-     *     @OA\Response(
-     *         response="default",
-     *         description="Ha ocurrido un error."
-     *     )
-     * )
-     */
     public function index(Request $request)
     {
         $organizationId = $request->header('Organization-Key');

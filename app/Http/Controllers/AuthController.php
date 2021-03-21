@@ -5,13 +5,8 @@ namespace App\Http\Controllers;
 use App\Log;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
+use Illuminate\Http\Response;
 
-/**
- * @OA\Tag(
- *     name="Autenticacion",
- *     description="Gestion de autenticacion de usuarios"
- * )
- */
 class AuthController extends Controller
 {
     /**
@@ -19,6 +14,8 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+
+
     const logLogout = 'Realizo cierre de sesion';
     const taskError = 'No se puede proceder con la tarea';
 
@@ -27,40 +24,7 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    /**
-     * @OA\Post(
-     *     path="/api/login",
-     *     tags={"Autenticacion"},
-     *     summary="Autenticar usuario",
-     *     description="Retorna un token de autenticacion",
-     *     @OA\Parameter(
-     *          name="id",
-     *          description="Project id",
-     *          required=true,
-     *          in="path",
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *      ),
-     *     @OA\RequestBody(
-     *          required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/Login")
-     *      ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Mostrar Autenticacion"
-     *     ),
-     *     @OA\Response(
-     *         response="default",
-     *         description="Ha ocurrido un error."
-     *     )
-     * )
-     */
+
     public function login(Request $request)
     {
         $organizationId = $request->header('Organization-Key');

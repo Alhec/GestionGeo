@@ -19,7 +19,13 @@ use App\StudentSubject;
 use App\Subject;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class StudentService
 {
     const taskError = 'No se puede proceder con la tarea';
@@ -37,11 +43,28 @@ class StudentService
     const unauthorized = "Unauthorized";
     const notWarningStudent="Todos los estudiantes estan en un estatus regular";
     const ok = "OK";
-
     const logCreateStudent = 'Creo la entidad student para ';
     const logUpdateStudent = 'Actualizo la entidad student para ';
     const logDeleteStudent = 'Elimino la entidad student para ';
 
+    /**
+     * Valida que se cumpla las restricciones:
+     * *guide_teacher_id: numerico
+     * *student_type: requerido, máximo 3 y finaliza en REG, EXT, AMP, PER, PDO o ACT
+     * *home_university: requerido y máximo 100
+     * *current_postgraduate: máximo 100
+     * *type_income: máximo 30
+     * *is_ucv_teacher: booleano y requerido
+     * *credits_granted: numérico y requerido
+     * *with_work: booleano
+     * *degrees.*.degree_obtained: requerido, máximo 3 y finaliza en TSU, TCM, Dr, Esp, Ing, MSc o Lic
+     * *degrees.*.degree_name: requerido y máximo 50
+     * *degrees.*.degree_description: máximo 200
+     * *degrees.*.university: requerido y máximo 50
+     * *equivalences.*.subject_id: requerido y numérico
+     * *equivalences.*.qualification: requerido y numérico
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validate(Request $request)
     {
         $request->validate([
@@ -62,12 +85,29 @@ class StudentService
         ]);
     }
 
+    /**
+     * Valida que se cumpla las restricciones:
+     * *school_program_id:requerido y numérico
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validateSchoolProgramId(Request $request){
         $request->validate([
             'school_program_id'=>'required|numeric',
         ]);
     }
 
+    /**
+     * Agrega grados asociados a un estudiante con el método Degree::addDegree($degree) y agrega equivalencias de una
+     * materia con el método
+     * Equivalence::addEquivalence([
+     * 'student_id'=>$studentId,
+     * 'subject_id'=>$equivalence['subject_id'],
+     * 'qualification'=>$equivalence['qualification']
+     * ])
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $studentId id del estudiante
+     * @return integer en caso de existir un error devolvera 0.
+     */
     public static function addEquivalencesAndDegrees(Request $request,$studentId)
     {
         if (isset($request['degrees'])){
@@ -93,6 +133,28 @@ class StudentService
         }
     }
 
+    /**
+     * Agrega la entidad estudiante a un usuario con el siguiente método
+     * Student::addStudent([
+     * 'school_program_id'=>$request['school_program_id'],
+     * 'user_id'=>$userId,
+     * 'guide_teacher_id'=>$request['guide_teacher_id'],
+     * 'student_type'=>$request['student_type'],
+     * 'home_university'=>$request['home_university'],
+     * 'current_postgraduate'=>$request['current_postgraduate'],
+     * 'type_income'=>$request['type_income'],
+     * 'is_ucv_teacher'=>$request['is_ucv_teacher'],
+     * 'is_available_final_work'=>false,
+     * 'credits_granted'=>$request['credits_granted'],
+     * 'with_work'=>$request['with_work'],
+     * 'end_program'=>false,
+     * 'test_period'=>false,
+     * 'current_status'=>'REG'
+     * ])
+     * @param Request $userId id del usuario que se le agregara la entidad estudiante.
+     * @param Request $request Contiene los datos del estudiante
+     * @return integer en caso de existir un error devolvera 0.
+     */
     public static function addStudent($userId,Request $request)
     {
         return Student::addStudent([
@@ -113,6 +175,15 @@ class StudentService
         ]);
     }
 
+    /**
+     * Verifica que las materias a las cuales se realizarán equivalencias pertenezcan al programa escolar y tengan una
+     * nota válida.
+     * @param integer $organizationId Objeto con los datos de la petición
+     * @param array $subjects lista de materias a validar
+     * @param integer $schoolProgramId id del programa escolar a donde pertenecen las materias a validar
+     * @return integer|boolean Devuelve un booleano si las equivalencias son validas en caso de existir un error
+     * devolvera 0.
+     */
     public static function validateEquivalences($organizationId,$subjects,$schoolProgramId)
     {
         $subjectsInBd=Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId);
@@ -134,6 +205,15 @@ class StudentService
         return true;
     }
 
+    /**
+     * Agrega un usuario estudiante y se envía un correo al usuario, con el método
+     * self::addStudent($userId,$request)
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @param Request $userId id del usuario
+     * @return Response|User de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
+     * devolvera el objeto user.
+     */
     public static function createStudent(Request $request, $organizationId, $userId)
     {
         $studentId=self::addStudent($userId,$request);
@@ -160,6 +240,14 @@ class StudentService
         return UserService::getUserById($userId,'S',$organizationId);
     }
 
+    /**
+     * Agrega una entidad usuario y estudiante nueva al sistema haciendo uso de los métodos
+     * UserService::addUser($request,'S',$organizationId) y self::addStudent($userId,$request)
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response|User de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
+     * devolvera el objeto user.
+     */
     public static function addNewStudent(Request $request,$organizationId)
     {
         self::validateSchoolProgramId($request);
@@ -212,6 +300,17 @@ class StudentService
         }
     }
 
+    /**
+     * Agrega una entidad estudiante a un usuario ya existente en el sistema en caso de que el usuario continúe con sus
+     * estudios en el postgrado después de graduarse y actualiza los datos del usuario con el método
+     * UserService::updateUser($request,$userId,'S',$organizationId) y crea el estudiante con
+     * self::addStudent($userId,$request).
+     * @param Request $request Objeto con los datos de la petición
+     * @param Request $userId id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return Response|User de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
+     * devolvera el objeto user.
+     */
     public static function addStudentContinue(Request $request, $userId, $organizationId)
     {
         self::validateSchoolProgramId($request);
@@ -270,6 +369,15 @@ class StudentService
         }
     }
 
+    /**
+     * Valida que se cumpla las restricciones:
+     * *student_id: numérico y requerido
+     * *is_available_final_work: booleano y requerido
+     * *test_period:booleano y requerido
+     * *current_status:requerido, máximo 5 y finaliza en RET-A, RET-B, DES-A, DES-B, (reingreso)RIN-A, RIN-B,
+     * (reincorporado)REI-A, REI-B, REG o ENDED (graduado)
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validateUpdate(Request $request)
     {
         $request->validate([
@@ -281,6 +389,30 @@ class StudentService
         ]);
     }
 
+    /**
+     * Actualiza los datos de un usuario con el método UserService::updateUser($request,$userId,'S',$organizationId) y
+     * los datos del estudiante dado su studentId para actualizar la entidad adecuada con el método
+     * Student::updateStudent($request['student_id'],[
+     * 'school_program_id'=>$student[0]['school_program_id'],
+     * 'user_id'=>$userId,
+     * 'guide_teacher_id'=>$request['guide_teacher_id'],
+     * 'student_type'=>$request['student_type'],
+     * 'home_university'=>$request['home_university'],
+     * 'current_postgraduate'=>$request['current_postgraduate'],
+     * 'type_income'=>$request['type_income'],
+     * 'is_ucv_teacher'=>$request['is_ucv_teacher'],
+     * 'is_available_final_work'=>$request['is_available_final_work'],
+     * 'credits_granted'=>$request['credits_granted'],
+     * 'with_work'=>$request['with_work'],
+     * 'end_program'=>$request['end_program'],
+     * 'test_period'=>$request['test_period'],
+     * 'current_status'=>$request['current_status'],])
+     * @param Request $request Objeto con los datos de la petición
+     * @param Request $userId id del usuario
+     * @param string $organizationId Id de la organiación
+     * @return Response|User de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
+     * devolvera el objeto user.
+     */
     public static function updateStudent(Request $request, $userId, $organizationId)
     {
         self::validate($request);
@@ -360,6 +492,15 @@ class StudentService
         }
     }
 
+    /**
+     * Elimina una entidad student de un usuario si este tiene más de dos entidades student asociadas con el método
+     * Student::deleteStudent($userId,$studentId).
+     * @param string $userId Id del usuario
+     * @param string $studentId id del estudiante
+     * @param string $organizationId Id de la organiación
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcto
+     * devolvera el objeto user.
+     */
     public static function deleteStudent($userId,$studentId,$organizationId)
     {
         $user = User::getUserById($userId,'S',$organizationId);
@@ -384,6 +525,14 @@ class StudentService
         return response()->json(['message'=>self::noAction],206);
     }
 
+    /**
+     * Válida si los datos enviados por parámetros son del estudiante que realiza la petición o son de un usuario
+     * administrador de lo contrario no estará autorizado.
+     * @param integer $organizationId Objeto con los datos de la petición
+     * @param string $studentId id del estudiante
+     * @return string|Response Devuelve un string valid si si es el estudiante coincide con su id de sesion o es usuario
+     * administrador de lo contrario o de ocurrir un error devolvera un mensaje asociado
+     */
     public static function validateStudent($organizationId,$studentId)
     {
         $existStudentById = Student::existStudentById($studentId,$organizationId);
@@ -411,6 +560,13 @@ class StudentService
         }
     }
 
+    /**
+     * Lista todos los estudiantes que tienen algún tipo de incidencia con el método
+     * Student::warningStudent($organizationId)
+     * @param integer $organizationId Objeto con los datos de la petición
+     * @return Student|Response Devuelve una lista de estudiantes, con estatus diferentes a los regulares,de ocurrir un
+     * error devolvera un mensaje asociado
+     */
     public static function warningStudent($organizationId)
     {
         $warningStudent=Student::warningStudent($organizationId);
@@ -423,6 +579,14 @@ class StudentService
         return response()->json(['message' => self::notWarningStudent], 200);
     }
 
+    /**
+     * Actualiza los estudiantes a periodo de prueba si estos tienen un promedio por debajo de 14 y si cumplen con los
+     * requisitos para presentar el trabajo especial de grado los cambia a habilitados con el método
+     * Student::updateStudent($student['id'],$student->toArray())
+     * @param integer $organizationId Objeto con los datos de la petición
+     * @return string|integer Actualiza los estudiantes que pasan a periodo de prueba y los que entran en requisitos
+     * para presentar tesis
+     */
     public static function warningOrAvailableWorkToStudent($organizationId)
     {
         $students=Student::getAllStudentToDegree($organizationId);

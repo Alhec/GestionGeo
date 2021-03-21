@@ -5,6 +5,11 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+/**
+ * @package : Commands
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class Kernel extends ConsoleKernel
 {
     /**
