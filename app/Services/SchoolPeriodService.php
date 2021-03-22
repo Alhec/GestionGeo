@@ -131,7 +131,7 @@ class SchoolPeriodService
     /**
      * Valida que los id de los profesores y las materias se encuentre en la organización, retorna un booleano.
      * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
-     * @param integer $organizationId Id de la organiación
+     * @param string $organizationId Id de la organiación
      * @return integer|boolean Devuelve un booleano si los profesores y materias pertenecen a la organizacion en caso de
      * existir un error devolvera 0.
      */
@@ -155,6 +155,11 @@ class SchoolPeriodService
         return true;
     }
 
+    /**
+     * Valida que no se envíe la misma materia dos veces en el  mismo periodo escolar, retorna un booleano.
+     * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * @return integer|boolean Devuelve true si las materias no estan duplicadas, de lo contrario devolvera false
+     */
     public static function subjectConsistency($subjects)
     {
         $subjectId = [];
@@ -167,6 +172,12 @@ class SchoolPeriodService
         return true;
     }
 
+    /**
+     * Crea un horario asociado al objeto SchoolPeriodSubjectTeacher con el metodo Schedule::addSchedule($schedule).
+     * @param object $schedules Array de la petición con los horarios de una materia
+     * @param integer $schoolPeriodSubjectTeacherId Id de la relacion entre periodo escolar, materia y profesor
+     * @return integer de ocurrir un error devolvera 0.
+     */
     public static function addSchedules($schedules,$schoolPeriodSubjectTeacherId)
     {
         foreach ($schedules as $schedule){
@@ -178,6 +189,14 @@ class SchoolPeriodService
         }
     }
 
+    /**
+     * Agrega materias al periodo escolar dado su id y devuelve su id con el metodo
+     * SchoolPeriodSubjectTeacher::addSchoolPeriodSubjectTeacher($subject).
+     * @param array $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * @param integer $schoolPeriodId Id del periodo escolar asociado
+     * @return integer Devuelve el id de la relacion entre periodo escolar profesor y asignatura, en caso de existir un
+     * error devolvera 0.
+     */
     public static function addSubjectInSchoolPeriod($subjects,$schoolPeriodId)
     {
         foreach ($subjects as $subject){
@@ -197,10 +216,20 @@ class SchoolPeriodService
         }
     }
 
+    /**
+     * Agrega un periodo escolar con el método SchoolPeriod::addSchoolPeriod($request).
+     * Nota: Se asume que las asignaturas de proyecto o trabajo especial de grado estarán habilitadas en todos los
+     * periodos escolares de los programas que las tengan.
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $organizationId Id de la organiación
+     * @return Response|SchoolPeriod de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto SchoolPeriod.
+     */
     public static function addSchoolPeriod(Request $request,$organizationId)
     {
         self::validate($request);
-        $existSchoolPeriodByCod =SchoolPeriod::existSchoolPeriodbyCodSchoolPeriod($request['cod_school_period'],$organizationId);
+        $existSchoolPeriodByCod =SchoolPeriod::existSchoolPeriodbyCodSchoolPeriod($request['cod_school_period'],
+            $organizationId);
         if (is_numeric($existSchoolPeriodByCod)&&$existSchoolPeriodByCod===0){
             return response()->json(['message' => self::taskError], 206);
         }
@@ -247,6 +276,13 @@ class SchoolPeriodService
         return response()->json(['message'=>self::busyCodSchoolPeriod],206);
     }
 
+    /**
+     * Elimina un periodo escolar dado su id con el método SchoolPeriod::deleteSchoolPeriod($id).
+     * @param string $id Id del periodo escolar
+     * @param string $organizationId Id de la organiación
+     * @return Response, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcto
+     * devolvera un objeto con mensaje OK.
+     */
     public static function deleteSchoolPeriod($id,$organizationId)
     {
         $schoolPeriod = SchoolPeriod::getSchoolPeriodById($id,$organizationId);
@@ -255,8 +291,8 @@ class SchoolPeriodService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message' => self::taskError], 206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolPeriod.$schoolPeriod[0]['cod_school_period'].
-                self::whitId.$id);
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolPeriod.
+                $schoolPeriod[0]['cod_school_period'].self::whitId.$id);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskPartialError],401);
             }
@@ -265,6 +301,12 @@ class SchoolPeriodService
         return response()->json(['message'=>self::notFoundSchoolPeriod],206);
     }
 
+    /**
+     *Valida que se cumpla las restricciones:
+     * *load_notes: requerido y booleano
+     * *inscription_visible: requerido y booleano
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validateInUpdate(Request $request)
     {
         $request->validate([
@@ -273,17 +315,25 @@ class SchoolPeriodService
         ]);
     }
 
+    /**
+     * Actualiza un objeto de tipo schoolPeriodSubjectTeacher con el metodo
+     * SchoolPeriodSubjectTeacher::updateSchoolPeriodSubjectTeacher($subjectInBd['id'],$subject).
+     * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * @param integer $schoolPeriodId Id del periodo escolar asociado
+     * @return integer en caso de existir un error devolvera 0.
+     */
     public static function updateSubjectInSchoolPeriod($subjects,$schoolPeriodId)
     {
         $subjectsInBd = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriod($schoolPeriodId);
         if (is_numeric($subjectsInBd)&&$subjectsInBd==0){
-            return response()->json(['message' => self::taskError], 206);
+            return 0;
         }
         $subjectsUpdated = [];
         foreach ($subjects as $subject){
             $existSubject = false;
             foreach ($subjectsInBd as $subjectInBd){
-                if ($subjectInBd['teacher_id']==$subject['teacher_id'] AND $subjectInBd['subject_id']==$subject['subject_id']){
+                if ($subjectInBd['teacher_id']==$subject['teacher_id'] AND
+                    $subjectInBd['subject_id']==$subject['subject_id']){
                     $subject['school_period_id']=$schoolPeriodId;
                     $subject['enrolled_student']=$subjectInBd['enrolled_student'];
                     $result=SchoolPeriodSubjectTeacher::updateSchoolPeriodSubjectTeacher($subjectInBd['id'],$subject);
@@ -323,6 +373,14 @@ class SchoolPeriodService
         }
     }
 
+    /**
+     * Actualiza un periodo escolar dado su id con el metodo SchoolPeriod::updateSchoolPeriod($id, $request).
+     * @param Request $request Objeto con los datos de la petición
+     * @param string $id Id del periodo escolar
+     * @param string $organizationId Id de la organiación
+     * @return Response|SchoolPeriod de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto SchoolPeriod.
+     */
     public static function updateSchoolPeriod(Request $request,$id,$organizationId)
     {
         $request['organization_id']=$organizationId;
@@ -366,7 +424,8 @@ class SchoolPeriodService
                 if (is_numeric($result)&&$result===0){
                     return response()->json(['message' => self::taskError], 206);
                 }
-                $existSchoolPeriodSubjectTeacher=SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherBySchoolPeriodId($id);
+                $existSchoolPeriodSubjectTeacher=
+                    SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherBySchoolPeriodId($id);
                 if (is_numeric($existSchoolPeriodSubjectTeacher)&& $existSchoolPeriodSubjectTeacher==0){
                     return response()->json(['message' => self::taskError], 206);
                 }
@@ -387,6 +446,13 @@ class SchoolPeriodService
         return response()->json(['message'=>self::notFoundSchoolPeriod],206);
     }
 
+    /**
+     * Obtiene el periodo escolar actual con el método  SchoolPeriod::getCurrentSchoolPeriod($organizationId).
+     * SchoolPeriod::getSchoolPeriodById($id,$organizationId).
+     * @param string $organizationId Id de la organiación
+     * @return SchoolPeriod|Response Obtiene un periodo escolar actual dado su id en la organizacion, de ocurrir un
+     * error o no existir periodo escolar devolvera un mensaje asociado.
+     */
     public static function getCurrentSchoolPeriod($organizationId)
     {
         $currentSchoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organizationId);
@@ -399,6 +465,14 @@ class SchoolPeriodService
         return response()->json(['message'=>self::noCurrentSchoolPeriod],206);
     }
 
+    /**
+     * Obtiene las materias que dicta un profesor dado su id, en el periodo escolar actual.
+     * SchoolPeriod::getSchoolPeriodById($id,$organizationId).
+     * @param string $teacherId Id del profesor
+     * @param string $organizationId Id de la organiación
+     * @return SchoolPeriodSubjectTeacher|Response Obtiene todas las asignaturas que dicta un profesor en el periodo
+     * escolar actual.
+     */
     public static function getSubjectsTaughtSchoolPeriod($teacherId,$organizationId)
     {
         $isValid=TeacherService::validateTeacher($teacherId,$organizationId);
@@ -408,7 +482,8 @@ class SchoolPeriodService
                 return response()->json(['message' => self::taskError], 206);
             }
             if (count($currentSchoolPeriod)>0){
-                $subjectsTaught = SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,
+                $subjectsTaught =
+                    SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,
                     $currentSchoolPeriod[0]['id']);
                 if (is_numeric($subjectsTaught)&&$subjectsTaught===0){
                     return response()->json(['message' => self::taskError], 206);

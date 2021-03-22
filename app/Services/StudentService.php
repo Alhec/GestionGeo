@@ -178,7 +178,7 @@ class StudentService
     /**
      * Verifica que las materias a las cuales se realizarán equivalencias pertenezcan al programa escolar y tengan una
      * nota válida.
-     * @param integer $organizationId Id de la organiación
+     * @param string $organizationId Id de la organiación
      * @param array $subjects lista de materias a validar
      * @param integer $schoolProgramId id del programa escolar a donde pertenecen las materias a validar
      * @return integer|boolean Devuelve un booleano si las equivalencias son validas en caso de existir un error
@@ -531,7 +531,7 @@ class StudentService
     /**
      * Válida si los datos enviados por parámetros son del estudiante que realiza la petición o son de un usuario
      * administrador de lo contrario no estará autorizado.
-     * @param integer $organizationId Objeto con los datos de la petición
+     * @param string $organizationId Objeto con los datos de la petición
      * @param string $studentId id del estudiante
      * @return string|Response Devuelve un string valid si si es el estudiante coincide con su id de sesion o es usuario
      * administrador de lo contrario o de ocurrir un error devolvera un mensaje asociado
@@ -566,7 +566,7 @@ class StudentService
     /**
      * Lista todos los estudiantes que tienen algún tipo de incidencia con el método
      * Student::warningStudent($organizationId)
-     * @param integer $organizationId Objeto con los datos de la petición
+     * @param string $organizationId Objeto con los datos de la petición
      * @return Student|Response Devuelve una lista de estudiantes, con estatus diferentes a los regulares,de ocurrir un
      * error devolvera un mensaje asociado
      */
@@ -586,7 +586,7 @@ class StudentService
      * Actualiza los estudiantes a periodo de prueba si estos tienen un promedio por debajo de 14 y si cumplen con los
      * requisitos para presentar el trabajo especial de grado los cambia a habilitados con el método
      * Student::updateStudent($student['id'],$student->toArray())
-     * @param integer $organizationId Objeto con los datos de la petición
+     * @param string $organizationId Objeto con los datos de la petición
      * @return string|integer Actualiza los estudiantes que pasan a periodo de prueba y los que entran en requisitos
      * para presentar tesis
      */

@@ -133,7 +133,7 @@ class SubjectService
     /**
      * Valida que los id de los programas escolares se encuentren asociados a la organización.
      * @param SchoolProgram $schoolPrograms Array de la petición con ids de programas escolares
-     * @param integer $organizationId Id de la organiación
+     * @param string $organizationId Id de la organiación
      * @return integer|boolean Devuelve un booleano si los programas escolares pertenecen a la organizacion en caso de
      * existir un error devolvera 0.
      */
@@ -310,7 +310,7 @@ class SubjectService
     /**
      * Valida que las materias agrupadas en cada programa escolar se encuentren en dicho programa antes de asociarse.
      * @param SchoolProgram $schoolPrograms Array con programas escolares de la petición
-     * @param integer $organizationId Id de la organiación
+     * @param string $organizationId Id de la organiación
      * @return integer|boolean Devuelve un booleano si las materias asociadas pertenecen a los programas escolares
      * en la organizacion en caso de existir un error devolvera 0.
      */
