@@ -51,8 +51,10 @@ class CustomResetPassword extends ResetPassword
         return (new MailMessage)
             ->subject('Recuperar contraseña')
             ->greeting('Hola')
-            ->line('Estás recibiendo este correo porque hiciste una solicitud de recuperación de contraseña para tu cuenta.')
-            ->action('Recuperar contraseña',  'http://'.$organization[0]['website'].'/password/reset?token='.$this->token)
+            ->line('Estás recibiendo este correo porque hiciste una solicitud de recuperación de contraseña para tu 
+            cuenta.')
+            ->action('Recuperar contraseña',  'http://'.$organization[0]['website'].'/password/reset?token='.
+                $this->token)
             ->line('Si no realizaste esta solicitud, no se requiere realizar ninguna otra acción.')
             ->salutation('Saludos, '. config('app.name'));
     }

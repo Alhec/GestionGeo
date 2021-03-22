@@ -178,7 +178,7 @@ class StudentService
     /**
      * Verifica que las materias a las cuales se realizarán equivalencias pertenezcan al programa escolar y tengan una
      * nota válida.
-     * @param integer $organizationId Objeto con los datos de la petición
+     * @param integer $organizationId Id de la organiación
      * @param array $subjects lista de materias a validar
      * @param integer $schoolProgramId id del programa escolar a donde pertenecen las materias a validar
      * @return integer|boolean Devuelve un booleano si las equivalencias son validas en caso de existir un error
@@ -268,7 +268,8 @@ class StudentService
             return response()->json(['message'=>self::invalidSchoolProgram],206);
         }
         if (isset($request['equivalences'])){
-            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],$request['school_program_id']);
+            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],
+                $request['school_program_id']);
             if (!$validEquivalence){
                 return response()->json(['message'=>self::invalidEquivalences],206);
             }
@@ -360,8 +361,8 @@ class StudentService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
-                ' '.$request['first_surname']);
+            $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name']. ' '.
+                $request['first_surname']);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskPartialError],401);
             }
@@ -436,7 +437,8 @@ class StudentService
             return response()->json(['message'=>self::notFoundUser],206);
         }
         if (isset($request['equivalences'])){
-            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],$student[0]['school_program_id']);
+            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],
+                $student[0]['school_program_id']);
             if (!$validEquivalence){
                 return response()->json(['message'=>self::invalidEquivalences],206);
             }
@@ -476,15 +478,16 @@ class StudentService
             }
             $deleteDegrees = Degree::deleteDegree($request['student_id']);
             $deleteEquivalences = Equivalence::deleteEquivalence($request['student_id']);
-            if ((is_numeric($deleteDegrees)&&$deleteDegrees==0)||(is_numeric($deleteEquivalences)&&$deleteEquivalences==0)){
+            if ((is_numeric($deleteDegrees)&&$deleteDegrees==0)||(is_numeric($deleteEquivalences)&&
+                    $deleteEquivalences==0)){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
             $result=self::addEquivalencesAndDegrees($request,$request['student_id']);
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$request['first_name'].
-                ' '.$request['first_surname']);
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$request['first_name'].' '.
+                $request['first_surname']);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskPartialError],401);
             }
@@ -515,8 +518,8 @@ class StudentService
             if (is_numeric($result)&&$result == 0 ){
                 return response()->json(['message'=>self::taskError],206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteStudent.$user[0]['first_name'].
-                ' '.$user[0]['first_surname']);
+            $log = Log::addLog(auth('api')->user()['id'],self::logDeleteStudent.$user[0]['first_name'].' '.
+                $user[0]['first_surname']);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskError],401);
             }

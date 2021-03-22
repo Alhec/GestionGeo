@@ -12,8 +12,20 @@ use App\User;
 use App\Organization;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class EmailService
 {
+    /**
+     * Envía correo de usuario creado a los usuarios que pertenecen a la organización con id ICT.
+     * @param integer $id Id del usuario
+     * @param string $userType Tipo de usuario
+     * @param string $organizationId Id de la organiación
+     * @return integer, de ocurrir un error devolvera un 0, del o contrario sera un 1.
+     */
     public static function createUserICT($id,$userType,$organizationId)
     {
         $user= User::getUserById($id,$userType,$organizationId);
@@ -53,6 +65,15 @@ class EmailService
         }
     }
 
+    /**
+     * Define que correo de creación de usuario se enviará de acuerdo a la organización, actualmente sólo está definido
+     * el de la organización con id ICT.
+     * @param integer $id Id del usuario
+     * @param string $organizationId Id de la organiación
+     * @param string $userType Tipo de usuario
+     * @return integer, de ocurrir un error devolvera un 0, del o contrario sera un 1 si es exitoxo y su etorno por
+     * defecto sera 0.
+     */
     public static function userCreate($id,$organizationId,$userType)
     {
         switch ($organizationId){

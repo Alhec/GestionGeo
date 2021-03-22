@@ -175,8 +175,8 @@ class TeacherService
             if (is_numeric($result)&&$result==0){
                 return response()->json(['message'=>self::taskPartialError],206);
             }
-            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateTeacher.$request['first_name'].
-                ' '.$request['first_surname']);
+            $log = Log::addLog(auth('api')->user()['id'],self::logUpdateTeacher.$request['first_name'].' '.
+                $request['first_surname']);
             if (is_numeric($log)&&$log==0){
                 return response()->json(['message'=>self::taskPartialError],401);
             }

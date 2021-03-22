@@ -62,8 +62,10 @@ class updateStatusStudentForNotRegistered extends Command
             foreach ($organizations->toArray() as $organization){
                 $schoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organization['id']);
                 if (!is_numeric($schoolPeriod) && count($schoolPeriod)>0){
-                    if (($schoolPeriod[0]['inscription_start_date']<=now())&&($schoolPeriod[0]['inscription_visible']==false)){
-                        $studentInscription=SchoolPeriodStudent::getSchoolPeriodStudentBySchoolPeriod($schoolPeriod[0]['id'],$organization['id']);
+                    if (($schoolPeriod[0]['inscription_start_date']<=now())&&
+                        ($schoolPeriod[0]['inscription_visible']==false)){
+                        $studentInscription=SchoolPeriodStudent::getSchoolPeriodStudentBySchoolPeriod(
+                            $schoolPeriod[0]['id'],$organization['id']);
                         if (!is_numeric($studentInscription)&&count($studentInscription)>0){
                             $allStudent = Student::getAllStudentToDegree($organization['id']);
                             if (!is_numeric($allStudent)&&count($allStudent)>0){

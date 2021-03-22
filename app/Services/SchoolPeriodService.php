@@ -15,7 +15,13 @@ use App\SchoolPeriod;
 use App\Subject;
 use App\SchoolPeriodSubjectTeacher;
 use App\Schedule;
+use Illuminate\Http\Response;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class SchoolPeriodService
 {
     const taskError = 'No se puede proceder con la tarea';
@@ -28,13 +34,18 @@ class SchoolPeriodService
     const ok = 'OK';
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
     const noTeachSubjects='No impartes materias en el periodo escolar actual';
-
     const logCreateSchoolPeriod = 'Creo el periodo escolar ';
     const logUpdateSchoolPeriod = 'Actualizo el periodo escolar ';
     const whitId = ' con id ';
     const logDeleteSchoolPeriod = 'Elimino el periodo escolar ';
 
-
+    /**
+     * Lista todos los periodos escolares que están asociados a la organización con el método
+     * SchoolPeriod::getSchoolPeriods($organizationId).
+     * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
+     * @return SchoolPeriod|Response Obtiene todos los periodos escolares presentes en la organizacion.
+     */
     public static function getSchoolPeriods($organizationId,$perPage=0)
     {
         $perPage == 0 ? $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId) :
@@ -52,6 +63,13 @@ class SchoolPeriodService
         }
     }
 
+    /**
+     *Devuelve un periodo escolar dado su id y la organización con el método
+     * SchoolPeriod::getSchoolPeriodById($id,$organizationId).
+     * @param string $id Id de la asignatura
+     * @param string $organizationId Id de la organiación
+     * @return Subject|Response Obtiene un periodo escolar dado su id en la organizacion.
+     */
     public static function getSchoolPeriodById($id,$organizationId)
     {
         $schoolPeriod = SchoolPeriod::getSchoolPeriodById($id,$organizationId);
@@ -64,6 +82,26 @@ class SchoolPeriodService
         return response()->json(['message'=>self::notFoundSchoolPeriod],206);
     }
 
+    /**
+     *Valida que se cumpla las restricciones:
+     * *cod_school_period: requerido y máximo 10
+     * *start_date: requerido y máximo 10
+     * *end_date: requerido y máximo 10
+     * *withdrawal_deadline: máximo 10
+     * *load_notes: boolean
+     * *subjects.*.teacher_id: requerido y numérico
+     * *subjects.*.subject_id: requerido y numérico
+     * *subjects.*.limit: requerido y numérico
+     * *subjects.*.duty: requerido y numérico
+     * *subjects.*.modality: requerido, máximo 3 y debe terminar en REG, INT o SUF
+     * *subjects.*.start_date: máximo 10
+     * *subjects.*.end_date: máximo 10
+     * *subjects.*.schedules.*.day: requerido, máximo 1 y debe terminar en 1 ,2, 3, 4, 5, 6, o 7
+     * *subjects.*.schedules.*.classroom: requerido y máximo 20
+     * *subjects.*.schedules.*.start_hour: requerido y máximo 8
+     * *subjects.*.schedules.*.end_hour: requerido y máximo 8
+     * @param Request $request Objeto con los datos de la petición
+     */
     public static function validate(Request $request)
     {
         $request->validate([
@@ -90,6 +128,13 @@ class SchoolPeriodService
         ]);
     }
 
+    /**
+     * Valida que los id de los profesores y las materias se encuentre en la organización, retorna un booleano.
+     * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * @param integer $organizationId Id de la organiación
+     * @return integer|boolean Devuelve un booleano si los profesores y materias pertenecen a la organizacion en caso de
+     * existir un error devolvera 0.
+     */
     public static function validateSubjects($subjects,$organizationId)
     {
         $subjectsInBd = Subject::getSubjects($organizationId);

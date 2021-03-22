@@ -184,8 +184,8 @@ class UserService
                 if (is_numeric($result) && $result == 0){
                     return response()->json(['message'=>self::taskError],206);
                 }
-                $log = Log::addLog(auth('api')->user()['id'],self::logDeleteUser.$user[0]['first_name']
-                    .$user[0]['first_surname'].self::logRol.$userType);
+                $log = Log::addLog(auth('api')->user()['id'],self::logDeleteUser.$user[0]['first_name'].' '.
+                    $user[0]['first_surname'].self::logRol.$userType);
                 if (is_numeric($log)&&$log==0){
                     return response()->json(['message'=>self::taskError],401);
                 }

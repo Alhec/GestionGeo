@@ -51,7 +51,6 @@ class InscriptionService
     const notCurrentInscription ='No hay inscripcion actual para usted';
     const notRegister = 'Debes mandar un body valido para inscribir';
     const notFoundFinalWork = 'Proyecto o trabajo de grado no encontrada';
-
     const logAddInscription = 'Inscripcion al estudiante con id ';
     const logUpdateInscription = 'Actualiza inscripcion al estudiante con id ';
     const logDeleteInscription = 'elimina inscripcion al estudiante con id ';
