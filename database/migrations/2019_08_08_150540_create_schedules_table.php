@@ -14,11 +14,11 @@ class CreateSchedulesTable extends Migration
     /**
      * Ejecutar migración Schedules.
      *
-     * Descripción: Horarios de las materias en el periodo escolar.
+     * Descripción: Horarios de las asignaturas en el periodo escolar.
      *
      * Atributos:
      *
-     * school_period_subject_teacher_id: Id de la relación entre materia, periodo escolar y profesor. |
+     * school_period_subject_teacher_id: Id de la relación entre asignatura, periodo escolar y profesor. |
      * bigint(20) unsigned | Clave foránea (school_period_subject_teacher)(id)
      *
      * day: Dia de la semana del 1 al 7 empezando por lunes. | varchar(1) - String| Longitud 1

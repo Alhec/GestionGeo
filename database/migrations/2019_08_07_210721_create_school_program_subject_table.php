@@ -14,7 +14,7 @@ class CreateSchoolProgramSubjectTable extends Migration
     /**
      * Ejecutar migración SchoolProgramSubject.
      *
-     * Descripción: Tabla relación entre programas escolares y materias.
+     * Descripción: Tabla relación entre programas escolares y asignaturas.
      *
      * Atributos:
      *
@@ -22,14 +22,14 @@ class CreateSchoolProgramSubjectTable extends Migration
      *
      * school_program_id: Id del programa escolar | varchar(10) - String | Longitud 10
      *
-     * subject_id: Id de la materia | varchar(100) - String | Longitud 100
+     * subject_id: Id de la asignatura | varchar(100) - String | Longitud 100
      *
-     * type: Tipo de materia: EL: electiva, OP: optativa, OB: Obligatoria | varchar(2) - String | Longitud: 2
+     * type: Tipo de asignatura: EL: electiva, OP: optativa, OB: Obligatoria | varchar(2) - String | Longitud: 2
      * Null permitido
      *
-     * subject_group: Grupo al que pertenece la materia (Esto se usa para agrupar las materias que se deben inscribir
-     * juntas por primera vez ejemplo en el postgrado de geoquímica proyecto y seminario son dos materias distintas que
-     * deben inscribirse al mismo tiempo) | int(11) - integer | Null permitido
+     * subject_group: Grupo al que pertenece la asignatura (Esto se usa para agrupar las asignaturas que se deben
+     * inscribir juntas por primera vez ejemplo en el postgrado de geoquímica proyecto y seminario son dos asignaturas
+     * distintas que deben inscribirse al mismo tiempo) | int(11) - integer | Null permitido
      *
      * @return void
      */

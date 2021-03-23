@@ -14,7 +14,7 @@ class CreateEquivalencesTable extends Migration
     /**
      * Ejecutar migración Equivalences.
      *
-     * Descripción: Equivalencias de materias a estudiante.
+     * Descripción: Equivalencias de asignaturas a estudiante.
      *
      * Atributos:
      *
@@ -22,9 +22,9 @@ class CreateEquivalencesTable extends Migration
      *
      * student_id: Id del estudiante asociado a la equivalencia | bigint(20) unsigned | Clave foránea(students)(id)
      *
-     * subject_id: Id de la materia que se le asigna equivalencia | bigint(20) unsigned | Clave foránea(subjects)(id)
+     * subject_id: Id de la asignatura que se le asigna equivalencia | bigint(20) unsigned | Clave foránea(subjects)(id)
      *
-     * qualification: Nota de la materia con equivalencia | int(11) - integer
+     * qualification: Nota de la asignatura con equivalencia | int(11) - integer
      *
      * @return void
      */

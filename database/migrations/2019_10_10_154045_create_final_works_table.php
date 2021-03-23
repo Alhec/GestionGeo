@@ -24,7 +24,7 @@ class CreateFinalWorksTable extends Migration
      *
      * student_id: Id del estudiante | bigint(20) unsigned | Clave foránea(students)(id)
      *
-     * subject_id: Id de la materia de trabajo de grado  o proyecto | bigint(20) unsigned | Clave foránea(subjects)(id)
+     * subject_id: Id de la asignatura de trabajo de grado  o proyecto |bigint(20) unsigned |Clave foránea(subjects)(id)
      *
      * project_id: En caso de ser un trabajo de grado lleva el id del proyecto que lo precede | bigint(20) unsigned |
      * Clave foránea(subjects)(id)

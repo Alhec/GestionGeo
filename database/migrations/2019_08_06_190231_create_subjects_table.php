@@ -14,15 +14,15 @@ class CreateSubjectsTable extends Migration
     /**
      * Ejecutar migración Subjects.
      *
-     * Descripción: Materias en el sistema asociadas a un programa escolar.
+     * Descripción: Asignaturas en el sistema asociadas a un programa escolar.
      *
      * Atributos:
      *
-     * id: Id de la materia | bigint(20) unsigned | Clave Primaria
+     * id: Id de la asignatura | bigint(20) unsigned | Clave Primaria
      *
-     * code: código de la materia  | varchar(10) - String | Longitud 10
+     * code: código de la asignatura  | varchar(10) - String | Longitud 10
      *
-     * name: nombre de la materia | varchar(100) - String | Longitud 100
+     * name: nombre de la asignatura | varchar(100) - String | Longitud 100
      *
      * uc: unidades de crédito | int(11) - integer
      *
