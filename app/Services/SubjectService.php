@@ -24,23 +24,23 @@ class SubjectService
 {
     const taskError = 'No se puede proceder con la tarea';
     const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
-    const emptySubject = 'No existen materias';
-    const notFoundSubject = 'Materia no encontrada';
-    const busySubjectCode = 'Codigo de materia en uso';
+    const emptySubject = 'No existen asignaturas';
+    const notFoundSubject = 'Asignatura no encontrada';
+    const busySubjectCode = 'Codigo de asignatura en uso';
     const invalidProgram = 'Programas invalidos';
-    const invalidSubjectGroup = 'Las materias que se quieren asociar no se encuentran en el programa escolar';
+    const invalidSubjectGroup = 'Las asignaturas que se quieren asociar no se encuentran en el programa escolar';
     const ok ='OK';
-    const logCreateSubject = 'Creo la materia ';
-    const logUpdateSubject = 'Actualizo la materia ';
+    const logCreateSubject = 'Creo la asignatura ';
+    const logUpdateSubject = 'Actualizo la asignatura ';
     const whitId = ' con id ';
-    const logDeleteSubject = 'Elimino la materia ';
+    const logDeleteSubject = 'Elimino la asignatura ';
 
     /**
-     *Lista todas las materias que están asociadas a algún programa escolar que se encuentren en una organización con el
-     * método Subject::getSubjects($organizationId).
+     *Lista todas las asignaturas que están asociadas a algún programa escolar que se encuentren en una organización con
+     * el método Subject::getSubjects($organizationId).
      * @param string $organizationId Id de la organiación
      * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
-     * @return array|Response Obtiene todas las materias presentes en la organizacion.
+     * @return array|Response Obtiene todas las asignaturas presentes en la organizacion.
      */
     public static function getSubjects($organizationId,$perPage=0)
     {
@@ -61,11 +61,11 @@ class SubjectService
     }
 
     /**
-     *Devuelve una materia dado su id y la organización donde se encuentran los programas asociados a ella con el método
-     * Subject::getSubjectById($id,$organizationId).
+     *Devuelve una asignatura dado su id y la organización donde se encuentran los programas asociados a ella con el
+     * método Subject::getSubjectById($id,$organizationId).
      * @param string $id Id de la asignatura
      * @param string $organizationId Id de la organiación
-     * @return Subject|Response Obtiene la materia dado su id en la organizacion.
+     * @return Subject|Response Obtiene la asignatura dado su id en la organizacion.
      */
     public static function getSubjectById($id, $organizationId)
     {
@@ -158,13 +158,13 @@ class SubjectService
     }
 
     /**
-     * En  caso de que alguna de las materias sean de tipo proyecto o trabajo de grado como pertenecen a un mismo grupo
-     * de materias y se deben ver juntas estas también serán del mismo tipo (ejemplo postgrado de geoquímica, el
-     * proyecto debe inscribirse con el seminario, por tanto la materia seminario será de proyecto seminario) con el
-     * método Subject::updateSubjectLikeArray($subjectAssociatedId,$subjectAssociated[0]->toArray()).
-     * @param integer $subjectId Id de la materia relacionada
+     * En  caso de que alguna de las asignaturas sean de tipo proyecto o trabajo de grado como pertenecen a un mismo
+     * grupo de asignaturas y se deben ver juntas estas también serán del mismo tipo (ejemplo postgrado de geoquímica,
+     * el proyecto debe inscribirse con el seminario, por tanto la asignatura seminario será de proyecto seminario) con
+     * el método Subject::updateSubjectLikeArray($subjectAssociatedId,$subjectAssociated[0]->toArray()).
+     * @param integer $subjectId Id de la asignatura relacionada
      * @param string $organizationId Id de la organiación
-     * @param array $subjectAssociatedId Lista de materias asociadas
+     * @param string $subjectAssociatedId Id de la materia creada
      * @return integer de ocurrir un error devolvera 0.
      */
     public static function updateSubjectToFinalOrProject($subjectId,$organizationId,$subjectAssociatedId)
@@ -202,18 +202,18 @@ class SubjectService
     }
 
     /**
-     * Crea una asociación entre programa escolar y materias, y tambien si estas materias están asociadas con otras,
-     * (como el caso explicado del proyecto y seminario en uno de los programas escolares del posgrado de geoquímica
-     * donde estas materias deben inscribirse en conjunto) haciendo uso del método
+     * Crea una asociación entre programa escolar y asignaturas, y tambien si estas asignaturas están asociadas con
+     * otras, (como el caso explicado del proyecto y seminario en uno de los programas escolares del posgrado de
+     * geoquímica donde estas asignaturas deben inscribirse en conjunto) haciendo uso del método
      * SchoolProgramSubject::addSchoolProgramSubject([
      * 'school_program_id'=>$schoolProgram['id'],
      * 'subject_id'=>$subjectId,
      * 'type'=>$schoolProgram['type']
      * ]).
-     * Luego de agregarla a base de datos se edita para definir en qué grupo de materias debe asociarse (subject_group);
-     * si no está asociada a un grupo se coloca el id de la entidad.
+     * Luego de agregarla a base de datos se edita para definir en qué grupo de asignaturas debe asociarse
+     * (subject_group); si no está asociada a un grupo se coloca el id de la entidad.
      * @param integer $schoolPrograms Array de la petición con ids de programas escolares
-     * @param integer $subjectId Id de la materia relacionada
+     * @param integer $subjectId Id de la asignatura
      * @param string $organizationId Id de la organiación
      * @return integer de ocurrir un error devolvera 0.
      */
@@ -276,9 +276,9 @@ class SubjectService
     }
 
     /**
-     * Actualiza una asociación entre programa escolar y materias, y tambien si estas materias están asociadas con
+     * Actualiza una asociación entre programa escolar y asignaturas, y tambien si estas asignaturas están asociadas con
      * otras, (como el caso explicado del proyecto y seminario en uno de los programas escolares del posgrado de
-     * geoquímica donde estas materias deben inscribirse en conjunto) haciendo uso del método
+     * geoquímica donde estas asignaturas deben inscribirse en conjunto) haciendo uso del método
      * SchoolProgramSubject::updateSchoolProgramSubject($id,
      * [
      * 'school_program_id'=>$schoolProgramId,
@@ -288,8 +288,8 @@ class SubjectService
      * ]).
      * @param integer $id Id de la entidad schoolProgramSubject
      * @param integer $schoolProgramId d del programa escolar asociado
-     * @param integer $subjectId Id de la materia relacionada
-     * @param string $type Tipo de materia en el programa escolar
+     * @param integer $subjectId Id de la asignatura relacionada
+     * @param string $type Tipo de asignatura en el programa escolar
      * @param integer $subjectGroup Id del grupo asociado al cual pertenece
      * @return integer de ocurrir un error devolvera 0.
      */
@@ -308,10 +308,10 @@ class SubjectService
     }
 
     /**
-     * Valida que las materias agrupadas en cada programa escolar se encuentren en dicho programa antes de asociarse.
+     * Valida que las asignaturas agrupadas en cada programa escolar se encuentren en dicho programa antes de asociarse.
      * @param SchoolProgram $schoolPrograms Array con programas escolares de la petición
      * @param string $organizationId Id de la organiación
-     * @return integer|boolean Devuelve un booleano si las materias asociadas pertenecen a los programas escolares
+     * @return integer|boolean Devuelve un booleano si las asignaturas asociadas pertenecen a los programas escolares
      * en la organizacion en caso de existir un error devolvera 0.
      */
     public static function validateSubjectGroup($schoolPrograms,$organizationId)
@@ -338,7 +338,7 @@ class SubjectService
     }
 
     /**
-     * Agrega una materia en un programa escolar de la organización  con el método Subject::addSubject($request).
+     * Agrega una asignatura en un programa escolar de la organización  con el método Subject::addSubject($request).
      * @param Request $request Objeto con los datos de la petición
      * @param string $organizationId Id de la organiación
      * @return Response|Subject de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
@@ -386,8 +386,8 @@ class SubjectService
     }
 
     /**
-     * Elimina una materia si existe en la organización dada usando el método Subject::deleteSubject($id).
-     * @param string $id Id de la materia
+     * Elimina una asignatura si existe en la organización dada usando el método Subject::deleteSubject($id).
+     * @param string $id Id de la asignatura
      * @param string $organizationId Id de la organiación
      * @return Response, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcto
      * devolvera un objeto con mensaje OK.
@@ -417,7 +417,7 @@ class SubjectService
      * Modifica el subjectGroup de las entidades que alguna vez estuvieron asociadas asignándoles sus id como
      * subjectGroup usando el metodo self::updateSchoolProgramSubject($subjectGroup['id'],
      * $subjectGroup['school_program_id'],$subjectGroup['subject_id'],$subjectGroup['type'],$subjectGroup['id']).
-     * @param object $subject información de la materia y el programa escolar.
+     * @param object $subject información de la asignatura y el programa escolar.
      * @return integer de ocurrir un error devolvera 0
      */
     public static function defineNewSubjectGroup($subject){
@@ -447,12 +447,12 @@ class SubjectService
     }
 
     /**
-     * Actualiza una asociación entre programa escolar y materias, y tambien si estas materias están asociadas con
+     * Actualiza una asociación entre programa escolar y asignaturas, y tambien si estas asignaturas están asociadas con
      * otras, (como el caso explicado del proyecto y seminario en uno de los programas escolares del posgrado de
-     * geoquímica donde estas materias deben inscribirse en conjunto) haciendo uso del método
+     * geoquímica donde estas asignaturas deben inscribirse en conjunto) haciendo uso del método
      * SchoolProgramSubject::updateSchoolProgramSubject($schoolProgramSubjectInBd['id'],$schoolProgram)
      * @param SchoolProgram $schoolPrograms Array de la petición con ids de programas escolares
-     * @param integer $subjectId Id de la materia relacionada
+     * @param integer $subjectId Id de la asignatura relacionada
      * @param string $organizationId Id de la organiación
      * @return integer de ocurrir un error devolvera 0
      */
@@ -564,7 +564,8 @@ class SubjectService
     }
 
     /**
-     * Edita una materia en un programa escolar de la organización  con el método Subject::updateSubject($id,$request).
+     * Edita una asignaturas en un programa escolar de la organización  con el método
+     * Subject::updateSubject($id,$request).
      * @param Request $request Objeto con los datos de la petición
      * @param string $id Id de la asignatura
      * @param string $organizationId Id de la organiación
@@ -621,12 +622,12 @@ class SubjectService
     }
 
     /**
-     *Lista todas las materias que están asociadas al id del programa escolar que se encuentren en una organización con
-     * el método Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId).
+     *Lista todas las asignaturas que están asociadas al id del programa escolar que se encuentren en una organización
+     * con el método Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId).
      * @param string $schoolProgramId: Id del programa escolar
      * @param string $organizationId Id de la organiación
-     * @return Subject|Response Obtiene la materia asociadas a un programaescolar dado el id del programa escolar en la
-     * organizacion.
+     * @return Subject|Response Obtiene la asignatura asociadas a un programaescolar dado el id del programa escolar en
+     * la organizacion.
      */
     public static function getSubjectsBySchoolProgramId($schoolProgramId, $organizationId)
     {
@@ -641,12 +642,12 @@ class SubjectService
     }
 
     /**
-     *Lista todas las materias que están asociadas a algún programa escolar que se encuentren en una organización sin el
-     * proyecto y sin el trabajo especial de grado con el método
+     *Lista todas las asignaturas que están asociadas a algún programa escolar que se encuentren en una organización sin
+     * el proyecto y sin el trabajo especial de grado con el método
      * Subject::getSubjectsWithoutFinalWorks($organizationId).
      * @param string $organizationId Id de la organiación
-     * @return object|Response Obtiene las materias sin las asignaturas del proyecto y los trabajos especiales de grado
-     * en la organizacion.
+     * @return object|Response Obtiene las asignaturas sin las asignaturas del proyecto y los trabajos especiales de
+     * grado en la organizacion.
      */
     public static function getSubjectsWithoutFinalWorks($organizationId)
     {

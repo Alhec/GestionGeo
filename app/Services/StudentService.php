@@ -98,7 +98,7 @@ class StudentService
 
     /**
      * Agrega grados asociados a un estudiante con el método Degree::addDegree($degree) y agrega equivalencias de una
-     * materia con el método
+     * asignatura con el método
      * Equivalence::addEquivalence([
      * 'student_id'=>$studentId,
      * 'subject_id'=>$equivalence['subject_id'],
@@ -176,11 +176,11 @@ class StudentService
     }
 
     /**
-     * Verifica que las materias a las cuales se realizarán equivalencias pertenezcan al programa escolar y tengan una
-     * nota válida.
+     * Verifica que las asignaturas a las cuales se realizarán equivalencias pertenezcan al programa escolar y tengan
+     * una nota válida.
      * @param string $organizationId Id de la organiación
-     * @param array $subjects lista de materias a validar
-     * @param integer $schoolProgramId id del programa escolar a donde pertenecen las materias a validar
+     * @param array $subjects lista de asignaturas a validar
+     * @param integer $schoolProgramId id del programa escolar a donde pertenecen las asignaturas a validar
      * @return integer|boolean Devuelve un booleano si las equivalencias son validas en caso de existir un error
      * devolvera 0.
      */

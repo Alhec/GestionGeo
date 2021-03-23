@@ -29,11 +29,11 @@ class SchoolPeriodService
     const emptySchoolPeriod = 'No existen periodos escolares';
     const notFoundSchoolPeriod = 'Periodo escolar no encontrado';
     const busyCodSchoolPeriod = 'Periodo escolar ya registrado';
-    const duplicateSubjects = 'Materias duplicadas';
-    const invalidSubjectOrTeacher = 'Materia o profesor invalido';
+    const duplicateSubjects = 'Asignaturas duplicadas';
+    const invalidSubjectOrTeacher = 'Asignatura o profesor invalido';
     const ok = 'OK';
     const noCurrentSchoolPeriod='No hay periodo escolar en curso';
-    const noTeachSubjects='No impartes materias en el periodo escolar actual';
+    const noTeachSubjects='No impartes asignaturas en el periodo escolar actual';
     const logCreateSchoolPeriod = 'Creo el periodo escolar ';
     const logUpdateSchoolPeriod = 'Actualizo el periodo escolar ';
     const whitId = ' con id ';
@@ -129,11 +129,11 @@ class SchoolPeriodService
     }
 
     /**
-     * Valida que los id de los profesores y las materias se encuentre en la organización, retorna un booleano.
-     * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * Valida que los id de los profesores y las asignaturas se encuentre en la organización, retorna un booleano.
+     * @param Subject $subjects: Array de la petición con las asignaturas que se asocian al periodo escolar
      * @param string $organizationId Id de la organiación
-     * @return integer|boolean Devuelve un booleano si los profesores y materias pertenecen a la organizacion en caso de
-     * existir un error devolvera 0.
+     * @return integer|boolean Devuelve un booleano si los profesores y asignaturas pertenecen a la organizacion en caso
+     * de existir un error devolvera 0.
      */
     public static function validateSubjects($subjects,$organizationId)
     {
@@ -156,9 +156,9 @@ class SchoolPeriodService
     }
 
     /**
-     * Valida que no se envíe la misma materia dos veces en el  mismo periodo escolar, retorna un booleano.
-     * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
-     * @return integer|boolean Devuelve true si las materias no estan duplicadas, de lo contrario devolvera false
+     * Valida que no se envíe la misma asignatura dos veces en el  mismo periodo escolar, retorna un booleano.
+     * @param Subject $subjects: Array de la petición con las asignaturas que se asocian al periodo escolar
+     * @return integer|boolean Devuelve true si las asignaturas no estan duplicadas, de lo contrario devolvera false
      */
     public static function subjectConsistency($subjects)
     {
@@ -174,8 +174,8 @@ class SchoolPeriodService
 
     /**
      * Crea un horario asociado al objeto SchoolPeriodSubjectTeacher con el metodo Schedule::addSchedule($schedule).
-     * @param object $schedules Array de la petición con los horarios de una materia
-     * @param integer $schoolPeriodSubjectTeacherId Id de la relacion entre periodo escolar, materia y profesor
+     * @param object $schedules Array de la petición con los horarios de una asignatura
+     * @param integer $schoolPeriodSubjectTeacherId Id de la relacion entre periodo escolar, asignatura y profesor
      * @return integer de ocurrir un error devolvera 0.
      */
     public static function addSchedules($schedules,$schoolPeriodSubjectTeacherId)
@@ -190,9 +190,9 @@ class SchoolPeriodService
     }
 
     /**
-     * Agrega materias al periodo escolar dado su id y devuelve su id con el metodo
+     * Agrega asignaturas al periodo escolar dado su id y devuelve su id con el metodo
      * SchoolPeriodSubjectTeacher::addSchoolPeriodSubjectTeacher($subject).
-     * @param array $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * @param array $subjects: Array de la petición con las asignaturas que se asocian al periodo escolar
      * @param integer $schoolPeriodId Id del periodo escolar asociado
      * @return integer Devuelve el id de la relacion entre periodo escolar profesor y asignatura, en caso de existir un
      * error devolvera 0.
@@ -318,7 +318,7 @@ class SchoolPeriodService
     /**
      * Actualiza un objeto de tipo schoolPeriodSubjectTeacher con el metodo
      * SchoolPeriodSubjectTeacher::updateSchoolPeriodSubjectTeacher($subjectInBd['id'],$subject).
-     * @param Subject $subjects: Array de la petición con las materias que se asocian al periodo escolar
+     * @param Subject $subjects: Array de la petición con las asignaturas que se asocian al periodo escolar
      * @param integer $schoolPeriodId Id del periodo escolar asociado
      * @return integer en caso de existir un error devolvera 0.
      */
@@ -466,7 +466,7 @@ class SchoolPeriodService
     }
 
     /**
-     * Obtiene las materias que dicta un profesor dado su id, en el periodo escolar actual.
+     * Obtiene las asignaturas que dicta un profesor dado su id, en el periodo escolar actual.
      * SchoolPeriod::getSchoolPeriodById($id,$organizationId).
      * @param string $teacherId Id del profesor
      * @param string $organizationId Id de la organiación
