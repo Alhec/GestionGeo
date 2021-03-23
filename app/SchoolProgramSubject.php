@@ -32,7 +32,7 @@ class SchoolProgramSubject extends Model
     protected $table = 'school_program_subject';
 
     /**
-     *Crea una asociacion de materia con programa escolar en el sistema
+     *Crea una asociacion de asignatura con programa escolar en el sistema
      * @param mixed $schoolProgramSubject: Objeto de tipo schoolProgramSubject (contiene los atributos del modelo)
      * @return integer Crea un objeto de SchoolProgramSubject, si falla devolverá 0.
      */
@@ -47,8 +47,8 @@ class SchoolProgramSubject extends Model
     }
 
     /**
-     *Obtiene la asociacion de una materia con un programa escolar
-     * @param string $subjectId: Id de la materia
+     *Obtiene la asociacion de una asignatura con un programa escolar
+     * @param string $subjectId: Id de la asignatura
      * @param string $schoolProgramId: Id del programa escolar
      * @return SchoolProgramSubject|integer Obtiene el objeto SchoolProgramSubject dado un subjectId y schoolProgramId.
      */
@@ -64,9 +64,9 @@ class SchoolProgramSubject extends Model
     }
 
     /**
-     *Obtiene la asociacion de una materia con todos sus programas escolares asociados
-     * @param string $subjectId: Id de la materia
-     * @return SchoolProgramSubject|integer Obtiene los programas escolares a los cuales está asociada la materia.
+     *Obtiene la asociacion de una asignatura con todos sus programas escolares asociados
+     * @param string $subjectId: Id de la asignatura
+     * @return SchoolProgramSubject|integer Obtiene los programas escolares a los cuales está asociada la asignatura.
      */
     public static function getSchoolProgramSubjectsBySubjectId($subjectId)
     {
@@ -79,7 +79,7 @@ class SchoolProgramSubject extends Model
     }
 
     /**
-     *Actualiza una asociacion de materia con programa escolar en el sistema
+     *Actualiza una asociacion de asignatura con programa escolar en el sistema
      * @param integer $id Id del objeto SchoolProgramSubject
      * @param mixed $schoolProgramSubject: Objeto de tipo schoolProgramSubject (contiene los atributos del modelo)
      * @return integer Actualiza un objeto schoolProgramSubject dado su id.
@@ -98,7 +98,7 @@ class SchoolProgramSubject extends Model
     }
 
     /**
-     *Elimina una asociacion entre materia y programa escolar
+     *Elimina una asociacion entre asignatura y programa escolar
      * @param integer $id Id del objeto SchoolProgramSubject
      * @return integer Elimina una entidad de tipo SchoolProgramSubject.
      */
@@ -114,9 +114,9 @@ class SchoolProgramSubject extends Model
     }
 
     /**
-     *Obtiene las materia sasociadas aun grupo
+     *Obtiene las asignatura sasociadas aun grupo
      * @param integer $subjectGroup: Id del grupo.
-     * @return integer Obtiene el conjunto de materias asociadas en caso de que esta esté asociada con otras.
+     * @return integer Obtiene el conjunto de asignaturas asociadas en caso de que esta esté asociada con otras.
      */
     public static function getSubjectGroup($subjectGroup)
     {

@@ -42,7 +42,7 @@ class Equivalence extends Model
     /**
      *Crea una asociacion equivalence a un estudiante
      * @param mixed $equivalence: Objeto de tipo equivalence (contiene los atributos del modelo)
-     * @return integer Crea una equivalencia con un estudiante y materia asociados, si falla devolverá 0.
+     * @return integer Crea una equivalencia con un estudiante y asignatura asociados, si falla devolverá 0.
      */
     public static function addEquivalence($equivalence)
     {

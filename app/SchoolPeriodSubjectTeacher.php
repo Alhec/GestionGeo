@@ -64,10 +64,10 @@ class SchoolPeriodSubjectTeacher extends Model
     }
 
     /**
-     *Crea una relacion SchoolPeriodSubjectTeacher que representa una materia con un profesor en un periodo escolar
+     *Crea una relacion SchoolPeriodSubjectTeacher que representa una asignatura con un profesor en un periodo escolar
      * @param mixed $schoolPeriodSubjectTeacher: Objeto de tipo schoolPeriodSubjectTeacher (contiene los atributos del
      * modelo)
-     * @return integer Agrega un objeto relación entre materia, periodo escolar y profesor, retorna el id del objeto,
+     * @return integer Agrega un objeto relación entre asignatura, periodo escolar y profesor, retorna el id del objeto,
      * de fallar devolverá 0.
      */
     public static function addSchoolPeriodSubjectTeacher($schoolPeriodSubjectTeacher)
@@ -82,8 +82,8 @@ class SchoolPeriodSubjectTeacher extends Model
     }
 
     /**
-     *Elimina todas las relaciones de SchoolPeriodSubjectTeacher que representan materias en un periodo escolar dado el
-     * id del periodo escolar
+     *Elimina todas las relaciones de SchoolPeriodSubjectTeacher que representan asignaturas en un periodo escolar dado
+     * el id del periodo escolar
      * @param integer $schoolPeriodId: Id del periodo escolar
      * @return integer Elimina todos los objetos de relación que tengan asociado el id del programa escolar dado, de
      * fallar devolverá 0.
@@ -101,8 +101,8 @@ class SchoolPeriodSubjectTeacher extends Model
     }
 
     /**
-     *Obtiene todas las relaciones de SchoolPeriodSubjectTeacher que representan materias en un periodo escolar dado el
-     * id del periodo escolar
+     *Obtiene todas las relaciones de SchoolPeriodSubjectTeacher que representan asignaturas en un periodo escolar dado
+     * el id del periodo escolar
      * @param string $schoolPeriodId Id del periodo escolar.
      * @return SchoolPeriodSubjectTeacher|integer Obtiene los objetos schoolPeriodSubjectTeacher que tengan asociado el
      * id del programa escolar dado.
@@ -121,8 +121,8 @@ class SchoolPeriodSubjectTeacher extends Model
     }
 
     /**
-     *Actualiza una relacion SchoolPeriodSubjectTeacher que representa una materia con un profesor en un periodo escolar
-     * dado su id
+     *Actualiza una relacion SchoolPeriodSubjectTeacher que representa una asignatura con un profesor en un periodo
+     * escolar dado su id
      * @param integer $id Id del objeto schoolPeriodSubjectTeacher
      * @param mixed $schoolPeriodSubjectTeacher: Objeto de tipo schoolPeriodSubjectTeacher (contiene los atributos del
      * modelo)
@@ -142,7 +142,7 @@ class SchoolPeriodSubjectTeacher extends Model
     /**
      *Obtiene el id de una relacion SchoolPeriodSubjectTeacher
      * @param string $schoolPeriodId Id del periodo escolar
-     * @param string $subjectId: Id de la materia
+     * @param string $subjectId: Id de la asignatura
      * @param string $teacherId: Id del profesor
      * @return SchoolPeriodSubjectTeacher|integer Obtiene el id del objeto que tiene asociado al id del profesor,
      * maestro y programa escolar dados.
@@ -193,9 +193,9 @@ class SchoolPeriodSubjectTeacher extends Model
 
     /**
      *Actualiza la cantidad de estudiantes inscritos en una relacion SchoolPeriodSubjectTeacher que representa una
-     * materia con un profesor en un periodo escolar dado su id
+     * asignatura con un profesor en un periodo escolar dado su id
      * @param integer $id Id del objeto schoolPeriodSubjectTeacher
-     * @return integer Actualiza la cantidad de estudiantes inscritos en una materia, de fallar devolverá 0.
+     * @return integer Actualiza la cantidad de estudiantes inscritos en una asignatura, de fallar devolverá 0.
      */
     public static function updateEnrolledStudent($id)
     {
@@ -222,11 +222,11 @@ class SchoolPeriodSubjectTeacher extends Model
     }
 
     /**
-     *Obtiene todas las relaciones de SchoolPeriodSubjectTeacher que representan materias en un periodo escolar dado el
-     * id del periodo escolar y el id del profesor
+     *Obtiene todas las relaciones de SchoolPeriodSubjectTeacher que representan asignaturas en un periodo escolar dado
+     * el id del periodo escolar y el id del profesor
      * @param string $teacherId Id del profesor.
      * @param string $schoolPeriodId Id del periodo escolar.
-     * @return SchoolPeriodSubjectTeacher|integer Obtiene las materias que dicta un profesor en un periodo escolar.
+     * @return SchoolPeriodSubjectTeacher|integer Obtiene las asignaturas que dicta un profesor en un periodo escolar.
      */
     public static function getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,$schoolPeriodId)
     {

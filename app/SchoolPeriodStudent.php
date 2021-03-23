@@ -50,8 +50,8 @@ class SchoolPeriodStudent extends Model
     }
 
     /**
-     *Asociación de la relación studentSubject con schoolPeriodStudent (representa una materia inscrita del estudiante
-     * en el periodo escolar)
+     *Asociación de la relación studentSubject con schoolPeriodStudent (representa una asignatura inscrita del
+     * estudiante en el periodo escolar)
      */
     public function enrolledSubjects()
     {

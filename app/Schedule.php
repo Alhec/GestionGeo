@@ -37,7 +37,7 @@ class Schedule extends Model
     protected $table = 'schedules';
 
     /**
-     *Crea un horario asociado a un SchoolPeriodSubjeectTeacher que representa una materia en un periodo escolar
+     *Crea un horario asociado a un SchoolPeriodSubjeectTeacher que representa una asignatura en un periodo escolar
      * @param mixed $schedule Objeto de tipo Schedule (contiene los atributos del modelo)
      * @return integer Crea un objeto schedule, si falla devolverá 0.
      */
@@ -52,7 +52,7 @@ class Schedule extends Model
     }
 
     /**
-     *Elimina todos los horarios asociados a una materia en un periodo escolar
+     *Elimina todos los horarios asociados a una asignatura en un periodo escolar
      * @param integer $schoolPeriodSubjectTeacherId Id del objeto schoolPeriodSubjectTeacher
      * @return integer Elimina todos los horarios asociados al id del objeto schoolPeriodSubjectTeacher, de fallar
      * devolverá 0.

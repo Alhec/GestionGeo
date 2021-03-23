@@ -61,7 +61,7 @@ class FinalWork extends Model
     }
 
     /**
-     *Valida si existe una materia finalWork dado el id del estudiante y su tipo Proyecto o TEG
+     *Valida si existe una asignatura finalWork dado el id del estudiante y su tipo Proyecto o TEG
      * @param string $studentId: Id del estudiante.
      * @param string $isProject: Flag para determinar si es un proyecto o un trabajo de grado.
      * @return bool|integer Devuelve true si no existe dependiendo del flag el proyecto o trabajo de grado aprobado
@@ -80,7 +80,7 @@ class FinalWork extends Model
     }
 
     /**
-     *Obtiene una materia finalWork no aprobada dado el id del estudiante y su tipo Proyecto o TEG
+     *Obtiene una asignatura finalWork no aprobada dado el id del estudiante y su tipo Proyecto o TEG
      * @param string $studentId: Id del estudiante.
      * @param string $isProject: Flag para determinar si es un proyecto o un trabajo de grado.
      * @return FinalWork|integer Obtiene el trabajo de grado o proyecto no aprobado dado un estudiante asociado.
@@ -98,7 +98,7 @@ class FinalWork extends Model
     }
 
     /**
-     *Obtiene una materia finalWork dado el id del estudiante, su estatus y su tipo Proyecto o TEG
+     *Obtiene una asignatura finalWork dado el id del estudiante, su estatus y su tipo Proyecto o TEG
      * @param string $studentId: Id del estudiante.
      * @param string $isProject: Flag para determinar si es un proyecto o un trabajo de grado.
      * @param string $status: El estatus del trabajo de grado o proyecto
@@ -170,11 +170,11 @@ class FinalWork extends Model
     }
 
     /**
-     *Obtiene todos los finalWork dado el id del estudiante, el id de la materia final y su tipo Proyecto o TEG
+     *Obtiene todos los finalWork dado el id del estudiante, el id de la asignatura final y su tipo Proyecto o TEG
      * @param string $studentId: Id del estudiante.
-     * @param string $subjectId: Id de la materia.
+     * @param string $subjectId: Id de la asignatura.
      * @param string $isProject: Flag para determinar si es un proyecto o un trabajo de grado.
-     * @return FinalWork|integer Obtiene el trabajo de grado o proyecto dado un estudiante y el id de la materia
+     * @return FinalWork|integer Obtiene el trabajo de grado o proyecto dado un estudiante y el id de la asignatura
      * asociada.
      */
     public static function getFinalWorksByStudentSubject($studentId,$subjectId, $isProject)
@@ -192,7 +192,7 @@ class FinalWork extends Model
     }
 
     /**
-     *Valida si existe una materia finalWork dado el id del finalWork, estatus y su tipo Proyecto o TEG
+     *Valida si existe una asignatura finalWork dado el id del finalWork, estatus y su tipo Proyecto o TEG
      * @param string $id: Id del FinalWork.
      * @param string $isProject: Flag para determinar si es un proyecto o un trabajo de grado.
      * @param string $status: El estatus del trabajo de grado o proyecto
@@ -215,7 +215,7 @@ class FinalWork extends Model
     }
 
     /**
-     *Elimina una materia FinalWork de un estudiante en el sistema
+     *Elimina una asignatura FinalWork de un estudiante en el sistema
      * @param integer $id Id del FinalWork
      * @return integer Elimina un finalWork dado su id, de fallar devolverá 0.
      */
@@ -249,7 +249,7 @@ class FinalWork extends Model
     }
 
     /**
-     *Valida si existe una materia finalWork dado su id
+     *Valida si existe una asignatura finalWork dado su id
      * @param string $id: Id del FinalWork.
      * @return bool|integer Valida si existe el finalWork dado su id.
      */

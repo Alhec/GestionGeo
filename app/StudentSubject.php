@@ -42,7 +42,7 @@ class StudentSubject extends Model
     }
 
     /**
-     *Asociación de la relación SchoolPeriodSubjectTeacher con studentSubject (representa la materia asociada al periodo
+     *Asociación de la relación SchoolPeriodSubjectTeacher con studentSubject (representa la asignatura asociada al periodo
      * escolar que el estudiante esta inscribiendo)
      */
     public function dataSubject()
@@ -54,10 +54,10 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene todas las materias inscritas con excepcion de las que han sido retiradas
+     *Obtiene todas las asignaturas inscritas con excepcion de las que han sido retiradas
      * @param string $studentId: Id del estudiante
-     * @return integer|StudentSubject Devuelve todas las materias que inscribió el estudiante dado su id con excepción
-     * de las que ha retirado.
+     * @return integer|StudentSubject Devuelve todas las asignaturas que inscribió el estudiante dado su id con
+     * excepción de las que ha retirado.
      */
     public static function getAllSubjectsEnrolledWithoutRET($studentId)
     {
@@ -75,9 +75,9 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene todas las materias inscritas con excepcion de las que han sido retiradas o estan siendo cursadas
+     *Obtiene todas las asignaturas inscritas con excepcion de las que han sido retiradas o estan siendo cursadas
      * @param string $studentId: Id del estudiante
-     * @return integer|StudentSubject Devuelve todas las materias que inscribió el estudiante dado su id con excepción
+     * @return integer|StudentSubject Devuelve todas las asignaturas que inscribió el estudiante dado su id con excepción
      * de las que ha retirado o las que está cursando.
      */
     public static function getAllSubjectsEnrolledWithoutRETCUR($studentId)
@@ -97,10 +97,10 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene la cantidad de materias inscritas con excepcion de las que han sido retiradas o estan siendo cursadas
+     *Obtiene la cantidad de asignaturas inscritas con excepcion de las que han sido retiradas o estan siendo cursadas
      * @param string $studentId Id del estudiante
-     * @return integer Devuelve la cantidad de materias que inscribió el estudiante dado su id con excepción de las que
-     * ha retirado o las que está cursando.
+     * @return integer Devuelve la cantidad de asignaturas que inscribió el estudiante dado su id con excepción de las
+     * que ha retirado o las que está cursando.
      */
     public static function cantAllSubjectsEnrolledWithoutRETCUR($studentId)
     {
@@ -118,10 +118,10 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene todas las materias inscritas de un estudiante en un periodo escolar
+     *Obtiene todas las asignaturas inscritas de un estudiante en un periodo escolar
      * @param string $studentId: Id del estudiante
      * @param string $schoolPeriodId: Id del periodo escolar
-     * @return integer|array Obtiene las materias que tiene inscritas un estudiante dado un periodo escolar.
+     * @return integer|array Obtiene las asignaturas que tiene inscritas un estudiante dado un periodo escolar.
      */
     public static function getEnrolledSubjectsBySchoolPeriodStudent($studentId,$schoolPeriodId)
     {
@@ -139,9 +139,10 @@ class StudentSubject extends Model
     }
 
     /**
-     *Crea una inscripcion de un estudiante en una materia de un periodo escolar
+     *Crea una inscripcion de un estudiante en una asignatura de un periodo escolar
      * @param mixed $studentSubject: Objeto de tipo studentSubject (contiene los atributos del modelo)
-     * @return integer Agrega la inscripción de una materia en el periodo escolar de un estudiante, de fallar retorna 0.
+     * @return integer Agrega la inscripción de una asignatura en el periodo escolar de un estudiante, de fallar retorna
+     * 0.
      */
     public static function addStudentSubject($studentSubject)
     {
@@ -154,9 +155,9 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene todas las inscripciones que se realizaron a una materia del periodo escolar
-     * @param string $schoolPeriodSubjectTeacherId: Id de la relacion entre las materias del periodo escolar
-     * @return integer|StudentSubject Devuelve los estudiantes inscritos en una materia con el id de relación del
+     *Obtiene todas las inscripciones que se realizaron a una asignatura del periodo escolar
+     * @param string $schoolPeriodSubjectTeacherId: Id de la relacion entre las asignaturas del periodo escolar
+     * @return integer|StudentSubject Devuelve los estudiantes inscritos en una asignatura con el id de relación del
      * periodo escolar.
      */
     public static function studentSubjectBySchoolPeriodSubjectTeacherId($schoolPeriodSubjectTeacherId)
@@ -171,9 +172,9 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene todas las materias que inscribio un estudiante en un periodo escolar
+     *Obtiene todas las asignaturas que inscribio un estudiante en un periodo escolar
      * @param string $schoolPeriodStudentId: Id de la relación entre el estudiante y el periodo escolar
-     * @return integer|StudentSubject Obtiene las materias que cursa un estudiante en un periodo escolar.
+     * @return integer|StudentSubject Obtiene las asignaturas que cursa un estudiante en un periodo escolar.
      */
     public static function studentSubjectBySchoolPeriodStudent($schoolPeriodStudentId)
     {
@@ -186,9 +187,9 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene el id de una inscripcion de materia de un estudiante
+     *Obtiene el id de una inscripcion de asignatura de un estudiante
      * @param string $schoolPeriodStudentId: Id de la relación entre el estudiante y el periodo escolar
-     * @param string $schoolPeriodSubjectTeacherId: Id de la relacion entre las materias del periodo escolar
+     * @param string $schoolPeriodSubjectTeacherId: Id de la relacion entre las asignaturas del periodo escolar
      * @return SchoolPeriodStudent|integer Obtiene el id de la relacion entre schoolPeriodStudent y
      * SchoolPeriodSubjectTeacher.
      */
@@ -204,10 +205,10 @@ class StudentSubject extends Model
     }
 
     /**
-     *Actualiza la inscripcion de un estudiante en una materia
-     * @param integer $id Id de la inscripción de la materia en el periodo escolar
+     *Actualiza la inscripcion de un estudiante en una asignatura
+     * @param integer $id Id de la inscripción de la asignatura en el periodo escolar
      * @param mixed $studentSubject: Objeto de tipo studentSubject (contiene los atributos del modelo)
-     * @return integer Actualiza la inscripción de una materia en el periodo escolar de un estudiante dado su id, de
+     * @return integer Actualiza la inscripción de una asignatura en el periodo escolar de un estudiante dado su id, de
      * fallar devolverá 0.
      */
     public static function updateStudentSubject($id,$studentSubject)
@@ -222,9 +223,9 @@ class StudentSubject extends Model
     }
 
     /**
-     *Elimina una inscripcion de una materia dado su id
-     * @param integer $id Id de la inscripción de la materia en el periodo escolar
-     * @return integer Elimina una materia de la inscripción de un estudiante dado su id de fallar devolverá 0.
+     *Elimina una inscripcion de una asignatura dado su id
+     * @param integer $id Id de la inscripción de la asignatura en el periodo escolar
+     * @return integer Elimina una asignatura de la inscripción de un estudiante dado su id de fallar devolverá 0.
      */
     public static function deleteStudentSubject($id)
     {
@@ -238,10 +239,10 @@ class StudentSubject extends Model
     }
 
     /**
-     *Elimina todas las inscripciones de materia que realizo un estudiante en un periodo escolar
+     *Elimina todas las inscripciones de asignatura que realizo un estudiante en un periodo escolar
      * @param integer $schoolPeriodStudentId: Id de la inscripción del estudiante en el periodo escolar
-     * @return integer Elimina todas las materias inscritas asociadas al id de la inscripción de un estudiante dado su
-     * id de fallar devolverá 0.
+     * @return integer Elimina todas las asignaturas inscritas asociadas al id de la inscripción de un estudiante dado
+     * su id de fallar devolverá 0.
      */
     public static function deleteStudentSubjectBySchoolPeriodStudentId($schoolPeriodStudentId)
     {
@@ -255,9 +256,9 @@ class StudentSubject extends Model
     }
 
     /**
-     *Obtiene una materia inscrita por un estudiante dado el id de esa materia inscrita
-     * @param string $id Id de la inscripción de la materia en el periodo escolar
-     * @return SchoolPeriodStudent|integer Obtiene la materia inscrita de un estudiante dado su id.
+     *Obtiene una asignatura inscrita por un estudiante dado el id de esa asignatura inscrita
+     * @param string $id Id de la inscripción de la asignatura en el periodo escolar
+     * @return SchoolPeriodStudent|integer Obtiene la asignatura inscrita de un estudiante dado su id.
      */
     public static function getStudentSubjectById($id)
     {

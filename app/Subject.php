@@ -38,10 +38,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene las materias presentes en una organización
+     *Obtiene las asignaturas presentes en una organización
      * @param string $organizationId Id de la organiación
      * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
-     * @return integer|array|object Lista las materias de todos los programas escolares asociadas a una organización.
+     * @return integer|array|object Lista las asignaturas de todos los programas escolares asociadas a una organización.
      */
     public static function getSubjects($organizationId, $perPage=0){
         try{
@@ -67,10 +67,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene una materia dado su id en una organización
-     * @param string $id Id de la materia
+     *Obtiene una asignatura dado su id en una organización
+     * @param string $id Id de la asignatura
      * @param string $organizationId Id de la organiación
-     * @return Subject|integer Devuelve una materia dado su id en una organización.
+     * @return Subject|integer Devuelve una asignatura dado su id en una organización.
      */
     public static function getSubjectById($id,$organizationId){
         try{
@@ -87,11 +87,11 @@ class Subject extends Model
     }
 
     /**
-     *Valida si existe una materia dado su codigo en una organización
-     * @param string $code Código de la materia
+     *Valida si existe una asignatura dado su codigo en una organización
+     * @param string $code Código de la asignatura
      * @param string $organizationId Id de la organiación
-     * @return bool|integer Devuelve true si el código de la materia está presente en la organización de lo contrario
-     * será false.
+     * @return bool|integer Devuelve true si el código de la asignaturas está presente en la organización de lo
+     * contrario será false.
      */
     public static function existSubjectByCode($code,$organizationId){
         try{
@@ -109,9 +109,9 @@ class Subject extends Model
     }
 
     /**
-     *Crea una materia en el sistema
+     *Crea una asignatura en el sistema
      * @param mixed $subject Objeto de tipo subject (contiene los atributos del modelo)
-     * @return integer Crea una materia de ser exitosa devolverá su id, si falla devolverá 0.
+     * @return integer Crea una asignatura de ser exitosa devolverá su id, si falla devolverá 0.
      */
     public static function addSubject($subject)
     {
@@ -125,10 +125,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene una materia dado su code en una organización
-     * @param string $code Código de la materia
+     *Obtiene una asignatura dado su code en una organización
+     * @param string $code Código de la asignatura
      * @param string $organizationId Id de la organiación
-     * @return Subject|integer Obtiene la materia asociada al código en la organización.
+     * @return Subject|integer Obtiene la asignatura asociada al código en la organización.
      */
     public static function getSubjectByCode($code,$organizationId)
     {
@@ -147,10 +147,10 @@ class Subject extends Model
     }
 
     /**
-     *Valida si existe una materia dado su id en una organización
-     * @param string $id Id de la materia
+     *Valida si existe una asignatura dado su id en una organización
+     * @param string $id Id de la asignatura
      * @param string $organizationId Id de la organiación
-     * @return bool|integer Devuelve true si el id de la materia está presente en la organización de lo contrario
+     * @return bool|integer Devuelve true si el id de la asignatura está presente en la organización de lo contrario
      * será false.
      */
     public static function existSubjectById($id,$organizationId)
@@ -169,9 +169,9 @@ class Subject extends Model
     }
 
     /**
-     *Elimina una materia en el sistema
-     * @param integer $id Id de la materia
-     * @return integer Elimina una materia dado su id, si falla devolverá 0.
+     *Elimina una asignatura en el sistema
+     * @param integer $id Id de la asignatura
+     * @return integer Elimina una asignatura dado su id, si falla devolverá 0.
      */
     public static function deleteSubject($id)
     {
@@ -185,10 +185,10 @@ class Subject extends Model
     }
 
     /**
-     *Actualiza una materia dado su id en el sistema
+     *Actualiza una asignatura dado su id en el sistema
      * @param integer $id Id del usuario
      * @param mixed $subject Objeto de tipo subject (contiene los atributos del modelo)
-     * @return integer Actualiza los datos de una materia dado su id.
+     * @return integer Actualiza los datos de una asignatura dado su id.
      */
     public static function updateSubject($id,$subject)
     {
@@ -202,10 +202,10 @@ class Subject extends Model
     }
 
     /**
-     *Actualiza una materia dado su id en el sistema
+     *Actualiza una asignatura dado su id en el sistema
      * @param integer $id Id del usuario
      * @param mixed $subject Array con los atributos del objeto subject
-     * @return integer Actualiza los datos de una materia dado su id.
+     * @return integer Actualiza los datos de una asignatura dado su id.
      */
     public static function updateSubjectLikeArray($id,$subject)
     {
@@ -220,10 +220,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene las materias presentes en un programa escolar de una organización
+     *Obtiene las asignaturas presentes en un programa escolar de una organización
      * @param string $schoolProgramId Id del programa escolar
      * @param string $organizationId Id de la organiación
-     * @return integer|Subject Devuelve las materias asociadas a un programa escolar en una organización.
+     * @return integer|Subject Devuelve las asignaturas asociadas a un programa escolar en una organización.
      */
     public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId){
         try{
@@ -239,10 +239,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene las materias de tipo proyecto en un programa escolar de una organización
+     *Obtiene las asignaturas de tipo proyecto en un programa escolar de una organización
      * @param string $schoolProgramId Id del programa escolar
      * @param string $organizationId Id de la organiación
-     * @return integer|Subject Devuelve la(s) materia proyecto de acuerdo al programa escolar en la organización.
+     * @return integer|Subject Devuelve la(s) asignatura(s) proyecto de acuerdo al programa escolar en la organización.
      */
     public static function getProjectBySchoolProgram($schoolProgramId,$organizationId)
     {
@@ -260,10 +260,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene las materias de tipo finalWork en un programa escolar de una organización
+     *Obtiene las asignaturas de tipo finalWork en un programa escolar de una organización
      * @param string $schoolProgramId Id del programa escolar
      * @param string $organizationId Id de la organiación
-     * @return integer|Subject Devuelve la materia de trabajo final de acuerdo al programa escolar en la organización
+     * @return integer|Subject Devuelve la asignatura de trabajo final de acuerdo al programa escolar en la organización
      */
     public static function getFinalWorkBySchoolProgram($schoolProgramId, $organizationId)
     {
@@ -281,10 +281,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene una materia dado su id en una organización
-     * @param string $id Id de la materia
+     *Obtiene una asignatura dado su id en una organización
+     * @param string $id Id de la asignatura
      * @param string $organizationId Id de la organiación
-     * @return Subject|integer Devuelve una materia dado su id en una organización sin relación con algun programa
+     * @return Subject|integer Devuelve una asignatura dado su id en una organización sin relación con algun programa
      * escolar.
      */
     public static function getSimpleSubjectById($id,$organizationId){
@@ -301,10 +301,10 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene las materias que no son de proyecto o de trabajo de grado presentes en una organización
+     *Obtiene las asignaturas que no son de proyecto o de trabajo de grado presentes en una organización
      * @param string $organizationId Id de la organiación
-     * @return integer|object Lista las materias de todos los programas escolares asociadas a una organización sin los
-     * programas escolares y proyectos.
+     * @return integer|object Lista las asignaturas de todos los programas escolares asociadas a una organización sin
+     * los programas escolares y proyectos.
      */
     public static function getSubjectsWithoutFinalWorks($organizationId){
         try{
@@ -322,9 +322,9 @@ class Subject extends Model
     }
 
     /**
-     *Obtiene las materias que que estan en programas no conducente a grado presentes en una organización
+     *Obtiene las asignaturas que que estan en programas no conducente a grado presentes en una organización
      * @param string $organizationId Id de la organiación
-     * @return integer|object Lista las materias de todos los programas escolares que no son conducentes a grado
+     * @return integer|object Lista las asignaturas de todos los programas escolares que no son conducentes a grado
      * asociadas a una organización
      */
     public static function getSubjectsInProgramsNotDegree($organizationId){

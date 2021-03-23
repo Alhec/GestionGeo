@@ -224,7 +224,7 @@ class SchoolPeriod extends Model
     /**
      *Obtiene los programas escolares en los que participo un profesor dado su id
      * @param string $teacherId: Id del profesor
-     * @return SchoolPeriod|integer Devuelve todas las materias que ha dictado un profesor dado su id en orden
+     * @return SchoolPeriod|integer Devuelve todas las asignaturas que ha dictado un profesor dado su id en orden
      * ascendente de acuerdo a la fecha.
      */
     public static function getSubjectsByTeacher($teacherId)
