@@ -16,16 +16,26 @@ use App\SchoolPeriod;
 use App\StudentSubject;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 
+/**
+ * @package : Services
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class ConstanceService
 {
-
     const taskError = 'No se puede proceder con la tarea';
     const notFoundUser = 'Usuario no encontrado';
     const hasNotPrincipal = 'No hay coordinador principal';
     const notFoundInscription = 'Inscripcion no encontrada';
     const notYetHaveHistorical = 'Aun no tienes historial';
 
+    /**
+     * Castea un mes de número a su correspondencia en texto
+     * @param integer $month  Número que representa el mes
+     * @return string Devuelve el mesen letras.
+     */
     public static function numberToMonth($month)
     {
         switch ($month){
@@ -56,6 +66,11 @@ class ConstanceService
         }
     }
 
+    /**
+     * Castea un dia de número a su correspondencia en texto
+     * @param integer $day  Número que representa el dia
+     * @return string Devuelve el dia letras.
+     */
     public static function numberToDay($day)
     {
         switch ($day){
@@ -124,6 +139,15 @@ class ConstanceService
         }
     }
 
+    /**
+     * Consulta la data necesaria para hacer una constancia de estudio, dependiendo del flag $getData, se devolverá la
+     * data en un response o un objeto pdf.
+     * @param integer $studentId Id del estudiante
+     * @param string $organizationId Id de la organización a consultar el usuario
+     * @param boolean $getData Flag para devolver la data o el pdf.
+     * @return array|\PDF|object Devuelve un objeto pdf o un array dependiendo del flag, de existir un error devolvera
+     * un objeto con el mensaje asociado.
+     */
     public static function constanceOfStudy($studentId,$organizationId,$getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
@@ -171,6 +195,12 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     * Obtiene la cantidad de créditos inscritos, la sumatoria de las notas obtenidas, cantidad de asignaturas inscritas
+     * y el promedio del estudiante.
+     * @param array $historical Array con todas las inscripciones del estudiante
+     * @return array Devuelve un arreglo con los datos estadisticos del estudiante
+     */
     public static function statisticsDataHistorical($historical)
     {
         $enrolledCredits=0;
@@ -193,6 +223,12 @@ class ConstanceService
         return $dataHistorical;
     }
 
+    /**
+     * Devuelve la suma de los créditos otorgados y las asignaturas por equivalencia.
+     * @param integer $creditsGranted Créditos otorgados al iniciar el programa escolar
+     * @param array $equivalences Asignaturas por equivalencia
+     * @return integer Devuelve la suma de los creditos por equivalencia y otorgados del estudiante
+     */
     public static function countCreditsEquivalences($creditsGranted, $equivalences)
     {
         $count = $creditsGranted;
@@ -202,6 +238,16 @@ class ConstanceService
         return $count;
     }
 
+    /**
+     * Consulta la data necesaria para hacer una constancia de inscripción, dependiendo del flag $getData, se devolverá
+     * la data en un response o un objeto pdf.
+     * @param integer $studentId Id del estudiante
+     * @param integer $inscriptionId Id de la inscripción asociada al estudiante
+     * @param string $organizationId Id de la organización a consultar el usuario
+     * @param boolean $getData Flag para devolver la data o el pdf.
+     * @return array|\PDF|object Devuelve un objeto pdf o un array dependiendo del flag, de existir un error devolvera
+     * un objeto con el mensaje asociado.
+     */
     public static function inscriptionConstance($studentId,$inscriptionId,$organizationId, $getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
@@ -267,6 +313,15 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     * Consulta la data necesaria para hacer una constancia de trabajo, dependiendo del flag $getData, se devolverá la
+     * data en un response o un objeto pdf.
+     * @param integer $teacherId Id del profesor
+     * @param string $organizationId Id de la organización a consultar el usuario
+     * @param boolean $getData Flag para devolver la data o el pdf.
+     * @return array|\PDF|object Devuelve un objeto pdf o un array dependiendo del flag, de existir un error devolvera
+     * un objeto con el mensaje asociado.
+     */
     public static function constanceOfWorkTeacher($teacherId,$organizationId,$getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
@@ -325,6 +380,15 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     * Consulta la data necesaria para hacer una constancia de trabajo, dependiendo del flag $getData, se devolverá la
+     * data en un response o un objeto pdf.
+     * @param integer $administratorId Id del administrador
+     * @param string $organizationId Id de la organización a consultar el usuario
+     * @param boolean $getData Flag para devolver la data o el pdf.
+     * @return array|\PDF|object Devuelve un objeto pdf o un array dependiendo del flag, de existir un error devolvera
+     * un objeto con el mensaje asociado.
+     */
     public static function constanceOfWorkAdministrator($administratorId,$organizationId,$getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
@@ -368,11 +432,22 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     * Función usada por el usort para comparar los códigos de las asignaturas.
+     * @param object $a primer parámetro
+     * @param object $b segundo parámetro
+     * @return array Lista ordenada
+     */
     public static function cmpSubjectCode($a, $b)
     {
         return strcmp($a["code"], $b["code"]);
     }
 
+    /**
+     * Suma los créditos de las asignaturas en la lista.
+     * @param array $subjects Lista que contiene las asignaturas
+     * @return integer Devuelve la suma de los creditos
+     */
     public static function countCreditsOfSubjects($subjects){
         $total = 0;
         foreach ($subjects as $subject){
@@ -381,7 +456,16 @@ class ConstanceService
         return $total;
     }
 
-    public static function academicLoad( $studentId,$organizationId,$getData)
+    /**
+     * Consulta la data necesaria para hacer una constancia de carga académica, dependiendo del flag $getData, se
+     * devolverá la data en un response o un objeto pdf.
+     * @param integer $studentId Id del estudiante
+     * @param string $organizationId Id de la organización a consultar el usuario
+     * @param boolean $getData Flag para devolver la data o el pdf.
+     * @return array|\PDF|object Devuelve un objeto pdf o un array dependiendo del flag, de existir un error devolvera
+     * un objeto con el mensaje asociado.
+     */
+    public static function academicLoad($studentId,$organizationId,$getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
         if (!in_array('A',$usersRol)){
@@ -439,6 +523,15 @@ class ConstanceService
         return response()->json(['message'=>self::notFoundUser],206);
     }
 
+    /**
+     * Consulta la data necesaria para hacer una constancia de historial, dependiendo del flag $getData, se devolverá la
+     * data en un response o un objeto pdf.
+     * @param integer $studentId Id del estudiante
+     * @param string $organizationId Id de la organización a consultar el usuario
+     * @param boolean $getData Flag para devolver la data o el pdf.
+     * @return array|\PDF|object Devuelve un objeto pdf o un array dependiendo del flag, de existir un error devolvera
+     * un objeto con el mensaje asociado.
+     */
     public static function studentHistorical( $studentId,$organizationId,$getData)
     {
         $usersRol = array_column(auth()->payload()['user']->roles,'user_type');
