@@ -14,13 +14,6 @@ use Illuminate\Http\Response;
  */
 class AuthController extends Controller
 {
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-
-
     const logLogout = 'Realizo cierre de sesion';
     const taskError = 'No se puede proceder con la tarea';
 

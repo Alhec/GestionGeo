@@ -7,9 +7,15 @@ use App\Log;
 use App\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Password;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 
+/**
+ * @package : Controller
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class ForgotPasswordController extends Controller
 {
     /*
@@ -34,9 +40,9 @@ class ForgotPasswordController extends Controller
     const logUserRequestRecoverPass = 'Solicitud de recuperacion de clave';
     const logSendEmailRecoverPass = 'Correo enviado para recuperacion de clave';
     const logNotSendEmailRecoverPass = 'Correo no enviado para recuperacion de clave';
+
     /**
-     * Create a new controller instance.
-     *
+     * Crea una nueva instancia del controlador
      * @return void
      */
     public function __construct()
@@ -45,7 +51,15 @@ class ForgotPasswordController extends Controller
     }
 
 
-
+    /**
+     * Valida los siguientes atributos
+     * *email: requerido y estructura de email
+     * *user_type: requerido, máximo 1 y termina en S,T o A
+     * además de ello envía el correo al usuario con el link de recuperación de contraseña.
+     * @param Request $request
+     * @return Response
+     * @throws
+     */
     public function sendResetLinkEmail(Request $request)
     {
         $this->validate($request, ['email' => 'required|email']);
