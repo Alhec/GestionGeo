@@ -151,7 +151,7 @@ class StudentService
      * 'test_period'=>false,
      * 'current_status'=>'REG'
      * ])
-     * @param Request $userId id del usuario que se le agregara la entidad estudiante.
+     * @param integer $userId id del usuario que se le agregara la entidad estudiante.
      * @param Request $request Contiene los datos del estudiante
      * @return integer en caso de existir un error devolvera 0.
      */
@@ -210,7 +210,7 @@ class StudentService
      * self::addStudent($userId,$request)
      * @param Request $request Objeto con los datos de la petición
      * @param string $organizationId Id de la organiación
-     * @param Request $userId id del usuario
+     * @param integer $userId id del usuario
      * @return Response|User de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
      * devolvera el objeto user.
      */
@@ -307,7 +307,7 @@ class StudentService
      * UserService::updateUser($request,$userId,'S',$organizationId) y crea el estudiante con
      * self::addStudent($userId,$request).
      * @param Request $request Objeto con los datos de la petición
-     * @param Request $userId id del usuario
+     * @param integer $userId id del usuario
      * @param string $organizationId Id de la organiación
      * @return Response|User de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera correcta
      * devolvera el objeto user.
