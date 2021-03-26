@@ -7,12 +7,18 @@ use App\Services\UserService;
 use App\Services\AdministratorService;
 
 
-
+/**
+ * @package : Controller
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class AdministratorController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * Obtiene todos los usuarios de rol administrador de una organización usa el método
+     * UserService::getUsers('A',$organizationId) o UserService::getUsers('A',$organizationId,$perPage) si usa
+     * paginación.
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -24,8 +30,8 @@ class AdministratorController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * Agrega un usuario administrador a una organización, usa el método
+     * AdministratorService::addAdministrator($request,$organizationId).
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -36,9 +42,10 @@ class AdministratorController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
+     * Devuelve los datos de un usuario administrador dado un id, usa el método
+     * UserService::getUserById($id,'A',$organizationId).
      * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function show($id,Request $request)
@@ -48,10 +55,10 @@ class AdministratorController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * Actualiza los datos de un usuario administrador usando el método
+     * AdministratorService::updateAdministrator($request,$id,$organizationId).
      * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function update($id,Request $request)
@@ -61,9 +68,10 @@ class AdministratorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * Elimina un usuario administrador dado su id usando el método
+     * AdministratorService::deleteAdministrator($id,$organizationId).
      * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy($id, Request $request)
@@ -72,6 +80,13 @@ class AdministratorController extends Controller
         return AdministratorService::deleteAdministrator($id,$organizationId);
     }
 
+    /**
+     * Devuelve los usuarios con rol administrador que estén en estatus activo usando el método
+     * UserService::activeUsers('A',$organizationId) o UserService::activeUsers('A',$organizationId,$perPage) si usa
+     * paginación.
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function active(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
@@ -80,6 +95,12 @@ class AdministratorController extends Controller
             UserService::activeUsers('A',$organizationId);
     }
 
+    /**
+     * Obtiene el usuario con rol coordinador principal usando el método
+     * AdministratorService::getPrincipalCoordinator($organizationId,false).
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function principal(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
