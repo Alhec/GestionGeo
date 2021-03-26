@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\AdministratorService;
 
-
 /**
  * @package : Controller
  * @author : Hector Alayon
