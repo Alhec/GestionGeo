@@ -6,10 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Log;
 use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+/**
+ * @package : Controller
+ * @author : Hector Alayon
+ * @version : 1.0
+ */
 class ResetPasswordController extends Controller
 {
     /*
@@ -29,19 +35,17 @@ class ResetPasswordController extends Controller
     const emailNotFound = 'Correo no encontrado';
     const resetPassword = 'Clave reseteada';
     const notResetPassword = 'Token invalido o vencido';
-
     const logResetPasword = 'Reseteo su clave';
     const logNotResetPasword = 'Provee token invalido';
+
     /**
-     * Where to redirect users after resetting their password.
-     *
+     * Dónde redirigir a los usuarios después de restablecer su contraseña.
      * @var string
      */
     protected $redirectTo = '/home';
 
     /**
-     * Create a new controller instance.
-     *
+     * Crea una nueva instancia del controlador
      * @return void
      */
     public function __construct()
@@ -49,6 +53,10 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
+    /**
+     * Reglas a validar
+     * @return array
+     */
     protected function rules()
     {
         return [
@@ -58,6 +66,11 @@ class ResetPasswordController extends Controller
         ];
     }
 
+    /**
+     * Obtiene valores especificos de la peticion
+     * @param Request $request
+     * @return array
+     */
     protected function credentials(Request $request)
     {
         return $request->only(
@@ -65,6 +78,16 @@ class ResetPasswordController extends Controller
         );
     }
 
+    /**
+     * Valida los siguientes atributos
+     * *email: requerido y estructura de email
+     * *user_type: requerido, máximo 1 y termina en S,T o A
+     * *token: requerido
+     * *password: requerido y confirmación
+     * además de ello resetea la clave del usuario.
+     * @param Request $request
+     * @return Response
+     */
     public function reset(Request $request)
     {
         $request->validate( [
@@ -99,6 +122,12 @@ class ResetPasswordController extends Controller
         return response()->json(['message'=>self::emailNotFound], 206);
     }
 
+    /**
+     * Resetea la clave del usuario.
+     * @param string $user
+     * @param string $password
+     * @return void
+     */
     protected function resetPassword($user, $password)
     {
         $user->forceFill([
