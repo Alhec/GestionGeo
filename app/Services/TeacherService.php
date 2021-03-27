@@ -199,7 +199,8 @@ class TeacherService
             return response()->json(['message'=>self::taskError],206);
         }
         if ($existTeacherId){
-            if(auth()->payload()['user']->user_type!='A' && auth()->payload()['user']->id!=$teacherId){
+            $roles =array_column(auth()->payload()['user']->roles,'user_type');
+            if(!in_array('A',$roles) && auth()->payload()['user']->id!=$teacherId){
                 return response()->json(['message'=>self::unauthorized],206);
             }
             return 'valid';

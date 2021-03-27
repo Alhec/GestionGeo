@@ -22,8 +22,8 @@ class AppAuthorization
     {
 
         $appAuth = $request->header('App-Auth');
-        if ($appAuth === env('APP_NAME', 'GAAPFC')){
-            return response()->json(['error' => 'Unauthorized'],401);
+        if ($appAuth !== env('APP_NAME', 'GAAPFC')){
+            return response()->json(['error' => 'App Unauthorized'],401);
         }
         return $next($request);
     }

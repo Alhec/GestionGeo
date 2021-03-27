@@ -548,10 +548,11 @@ class StudentService
                 return response()->json(['message' => self::taskError], 206);
             }
             if (count($student) > 0) {
-                if (auth()->payload()['user']->user_type=='A'){
+                $roles =array_column(auth()->payload()['user']->roles,'user_type');
+                if (in_array('A',$roles)){
                     return 'valid';
                 }
-                if (auth()->payload()['user']->user_type=='S'){
+                if (in_array('S',$roles)){
                     $studentsId = array_column(auth()->payload()['user']->student, 'id');
                     if (in_array($studentId, $studentsId)) {
                         return 'valid';

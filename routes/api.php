@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 */
 
 //Authentication
-Route::post('login', 'AuthController@login');
+Route::middleware('app.auth')->post('login', 'AuthController@login');
 Route::middleware('jwt.auth')->post('logout', 'AuthController@logout');
 Route::middleware('jwt.auth')->post('refresh', 'AuthController@refresh');
 Route::middleware('jwt.auth')->post('me', 'AuthController@me');
