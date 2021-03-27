@@ -163,7 +163,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        L5Swagger\L5SwaggerServiceProvider::class,
 
         /*
          * Package Service Providers...

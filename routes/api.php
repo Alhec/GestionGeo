@@ -16,10 +16,10 @@ use Illuminate\Http\Request;
 
 //Authentication
 Route::middleware('app.auth')->post('login', 'AuthController@login');
-Route::middleware('jwt.auth')->post('logout', 'AuthController@logout');
-Route::middleware('jwt.auth')->post('refresh', 'AuthController@refresh');
-Route::middleware('jwt.auth')->post('me', 'AuthController@me');
-Route::middleware('jwt.auth')->post('payload', 'AuthController@payload');
+Route::middleware('app.auth','jwt.auth')->post('me', 'AuthController@me');
+Route::middleware('app.auth','jwt.auth')->post('logout', 'AuthController@logout');
+Route::middleware('app.auth','jwt.auth')->post('refresh', 'AuthController@refresh');
+Route::middleware('app.auth','jwt.auth')->post('payload', 'AuthController@payload');
 
 //Comun Users
 Route::middleware('jwt.auth')->post('changePassword', 'UserController@changePassword');
