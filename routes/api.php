@@ -17,17 +17,21 @@ use Illuminate\Http\Request;
 //Authentication
 Route::middleware('app.auth')->post('login', 'AuthController@login');
 Route::middleware('app.auth','jwt.auth')->post('me', 'AuthController@me');
-Route::middleware('app.auth','jwt.auth')->post('logout', 'AuthController@logout');
-Route::middleware('app.auth','jwt.auth')->post('refresh', 'AuthController@refresh');
 Route::middleware('app.auth','jwt.auth')->post('payload', 'AuthController@payload');
-
-//Comun Users
-Route::middleware('jwt.auth')->post('changePassword', 'UserController@changePassword');
-Route::middleware('jwt.auth')->post('updateUser', 'UserController@changeUserData');
+Route::middleware('app.auth','jwt.auth')->post('refresh', 'AuthController@refresh');
+Route::middleware('app.auth','jwt.auth')->post('logout', 'AuthController@logout');
 
 // Password Reset
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
+Route::middleware('app.auth')->prefix('password')->group(function (){
+    Route::post('/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
+});
+
+
+//Comun Users
+Route::middleware('app.auth','jwt.auth')->post('changePassword', 'UserController@changePassword');
+Route::middleware('app.auth','jwt.auth')->post('updateUser', 'UserController@changeUserData');
+
 
 //Administrator
 Route::middleware('jwt.auth','role:A')->get('administrators/active','AdministratorController@active');

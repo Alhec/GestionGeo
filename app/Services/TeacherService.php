@@ -80,16 +80,16 @@ class TeacherService
             'country'=>$request['country'],
         ]);
         if (is_numeric($result)&&$result==0){
-            return response()->json(['message'=>self::taskPartialError],206);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'T']);
         if (is_numeric($rol)&&$rol==0){
-            return response()->json(['message'=>self::taskPartialError],401);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $log = Log::addLog(auth('api')->user()['id'],self::logCreateTeacher.$request['first_name'].
             ' '.$request['first_surname']);
         if (is_numeric($log)&&$log==0){
-            return response()->json(['message'=>self::taskPartialError],401);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $result = EmailService::userCreate($userId,$organizationId,'T');
         if ($result==0){
@@ -115,7 +115,7 @@ class TeacherService
             $userByCredentials = User::getUserByIdentification($request['identification'],$organizationId);
             $userByEmail = User::getUserByEmail($request['email'],$organizationId);
             if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }else{
                 if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
                     $userByCredentials[0]['identification']==$request['identification'] &&
@@ -123,7 +123,7 @@ class TeacherService
                     $request['active'] = $userByCredentials[0]['active'];
                     $result = UserService::updateUser($request,$userByCredentials[0]['id'],'T',$organizationId);
                     if(is_numeric($result)&&$result==0){
-                        return response()->json(['message' => self::taskError], 206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     return self::createTeacher($request,$organizationId,$userByCredentials[0]['id']);
                 }else{
@@ -131,7 +131,7 @@ class TeacherService
                 }
             }
         }else if (is_numeric($user)&&$user==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }else{
             return self::createTeacher($request,$organizationId,$user);
         }
@@ -160,7 +160,7 @@ class TeacherService
         if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
@@ -173,12 +173,12 @@ class TeacherService
                 'country'=>$request['country'],
             ]);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateTeacher.$request['first_name'].' '.
                 $request['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return UserService::getUserById($id, 'T',$organizationId);
         }
@@ -196,7 +196,7 @@ class TeacherService
     {
         $existTeacherId=User::existUserById($teacherId,'T',$organizationId);
         if (is_numeric($existTeacherId)&&$existTeacherId==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($existTeacherId){
             $roles =array_column(auth()->payload()['user']->roles,'user_type');

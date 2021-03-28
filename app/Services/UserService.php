@@ -55,7 +55,7 @@ class UserService
         $perPage == 0 ? $users= User::getUsers($userType,$organizationId) :
             $users= User::getUsers($userType,$organizationId,$perPage);
         if (is_numeric($users) && $users == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($perPage == 0){
             if (count($users)>0){
@@ -80,7 +80,7 @@ class UserService
     {
         $user = User::getUserById($userId,$userType,$organizationId);
         if (is_numeric($user) && $user == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($user)>0){
             return $user[0];
@@ -174,7 +174,7 @@ class UserService
     {
         $user = User::getUserById($userId,$userType,$organizationId);
         if (is_numeric($user) && $user == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         $user=$user->toArray();
         if (count($user)>0){
@@ -182,12 +182,12 @@ class UserService
             if (count($usersRol)==1){
                 $result=User::deleteUser($userId);
                 if (is_numeric($result) && $result == 0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 $log = Log::addLog(auth('api')->user()['id'],self::logDeleteUser.$user[0]['first_name'].' '.
                     $user[0]['first_surname'].self::logRol.$userType);
                 if (is_numeric($log)&&$log==0){
-                    return response()->json(['message'=>self::taskError],401);
+                    return response()->json(['message' => self::taskError], 500);
                 }
             }else{
                 switch ($userType){
@@ -196,32 +196,32 @@ class UserService
                             $user[0]['administrator']['principal'] == false){
                             $result = Administrator::deleteAdministrator($userId);
                             if (is_numeric($result) && $result == 0){
-                                return response()->json(['message'=>self::taskError],206);
+                                return response()->json(['message'=>self::taskError],500);
                             }
                             $result = Roles::deleteRol($userId,$userType);
                             if (is_numeric($result) && $result == 0){
-                                return response()->json(['message'=>self::taskError],206);
+                                return response()->json(['message'=>self::taskError],500);
                             }
                             break;
                         }
                     case 'T':
                         $result = Teacher::deleteTeacher($userId);
                         if (is_numeric($result) && $result == 0){
-                            return response()->json(['message'=>self::taskError],206);
+                            return response()->json(['message'=>self::taskError],500);
                         }
                         $result = Roles::deleteRol($userId,$userType);
                         if (is_numeric($result) && $result == 0){
-                            return response()->json(['message'=>self::taskError],206);
+                            return response()->json(['message'=>self::taskError],500);
                         }
                         break;
                     case 'S':
                         $result = Student::deleteStudentsByUserId($userId);
                         if (is_numeric($result) && $result == 0){
-                            return response()->json(['message'=>self::taskError],206);
+                            return response()->json(['message'=>self::taskError],500);
                         }
                         $result = Roles::deleteRol($userId,$userType);
                         if (is_numeric($result) && $result == 0){
-                            return response()->json(['message'=>self::taskError],206);
+                            return response()->json(['message'=>self::taskError],500);
                         }
                         break;
                     default:
@@ -344,7 +344,7 @@ class UserService
         $perPage == 0 ? $users = User::getUsersActive($userType,$organizationId) :
             $users = User::getUsersActive($userType,$organizationId,$perPage);
         if (is_numeric($users) && $users == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($perPage == 0){
             if (count($users)>0){
@@ -367,14 +367,14 @@ class UserService
     public static function changeUserData(Request $request,$organizationId)
     {
         self::validate($request);
-        $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
+        $user=User::getUserByIdWithoutFilterRol(auth()->payload()['user']->id,$organizationId);
         if (is_numeric($user) && $user ==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         $user=$user[0];
         $availableUser = self::availableUser($request,$user['id'],$organizationId);
         if (is_numeric($availableUser) && $availableUser == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$availableUser){
             return response()->json(['message'=>self::busyCredential],206);
@@ -384,11 +384,11 @@ class UserService
         $request['activate']=$user['activate'];
         $result = User::updateUser(auth()->payload()['user']->id,$request);
         if (is_numeric($result) && $result ==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         $log = Log::addLog(auth()->payload()['user']->id,self::logChangePassword);
         if (is_numeric($log) && $log==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         return response()->json(['message'=>self::ok],200);
     }
@@ -418,9 +418,9 @@ class UserService
     public static function changePassword(Request $request,$organizationId)
     {
         self::validateChangePassword($request);
-        $user=User::getUserById(auth()->payload()['user']->id,auth()->payload()['user']->user_type,$organizationId);
+        $user=User::getUserByIdWithoutFilterRol(auth()->payload()['user']->id,$organizationId);
         if (is_numeric($user)&&$user==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!Hash::check($request['old_password'],$user[0]['password'])){
             return response()->json(['message'=>self::invalidCurrentPassword],206);
@@ -436,11 +436,11 @@ class UserService
         unset($user['student']);
         $result = User::updateUserLikeArray(auth()->payload()['user']->id,$user);
         if (is_numeric($result) && $result ==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         $log = Log::addLog(auth()->payload()['user']->id,self::logChangePassword);
         if (is_numeric($log) && $log==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         return response()->json(['message'=>self::ok],200);
     }

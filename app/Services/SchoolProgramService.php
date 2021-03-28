@@ -35,7 +35,7 @@ class SchoolProgramService
         $perPage == 0 ? $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId):
             $schoolPrograms = SchoolProgram::getSchoolProgram($organizationId,$perPage);
         if (is_numeric($schoolPrograms)&&$schoolPrograms == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($perPage == 0) {
             if (count($schoolPrograms)>0){
@@ -58,7 +58,7 @@ class SchoolProgramService
     {
         $schoolProgram = SchoolProgram::getSchoolProgramById($id,$organizationId);
         if (is_numeric($schoolProgram) && $schoolProgram == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($schoolProgram)>0) {
             return $schoolProgram[0];
@@ -134,7 +134,7 @@ class SchoolProgramService
         $existSchoolProgramByName=SchoolProgram::existSchoolProgramByName($request['school_program_name'],
             $organizationId);
         if (is_numeric($existSchoolProgramByName)&& $existSchoolProgramByName==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$existSchoolProgramByName){
             $request['organization_id']=$organizationId;
@@ -153,11 +153,11 @@ class SchoolProgramService
             }
             $id = SchoolProgram::addSchoolProgram($request);
             if (is_numeric($id) && $id == 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logCreateSchoolProgram.$request['school_program_name']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message' => self::taskError], 500);
             }
             return self::getSchoolProgramById($id,$organizationId);
         }
@@ -175,17 +175,17 @@ class SchoolProgramService
     {
         $schoolProgram = SchoolProgram::getSchoolProgramById($id,$organizationId);
         if (is_numeric($schoolProgram) && $schoolProgram == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($schoolProgram)>0){
             $result = SchoolProgram::deleteSchoolProgram($id);
             if (is_numeric($result) && $result == 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolProgram.
                 $schoolProgram[0]['school_program_name']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message' => self::taskError], 500);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -211,13 +211,13 @@ class SchoolProgramService
         }
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($id,$organizationId);
         if (is_numeric($existSchoolProgram) && $existSchoolProgram == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($existSchoolProgram){
             $request['organization_id']=$organizationId;
             $schoolProgramName=SchoolProgram::getSchoolProgramByName($request['school_program_name'],$organizationId);
             if (is_numeric($schoolProgramName) && $schoolProgramName == 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($schoolProgramName)>0){
                 if ($schoolProgramName[0]['id']!=$id){
@@ -239,12 +239,12 @@ class SchoolProgramService
             }
             $result = SchoolProgram::updateSchoolProgram($id,$request);
             if (is_numeric($result) && $result == 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateSchoolProgram.
                 $request['school_program_name']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message' => self::taskError], 500);
             }
             return self::getSchoolProgramById($id,$organizationId);
         }

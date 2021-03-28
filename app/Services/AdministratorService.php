@@ -74,7 +74,7 @@ class AdministratorService
                 'principal'=>false
             ]);
             if(is_numeric($result) && $result==0){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }
         }
         if ($request['rol']=='COORDINATOR'){
@@ -91,16 +91,16 @@ class AdministratorService
             ]);
         }
         if(is_numeric($result) && $result==0){
-            return response()->json(['message' => self::taskPartialError], 206);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'A']);
         if (is_numeric($rol)&&$rol==0){
-            return response()->json(['message'=>self::taskPartialError],401);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $log = Log::addLog(auth('api')->user()['id'],self::logCreateAdmin.$request['first_name'].
             ' '.$request['first_surname']);
         if (is_numeric($log)&&$log==0){
-            return response()->json(['message'=>self::taskPartialError],401);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $result = EmailService::userCreate($userId,$organizationId,'A');
         if ($result==0){
@@ -135,7 +135,7 @@ class AdministratorService
             $userByCredentials = User::getUserByIdentification($request['identification'],$organizationId);
             $userByEmail = User::getUserByEmail($request['email'],$organizationId);
             if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }else{
                 if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
                     $userByCredentials[0]['identification']==$request['identification'] &&
@@ -143,7 +143,7 @@ class AdministratorService
                     $request['active'] = $userByCredentials[0]['active'];
                     $result = UserService::updateUser($request,$userByCredentials[0]['id'],'A',$organizationId);
                     if(is_numeric($result)&&$result==0){
-                        return response()->json(['message' => self::taskError], 206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     return self::createAdmin($request,$organizationId,$userByCredentials[0]['id']);
                 }else{
@@ -151,7 +151,7 @@ class AdministratorService
                 }
             }
         }else if(is_numeric($user) && $user==0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }else{
             return self::createAdmin($request,$organizationId,$user);
         }
@@ -186,7 +186,7 @@ class AdministratorService
         if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&& $result==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
@@ -201,7 +201,7 @@ class AdministratorService
                         'principal'=>false
                     ]);
                     if (is_numeric($result)&& $result==0){
-                        return response()->json(['message'=>self::taskError],206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                 }
             }
@@ -219,12 +219,12 @@ class AdministratorService
                 ]);
             }
             if (is_numeric($result)&& $result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateAdmin.$request['first_name'].
                 ' '.$request['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return UserService::getUserById($id, 'A',$organizationId);
         }
@@ -242,7 +242,7 @@ class AdministratorService
     {
         $administrator = User::getUserById($id,'A',$organizationId);
         if (is_numeric($administrator)&&$administrator==0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($administrator)<=0){
             return response()->json(['message'=>self::notFoundUser],206);
@@ -268,7 +268,7 @@ class AdministratorService
             if ($internalCall){
                 return 0;
             }
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($administrator)>0){
             return $administrator[0];

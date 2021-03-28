@@ -160,14 +160,14 @@ class ConstanceService
         $data=[];
         $student = Student::getStudentById($studentId,$organizationId);
         if (is_numeric($student)&&$student===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($student)>0){
             $student=$student[0]->toArray();
             $data['user_data']=$student;
             $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
             if (is_numeric($coordinator)&&$coordinator===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if ($coordinator=='noExist'){
                 return response()->json(['message'=>self::hasNotPrincipal],206);
@@ -175,7 +175,7 @@ class ConstanceService
             $data['coordinator_data']=$coordinator->toArray();
             $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
             if (is_numeric($schoolProgram)&&$schoolProgram===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $data['school_program_data']=$schoolProgram[0]->toArray();
             $now = Carbon::now();
@@ -260,13 +260,13 @@ class ConstanceService
         $data=[];
         $student = Student::getStudentById($studentId,$organizationId);
         if (is_numeric($student)&&$student===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($student)>0){
             $student=$student[0]->toArray();
             $inscription = SchoolPeriodStudent::getSchoolPeriodStudentById($inscriptionId,$organizationId);
             if (is_numeric($inscription)&&$inscription===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($inscription)>0){
                 if ($inscription[0]['student_id']==$studentId){
@@ -275,7 +275,7 @@ class ConstanceService
                         $student['equivalence']);
                     $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
                     if (is_numeric($schoolProgram)&&$schoolProgram===0){
-                        return response()->json(['message'=>self::taskError],206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     $data['school_program_data']=$schoolProgram->toArray()[0];
                     $now = Carbon::now();
@@ -284,7 +284,7 @@ class ConstanceService
                     $data['inscription']=$inscription->toArray()[0];
                     $studentSubject=SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($studentId,$organizationId);
                     if (is_numeric($studentSubject)&&$studentSubject===0){
-                        return response()->json(['message'=>self::taskError],206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     if (count($studentSubject)>0){
                         $data['historical_data']=$studentSubject;
@@ -334,12 +334,12 @@ class ConstanceService
         $data=[];
         $teacher = User::getUserById($teacherId,'T',$organizationId);
         if (is_numeric($teacher)&&$teacher===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($teacher)>0){
             $schoolPeriods = SchoolPeriod::getSubjectsByTeacher($teacherId);
             if (is_numeric($schoolPeriods)&&$schoolPeriods===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($schoolPeriods)>0){
                 foreach ($schoolPeriods as $schoolPeriod ){
@@ -355,7 +355,7 @@ class ConstanceService
                 $data['historical_data']=$schoolPeriods->toArray();
                 $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
                 if (is_numeric($coordinator)&&$coordinator===0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if ($coordinator=='noExist'){
                     return response()->json(['message'=>self::hasNotPrincipal],206);
@@ -398,18 +398,18 @@ class ConstanceService
         $data=[];
         $administrator =User::getUserById($administratorId,'A',$organizationId);
         if (is_numeric($administrator)&&$administrator===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($administrator)>0){
             $data['user_data']=$administrator[0]->toArray();
             $organization=Organization::getOrganizationById($organizationId);
             if (is_numeric($organization)&&$organization===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $data['organization_data']=$organization[0]->toArray();
             $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
             if (is_numeric($coordinator)&&$coordinator===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if ($coordinator=='noExist'){
                 return response()->json(['message'=>self::hasNotPrincipal],206);
@@ -477,13 +477,13 @@ class ConstanceService
         $data=[];
         $student = Student::getStudentById($studentId,$organizationId);
         if (is_numeric($student)&&$student===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($student)>0){
             $student=$student[0]->toArray();
             $subjects = StudentSubject::getAllSubjectsEnrolledWithoutRET($studentId);
             if (is_numeric($subjects)&&$subjects===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($subjects)>0){
                 $subjects = array_column(array_column( $subjects->toArray(),'data_subject'),'subject');
@@ -491,7 +491,7 @@ class ConstanceService
                 $data['user_data']=$student;
                 $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
                 if (is_numeric($coordinator)&&$coordinator===0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if ($coordinator=='noExist'){
                     return response()->json(['message'=>self::hasNotPrincipal],206);
@@ -499,7 +499,7 @@ class ConstanceService
                 $data['coordinator_data']=$coordinator->toArray();
                 $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
                 if (is_numeric($schoolProgram)&&$schoolProgram===0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 $data['school_program_data']=$schoolProgram->toArray()[0];
                 $now = Carbon::now();
@@ -544,19 +544,19 @@ class ConstanceService
         $data=[];
         $student = Student::getStudentById($studentId,$organizationId);
         if (is_numeric($student)&&$student===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($student)>0){
             $student=$student[0]->toArray();
             $enrolledSubjects = SchoolPeriodStudent::getEnrolledSchoolPeriodsByStudent($studentId,$organizationId);
             if (is_numeric($enrolledSubjects)&&$enrolledSubjects===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($enrolledSubjects)>0){
                 $data['user_data']=$student;
                 $coordinator=AdministratorService::getPrincipalCoordinator($organizationId,true);
                 if (is_numeric($coordinator)&&$coordinator===0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if ($coordinator=='noExist'){
                     return response()->json(['message'=>self::hasNotPrincipal],206);
@@ -564,7 +564,7 @@ class ConstanceService
                 $data['coordinator_data']=$coordinator->toArray();
                 $schoolProgram=SchoolProgram::getSchoolProgramById($student['school_program_id'],$organizationId);
                 if (is_numeric($schoolProgram)&&$schoolProgram===0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 $data['school_program_data']=$schoolProgram->toArray()[0];
                 $now = Carbon::now();

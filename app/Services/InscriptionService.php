@@ -77,9 +77,9 @@ class InscriptionService
             return 0;
         }
         if ($isPartial){
-            return response()->json(['message' => self::taskPartialError], 206);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
-        return response()->json(['message' => self::taskError], 206);
+        return response()->json(['message'=>self::taskError],500);
     }
 
     /**
@@ -332,8 +332,8 @@ class InscriptionService
     /**
      * Filtra las asignaturas que están en equivalencia con respecto a las que están disponibles en el semestre.
      * @param array $equivalence Equivalencias del estudiante
-     * @param array $subjectsInSchoolPeriod Asignaturas en un determinado periodo escolar, arreglo de tipo
-     * schoolPeriodSubjectTeacher
+     * @param SchoolPeriodSubjectTeacher $subjectsInSchoolPeriod Asignaturas en un determinado periodo escolar, arreglo
+     * de tipo schoolPeriodSubjectTeacher
      * @return array|integer filtra un arreglo con las asignaturasque fueron pasadas por equivalencia apsociadas al
      * estudiante y que estan disponibles en el periodo escolar, de fallar devolvera 0.
      */
@@ -1767,7 +1767,7 @@ class InscriptionService
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($currentSchoolPeriod)>0){
                 $inscription = SchoolPeriodStudent::findSchoolPeriodStudent($studentId,$currentSchoolPeriod[0]['id']);

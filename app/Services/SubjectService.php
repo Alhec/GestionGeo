@@ -47,7 +47,7 @@ class SubjectService
         $perPage == 0 ? $subjects = Subject::getSubjects($organizationId) :
             $subjects = Subject::getSubjects($organizationId,$perPage);
         if (is_numeric($subjects)&&$subjects == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($perPage == 0){
             if (count($subjects)>0){
@@ -71,7 +71,7 @@ class SubjectService
     {
         $subject = Subject::getSubjectById($id,$organizationId);
         if (is_numeric($subject)&&$subject == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($subject)>0){
             for ($i=0;$i<count($subject[0]['schoolPrograms']);$i++){
@@ -82,7 +82,7 @@ class SubjectService
                     if ($subjectId['subject_id']!=$subject[0]['id']){
                         $subjectBD = Subject::getSimpleSubjectById($subjectId['subject_id'],$organizationId);
                         if (is_numeric($subjectBD)&&$subjectBD===0){
-                            return response()->json(['message'=>self::taskError],206);
+                            return response()->json(['message'=>self::taskError],500);
                         }
                         if (count($subjectBD)>0){
                             $subjects[] = $subjectBD[0];
@@ -349,32 +349,32 @@ class SubjectService
         self::validate($request);
         $result =Subject::existSubjectByCode($request['code'],$organizationId);
         if (is_numeric($result)&& $result == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$result){
             $validateSchoolProgram = self::validateSchoolProgram($request['school_programs'],$organizationId);
             if (is_numeric($validateSchoolProgram) && $validateSchoolProgram === 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if ($validateSchoolProgram){
                 $validateSubjectGroup = self::validateSubjectGroup($request['school_programs'],$organizationId);
                 if($validateSubjectGroup === 0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
 
                 }
                 if ($validateSubjectGroup){
                     $id = Subject::addSubject($request);
                     if ($id === 0){
-                        return response()->json(['message'=>self::taskError],206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     $result= self::addSchoolProgramInSubject($request['school_programs'],$id,$organizationId);
                     if (is_numeric($result)&& $result == 0){
-                        return response()->json(['message'=>self::taskPartialError],206);
+                        return response()->json(['message' => self::taskPartialError], 500);
                     }
                     $log = Log::addLog(auth('api')->user()['id'],self::logCreateSubject.$request['name'].self::whitId.
                         $id);
                     if (is_numeric($log)&&$log==0){
-                        return response()->json(['message'=>self::taskPartialError],401);
+                        return response()->json(['message' => self::taskPartialError], 500);
                     }
                     return self::getSubjectById($id,$organizationId);
                 }
@@ -396,17 +396,17 @@ class SubjectService
     {
         $subject = Subject::getSubjectById($id,$organizationId);
         if (is_numeric($subject)&& $subject == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($subject)>0){
             $result = Subject::deleteSubject($id);
             if (is_numeric($result)&& $result == 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSubject.$subject[0]['name'].self::whitId.
                 $subject[0]['id']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -577,17 +577,17 @@ class SubjectService
         self::validate($request);
         $result = Subject::existSubjectById($id,$organizationId);
         if (is_numeric($result)&& $result == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if($result){
             $validateSchoolProgram = self::validateSchoolProgram($request['school_programs'],$organizationId);
             if (is_numeric($validateSchoolProgram) && $validateSchoolProgram === 0){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if ($validateSchoolProgram){
                 $subjectCode = Subject::getSubjectByCode($request['code'],$organizationId);
                 if (is_numeric($subjectCode)&& $subjectCode == 0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if (count($subjectCode)>0) {
                     if ($subjectCode[0]['id'] != $id) {
@@ -596,22 +596,22 @@ class SubjectService
                 }
                 $validateSubjectGroup = self::validateSubjectGroup($request['school_programs'],$organizationId);
                 if($validateSubjectGroup === 0){
-                    return response()->json(['message'=>self::taskError],206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if ($validateSubjectGroup){
                     $result = Subject::updateSubject($id,$request);
                     if (is_numeric($result)&& $result == 0){
-                        return response()->json(['message'=>self::taskError],206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     $result = self::updateSchoolProgramSubjectsInSubject($request['school_programs'],$id,
                         $organizationId);
                     if (is_numeric($result)&& $result == 0){
-                        return response()->json(['message'=>self::taskPartialError],206);
+                        return response()->json(['message' => self::taskPartialError], 500);
                     }
                     $log = Log::addLog(auth('api')->user()['id'],self::logUpdateSubject.$request['name'].self::whitId.
                         $id);
                     if (is_numeric($log)&&$log==0){
-                        return response()->json(['message'=>self::taskPartialError],401);
+                        return response()->json(['message' => self::taskPartialError], 500);
                     }
                     return self::getSubjectById($id,$organizationId);
                 }
@@ -633,7 +633,7 @@ class SubjectService
     {
         $subjects = Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId);
         if (is_numeric($subjects)&&$subjects===0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($subjects)>0){
             return $subjects;
@@ -653,7 +653,7 @@ class SubjectService
     {
         $subjects = Subject::getSubjectsWithoutFinalWorks($organizationId);
         if (is_numeric($subjects)&&$subjects == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($subjects)>0){
             return $subjects;

@@ -42,15 +42,15 @@ class AuthService
                 'active'=>1
             ]);
         if (!$token) {
-            return response()->json(['message'=>self::taskError],401);
+            return response()->json(['error' => self::invalidUser], 401);
         }
         $user=User::getUserByIdWithoutFilterRol(auth('api')->user()['id'],$organizationId);
         if (is_numeric($user)&&$user==0){
-            return response()->json(['message'=>self::taskError],401);
+            return response()->json(['message' => self::taskError], 500);
         }
         $log = Log::addLog(auth('api')->user()['id'],self::logUserLogin);
         if (is_numeric($log)&&$log==0){
-            return response()->json(['message'=>self::taskError],401);
+            return response()->json(['message' => self::taskError], 500);
         }
         $user=$user->toArray()[0];
         if (!$user['administrator']['principal']){

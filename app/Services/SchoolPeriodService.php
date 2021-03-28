@@ -51,7 +51,7 @@ class SchoolPeriodService
         $perPage == 0 ? $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId) :
             $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId,$perPage);
         if (is_numeric($schoolPeriods)&&$schoolPeriods===0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($perPage == 0){
             if (count($schoolPeriods)>0){
@@ -74,7 +74,7 @@ class SchoolPeriodService
     {
         $schoolPeriod = SchoolPeriod::getSchoolPeriodById($id,$organizationId);
         if (is_numeric($schoolPeriod)&&$schoolPeriod===0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($schoolPeriod)>0){
             return $schoolPeriod[0];
@@ -231,7 +231,7 @@ class SchoolPeriodService
         $existSchoolPeriodByCod =SchoolPeriod::existSchoolPeriodbyCodSchoolPeriod($request['cod_school_period'],
             $organizationId);
         if (is_numeric($existSchoolPeriodByCod)&&$existSchoolPeriodByCod===0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$existSchoolPeriodByCod){
             $request['load_notes']=false;
@@ -243,33 +243,33 @@ class SchoolPeriodService
                 }
                 $validateSubjects=self::validateSubjects($request['subjects'],$organizationId);
                 if (is_numeric($validateSubjects)&&$validateSubjects===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if (!$validateSubjects){
                     return response()->json(['message'=>self::invalidSubjectOrTeacher],206);
                 }
                 $schoolPeriodId = SchoolPeriod::addSchoolPeriod($request);
                 if ($schoolPeriodId==0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 $result = self::addSubjectInSchoolPeriod($request['subjects'],$schoolPeriodId);
                 if (is_numeric($result)&&$result===0){
-                    return response()->json(['message' => self::taskPartialError], 206);
+                    return response()->json(['message' => self::taskPartialError], 500);
                 }
             }else{
                 $schoolPeriodId = SchoolPeriod::addSchoolPeriod($request);
                 if (is_numeric($schoolPeriodId)&&$schoolPeriodId===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
             }
             $updateStudent=StudentService::warningOrAvailableWorkToStudent($organizationId);
             if (is_numeric($updateStudent)&&$updateStudent===0){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logCreateSchoolPeriod.$request['cod_school_period'].
                 self::whitId.$schoolPeriodId);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return self::getSchoolPeriodById($schoolPeriodId,$organizationId);
         };
@@ -289,12 +289,12 @@ class SchoolPeriodService
         if (count($schoolPeriod)>0){
             $result=SchoolPeriod::deleteSchoolPeriod($id);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolPeriod.
                 $schoolPeriod[0]['cod_school_period'].self::whitId.$id);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -386,14 +386,14 @@ class SchoolPeriodService
         $request['organization_id']=$organizationId;
         $existSchoolPeriod=SchoolPeriod::existSchoolPeriodById($id,$organizationId);
         if (is_numeric($existSchoolPeriod)&&$existSchoolPeriod===0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($existSchoolPeriod){
             self::validate($request);
             self::validateInUpdate($request);
             $schoolPeriod=SchoolPeriod::getSchoolPeriodByCodSchoolPeriod($request['cod_school_period'],$organizationId);
             if (is_numeric($schoolPeriod)&&$schoolPeriod===0){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($schoolPeriod)>0){
                 if ($schoolPeriod[0]['id']!=$id){
@@ -406,40 +406,40 @@ class SchoolPeriodService
                 }
                 $validateSubjects=self::validateSubjects($request['subjects'],$organizationId);
                 if (is_numeric($validateSubjects)&&$validateSubjects===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if (!$validateSubjects){
                     return response()->json(['message'=>self::invalidSubjectOrTeacher],206);
                 }
                 $result=SchoolPeriod::updateSchoolPeriod($id, $request);
                 if (is_numeric($result)&&$result===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 $result = self::updateSubjectInSchoolPeriod($request['subjects'],$id);
                 if (is_numeric($result)&&$result===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
             }else{
                 $result = SchoolPeriod::updateSchoolPeriod($id, $request);
                 if (is_numeric($result)&&$result===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 $existSchoolPeriodSubjectTeacher=
                     SchoolPeriodSubjectTeacher::existSchoolPeriodSubjectTeacherBySchoolPeriodId($id);
                 if (is_numeric($existSchoolPeriodSubjectTeacher)&& $existSchoolPeriodSubjectTeacher==0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if ($existSchoolPeriodSubjectTeacher){
                     $result=SchoolPeriodSubjectTeacher::deleteSchoolPeriodSubjectTeacherBySchoolPeriod($id);
                     if (is_numeric($result)&&$result===0){
-                        return response()->json(['message' => self::taskError], 206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                 }
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateSchoolPeriod.$request['cod_school_period'].
                 self::whitId.$id);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return self::getSchoolPeriodById($id,$organizationId);
         }
@@ -457,7 +457,7 @@ class SchoolPeriodService
     {
         $currentSchoolPeriod = SchoolPeriod::getCurrentSchoolPeriod($organizationId);
         if (is_numeric($currentSchoolPeriod) && $currentSchoolPeriod ==0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($currentSchoolPeriod)>0){
             return $currentSchoolPeriod[0];
@@ -479,14 +479,14 @@ class SchoolPeriodService
         if ($isValid=='valid'){
             $currentSchoolPeriod= SchoolPeriod::getCurrentSchoolPeriod($organizationId);
             if (is_numeric($currentSchoolPeriod)&&$currentSchoolPeriod===0){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($currentSchoolPeriod)>0){
                 $subjectsTaught =
                     SchoolPeriodSubjectTeacher::getSchoolPeriodSubjectTeacherBySchoolPeriodTeacher($teacherId,
                     $currentSchoolPeriod[0]['id']);
                 if (is_numeric($subjectsTaught)&&$subjectsTaught===0){
-                    return response()->json(['message' => self::taskError], 206);
+                    return response()->json(['message'=>self::taskError],500);
                 }
                 if (count($subjectsTaught)>0){
                     return $subjectsTaught;

@@ -218,20 +218,20 @@ class StudentService
     {
         $studentId=self::addStudent($userId,$request);
         if (is_numeric($studentId)&&$studentId==0){
-            return response()->json(['message'=>self::taskPartialError],206);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $rol = Roles::addRol(['user_id'=>$userId,'user_type'=>'S']);
         if (is_numeric($rol)&&$rol==0){
-            return response()->json(['message'=>self::taskPartialError],401);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $result = self::addEquivalencesAndDegrees($request,$studentId);
         if (is_numeric($result)&&$result==0){
-            return response()->json(['message'=>self::taskPartialError],206);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name'].
             ' '.$request['first_surname']);
         if (is_numeric($log)&&$log==0){
-            return response()->json(['message'=>self::taskPartialError],401);
+            return response()->json(['message' => self::taskPartialError], 500);
         }
         $result = EmailService::userCreate($userId,$organizationId,'S');
         if ($result==0){
@@ -259,7 +259,7 @@ class StudentService
         }
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($request['school_program_id'],$organizationId);
         if ((is_numeric($existTeacher)&&$existTeacher==0)||(is_numeric($existSchoolProgram)&&$existSchoolProgram==0)){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$existTeacher){
             return response()->json(['message'=>self::invalidTeacher],206);
@@ -279,7 +279,7 @@ class StudentService
             $userByCredentials = User::getUserByIdentification($request['identification'],$organizationId);
             $userByEmail = User::getUserByEmail($request['email'],$organizationId);
             if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }else{
                 if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
                     $userByCredentials[0]['identification']==$request['identification'] &&
@@ -287,7 +287,7 @@ class StudentService
                     $request['active'] = $userByCredentials[0]['active'];
                     $result = UserService::updateUser($request,$userByCredentials[0]['id'],'S',$organizationId);
                     if(is_numeric($result)&&$result==0){
-                        return response()->json(['message' => self::taskError], 206);
+                        return response()->json(['message'=>self::taskError],500);
                     }
                     return self::createStudent($request,$organizationId,$userByCredentials[0]['id']);
                 }else{
@@ -295,7 +295,7 @@ class StudentService
                 }
             }
         }else if (is_numeric($userId)&&$userId==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }else{
             return self::createStudent($request,$organizationId,$userId);
         }
@@ -318,7 +318,7 @@ class StudentService
         self::validate($request);
         $result = Student::studentHasProgram($userId);
         if (is_numeric($result)&&$result == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($result){
             return response()->json(['message'=>self::studentInProgram],206);
@@ -330,7 +330,7 @@ class StudentService
         }
         $existSchoolProgram = SchoolProgram::existSchoolProgramById($request['school_program_id'],$organizationId);
         if ((is_numeric($existTeacher)&&$existTeacher==0)||(is_numeric($existSchoolProgram)&&$existSchoolProgram==0)){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$existTeacher){
             return response()->json(['message'=>self::invalidTeacher],206);
@@ -340,7 +340,7 @@ class StudentService
         }
         $result=Student::existStudentInProgram($userId,$request['school_program_id']);
         if (is_numeric($result)&&$result == 0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($result){
             return response()->json(['message'=>self::studentHasProgram],206);
@@ -349,22 +349,22 @@ class StudentService
         if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
             $studentId=self::addStudent($userId,$request);
             if (is_numeric($studentId)&&$studentId==0){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $result = self::addEquivalencesAndDegrees($request,$studentId);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logCreateStudent.$request['first_name']. ' '.
                 $request['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
@@ -424,14 +424,14 @@ class StudentService
             $existTeacher=true;
         }
         if ((is_numeric($existTeacher)&&$existTeacher==0)){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (!$existTeacher){
             return response()->json(['message'=>self::invalidTeacher],206);
         }
         $student = Student::getStudentById($request['student_id'],$organizationId);
         if (is_numeric($student)&&$student==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($student)<1){
             return response()->json(['message'=>self::notFoundUser],206);
@@ -447,7 +447,7 @@ class StudentService
         if ($result==="not_found"){
             return response()->json(['message'=>self::notFoundUser],206);
         }else if (is_numeric($result)&&$result==0){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }else if ($result==="busy_credential"){
             return response()->json(['message'=>self::busyCredential],206);
         }else {
@@ -474,22 +474,22 @@ class StudentService
                 'allow_post_inscription'=>$request['allow_post_inscription'],
             ]);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $deleteDegrees = Degree::deleteDegree($request['student_id']);
             $deleteEquivalences = Equivalence::deleteEquivalence($request['student_id']);
             if ((is_numeric($deleteDegrees)&&$deleteDegrees==0)||(is_numeric($deleteEquivalences)&&
                     $deleteEquivalences==0)){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $result=self::addEquivalencesAndDegrees($request,$request['student_id']);
             if (is_numeric($result)&&$result==0){
-                return response()->json(['message'=>self::taskPartialError],206);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logUpdateStudent.$request['first_name'].' '.
                 $request['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskPartialError],401);
+                return response()->json(['message' => self::taskPartialError], 500);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
@@ -508,7 +508,7 @@ class StudentService
     {
         $user = User::getUserById($userId,'S',$organizationId);
         if (is_numeric($user)&& $user == 0 ){
-            return response()->json(['message'=>self::taskError],206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($user)<1){
             return response()->json(['message'=>self::notFoundUser],206);
@@ -516,12 +516,12 @@ class StudentService
         if (count($user[0]['student'])>=2){
             $result = Student::deleteStudent($userId,$studentId);
             if (is_numeric($result)&&$result == 0 ){
-                return response()->json(['message'=>self::taskError],206);
+                return response()->json(['message'=>self::taskError],500);
             }
             $log = Log::addLog(auth('api')->user()['id'],self::logDeleteStudent.$user[0]['first_name'].' '.
                 $user[0]['first_surname']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message'=>self::taskError],401);
+                return response()->json(['message' => self::taskError], 500);
             }
             return UserService::getUserById($userId,'S',$organizationId);
         }
@@ -540,12 +540,12 @@ class StudentService
     {
         $existStudentById = Student::existStudentById($studentId,$organizationId);
         if (is_numeric($existStudentById) && $existStudentById == 0) {
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if ($existStudentById) {
             $student = Student::getStudentById($studentId, $organizationId);
             if (is_numeric($student) && $student == 0) {
-                return response()->json(['message' => self::taskError], 206);
+                return response()->json(['message'=>self::taskError],500);
             }
             if (count($student) > 0) {
                 $roles =array_column(auth()->payload()['user']->roles,'user_type');
@@ -575,7 +575,7 @@ class StudentService
     {
         $warningStudent=Student::warningStudent($organizationId);
         if (is_numeric($warningStudent)&&$warningStudent==0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($warningStudent)>0){
             return $warningStudent;

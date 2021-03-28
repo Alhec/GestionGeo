@@ -63,7 +63,7 @@ class AuthController extends Controller
     {
         $log = Log::addLog(auth('api')->user()['id'],self::logLogout);
         if (is_numeric($log)&&$log==0){
-            return response()->json(['message'=>self::taskError],401);
+            return response()->json(['message' => self::taskError], 500);
         }
         auth()->logout();
         return response()->json(['message' => 'Cerro sesión exitosamente']);

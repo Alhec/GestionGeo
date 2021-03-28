@@ -33,7 +33,7 @@ class Roles extends Model
 
     /**
      *Crea una asociacion de rol con un usuario
-     * @param integer $rol: objeto de tipo rol
+     * @param array $rol: objeto de tipo rol
      * @return integer Asociar rol a un usuario.
      */
     public static function addRol($rol)

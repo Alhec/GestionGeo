@@ -42,7 +42,7 @@ class AnnualReportService
         $lastSchoolPeriod=SchoolPeriod::getSchoolPeriodById($lastSchoolPeriodId,$organizationId);
         if ((is_numeric($firstSchoolPeriod)&&$firstSchoolPeriod===0) ||
             (is_numeric($lastSchoolPeriod)&&$lastSchoolPeriod==0)){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         if (count($firstSchoolPeriod)<1 || count($lastSchoolPeriod)<1){
             return response()->json(['message' => self::schoolPeriodsValid], 206);
@@ -52,7 +52,7 @@ class AnnualReportService
         }
         $schoolPeriods = SchoolPeriod::getSchoolPeriods($organizationId);
         if (is_numeric($schoolPeriods)&&$schoolPeriods===0){
-            return response()->json(['message' => self::taskError], 206);
+            return response()->json(['message'=>self::taskError],500);
         }
         $schoolPeriodsToReport = [];
         foreach ($schoolPeriods->toArray() as $schoolPeriod){
@@ -507,7 +507,7 @@ class AnnualReportService
      * Verifica que la asignatura y el programa escolar están  asociados, de ser así devolverá true de lo contrario será
      * false.
      * @param integer $schoolProgramId Id del programa escolar
-     * @param array $subjects Array con asignaturas que pertenecen a programas escolares no conducente a grados
+     * @param Subject|object $subjects Array con asignaturas que pertenecen a programas escolares no conducente a grados
      * @param integer $subjectId Id de la asignatura
      * @return boolean Devolvera true si la asignatura y el programa escolar estan asociado
      */
