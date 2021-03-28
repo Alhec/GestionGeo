@@ -27,20 +27,20 @@ Route::middleware('app.auth')->prefix('password')->group(function (){
     Route::post('/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
 });
 
-
 //Comun Users
 Route::middleware('app.auth','jwt.auth')->post('changePassword', 'UserController@changePassword');
 Route::middleware('app.auth','jwt.auth')->post('updateUser', 'UserController@changeUserData');
 
-
 //Administrator
-Route::middleware('jwt.auth','role:A')->get('administrators/active','AdministratorController@active');
-Route::middleware('jwt.auth','role:A')->get('administrators/principalCoordinator','AdministratorController@principal');
-Route::middleware('jwt.auth','role:A')->get('administrators','AdministratorController@index');
-Route::middleware('jwt.auth','role:A')->post('administrators','AdministratorController@store');
-Route::middleware('jwt.auth','role:A')->get('administrators/{id}','AdministratorController@show');
-Route::middleware('jwt.auth','role:A')->put('administrators/{id}','AdministratorController@update');
-Route::middleware('jwt.auth','role:A')->delete('administrators/{id}','AdministratorController@destroy');
+Route::middleware('app.auth','jwt.auth','role:A')->prefix('administrators')->group(function (){
+    Route::get('/','AdministratorController@index');
+    Route::get('/{id}','AdministratorController@show');
+    Route::get('/active','AdministratorController@active');
+    Route::get('/principalCoordinator','AdministratorController@principal');
+    Route::post('','AdministratorController@store');
+    Route::put('/{id}','AdministratorController@update');
+    Route::delete('/{id}','AdministratorController@destroy');
+});
 
 //Teacher
 Route::middleware('jwt.auth','role:A')->get('teachers/active','TeacherController@active');
