@@ -321,6 +321,10 @@ class User extends Authenticatable implements JWTSubject
         try{
             return self::where('identification',$identification)
                 ->where('organization_id',$organizationId)
+                ->with('administrator')
+                ->with('teacher')
+                ->with('student')
+                ->with('roles')
                 ->get();
         }catch (\Exception $e){
             return 0;

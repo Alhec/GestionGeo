@@ -54,15 +54,15 @@ class EmailService
                 break;
         }
         $data['web']=$organization['website'];
-        Mail::send('email.Geoquimica.emailCreateUser',$data,function ($message) use ($user){
-            $message->to($user['email'], $user['first_name'])
-                ->subject('Usuario creado exitosamente');
-        });
-        if (Mail::failures()) {
+        try{
+            Mail::send('email.Geoquimica.emailCreateUser',$data,function ($message) use ($user){
+                $message->to($user['email'], $user['first_name'])
+                    ->subject('Usuario creado exitosamente');
+            });
+        }catch (\Exception $error){
             return 0;
-        }else{
-            return 1;
         }
+        return 1;
     }
 
     /**

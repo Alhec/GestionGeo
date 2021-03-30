@@ -34,10 +34,10 @@ Route::middleware('app.auth','jwt.auth')->post('updateUser', 'UserController@cha
 //Administrator
 Route::middleware('app.auth','jwt.auth','role:A')->prefix('administrators')->group(function (){
     Route::get('/','AdministratorController@index');
-    Route::get('/{id}','AdministratorController@show');
     Route::get('/active','AdministratorController@active');
     Route::get('/principalCoordinator','AdministratorController@principal');
-    Route::post('','AdministratorController@store');
+    Route::get('/{id}','AdministratorController@show');
+    Route::post('/','AdministratorController@store');
     Route::put('/{id}','AdministratorController@update');
     Route::delete('/{id}','AdministratorController@destroy');
 });
@@ -50,6 +50,13 @@ Route::middleware('jwt.auth','role:A')->get('teachers/{id}','TeacherController@s
 Route::middleware('jwt.auth','role:A')->put('teachers/{id}','TeacherController@update');
 Route::middleware('jwt.auth','role:A')->delete('teachers/{id}','TeacherController@destroy');
 
+//SchoolProgram
+Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');
+Route::middleware('jwt.auth','role:A')->post('schoolPrograms','SchoolProgramController@store');
+Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgramController@show');
+Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
+Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
+
 //Student
 Route::middleware('jwt.auth','role:A')->get('students/active','StudentController@active');
 Route::middleware('jwt.auth','role:A')->get('students','StudentController@index');
@@ -60,13 +67,6 @@ Route::middleware('jwt.auth','role:A')->delete('students/{id}','StudentControlle
 Route::middleware('jwt.auth','role:A')->put('students/continue/{id}','StudentController@addStudentToUser');
 Route::middleware('jwt.auth','role:A')->delete('students/delete/{id}','StudentController@deleteStudent');
 Route::middleware('jwt.auth','role:A')->get('warningStudents','StudentController@warningStudent');
-
-//SchoolProgram
-Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');
-Route::middleware('jwt.auth','role:A')->post('schoolPrograms','SchoolProgramController@store');
-Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgramController@show');
-Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
-Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
 
 //Subject
 Route::middleware('jwt.auth','role:A')->get('subjects','SubjectController@index');
@@ -116,8 +116,8 @@ Route::middleware('jwt.auth','role:A,S')->get('constance/inscription','Constance
 Route::middleware('jwt.auth','role:A')->get('annualReport','AnnualReportController@exportAnnualReport');
 
 //Test
-Route::get('foo', function () {
-    return 'Hello GAAPFC';
+Route::get('test', function () {
+    return 'GAAPFC';
 });
-Route::get('foo/{id}','SchoolProgramController@show');
+Route::get('test/{id}','SchoolProgramController@show');
 
