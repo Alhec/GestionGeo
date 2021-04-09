@@ -202,8 +202,8 @@ class UserService
                             if (is_numeric($result) && $result == 0){
                                 return response()->json(['message'=>self::taskError],500);
                             }
-                            break;
                         }
+                        break;
                     case 'T':
                         $result = Teacher::deleteTeacher($userId);
                         if (is_numeric($result) && $result == 0){

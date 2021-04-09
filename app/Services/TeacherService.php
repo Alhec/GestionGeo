@@ -25,6 +25,7 @@ class TeacherService
 {
     const taskError = 'No se puede proceder con la tarea';
     const busyCredential = 'Identificacion o Correo ya registrados';
+    const isStudent = 'Un estudiante cursando un programa academico no puede ser profesor';
     const notFoundUser = 'Usuario no encontrado';
     const taskPartialError = 'No se pudo proceder con la tarea en su totalidad';
     const notSendEmail = 'No se pudo enviar el correo electronico';
@@ -99,9 +100,41 @@ class TeacherService
     }
 
     /**
+     * Evalúa al usuario de tener rol estudiante verifica que este no esté cursando un programa escolar de estar
+     * cursando un programa escolar devolverá un mensaje asociado, de no ser estudiante, se procede agregar el rol
+     * profesor con el método self::createTeacher($request,$organizationId,$user[0]['id'])
+     * @param Request $request Objeto con los datos de la petición
+     * @param User $user Objeto con los datos del usuario a anexar rol profesor
+     * @param string $organizationId Id de la organiación
+     * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
+     * correcta devolvera el objeto user.
+     */
+    public static function evaluateAndCreateTeacher(Request $request,$user,$organizationId)
+    {
+        $isStudent = false;
+        if (isset($user[0]['student'])){
+            foreach ($user[0]['student'] as $student){
+                if ($student['current_status']!='ENDED'||!$student['end_program']){
+                    $isStudent = true;
+                }
+            }
+        }
+        if (!$isStudent){
+            $request['active'] = $user[0]['active'];
+            $result = UserService::updateUser($request,$user[0]['id'],'T',$organizationId);
+            if(is_numeric($result)&&$result==0){
+                return response()->json(['message'=>self::taskError],500);
+            }
+            return self::createTeacher($request,$organizationId,$user[0]['id']);
+        }
+        return response()->json(['message' => self::isStudent], 206);
+    }
+
+    /**
      * Agrega un usuario profesor y se envía un correo al usuario, con el método
      * UserService::addUser($request,'T',$organizationId) y el método
-     * self::createTeacher($request,$organizationId,$userByCredentials[0]['id']).
+     * self::createTeacher($request,$organizationId,$userByCredentials[0]['id']) o con el metodo
+     * self::evaluateAndCreateTeacher($request,$userByCredentials,$organizationId).
      * @param Request $request Objeto con los datos de la petición
      * @param string $organizationId Id de la organiación
      * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
@@ -116,20 +149,25 @@ class TeacherService
             $userByEmail = User::getUserByEmail($request['email'],$organizationId);
             if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
                 return response()->json(['message'=>self::taskError],500);
-            }else{
+            }
+            if (count($userByCredentials)>0 && count($userByEmail)>0){
                 if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
                     $userByCredentials[0]['identification']==$request['identification'] &&
-                    !isset($userByCredentials[0]['teacher'])){
-                    $request['active'] = $userByCredentials[0]['active'];
-                    $result = UserService::updateUser($request,$userByCredentials[0]['id'],'T',$organizationId);
-                    if(is_numeric($result)&&$result==0){
-                        return response()->json(['message'=>self::taskError],500);
-                    }
-                    return self::createTeacher($request,$organizationId,$userByCredentials[0]['id']);
-                }else{
-                    return response()->json(['message' => self::busyCredential], 206);
+                    $userByCredentials[0]['email']==$request['email'] && !isset($userByCredentials[0]['teacher'])){
+                    return self::evaluateAndCreateTeacher($request,$userByCredentials,$organizationId);
+                }
+            }else if(count($userByCredentials)>0 && count($userByEmail)==0){
+                if ($userByCredentials[0]['identification']==$request['identification'] &&
+                    $userByCredentials[0]['email']==$request['email'] && !isset($userByCredentials[0]['teacher'])){
+                    return self::evaluateAndCreateTeacher($request,$userByCredentials,$organizationId);
+                }
+            }else if(count($userByEmail)>0 && count($userByCredentials)==0){
+                if ($userByEmail[0]['identification']==$request['identification'] &&
+                    $userByEmail[0]['email']==$request['email'] && !isset($userByCredentials[0]['teacher'])){
+                    return self::evaluateAndCreateTeacher($request,$userByEmail,$organizationId);
                 }
             }
+            return response()->json(['message' => self::busyCredential], 206);
         }else if (is_numeric($user)&&$user==0){
             return response()->json(['message'=>self::taskError],500);
         }else{

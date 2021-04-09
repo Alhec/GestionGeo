@@ -43,12 +43,15 @@ Route::middleware('app.auth','jwt.auth','role:A')->prefix('administrators')->gro
 });
 
 //Teacher
-Route::middleware('jwt.auth','role:A')->get('teachers/active','TeacherController@active');
-Route::middleware('jwt.auth','role:A,S')->get('teachers','TeacherController@index');
-Route::middleware('jwt.auth','role:A')->post('teachers','TeacherController@store');
-Route::middleware('jwt.auth','role:A')->get('teachers/{id}','TeacherController@show');
-Route::middleware('jwt.auth','role:A')->put('teachers/{id}','TeacherController@update');
-Route::middleware('jwt.auth','role:A')->delete('teachers/{id}','TeacherController@destroy');
+Route::middleware('app.auth','jwt.auth')->prefix('teachers')->group(function (){
+    Route::middleware('role:A,S')->get('/','TeacherController@index');
+    Route::middleware('role:A')->get('/active','TeacherController@active');
+    Route::middleware('role:A')->get('/{id}','TeacherController@show');
+    Route::middleware('role:A')->post('/','TeacherController@store');
+    Route::middleware('role:A')->put('/{id}','TeacherController@update');
+    Route::middleware('role:A')->delete('/{id}','TeacherController@destroy');
+});
+
 
 //SchoolProgram
 Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');

@@ -113,7 +113,7 @@ class AdministratorService
     /**
      * Evalúa al usuario de tener rol estudiante verifica que este no esté cursando un programa escolar de estar
      * cursando un programa escolar devolverá un mensaje asociado, de no ser estudiante, se procede agregar el rol
-     * administrador con el métodoself::createAdmin($request,$organizationId,$userByCredentials[0]['id'])
+     * administrador con el método self::createAdmin($request,$organizationId,$userByCredentials[0]['id'])
      * @param Request $request Objeto con los datos de la petición
      * @param User $user Objeto con los datos del usuario a anexar rol administrador
      * @param string $organizationId Id de la organiación
@@ -146,7 +146,8 @@ class AdministratorService
      * usuario, en caso de que el campo principal esté seteado esta acción solo la puede realizar el actual coordinador
      * principal, y este dejara de ser coordinador principal con el método
      * UserService::addUser($request,'A',$organizationId) y el método
-     * self::evaluateAndCreateAdmin($request,$userByCredentials,$organizationId).
+     * self::evaluateAndCreateAdmin($request,$userByCredentials,$organizationId) o el método
+     * self::createAdmin($request,$organizationId,$user).
      * @param Request $request Objeto con los datos de la petición
      * @param string $organizationId Id de la organiación
      * @return Response|User, de ocurrir un error devolvera un mensaje asociado, y si se realiza de manera
@@ -172,17 +173,20 @@ class AdministratorService
             if (count($userByCredentials)>0 && count($userByEmail)>0){
                 if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
                     $userByCredentials[0]['identification']==$request['identification'] &&
+                    $userByCredentials[0]['email']==$request['email'] &&
                     !isset($userByCredentials[0]['administrator'])){
                     return self::evaluateAndCreateAdmin($request,$userByCredentials,$organizationId);
                 }
             }else if (count($userByCredentials)>0 && count($userByEmail)==0){
                 if ($userByCredentials[0]['identification']==$request['identification'] &&
+                    $userByCredentials[0]['email']==$request['email'] &&
                     !isset($userByCredentials[0]['administrator'])){
                     return self::evaluateAndCreateAdmin($request,$userByCredentials,$organizationId);
                 }
             }else if (count($userByEmail)>0 && count($userByCredentials)==0){
-                if ($userByCredentials[0]['identification']==$request['identification'] &&
-                    !isset($userByCredentials[0]['administrator'])){
+                if ($userByEmail[0]['identification']==$request['identification'] &&
+                    $userByEmail[0]['email']==$request['email'] &&
+                    !isset($userByEmail[0]['administrator'])){
                     return self::evaluateAndCreateAdmin($request,$userByEmail,$organizationId);
                 }
             }
@@ -191,7 +195,6 @@ class AdministratorService
             return response()->json(['message'=>self::taskError],500);
         }
         return self::createAdmin($request,$organizationId,$user);
-
     }
 
     /**
