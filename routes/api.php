@@ -54,11 +54,14 @@ Route::middleware('app.auth','jwt.auth')->prefix('teachers')->group(function (){
 
 
 //SchoolProgram
-Route::middleware('jwt.auth','role:A')->get('schoolPrograms','SchoolProgramController@index');
-Route::middleware('jwt.auth','role:A')->post('schoolPrograms','SchoolProgramController@store');
-Route::middleware('jwt.auth','role:A')->get('schoolPrograms/{id}','SchoolProgramController@show');
-Route::middleware('jwt.auth','role:A')->put('schoolPrograms/{id}','SchoolProgramController@update');
-Route::middleware('jwt.auth','role:A')->delete('schoolPrograms/{id}','SchoolProgramController@destroy');
+Route::middleware('app.auth','jwt.auth','role:A')->prefix('schoolPrograms')->group(function (){
+    Route::get('/','SchoolProgramController@index');
+    Route::get('/{id}','SchoolProgramController@show');
+    Route::post('/','SchoolProgramController@store');
+    Route::put('/{id}','SchoolProgramController@update');
+    Route::delete('/{id}','SchoolProgramController@destroy');
+});
+
 
 //Student
 Route::middleware('jwt.auth','role:A')->get('students/active','StudentController@active');

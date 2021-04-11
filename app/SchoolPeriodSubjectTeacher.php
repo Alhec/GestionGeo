@@ -234,6 +234,7 @@ class SchoolPeriodSubjectTeacher extends Model
             return self::where('school_period_id',$schoolPeriodId)
                 ->where('teacher_id',$teacherId)
                 ->with('subject')
+                ->with('schedules')
                 ->get();
         }catch (\Exception $e){
             DB::rollback();
