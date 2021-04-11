@@ -69,8 +69,6 @@ class SchoolProgramService
     /**
      *Valida que se cumpla las restricciones:
      * *school_program_name: requerido y máximo 100
-     * *grant_certificate: booleano
-     * *conducive_to_degree: requerido y booleano
      * *doctoral_exam: booleano
      * *min_cu_to_doctoral_exam: numérico
      * @param Request $request Objeto con los datos de la petición
@@ -79,8 +77,6 @@ class SchoolProgramService
     {
         $request->validate([
             'school_program_name'=>'required|max:100',
-            'conducive_to_degree'=>'required|boolean',
-            'grant_certificate'=>'boolean',
             'doctoral_exam'=>'boolean',
             'min_cu_to_doctoral_exam'=>'numeric'
         ]);
@@ -92,6 +88,7 @@ class SchoolProgramService
      * *min_num_cu_final_work: requerido y numérico
      * *duration: requerido y numérico
      * *min_duration: requerido y numérico
+     * *conducive_to_degree: requerido y booleano
      * @param Request $request Objeto con los datos de la petición
      */
     public static function validateWithDegree(Request $request)
@@ -101,18 +98,21 @@ class SchoolProgramService
             'duration'=>'required|numeric',
             'min_duration'=>'numeric|required',
             'min_num_cu_final_work'=>'numeric|required',
+            'conducive_to_degree'=>'required|boolean',
         ]);
     }
 
     /**
      *Valida que se cumpla las restricciones:
      * *duration: numérico
+     * *grant_certificate: requerido y booleano
      * @param Request $request Objeto con los datos de la petición
      */
     public static function validateWithoutDegree(Request $request)
     {
         $request->validate([
             'duration'=>'numeric',
+            'grant_certificate'=>'required|boolean',
         ]);
     }
 
