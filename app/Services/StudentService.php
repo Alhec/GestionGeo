@@ -281,18 +281,39 @@ class StudentService
             if ((is_numeric($userByCredentials)&& $userByCredentials==0)||(is_numeric($userByEmail)&&$userByEmail==0)){
                 return response()->json(['message'=>self::taskError],500);
             }else{
-                if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
-                    $userByCredentials[0]['identification']==$request['identification'] &&
-                    !isset($userByCredentials[0]['student'])){
-                    $request['active'] = $userByCredentials[0]['active'];
-                    $result = UserService::updateUser($request,$userByCredentials[0]['id'],'S',$organizationId);
-                    if(is_numeric($result)&&$result==0){
-                        return response()->json(['message'=>self::taskError],500);
+                if (count($userByEmail)>0 && count($userByCredentials)>0){
+                    if ($userByCredentials[0]['id']==$userByEmail[0]['id'] &&
+                        $userByCredentials[0]['identification']==$request['identification'] &&
+                        !isset($userByCredentials[0]['student'])){
+                        $request['active'] = $userByCredentials[0]['active'];
+                        $result = UserService::updateUser($request,$userByCredentials[0]['id'],'S',$organizationId);
+                        if(is_numeric($result)&&$result==0){
+                            return response()->json(['message'=>self::taskError],500);
+                        }
+                        return self::createStudent($request,$organizationId,$userByCredentials[0]['id']);
                     }
-                    return self::createStudent($request,$organizationId,$userByCredentials[0]['id']);
-                }else{
-                    return response()->json(['message' => self::busyCredential], 206);
+                }else if(count($userByCredentials)>0 && count($userByEmail)==0){
+                    if ($userByCredentials[0]['identification']==$request['identification'] &&
+                        !isset($userByCredentials[0]['student'])){
+                        $request['active'] = $userByCredentials[0]['active'];
+                        $result = UserService::updateUser($request,$userByCredentials[0]['id'],'S',$organizationId);
+                        if(is_numeric($result)&&$result==0){
+                            return response()->json(['message'=>self::taskError],500);
+                        }
+                        return self::createStudent($request,$organizationId,$userByCredentials[0]['id']);
+                    }
+                }else if(count($userByEmail)>0 && count($userByCredentials)==0){
+                    if ($userByEmail[0]['identification']==$request['identification'] &&
+                        !isset($userByCredentials[0]['student'])){
+                        $request['active'] = $userByEmail[0]['active'];
+                        $result = UserService::updateUser($request,$userByEmail[0]['id'],'S',$organizationId);
+                        if(is_numeric($result)&&$result==0){
+                            return response()->json(['message'=>self::taskError],500);
+                        }
+                        return self::createStudent($request,$organizationId,$userByEmail[0]['id']);
+                    }
                 }
+                return response()->json(['message' => self::busyCredential], 206);
             }
         }else if (is_numeric($userId)&&$userId==0){
             return response()->json(['message'=>self::taskError],500);
@@ -337,6 +358,13 @@ class StudentService
         }
         if (!$existSchoolProgram){
             return response()->json(['message'=>self::invalidSchoolProgram],206);
+        }
+        if (isset($request['equivalences'])){
+            $validEquivalence =self::validateEquivalences($organizationId,$request['equivalences'],
+                $request['school_program_id']);
+            if (!$validEquivalence){
+                return response()->json(['message'=>self::invalidEquivalences],206);
+            }
         }
         $result=Student::existStudentInProgram($userId,$request['school_program_id']);
         if (is_numeric($result)&&$result == 0){
@@ -393,6 +421,7 @@ class StudentService
     /**
      * Actualiza los datos de un usuario con el método UserService::updateUser($request,$userId,'S',$organizationId) y
      * los datos del estudiante dado su studentId para actualizar la entidad adecuada con el método
+     *
      * Student::updateStudent($request['student_id'],[
      * 'school_program_id'=>$student[0]['school_program_id'],
      * 'user_id'=>$userId,

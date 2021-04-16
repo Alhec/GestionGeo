@@ -59,7 +59,7 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'guide_teacher_id'=>7
+            'guide_teacher_id'=>1
         ]);
         Student::create([
             'school_program_id'=>2,
@@ -104,7 +104,7 @@ class StudentsTableSeeder extends Seeder
             'home_university'=>'Universidad Central de Venezuela',
             'is_ucv_teacher'=>false,
             'is_available_final_work' => false,
-            'guide_teacher_id'=>7
+            'guide_teacher_id'=>1
         ]);
         Student::create([
             'school_program_id'=>2,
