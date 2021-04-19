@@ -78,13 +78,14 @@ Route::middleware('app.auth','jwt.auth','role:A')->get('warningStudents','Studen
 Route::middleware('app.auth','jwt.auth','role:A')->prefix('subjects')->group(function (){
     Route::get('/','SubjectController@index');
     Route::get('/{id}','SubjectController@show');
-    Route::get('BySchoolProgram/{id}','SubjectController@getBySchoolProgram');
-    Route::get('WithoutFinalWorks','SubjectController@getSubjectsWithoutFinalWorks');
     Route::post('/','SubjectController@store');
     Route::put('/{id}','SubjectController@update');
     Route::delete('/{id}','SubjectController@destroy');
 });
-
+Route::middleware('app.auth','jwt.auth','role:A')->group(function (){
+    Route::get('subjectsBySchoolProgram/{id}','SubjectController@getBySchoolProgram');
+    Route::get('subjectsWithoutFinalWorks','SubjectController@getSubjectsWithoutFinalWorks');
+});
 
 //SchoolPeriod
 Route::middleware('jwt.auth','role:A,S,T')->get('schoolPeriods/current','SchoolPeriodController@current');

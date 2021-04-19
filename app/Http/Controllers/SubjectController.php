@@ -79,25 +79,31 @@ class SubjectController extends Controller
 
     /**
      * Devuelve las asignaturas asociadas al id del programa escolar usando el método
-     * SubjectService::getSubjectsBySchoolProgramId($id,$organizationId).
+     * SubjectService::getSubjectsBySchoolProgramId($id,$organizationId) o
+     * SubjectService::getSubjectsWithoutFinalWorks($organizationId,$perPage) si usa paginación.
      * @param  int  $id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function getBySchoolProgram($id,Request $request){
         $organizationId = $request->header('Organization-Key');
-        return SubjectService::getSubjectsBySchoolProgramId($id,$organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? SubjectService::getSubjectsBySchoolProgramId($id,$organizationId,$perPage) :
+            SubjectService::getSubjectsBySchoolProgramId($id,$organizationId);
     }
 
     /**
      * Obtiene todos las asignaturas asociadas a un programa escolar sin asignaturas finales ni proyectos de una
-     * organización usa el método SubjectService::getSubjectsWithoutFinalWorks($organizationId).
+     * organización usa el método SubjectService::getSubjectsWithoutFinalWorks($organizationId) o
+     * SubjectService::getSubjectsBySchoolProgramId($id,$organizationId,$perPage) si usa paginación.
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function getSubjectsWithoutFinalWorks(Request $request)
     {
         $organizationId = $request->header('Organization-Key');
-        return SubjectService::getSubjectsWithoutFinalWorks($organizationId);
+        $perPage = $request->input('per_page');
+        return $perPage ? SubjectService::getSubjectsWithoutFinalWorks($organizationId,$perPage) :
+            SubjectService::getSubjectsWithoutFinalWorks($organizationId);
     }
 }

@@ -57,7 +57,6 @@ class SubjectService
         }else{
             return $subjects;
         }
-
     }
 
     /**
@@ -248,7 +247,7 @@ class SubjectService
                         if (is_numeric($result) && $result === 0){
                             return 0;
                         }
-                       if ($subject['subject_group']!==$schoolProgramSubjectId){
+                        if ($subject['subject_group']!==$schoolProgramSubjectId){
                             $subjectsInGroup = SchoolProgramSubject::getSubjectGroup($subject['subject_group']);
                             if (is_numeric($subjectsInGroup)&&$subjectsInGroup ===0 ){
                                 return 0;
@@ -317,15 +316,15 @@ class SubjectService
     public static function validateSubjectGroup($schoolPrograms,$organizationId)
     {
         foreach ($schoolPrograms as $schoolProgram){
-            $subjectsInBd = Subject::getSubjectsBySchoolProgram($schoolProgram['school_program_id'],$organizationId);
-            if (is_numeric($subjectsInBd) && $subjectsInBd==0){
-                return 0;
-            }
-            if (count($subjectsInBd)<1){
-                return false;
-            }
             if (isset($schoolProgram['with_subjects'])){
-                $subjectsId = array_column($schoolProgram['with_subjects'],'id');
+                $subjectsInBd = Subject::getSubjectsBySchoolProgram($schoolProgram['school_program_id'],$organizationId);
+                if (is_numeric($subjectsInBd) && $subjectsInBd==0){
+                    return 0;
+                }
+                if (count($subjectsInBd)<1){
+                    return false;
+                }
+                $subjectsId = array_column($schoolProgram['with_subjects'],'subject_id');
                 $subjectsIdInBd = array_column($subjectsInBd->toArray(),'id');
                 foreach ($subjectsId as $subjectId){
                     if (!in_array($subjectId, $subjectsIdInBd)){
@@ -360,7 +359,6 @@ class SubjectService
                 $validateSubjectGroup = self::validateSubjectGroup($request['school_programs'],$organizationId);
                 if($validateSubjectGroup === 0){
                     return response()->json(['message'=>self::taskError],500);
-
                 }
                 if ($validateSubjectGroup){
                     $id = Subject::addSubject($request);
@@ -406,7 +404,7 @@ class SubjectService
             $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSubject.$subject[0]['name'].self::whitId.
                 $subject[0]['id']);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message' => self::taskPartialError], 500);
+                return response()->json(['message' => self::taskError], 500);
             }
             return response()->json(['message'=>self::ok]);
         }
@@ -483,7 +481,7 @@ class SubjectService
                         }
                         if (count($subjectGroup)>0){
                             $subjectGroupSubjectId = array_column($subjectGroup->toArray(),'subject_id');
-                            $subjectsJoin = [];
+                            $subjectsJoin = [$subjectId];
                             foreach ($schoolProgram['with_subjects'] as $subjectIdJoin){
                                 if (!in_array($subjectIdJoin['subject_id'],$subjectGroupSubjectId)){
                                     $schoolProgramSubject =
@@ -615,6 +613,7 @@ class SubjectService
                     }
                     return self::getSubjectById($id,$organizationId);
                 }
+                return response()->json(['message'=>self::invalidSubjectGroup],206);
             }
             return response()->json(['message'=> self::invalidProgram],206);
         }
@@ -626,19 +625,25 @@ class SubjectService
      * con el método Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId).
      * @param string $schoolProgramId: Id del programa escolar
      * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
      * @return Subject|Response Obtiene la asignatura asociadas a un programaescolar dado el id del programa escolar en
      * la organizacion.
      */
-    public static function getSubjectsBySchoolProgramId($schoolProgramId, $organizationId)
+    public static function getSubjectsBySchoolProgramId($schoolProgramId, $organizationId,$perPage=0)
     {
-        $subjects = Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId);
+        $perPage == 0 ? $subjects = Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId) :
+            $subjects = Subject::getSubjectsBySchoolProgram($schoolProgramId,$organizationId,$perPage);
         if (is_numeric($subjects)&&$subjects===0){
             return response()->json(['message'=>self::taskError],500);
         }
-        if (count($subjects)>0){
+        if ($perPage == 0){
+            if (count($subjects)>0){
+                return $subjects;
+            }
+            return response()->json(['message'=>self::emptySubject],206);
+        }else{
             return $subjects;
         }
-        return response()->json(['message'=>self::emptySubject],206);
     }
 
     /**
@@ -646,18 +651,24 @@ class SubjectService
      * el proyecto y sin el trabajo especial de grado con el método
      * Subject::getSubjectsWithoutFinalWorks($organizationId).
      * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
      * @return object|Response Obtiene las asignaturas sin las asignaturas del proyecto y los trabajos especiales de
      * grado en la organizacion.
      */
-    public static function getSubjectsWithoutFinalWorks($organizationId)
+    public static function getSubjectsWithoutFinalWorks($organizationId, $perPage=0)
     {
-        $subjects = Subject::getSubjectsWithoutFinalWorks($organizationId);
+        $perPage == 0 ? $subjects = Subject::getSubjectsWithoutFinalWorks($organizationId) :
+            $subjects = Subject::getSubjectsWithoutFinalWorks($organizationId,$perPage);
         if (is_numeric($subjects)&&$subjects == 0){
             return response()->json(['message'=>self::taskError],500);
         }
-        if (count($subjects)>0){
+        if ($perPage == 0){
+            if (count($subjects)>0){
+                return $subjects;
+            }
+            return response()->json(['message'=>self::emptySubject],206);
+        }else{
             return $subjects;
         }
-        return response()->json(['message'=>self::emptySubject],206);
     }
 }

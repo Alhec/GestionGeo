@@ -114,7 +114,7 @@ class SchoolProgramSubject extends Model
     }
 
     /**
-     *Obtiene las asignatura sasociadas aun grupo
+     *Obtiene las asignatura sasociadas a un grupo
      * @param integer $subjectGroup: Id del grupo.
      * @return integer Obtiene el conjunto de asignaturas asociadas en caso de que esta esté asociada con otras.
      */

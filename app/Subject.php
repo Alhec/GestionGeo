@@ -60,7 +60,6 @@ class Subject extends Model
                     })
                     ->paginate($perPage);
             }
-
         }catch (\Exception $e){
             return 0;
         }
@@ -223,16 +222,26 @@ class Subject extends Model
      *Obtiene las asignaturas presentes en un programa escolar de una organización
      * @param string $schoolProgramId Id del programa escolar
      * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
      * @return integer|Subject Devuelve las asignaturas asociadas a un programa escolar en una organización.
      */
-    public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId){
+    public static function getSubjectsBySchoolProgram($schoolProgramId, $organizationId,  $perPage=0){
         try{
-            return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
-                $query
-                    ->where('organization_id','=',$organizationId)
-                    ->where('school_program_id','=',$schoolProgramId);
-            })
-                ->get();
+            if($perPage == 0){
+                return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId)
+                        ->where('school_program_id','=',$schoolProgramId);
+                    })
+                    ->get();
+            }else{
+                return self::whereHas('schoolPrograms',function (Builder $query) use ($schoolProgramId,$organizationId){
+                    $query
+                        ->where('organization_id','=',$organizationId)
+                        ->where('school_program_id','=',$schoolProgramId);
+                    })
+                    ->paginate($perPage);
+            }
         }catch (\Exception $e){
             return 0;
         }
@@ -303,19 +312,31 @@ class Subject extends Model
     /**
      *Obtiene las asignaturas que no son de proyecto o de trabajo de grado presentes en una organización
      * @param string $organizationId Id de la organiación
+     * @param integer $perPage Parámetro opcional, cantidad de elementos por página, default:0
      * @return integer|object Lista las asignaturas de todos los programas escolares asociadas a una organización sin
      * los programas escolares y proyectos.
      */
-    public static function getSubjectsWithoutFinalWorks($organizationId){
+    public static function getSubjectsWithoutFinalWorks($organizationId, $perPage=0){
         try{
-            return self::with('schoolPrograms')
-                ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
-                    $query
-                        ->where('organization_id','=',$organizationId);
-                })
-                ->where('is_final_subject','=',false)
-                ->where('is_project_subject','=',false)
-                ->get();
+            if ($perPage == 0){
+                return self::with('schoolPrograms')
+                    ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                        $query
+                            ->where('organization_id','=',$organizationId);
+                    })
+                    ->where('is_final_subject','=',false)
+                    ->where('is_project_subject','=',false)
+                    ->get();
+            }else{
+                return self::with('schoolPrograms')
+                    ->whereHas('schoolPrograms',function (Builder $query) use ($organizationId){
+                        $query
+                            ->where('organization_id','=',$organizationId);
+                    })
+                    ->where('is_final_subject','=',false)
+                    ->where('is_project_subject','=',false)
+                    ->paginate($perPage);
+            }
         }catch (\Exception $e){
             return 0;
         }
