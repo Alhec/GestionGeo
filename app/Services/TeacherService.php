@@ -239,7 +239,7 @@ class TeacherService
         if ($existTeacherId){
             $roles =array_column(auth()->payload()['user']->roles,'user_type');
             if(!in_array('A',$roles) && auth()->payload()['user']->id!=$teacherId){
-                return response()->json(['message'=>self::unauthorized],206);
+                return response()->json(['message'=>self::unauthorized],401);
             }
             return 'valid';
         }

@@ -34,8 +34,7 @@ class CreateSchedulesTable extends Migration
     public function up()
     {
         Schema::create('schedules', function (Blueprint $table) {
-            $table->unsignedBigInteger('school_period_subject_teacher_id')
-                ->primary();
+            $table->unsignedBigInteger('school_period_subject_teacher_id');
             $table->string('day',1);
             $table->string('classroom',40);
             $table->time('start_hour');

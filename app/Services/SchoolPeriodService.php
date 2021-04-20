@@ -294,7 +294,7 @@ class SchoolPeriodService
             $log = Log::addLog(auth('api')->user()['id'],self::logDeleteSchoolPeriod.
                 $schoolPeriod[0]['cod_school_period'].self::whitId.$id);
             if (is_numeric($log)&&$log==0){
-                return response()->json(['message' => self::taskPartialError], 500);
+                return response()->json(['message' => self::taskError], 500);
             }
             return response()->json(['message'=>self::ok]);
         }

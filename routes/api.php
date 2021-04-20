@@ -16,10 +16,13 @@ use Illuminate\Http\Request;
 
 //Authentication
 Route::middleware('app.auth')->post('login', 'AuthController@login');
-Route::middleware('app.auth','jwt.auth')->post('me', 'AuthController@me');
-Route::middleware('app.auth','jwt.auth')->post('payload', 'AuthController@payload');
-Route::middleware('app.auth','jwt.auth')->post('refresh', 'AuthController@refresh');
-Route::middleware('app.auth','jwt.auth')->post('logout', 'AuthController@logout');
+
+Route::middleware('app.auth','jwt.auth')->group(function (){
+    Route::post('me', 'AuthController@me');
+    Route::post('payload', 'AuthController@payload');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('logout', 'AuthController@logout');
+});
 
 // Password Reset
 Route::middleware('app.auth')->prefix('password')->group(function (){
@@ -28,8 +31,10 @@ Route::middleware('app.auth')->prefix('password')->group(function (){
 });
 
 //Comun Users
-Route::middleware('app.auth','jwt.auth')->post('changePassword', 'UserController@changePassword');
-Route::middleware('app.auth','jwt.auth')->post('updateUser', 'UserController@changeUserData');
+Route::middleware('app.auth','jwt.auth')->group(function (){
+    Route::post('changePassword', 'UserController@changePassword');
+    Route::post('updateUser', 'UserController@changeUserData');
+});
 
 //Administrator
 Route::middleware('app.auth','jwt.auth','role:A')->prefix('administrators')->group(function (){
@@ -88,13 +93,18 @@ Route::middleware('app.auth','jwt.auth','role:A')->group(function (){
 });
 
 //SchoolPeriod
-Route::middleware('jwt.auth','role:A,S,T')->get('schoolPeriods/current','SchoolPeriodController@current');
-Route::middleware('jwt.auth','role:A,T')->get('schoolPeriods/subjectsTaught','SchoolPeriodController@subjectTaughtSchoolPeriod');
-Route::middleware('jwt.auth','role:A')->get('schoolPeriods','SchoolPeriodController@index');
-Route::middleware('jwt.auth','role:A')->post('schoolPeriods','SchoolPeriodController@store');
-Route::middleware('jwt.auth','role:A')->get('schoolPeriods/{id}','SchoolPeriodController@show');
-Route::middleware('jwt.auth','role:A')->put('schoolPeriods/{id}','SchoolPeriodController@update');
-Route::middleware('jwt.auth','role:A')->delete('schoolPeriods/{id}','SchoolPeriodController@destroy');
+Route::middleware('app.auth','jwt.auth')->prefix('schoolPeriods')->group(function (){
+    Route::middleware('role:A,S,T')->get('/current','SchoolPeriodController@current');
+    Route::middleware('role:A,T')->get('/subjectsTaught','SchoolPeriodController@subjectTaughtSchoolPeriod');
+    Route::middleware('role:A')->group(function (){
+        Route::get('/','SchoolPeriodController@index');
+        Route::get('/{id}','SchoolPeriodController@show');
+        Route::post('/','SchoolPeriodController@store');
+        Route::put('/{id}','SchoolPeriodController@update');
+        Route::delete('/{id}','SchoolPeriodController@destroy');
+    });
+});
+
 
 //Inscription
 Route::middleware('jwt.auth','role:A,T')->get('teacherInscription/enrolledStudent','InscriptionController@enrolledStudentsInSchoolPeriod');
