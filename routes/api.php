@@ -125,15 +125,19 @@ Route::middleware('jwt.auth','role:A')->delete('inscriptions/{id}','InscriptionC
 Route::middleware('jwt.auth','role:A')->delete('inscriptions/deleteFinalWork/{id}','InscriptionController@deleteFinalWork');
 
 //Constance
-Route::middleware('jwt.auth','role:A,S')->get('constance/study','ConstanceController@constanceOfStudy');
-Route::middleware('jwt.auth','role:A,S')->get('constance/academicLoad','ConstanceController@academicLoad');
-Route::middleware('jwt.auth','role:A,S')->get('constance/studentHistorical','ConstanceController@studentHistorical');
-Route::middleware('jwt.auth','role:A,T')->get('constance/workTeacher','ConstanceController@constanceOfWorkTeacher');
-Route::middleware('jwt.auth','role:A')->get('constance/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
-Route::middleware('jwt.auth','role:A,S')->get('constance/inscription','ConstanceController@inscriptionConstance');
+Route::middleware('app.auth','jwt.auth')->prefix('constance')->group(function (){
+    Route::middleware('role:A')->get('/workAdministrator','ConstanceController@constanceOfWorkAdministrator');
+    Route::middleware('role:A,T')->get('/workTeacher','ConstanceController@constanceOfWorkTeacher');
+    Route::middleware('role:A,S')->group(function (){
+        Route::get('/study','ConstanceController@constanceOfStudy');
+        Route::get('/academicLoad','ConstanceController@academicLoad');
+        Route::get('/studentHistorical','ConstanceController@studentHistorical');
+        Route::get('/inscription','ConstanceController@inscriptionConstance');
+    });
+});
 
 //Annual Report
-Route::middleware('jwt.auth','role:A')->get('annualReport','AnnualReportController@exportAnnualReport');
+Route::middleware('app.auth','jwt.auth','role:A')->get('annualReport','AnnualReportController@exportAnnualReport');
 
 //Test
 Route::get('test', function () {

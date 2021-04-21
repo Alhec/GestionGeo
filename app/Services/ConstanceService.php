@@ -518,7 +518,7 @@ class ConstanceService
                 }
                 return $data;
             }
-            return response()->json(['message'=>self::notFoundInscription],206);
+            return response()->json(['message'=>self::notYetHaveHistorical],206);
         }
         return response()->json(['message'=>self::notFoundUser],206);
     }
