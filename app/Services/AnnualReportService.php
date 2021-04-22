@@ -62,6 +62,7 @@ class AnnualReportService
             }
         }
         $annualReport = new AnnualReport($schoolPeriodsToReport,$organizationId);
+        ob_end_clean();
         return Excel::download($annualReport,'InformeAnual.xlsx');
     }
 
