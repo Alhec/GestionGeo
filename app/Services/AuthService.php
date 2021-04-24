@@ -53,9 +53,6 @@ class AuthService
             return response()->json(['message' => self::taskError], 500);
         }
         $user=$user->toArray()[0];
-        if (!$user['administrator']['principal']){
-            unset($user['administrator']);
-        }
         return response()->json([
             'token' => $token,
             'type' => 'bearer',

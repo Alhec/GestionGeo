@@ -50,11 +50,13 @@ Route::middleware('app.auth','jwt.auth','role:A')->prefix('administrators')->gro
 //Teacher
 Route::middleware('app.auth','jwt.auth')->prefix('teachers')->group(function (){
     Route::middleware('role:A,S')->get('/','TeacherController@index');
-    Route::middleware('role:A')->get('/active','TeacherController@active');
-    Route::middleware('role:A')->get('/{id}','TeacherController@show');
-    Route::middleware('role:A')->post('/','TeacherController@store');
-    Route::middleware('role:A')->put('/{id}','TeacherController@update');
-    Route::middleware('role:A')->delete('/{id}','TeacherController@destroy');
+    Route::middleware('role:A')->group(function (){
+        Route::get('/active','TeacherController@active');
+        Route::get('/{id}','TeacherController@show');
+        Route::post('/','TeacherController@store');
+        Route::put('/{id}','TeacherController@update');
+        Route::delete('/{id}','TeacherController@destroy');
+    });
 });
 
 //SchoolProgram
@@ -107,22 +109,28 @@ Route::middleware('app.auth','jwt.auth')->prefix('schoolPeriods')->group(functio
 
 
 //Inscription
-Route::middleware('jwt.auth','role:A,T')->get('teacherInscription/enrolledStudent','InscriptionController@enrolledStudentsInSchoolPeriod');
-Route::middleware('jwt.auth','role:A,T')->post('teacherInscription/loadNotes','InscriptionController@loadNotes');
+Route::middleware('app.auth','jwt.auth','role:A,T')->prefix('teacherInscription')->group(function (){
+    Route::get('/enrolledStudent','InscriptionController@enrolledStudentsInSchoolPeriod');
+    Route::post('/loadNotes','InscriptionController@loadNotes');
+});
 
-Route::middleware('jwt.auth','role:S')->get('studentInscription/availableSubjects','InscriptionController@studentAvailableSubjects');
-Route::middleware('jwt.auth','role:S')->get('studentInscription/currentEnrolledSubjects','InscriptionController@currentEnrolledSubjects');
-Route::middleware('jwt.auth','role:S')->post('studentInscription','InscriptionController@addStudentInscription');
-Route::middleware('jwt.auth','role:S')->post('studentInscription/withdrawSubjects','InscriptionController@withdrawSubjects');
+Route::middleware('app.auth','jwt.auth','role:S')->prefix('studentInscription')->group(function (){
+    Route::get('/availableSubjects','InscriptionController@studentAvailableSubjects');
+    Route::get('/currentEnrolledSubjects','InscriptionController@currentEnrolledSubjects');
+    Route::post('','InscriptionController@addStudentInscription');
+    Route::post('/withdrawSubjects','InscriptionController@withdrawSubjects');
+});
 
-Route::middleware('jwt.auth','role:A')->get('inscriptions/schoolPeriod/{schoolPeriodId}','InscriptionController@inscriptionBySchoolPeriod');
-Route::middleware('jwt.auth','role:A')->get('inscriptions/availableSubjects','InscriptionController@availableSubjects');
-Route::middleware('jwt.auth','role:A')->get('inscriptions','InscriptionController@index');
-Route::middleware('jwt.auth','role:A')->post('inscriptions','InscriptionController@store');
-Route::middleware('jwt.auth','role:A')->get('inscriptions/{id}','InscriptionController@show');
-Route::middleware('jwt.auth','role:A')->put('inscriptions/{id}','InscriptionController@update');
-Route::middleware('jwt.auth','role:A')->delete('inscriptions/{id}','InscriptionController@destroy');
-Route::middleware('jwt.auth','role:A')->delete('inscriptions/deleteFinalWork/{id}','InscriptionController@deleteFinalWork');
+Route::middleware('app.auth','jwt.auth','role:A')->prefix('inscriptions')->group(function (){
+    Route::get('/schoolPeriod/{schoolPeriodId}','InscriptionController@inscriptionBySchoolPeriod');
+    Route::get('/availableSubjects','InscriptionController@availableSubjects');
+    Route::get('/','InscriptionController@index');
+    Route::get('/{id}','InscriptionController@show');
+    Route::post('/','InscriptionController@store');
+    Route::put('/{id}','InscriptionController@update');
+    Route::delete('/{id}','InscriptionController@destroy');
+    Route::delete('/deleteFinalWork/{id}','InscriptionController@deleteFinalWork');
+});
 
 //Constance
 Route::middleware('app.auth','jwt.auth')->prefix('constance')->group(function (){
