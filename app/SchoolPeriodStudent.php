@@ -297,7 +297,7 @@ class SchoolPeriodStudent extends Model
     {
         try{
             return self::where('student_id',$studentId)
-                ->where('amount_paid',null)
+                ->where('amount_paid',0)
                 ->exists();
         }catch (\Exception $e){
             return 0;

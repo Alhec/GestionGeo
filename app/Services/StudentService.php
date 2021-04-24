@@ -589,8 +589,8 @@ class StudentService
                 }
                 return response()->json(['message' => self::unauthorized], 401);
             }
-            return response()->json(['message' => self::notFoundUser], 206);
         }
+        return response()->json(['message' => self::notFoundUser], 206);
     }
 
     /**

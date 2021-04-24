@@ -57,6 +57,7 @@ class CreateSchoolPeriodStudentTable extends Migration
             $table->string('pay_ref',50)
                 ->nullable();
             $table->float('amount_paid')
+                ->default(0)
                 ->nullable();
             $table->date('inscription_date')
                 ->default(now());
