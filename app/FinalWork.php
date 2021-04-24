@@ -263,4 +263,28 @@ class FinalWork extends Model
         }
     }
 
+    /**
+     *Obtiene todos los finalWork dado el id del estudiante, inscripcion del estudiante y su tipo Proyecto o TEG
+     * @param string $studentId: Id del estudiante.
+     * @param string $isProject: Flag para determinar si es un proyecto o un trabajo de grado.
+     * @param string $inscriptionId: Id de la inscripcion.
+     * @return FinalWork|integer Obtiene el trabajo de grado o proyecto dado un estudiante asociado y su inscripcion.
+     */
+    public static function getFinalWorksByStudentAndSchoolPeriod($studentId, $isProject, $inscriptionId)
+    {
+        try{
+            return self::where('student_id',$studentId)
+                ->where('is_project',$isProject)
+                ->whereHas('schoolPeriods',function (Builder $query) use ($inscriptionId) {
+                    $query
+                        ->where('final_work_school_period.school_period_student_id','=',$inscriptionId);
+                })
+                ->with('schoolPeriods')
+                ->with('teachers')
+                ->get();
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
 }
