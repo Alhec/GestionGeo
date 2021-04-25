@@ -536,7 +536,7 @@ class InscriptionService
                         }
                     }
                     if (count($response['available_subjects'])<1&&(!isset($response['available_project'])&&
-                            !isset($response['available_final_work']))){
+                            !isset($response['available_final_work'])&&!isset($response['available_doctoral_exam']))){
                         if ($internalCall){return 3;}
                         return response()->json(['message'=>self::thereAreNotSubjectsAvailableToRegister],206);
                     }
@@ -576,7 +576,7 @@ class InscriptionService
     /**
      *Valida que se cumpla las restricciones:
      * *subjects.*.school_period_teacher_id: requerido y numérico
-     * *subjects.*.qualification: numérico
+     * *subjects.*.qualification: numérico y en un rango de 0 a 20
      * *subjects.*.status: máximo 3 y termina en CUR, RET, APR y REP
      * @param Request $request Objeto con los datos de la petición
      */
@@ -584,7 +584,7 @@ class InscriptionService
     {
         $request->validate([
             'subjects.*.school_period_subject_teacher_id'=>'required|numeric',
-            'subjects.*.qualification'=>'numeric',
+            'subjects.*.qualification'=>'numeric|between:0,20',
             'subjects.*.status'=>'max:3|ends_with:CUR,RET,APR,REP'
         ]);
     }
@@ -594,7 +594,7 @@ class InscriptionService
      * *projects.*.title: requerido y máximo 100
      * *projects.*.subject_id: requerido y numérico
      * *projects.*.status:  máximo 10 y debe terminar en APPROVED, REPROBATE o PROGRESS
-     * *projects.*.status_description: máximo 200
+     * *projects.*.description_status: máximo 200
      * *projects.*.approval_date: máximo 10
      * @param Request $request Objeto con los datos de la petición
      */
@@ -604,7 +604,7 @@ class InscriptionService
             'projects.*.title'=>'required|max:100',
             'projects.*.subject_id'=>'required|numeric',
             'projects.*.status'=>'max:10|ends_with:PROGRESS,APPROVED,REPROBATE',
-            'projects.*.status_description'=>'max:200',
+            'projects.*.description_status'=>'max:200',
             'projects.*.approval_date'=>'size:10'
         ]);
     }
@@ -615,7 +615,7 @@ class InscriptionService
      * *final_works.*.subject_id: requerido y numérico
      * *final_works.*.project_id: numérico
      * *final_works.*.status:  máximo 10 y debe terminar en APPROVED, REPROBATE o PROGRESS
-     * *final_works.*.status_description: máximo 200
+     * *final_works.*.description_status: máximo 200
      * *final_works.*.approval_date: máximo 10
      * *final_works.*.advisors.*.teacher_id: numérico
      * @param Request $request Objeto con los datos de la petición
@@ -627,7 +627,7 @@ class InscriptionService
             'final_works.*.subject_id'=>'required|numeric',
             'final_works.*.project_id'=>'numeric',
             'final_works.*.status'=>'max:10|ends_with:PROGRESS,APPROVED,REPROBATE',
-            'final_works.*.status_description'=>'max:200',
+            'final_works.*.description_status'=>'max:200',
             'final_works.*.approval_date'=>'size:10',
             'final_works.*.advisors.*.teacher_id'=>'numeric'
         ]);
@@ -808,6 +808,9 @@ class InscriptionService
         $descriptionStatus = '';
         if (isset($finalWork['status'])){
             $status=$finalWork['status'];
+            if ($status=='APPROVED' && !isset($finalWork['approval_date'])){
+                $finalWork['approval_date']=(now()->toDateTimeString());
+            }
             unset($finalWork['status']);
         }
         if (isset($finalWork['description_status'])){
@@ -1275,10 +1278,16 @@ class InscriptionService
                         if (is_numeric($log)&&$log==0){
                             return self::taskError(false,true);
                         }
-                        $student[0]['allow_post_inscription']=false;
-                        $result = Student::updateStudent($student[0]['id'],$student[0]->toArray());
-                        if (is_numeric($result)&&$result==0){
+                        $student=Student::getStudentById($request['student_id'],$organizationId);
+                        if (is_numeric($student) && $student==0){
                             return self::taskError(false,true);
+                        }
+                        if(count($student)>0){
+                            $student[0]['allow_post_inscription']=false;
+                            $result = Student::updateStudent($student[0]['id'],$student[0]->toArray());
+                            if (is_numeric($result)&&$result==0){
+                                return self::taskError(false,true);
+                            }
                         }
                         return self::getInscriptionById($schoolPeriodStudentId,$organizationId);
                     }
