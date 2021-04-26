@@ -1,72 +1,78 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# GAAPFC 
+GAAPFC (Gestión Académica y Administrativa para los Postgrados de la Facultad de Ciencias) es un api que presta 
+servicios académicos y administrativos para aplicaciones web asociadas a los postgrados de la Facultad de Ciencias hecha
+ con el framework de desarrollo [Laravel 6](https://laravel.com/docs/6.x).
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+<img src="https://laravel.com/assets/img/components/logo-laravel.svg">
 
-## About Laravel
+##Instalación 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+###Requisitos
+- node v14.3.0
+- php v7.4.3
+- composer v1.9.0
+- mysql v8..22
+- docker v19.03.13
+- docker-compose v1.25.0
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+###Despliegue
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Configurar el archivo .env con las variables necesarias para que funcione y luego ejecutar los siguientes comandos en 
+caso de ser necesario limpiar cache
 
-## Learning Laravel
+####Servidor Local
+```bash
+#Cargador de clases optimizado
+php artisan optimize
+composer dump-autolad
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#Borrar valor de fachada de caché
+php artisan cache:clear
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1400 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#Borrar caché de ruta
+php artisan route:clear
+php artisan route:cache
 
-## Laravel Sponsors
+#Borrar vista de caché
+php artisan view:clear
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#Borrar caché de configuración
+php artisan config:clear
+php artisan config:cache
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
+#Instalar dependencias
+composer install
 
-## Contributing
+#Levantar servidor
+php artisan serve
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+####Docker
+```bash
+docker-compose up
+```
 
-## Security Vulnerabilities
+###Documentación
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Para generar la documentacion mediante el uso de [PHPDocumentor](https://www.phpdoc.org/) necesitas ejecutar el comando 
+```bash
+php phpDocumentor.phar -t docs -d ./database/migrations/ -d ./app/{*}.php -d ./app/Http/Middleware/RoleAuthorization.php
+ -d ./app/Http/Middleware/AppAuthorization.php -d ./app/Exports/ -d ./app/Notifications/ -d ./app/Console/ 
+ -d ./app/Services/ -d ./app/Http/Controllers/
 
-## License
+```
+Esto da como resultado que el el directorio docs se genere un [index.html](./docs/index.html)
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Ademas existe una colección de [Postman](https://www.postman.com/) tanto de ambiente como de peticiones las cuales 
+contiene ejemplos de como hacer llamadas a cada endpoint del api y todas las posibles respuestas de cada endpoint, esta 
+se ubica en la carpeta collections llamadas 
+[GAAPFC.postman_collection.json](./collections/GAAPFC.postman_collection.json) y 
+[GAAPFC_Develop.postman_environment.json](./collections/GAAPFC_Develop.postman_environment.json)
+
+## Authors
+
+- [Héctor Alayón](mailto:hector.alayon@ciens.ucv.ve)
+
+## Licencia
+
+ [MIT license](https://opensource.org/licenses/MIT).
