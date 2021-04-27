@@ -69,7 +69,7 @@ se ubica en la carpeta collections llamadas
 [GAAPFC.postman_collection.json](./collections/GAAPFC.postman_collection.json) y 
 [GAAPFC_Develop.postman_environment.json](./collections/GAAPFC_Develop.postman_environment.json)
 
-## Authors
+## Autores
 
 - [Héctor Alayón](mailto:hector.alayon@ciens.ucv.ve)
 
