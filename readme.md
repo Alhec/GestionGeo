@@ -45,11 +45,46 @@ composer install
 
 #Levantar servidor
 php artisan serve
+
 ```
 
-####Docker
+####Docker 
+Realizar los mismos pasos que en despliegue local hasta el penultimo comando
+
+[Guia de dockerizacion](https://www.digitalocean.com/community/tutorials/how-to-install-and-set-up-laravel-with-docker-compose-on-ubuntu-20-04)
+
+[Guia de dockerizacion 2](https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose)
 ```bash
-docker-compose up
+#Construye la imagen con el siguiente comando:
+docker-compose build app
+
+#Ejecucion de entorno:
+docker-compose up -d
+
+#Mostrar informacion de los contenedores
+docker-compose ps
+
+#Ejecutar comandos ejemplo ls -l
+docker-compose exec app ls -l
+
+#Verificar los logs de la aplicacion
+docker-compose logs nginx
+
+#Pausar el uso de los contenedores
+docker-compose pause
+
+#Reanudar el uso de los contenedores
+docker-compose unpause
+
+#Cerrar entorno de Docker-Compose y eliminar todos los contenedores, redes y volúmenes
+docker-compose down
+
+#Agregar crontabs
+docker-compose exec nginx crontab -e
+
+#Se abrira un archivo con el gestor Vim añadir 
+# * * * * * cd /var/www/ && php artisan schedule:run >> /dev/null 2>&1      
+
 ```
 
 ###Documentación

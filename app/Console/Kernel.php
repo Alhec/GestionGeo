@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\updateStatusStudentForNotRegistered::class,
+        Commands\DatabaseBackUp::class,
     ];
 
     /**
@@ -31,6 +32,8 @@ class Kernel extends ConsoleKernel
     {
          $schedule->command('update:status-student')
             ->monthly();
+        $schedule->command('database:backup')
+            ->everyFiveMinutes();
     }
 
     /**

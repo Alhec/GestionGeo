@@ -3,12 +3,11 @@ services:
   app:
     build:
       args:
-        user: sammy
+        user: halayon
         uid: 1000
       context: ./
       dockerfile: Dockerfile
     image: gaapfc
-
     container_name: gaapfc-app
     restart: unless-stopped
     working_dir: /var/www/
@@ -28,7 +27,8 @@ services:
       MYSQL_USER: ${DB_USERNAME}
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
-
+    volumes:
+      - dbdata:/var/lib/mysql
     networks:
       - gaapfc
 
@@ -36,6 +36,7 @@ services:
     image: nginx:1.15.2-alpine
     container_name: gaapfc-nginx
     restart: unless-stopped
+    working_dir: /var/www/
     ports:
       - 8000:80
     volumes:
@@ -47,3 +48,6 @@ services:
 networks:
   gaapfc:
     driver: bridge
+volumes:
+  dbdata:
+    driver: local
