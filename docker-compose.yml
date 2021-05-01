@@ -14,7 +14,8 @@ services:
     volumes:
       - ./:/var/www
     networks:
-      - gaapfc
+      gaapfc:
+        ipv4_address: 172.34.0.10
 
   db:
     image: mysql:5.7
@@ -30,7 +31,8 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     networks:
-      - gaapfc
+      gaapfc:
+        ipv4_address: 172.34.0.20
 
   nginx:
     image: nginx:1.15.2-alpine
@@ -43,11 +45,31 @@ services:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
-      - gaapfc
-
+      gaapfc:
+        ipv4_address: 172.34.0.30
+  cron:
+    build:
+      args:
+        user: halayon
+        uid: 1000
+      context: ./docker-compose/php/
+      dockerfile: Dockerfile
+    image: php-cron
+    container_name: gaapfc-crontab
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/php/crontab:/etc/crontab:ro
+    command: bash -c "/usr/bin/crontab /etc/crontab && /usr/sbin/cron -f"
+    networks:
+      gaapfc:
+        ipv4_address: 172.34.0.40
 networks:
   gaapfc:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.34.0.0/24
 volumes:
   dbdata:
     driver: local

@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:7.4-cli
 
 # Arguments defined in docker-compose.yml
 ARG user
@@ -13,7 +13,17 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zip \
     unzip \
-    default-mysql-client
+    default-mysql-client\
+    cron \
+    vim \
+    systemd \
+    syslog-ng
+
+RUN apt-get update && apt-get install -y cron
+
+COPY crontab /etc/crontab
+RUN chmod 644 /etc/crontab
+RUN crontab /etc/crontab
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -28,9 +38,10 @@ COPY --from=composer:1.10.22 /usr/bin/composer /usr/bin/composer
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
+RUN chmod 644 /etc/crontab
+RUN chmod 644 -R /var/run
 
-# Set working directory
-WORKDIR /var/www
 
-USER $user
+CMD /usr/sbin/cron -f
+
 

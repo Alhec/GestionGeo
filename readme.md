@@ -57,6 +57,7 @@ Realizar los mismos pasos que en despliegue local hasta el penultimo comando
 ```bash
 #Construye la imagen con el siguiente comando:
 docker-compose build app
+docker-compose build cron
 
 #Ejecucion de entorno:
 docker-compose up -d
@@ -82,9 +83,6 @@ docker-compose down
 #Agregar crontabs
 docker-compose exec nginx crontab -e
 
-#Se abrira un archivo con el gestor Vim añadir 
-# * * * * * cd /var/www/ && php artisan schedule:run >> /dev/null 2>&1      
-
 ```
 
 ###Documentación
@@ -104,7 +102,8 @@ se ubica en la carpeta collections llamadas
 [GAAPFC.postman_collection.json](./collections/GAAPFC.postman_collection.json) y 
 [GAAPFC_Develop.postman_environment.json](./collections/GAAPFC_Develop.postman_environment.json)
 
-## Autores
+## Autor
+}
 
 - [Héctor Alayón](mailto:hector.alayon@ciens.ucv.ve)
 
