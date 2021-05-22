@@ -82,12 +82,14 @@ Route::middleware('app.auth','jwt.auth','role:A')->prefix('students')->group(fun
 Route::middleware('app.auth','jwt.auth','role:A')->get('warningStudents','StudentController@warningStudent');
 
 //Subject
-Route::middleware('app.auth','jwt.auth','role:A')->prefix('subjects')->group(function (){
-    Route::get('/','SubjectController@index');
-    Route::get('/{id}','SubjectController@show');
-    Route::post('/','SubjectController@store');
-    Route::put('/{id}','SubjectController@update');
-    Route::delete('/{id}','SubjectController@destroy');
+Route::middleware('app.auth','jwt.auth')->prefix('subjects')->group(function (){
+    Route::middleware('role:A')->group(function (){
+        Route::get('/','SubjectController@index');
+        Route::post('/','SubjectController@store');
+        Route::put('/{id}','SubjectController@update');
+        Route::delete('/{id}','SubjectController@destroy');
+    });
+    Route::middleware('role:A,T')->get('/{id}','SubjectController@show');
 });
 Route::middleware('app.auth','jwt.auth','role:A')->group(function (){
     Route::get('subjectsBySchoolProgram/{id}','SubjectController@getBySchoolProgram');
