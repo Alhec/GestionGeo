@@ -31,9 +31,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('update:status-student')
-            ->everyMinute();
+            ->monthly();
         $schedule->command('database:backup')
-            ->everyMinute();
+            ->weekly();
     }
 
     /**
